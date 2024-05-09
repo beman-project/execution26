@@ -1,0 +1,26 @@
+# Copyright © 2024 Beman Project
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+name: Windows Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: environment
+      run: cmake -E make_directory ${{github.workspace}}/build
+    - name: configure
+      working-directory: ${{github.workspace}}/build
+      run: cmake ${{github.workspace}}/src/toy
+    - name: make
+      working-directory: ${{github.workspace}}/build
+      run: cmake --build .
