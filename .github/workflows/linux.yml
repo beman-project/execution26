@@ -6,14 +6,22 @@ name: Linux Build
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - "include/**"
+      - "src/**"
+      - "test/**"
+      - "CMakeLists.txt"
   pull_request:
     branches: [ "main" ]
+    paths:
+      - "include/**"
+      - "src/**"
+      - "test/**"
+      - "CMakeLists.txt"
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
     - name: build

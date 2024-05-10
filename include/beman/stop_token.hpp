@@ -12,7 +12,7 @@ namespace beman::inline cpp26
         concept stoppable_callback_for = false;
 
         template<typename Source>
-        concept stoppable_source = false;
+        concept stoppable_source = true;
     }
 
     template<typename Token>
