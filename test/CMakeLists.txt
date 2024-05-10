@@ -2,6 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 list(APPEND execution_tests
+    thread.pass
+    thread-stoptoken.pass
+    thread-stoptoken-intro.pass
     thread-stoptoken-syn.compile.pass
 )
 foreach(test ${execution_tests})
