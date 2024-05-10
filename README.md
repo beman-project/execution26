@@ -21,3 +21,7 @@ You can just use `make` in the current directory. It will invoke `cmake`,
 build the code, and run tests. To have more control over the build-process
 you can use `cmake` with the `CMakeLists.txt` in the root directory.
 
+## To Do
+
+Help is very welcome: Please send pull requests!
+The [To Do Page](docs/TODO.md) lists what sections and their current status.
