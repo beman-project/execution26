@@ -40,8 +40,9 @@ namespace
             };
 
             test_source* d_source;
-            bool stop_possible() const { return true; }
-            auto stop_requested() const { return this->d_source->d_value; }
+            auto stop_possible() const noexcept -> bool { return true; }
+            auto stop_requested() const noexcept -> bool { return this->d_source->d_value; }
+            auto operator== (token const&) const -> bool;
         };
         struct no_call
             : callback_base

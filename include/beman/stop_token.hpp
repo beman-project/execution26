@@ -31,10 +31,23 @@ namespace beman::inline cpp26
 
         template<typename Source>
         concept stoppable_source = true;
+
+        template <template<typename> class> struct check_type_alias_exist;
     }
 
     template<typename Token>
-    concept stoppable_token = true;
+    concept stoppable_token
+        =   requires(Token const& token)
+            {
+                typename ::beman::cpp26::detail::check_type_alias_exist<Token::template callback_type>;
+                { token.stop_requested() } noexcept -> ::std::same_as<bool>;
+                { token.stop_possible() } noexcept -> ::std::same_as<bool>;
+                { Token(token) } noexcept;
+            }
+        &&  ::std::copyable<Token>
+        &&  ::std::equality_comparable<Token>
+        &&  ::std::swappable<Token>
+        ;
 
     template<typename Token>
     concept unstoppable_token = false;

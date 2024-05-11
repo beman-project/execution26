@@ -20,7 +20,7 @@ auto main() -> int
     static_assert((not ::test_std::detail::stoppable_callback_for<int, int, int>));
     static_assert((/*-dk:TODO not*/ ::test_std::detail::stoppable_source<int>));
 
-    static_assert((/*-dk:TODO not*/ ::test_std::stoppable_token<int>));
+    static_assert((not ::test_std::stoppable_token<int>));
     static_assert((not ::test_std::unstoppable_token<int>));
 
     type_exists<::test_std::stop_token>();
