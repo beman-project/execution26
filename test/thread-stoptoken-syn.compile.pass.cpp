@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <beman/stop_token.hpp>
-#include <cassert>
+#include "test/execution.hpp"
 
 namespace
 {
@@ -11,32 +11,33 @@ namespace
     struct test_token
     {
         template <typename CallbackFn>
-        using callback_type = beman::stop_callback<CallbackFn>;
+        using callback_type = ::test_std::stop_callback<CallbackFn>;
     };
 }
 
-int main()
+auto main() -> int
 {
-    assert((not beman::detail::stoppable_callback_for<int, int, int>));
-    assert((/*-dk:TODO not*/ beman::detail::stoppable_source<int>));
+    static_assert((not ::test_std::detail::stoppable_callback_for<int, int, int>));
+    static_assert((/*-dk:TODO not*/ ::test_std::detail::stoppable_source<int>));
 
-    assert((not beman::stoppable_token<int>));
-    assert((not beman::unstoppable_token<int>));
+    static_assert((/*-dk:TODO not*/ ::test_std::stoppable_token<int>));
+    static_assert((not ::test_std::unstoppable_token<int>));
 
-    type_exists<beman::stop_token>();
-    type_exists<beman::stop_source>();
+    type_exists<::test_std::stop_token>();
+    type_exists<::test_std::stop_source>();
 
-    type_exists<beman::nostopstate_t>();
-    (void)beman::nostopstate_t();
-    beman::nostopstate_t const& nostopstate = beman::nostopstate;
+    type_exists<::test_std::nostopstate_t>();
+    (void)::test_std::nostopstate_t();
+    ::test_std::nostopstate_t const& nostopstate = ::test_std::nostopstate;
+    (void)nostopstate;
 
-    type_exists<beman::stop_callback<decltype([]{})>>();
+    type_exists<::test_std::stop_callback<decltype([]{})>>();
 
-    type_exists<beman::never_stop_token>();
+    type_exists<::test_std::never_stop_token>();
 
-    type_exists<beman::inplace_stop_token>();
-    type_exists<beman::inplace_stop_source>();
-    type_exists<beman::inplace_stop_callback<decltype([]{})>>();
+    type_exists<::test_std::inplace_stop_token>();
+    type_exists<::test_std::inplace_stop_source>();
+    type_exists<::test_std::inplace_stop_callback<decltype([]{})>>();
 
-    type_exists<beman::stop_callback_for_t<test_token, decltype([]{})>>();
+    type_exists<::test_std::stop_callback_for_t<test_token, decltype([]{})>>();
 }
