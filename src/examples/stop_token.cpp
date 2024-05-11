@@ -3,7 +3,7 @@
 
 #include <beman/stop_token.hpp>
 
-int main()
+auto main() -> int
 {
 }
 
