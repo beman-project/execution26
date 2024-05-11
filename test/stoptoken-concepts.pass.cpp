@@ -153,8 +153,31 @@ auto test_stoppable_token()
     static_assert(not test_std::stoppable_token<stoppable_token::non_swappable>);
 }
 
+namespace unstoppable_token
+{
+    template <bool CopyNoexcept, bool Possible>
+    struct token
+    {
+        template <typename> struct callback_type {};
+
+        constexpr token() {}
+        constexpr token(token const&) noexcept(CopyNoexcept);
+        auto stop_requested() const noexcept -> bool;
+        static constexpr auto stop_possible() noexcept -> bool { return Possible; }
+        auto operator== (token const&) const -> bool = default;
+    };
+}
+
+auto test_unstoppable_token() -> void
+{
+    static_assert(::test_std::unstoppable_token<::unstoppable_token::token<true, false>>);
+    static_assert(not ::test_std::unstoppable_token<::unstoppable_token::token<false, false>>);
+    static_assert(not ::test_std::unstoppable_token<::unstoppable_token::token<true, true>>);
+}
+
 auto main() -> int
 {
     test_detail_stopppable_callback_for();
     test_stoppable_token();
+    test_unstoppable_token();
 }

@@ -50,7 +50,13 @@ namespace beman::inline cpp26
         ;
 
     template<typename Token>
-    concept unstoppable_token = false;
+    concept unstoppable_token
+        =  ::beman::cpp26::stoppable_token<Token>
+        && requires()
+            {
+                requires ::std::bool_constant<not Token::stop_possible()>::value;
+            }
+        ;
 
     class never_stop_token;
 
