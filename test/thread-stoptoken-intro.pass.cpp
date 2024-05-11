@@ -61,13 +61,16 @@ namespace
         test_source() = default;
         test_source(test_source&&) = delete;
 
-        auto get_token() -> token { return {this}; }
-        auto request_stop() -> void
+        auto get_token() const -> token { return { const_cast<test_source*>(this)}; }
+        auto stop_possible() const noexcept -> bool { return true; }
+        auto stop_requested() const noexcept -> bool { return this->d_value; }
+        auto request_stop() -> bool
         {
+            bool rc{};
             callback_base* cb{};
             {
                 ::std::lock_guard guard(this->d_lock);
-                this->d_value = true;
+                rc = ::std::exchange(this->d_value, true);
                 this->d_in_progress = true;
                 this->d_id = ::std::this_thread::get_id();
                 cb = ::std::exchange(this->d_callback, &this->d_no_call);
@@ -79,6 +82,7 @@ namespace
                 this->d_id = ::std::thread::id();
             }
             this->d_cond.notify_one();
+            return rc;
         }
         auto add(callback_base* cb) -> void
         {

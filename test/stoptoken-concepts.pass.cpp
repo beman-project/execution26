@@ -175,9 +175,55 @@ auto test_unstoppable_token() -> void
     static_assert(not ::test_std::unstoppable_token<::unstoppable_token::token<true, true>>);
 }
 
+namespace stoppable_source
+{
+    template <bool IsToken>
+    struct token
+    {
+        template <typename> struct callback_type {};
+
+        token(token const&) noexcept(IsToken);
+        auto stop_requested() const noexcept -> bool;
+        auto stop_possible() const noexcept -> bool;
+        auto operator== (token const&) const -> bool = default;
+    };
+
+    template <bool IsToken,
+              typename PossibleType, bool PossibleNoexcept,
+              typename RequestedType, bool RequestedNoexcept,
+              typename RequestType
+              >
+    struct source
+    {
+        auto get_token() const -> ::stoppable_source::token<IsToken>;
+        auto stop_possible() const noexcept(PossibleNoexcept) -> PossibleType;
+        auto stop_requested() const noexcept(RequestedNoexcept) -> RequestedType;
+        auto request_stop() -> RequestType;
+    };
+}
+
+auto test_detail_stoppable_source() -> void
+{
+    static_assert(::test_detail::stoppable_source<
+        ::stoppable_source::source<true, bool, true, bool, true, bool>>);
+    static_assert(not ::test_detail::stoppable_source<
+        ::stoppable_source::source<false, bool, true, bool, true, bool>>);
+    static_assert(not ::test_detail::stoppable_source<
+        ::stoppable_source::source<true, int, true, bool, true, bool>>);
+    static_assert(not ::test_detail::stoppable_source<
+        ::stoppable_source::source<true, bool, false, bool, true, bool>>);
+    static_assert(not ::test_detail::stoppable_source<
+        ::stoppable_source::source<true, bool, true, int, true, bool>>);
+    static_assert(not ::test_detail::stoppable_source<
+        ::stoppable_source::source<true, bool, true, bool, false, bool>>);
+    static_assert(not ::test_detail::stoppable_source<
+        ::stoppable_source::source<true, bool, true, bool, true, int>>);
+}
+
 auto main() -> int
 {
     test_detail_stopppable_callback_for();
     test_stoppable_token();
     test_unstoppable_token();
+    test_detail_stoppable_source();
 }

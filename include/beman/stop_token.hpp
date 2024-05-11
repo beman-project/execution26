@@ -29,9 +29,6 @@ namespace beman::inline cpp26
                                          Initializer>
             ;
 
-        template<typename Source>
-        concept stoppable_source = true;
-
         template <template<typename> class> struct check_type_alias_exist;
     }
 
@@ -57,6 +54,20 @@ namespace beman::inline cpp26
                 requires ::std::bool_constant<not Token::stop_possible()>::value;
             }
         ;
+
+    namespace detail
+    {
+        template<typename Source>
+        concept stoppable_source
+            =   requires(Source& source, Source const& csource)
+                {
+                    { csource.get_token() } -> ::beman::cpp26::stoppable_token;
+                    { csource.stop_possible() } noexcept -> ::std::same_as<bool>;
+                    { csource.stop_requested() } noexcept -> ::std::same_as<bool>;
+                    { source.request_stop() } -> ::std::same_as<bool>;
+                }
+            ;
+    }
 
     class never_stop_token;
 
