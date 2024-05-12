@@ -34,7 +34,7 @@ default: test
 
 all: $(SANITIZERS)
 
-warn: test
+none: test
 asan:
 	$(MAKE) SANITIZER=asan
 
