@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 SANITIZERS = none asan usan tsan
-.PHONY: default clean build test all $(SANITIZERS)
+.PHONY: default todo distclean clean build test all $(SANITIZERS)
 
 CXX_FLAGS = -O3
 SANITIZER = none
@@ -55,6 +55,11 @@ build:
 test: build
 	cd $(BUILD); $(MAKE) test
 
+todo:
+	bin/mk-todo.py
+
 clean:
-	$(RM) mkerr older *~
+	$(RM) mkerr olderr *~
+
+distclean: clean
 	$(RM) -r $(BUILDROOT)

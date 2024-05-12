@@ -5,7 +5,7 @@
 #include <type_traits>
 #include "test/execution.hpp"
 
-namespace test
+namespace detail_stopppable_callback_for
 {
     struct NonToken
     {
@@ -52,6 +52,13 @@ namespace test
 
 auto test_detail_stopppable_callback_for()
 {
+    // Plan:
+    // - Given various definition of token-like types.
+    // - When trying to use a valid callback with these types.
+    // - Then only token types matching the concept pass.
+    // Reference: [stoptoken.concepts] p1
+
+    namespace own = detail_stopppable_callback_for;
     struct Callback
     {
         struct Tag {};
@@ -60,18 +67,18 @@ auto test_detail_stopppable_callback_for()
         auto operator()() -> void {}
     };
 
-    static_assert(not test_detail::stoppable_callback_for<int, test::Token>);
-    static_assert(test_detail::stoppable_callback_for<Callback, test::Token>);
+    static_assert(not test_detail::stoppable_callback_for<int, own::Token>);
+    static_assert(test_detail::stoppable_callback_for<Callback, own::Token>);
 
-    static_assert(not test_detail::stoppable_callback_for<Callback, test::Token, int>);
-    static_assert(test_detail::stoppable_callback_for<Callback, test::Token, Callback::Tag>);
+    static_assert(not test_detail::stoppable_callback_for<Callback, own::Token, int>);
+    static_assert(test_detail::stoppable_callback_for<Callback, own::Token, Callback::Tag>);
 
-    static_assert(not test_detail::stoppable_callback_for<Callback, test::NonToken>);
-    static_assert(not test_detail::stoppable_callback_for<Callback, test::TokenNonCtorCallback>);
-    static_assert(not test_detail::stoppable_callback_for<Callback, test::TokenWithValueCallback>);
-    static_assert(not test_detail::stoppable_callback_for<Callback, test::TokenWithOddCallback>);
-    static_assert(test_detail::stoppable_callback_for<Callback, test::Token>);
-    static_assert(test_detail::stoppable_callback_for<Callback, test::Token, Callback::Tag>);
+    static_assert(not test_detail::stoppable_callback_for<Callback, own::NonToken>);
+    static_assert(not test_detail::stoppable_callback_for<Callback, own::TokenNonCtorCallback>);
+    static_assert(not test_detail::stoppable_callback_for<Callback, own::TokenWithValueCallback>);
+    static_assert(not test_detail::stoppable_callback_for<Callback, own::TokenWithOddCallback>);
+    static_assert(test_detail::stoppable_callback_for<Callback, own::Token>);
+    static_assert(test_detail::stoppable_callback_for<Callback, own::Token, Callback::Tag>);
 }
 
 namespace stoppable_token
@@ -138,6 +145,12 @@ namespace stoppable_token
 
 auto test_stoppable_token()
 {
+    // Plan:
+    // - Given various definition of stoppable_token-like types.
+    // - When trying to use them as a stoppable token
+    // - Then only token types matching the concept pass.
+    // Reference: [stoptoken.concepts] p4
+
     static_assert(not test_std::stoppable_token<stoppable_token::no_callback_type>);
     static_assert(not test_std::stoppable_token<stoppable_token::non_template_callback_type>);
 
@@ -170,8 +183,16 @@ namespace unstoppable_token
 
 auto test_unstoppable_token() -> void
 {
+    // Plan:
+    // - Given various definition of stoppable token types.
+    // - When trying to use them as a stoppable token
+    // - Then only token types matching the concept pass.
+    // Reference: [stoptoken.concepts] p4
+
     static_assert(::test_std::unstoppable_token<::unstoppable_token::token<true, false>>);
+    static_assert(not ::test_std::stoppable_token<::unstoppable_token::token<false, false>>);
     static_assert(not ::test_std::unstoppable_token<::unstoppable_token::token<false, false>>);
+    static_assert(::test_std::stoppable_token<::unstoppable_token::token<true, true>>);
     static_assert(not ::test_std::unstoppable_token<::unstoppable_token::token<true, true>>);
 }
 
@@ -204,6 +225,12 @@ namespace stoppable_source
 
 auto test_detail_stoppable_source() -> void
 {
+    // Plan:
+    // - Given various definition of stoppable source-like types.
+    // - When trying to use them as a stoppable source.
+    // - Then only source types matching the concept pass.
+    // Reference: [stoptoken.concepts] p6
+
     static_assert(::test_detail::stoppable_source<
         ::stoppable_source::source<true, bool, true, bool, true, bool>>);
     static_assert(not ::test_detail::stoppable_source<
