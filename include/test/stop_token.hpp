@@ -8,6 +8,7 @@
 #include <beman/stop_token.hpp>
 #include <test/execution.hpp>
 
+#include <algorithm>
 #include <atomic>
 #include <cassert>
 #include <chrono>
