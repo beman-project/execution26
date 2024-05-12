@@ -24,17 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        config:
-          - id: linux-gcc-warnings
-            cxx: g++
-            name: warn
-          - id: linux-gcc-warnings
-            cxx: clang++
-            name: warn
-          - id: linux-gcc-asan
-            cxx: g++
-            name: asan
+        config: [ warn asan ]
     steps:
       - uses: actions/checkout@v4
-      - name: ${{ matrix.config.id }}
-        run: make CXX=${{ matrix.config.cxx }} ${{ matrix.config.name }}
+      - name: Linux ${{ matrix.config }}
+        run: make ${{ matrix.config }}
