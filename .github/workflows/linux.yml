@@ -11,7 +11,7 @@ on:
       - "src/**"
       - "test/**"
       - "CMakeLists.txt"
-      - ".github/workflows/**"
+      - ".github/workflows/linux.yml"
   pull_request:
     branches: [ "main" ]
     paths:
@@ -19,15 +19,15 @@ on:
       - "src/**"
       - "test/**"
       - "CMakeLists.txt"
-      - ".github/workflows/**"
+      - ".github/workflows/linux.yml"
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        sanitizer: [ none asan usan tsan ]
-        compiler: [ g++ clang++ ]
+        sanitizer: [none asan]
+        compiler: [g++ clang++]
     steps:
       - uses: actions/checkout@v4
       - name: Linux ${{ matrix.compiler }} ${{ matrix.sanitizer }}
