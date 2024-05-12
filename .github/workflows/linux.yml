@@ -20,7 +20,7 @@ on:
       - "CMakeLists.txt"
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -35,6 +35,6 @@ jobs:
             cxx: g++
             name: asan
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: ${{ matrix.config.id }}
         run: make CXX=${{ matrix.config.cxx }} ${{ matrix.config.name }}
