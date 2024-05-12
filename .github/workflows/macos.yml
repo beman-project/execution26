@@ -6,15 +6,25 @@ name: Macos Build
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - "include/**"
+      - "src/**"
+      - "test/**"
+      - "CMakeLists.txt"
+      - ".github/workflows/macos.yml"
   pull_request:
     branches: [ "main" ]
+    paths:
+      - "include/**"
+      - "src/**"
+      - "test/**"
+      - "CMakeLists.txt"
+      - ".github/workflows/macos.yml"
 
 jobs:
   build:
-
     runs-on: macos-latest
-
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: make
       run: make
