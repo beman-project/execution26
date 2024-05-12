@@ -20,9 +20,16 @@ on:
       - "CMakeLists.txt"
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config:
+          - { id: linux-gcc-warnings, cc: gcc, cxx: g++, name: warn }
+          - { id: linux-clang-warnings, cc: clang, cxx: clang++, name: warn }
+          - { id: linux-gcc-asan, cc: gcc, cxx: g++, name: asan }
+
     steps:
     - uses: actions/checkout@v3
-    - name: build
-      run: make
+    - name: {{ matrix.config.id }}
+      run: make CC={{ matrix.config.cc }} CXX={{ matrix.config.cxx }} {{ matrix.config.name }}
