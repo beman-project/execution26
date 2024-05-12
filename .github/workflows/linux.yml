@@ -25,11 +25,16 @@ jobs:
     strategy:
       matrix:
         config:
-          - { id: linux-gcc-warnings, cc: gcc, cxx: g++, name: warn }
-          - { id: linux-clang-warnings, cc: clang, cxx: clang++, name: warn }
-          - { id: linux-gcc-asan, cc: gcc, cxx: g++, name: asan }
-
+          - id: linux-gcc-warnings
+            cxx: g++
+            name: warn
+          - id: linux-gcc-warnings
+            cxx: clang++
+            name: warn
+          - id: linux-gcc-asan
+            cxx: g++
+            name: asan
     steps:
-    - uses: actions/checkout@v3
-    - name: {{ matrix.config.id }}
-      run: make CC={{ matrix.config.cc }} CXX={{ matrix.config.cxx }} {{ matrix.config.name }}
+      - uses: actions/checkout@v3
+      - name: ${{ matrix.config.id }}
+        run: make CXX=${{ matrix.config.cxx }} ${{ matrix.config.name }}
