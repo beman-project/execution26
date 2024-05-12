@@ -17,6 +17,12 @@ namespace
 
 auto main() -> int
 {
+    // Plan:
+    // - Given a header with the declarations relating to <stop_token>
+    // - When trying to access the various names in the header.
+    // - Then the compiler should OK doing so.
+    // Reference: [thread.stoptoken.syn]
+
     static_assert((not ::test_std::detail::stoppable_callback_for<int, int, int>));
     static_assert((not ::test_std::detail::stoppable_source<int>));
 
