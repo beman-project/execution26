@@ -1,0 +1,10 @@
+{
+    "utilities": { "code":true, "test":true, "doc":true, "comment":"empty" },
+    "function.objects": { "code":true, "test":true, "doc":true, "comment":"empty" },
+    "thread": { "code":true, "test":true, "doc":true, "comment":"empty" },
+    "thread.stoptoken": { "code":true, "test":true, "doc":true, "comment":"empty" },
+    "thread.stoptoken.intro": { "code":true, "test":true, "doc":false },
+    "thread.stoptoken.syn": { "code":true, "test":true, "doc":false },
+    "stoptoken.concepts": { "code":true, "test":true, "doc":false },
+    "": {}
+}

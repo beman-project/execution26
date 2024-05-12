@@ -109,5 +109,12 @@ namespace
 
 auto main() -> int
 {
+    // Plan:
+    // - Given a test stoppable source.
+    // - When running the stop source tests.
+    // - Then the tests pass.
+    // As the tests [static_]assert upon failure, incorrect stop sources are not tests.
+    // Reference: [thread.stoptoken.intro]
+
     test::stop_source([]{ return ::test_source(); });
 }
