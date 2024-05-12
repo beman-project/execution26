@@ -49,7 +49,7 @@ lsan:
 
 build:
 	@mkdir -p $(BUILD)
-	cd $(BUILD); cmake ../.. -DCMAKE_C_COMPILER=$(CXX) -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
+	cd $(BUILD); CC=$(CXX) cmake ../.. -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 	cmake --build $(BUILD)
 
 test: build

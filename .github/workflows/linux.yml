@@ -27,7 +27,7 @@ jobs:
     strategy:
       matrix:
         sanitizer: [ none asan usan tsan ]
-        compiler: [ gcc clang ]
+        compiler: [ g++ clang++ ]
     steps:
       - uses: actions/checkout@v4
       - name: Linux ${{ matrix.compiler }} ${{ matrix.sanitizer }}
