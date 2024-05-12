@@ -24,8 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        config: [ warn asan ]
+        sanitizer: [ none asan ]
     steps:
       - uses: actions/checkout@v4
-      - name: Linux ${{ matrix.config }}
-        run: make ${{ matrix.config }}
+      - name: Linux ${{ matrix.sanitizer }}
+        run: make ${{ matrix.sanitizer }}
