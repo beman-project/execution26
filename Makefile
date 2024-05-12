@@ -4,7 +4,7 @@
 CONFIGS = none asan usan tsan
 .PHONY: default clean build test all $(CONFIGS)
 
-CXX_FLAGS =-g -pedantic -Wall -Wextra -Weffc++ -Werror
+CXX_FLAGS =-g -pedantic -Wall -Wextra -Werror
 SANITIZER = 
 SAN_FLAGS =
 BUILDROOT = build
