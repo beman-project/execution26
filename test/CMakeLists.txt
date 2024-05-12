@@ -6,6 +6,7 @@ list(APPEND execution_tests
     thread-stoptoken.pass
     thread-stoptoken-intro.pass
     thread-stoptoken-syn.compile.pass
+    stoptoken-concepts.pass
 )
 foreach(test ${execution_tests})
     add_executable(${test} ${test}.cpp)
