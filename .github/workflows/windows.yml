@@ -6,14 +6,24 @@ name: Windows Build
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - "include/**"
+      - "src/**"
+      - "test/**"
+      - "CMakeLists.txt"
+      - ".github/workflows/windows.yml"
   pull_request:
     branches: [ "main" ]
+    paths:
+      - "include/**"
+      - "src/**"
+      - "test/**"
+      - "CMakeLists.txt"
+      - ".github/workflows/windows.yml"
 
 jobs:
   build:
-
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v4
     - name: environment
