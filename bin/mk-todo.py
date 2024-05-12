@@ -20,7 +20,7 @@ with open("docs/TODO.md", "w") as todo:
     print(f"# ToDo ", file=todo)
     print(f"", file=todo)
     print(f"| Section | Code | Test | Doc | Comment |", file=todo)
-    print(f"| ------- | ---- | ---- | --- | ------- |", file=todo)
+    print(f"| ------- |:----:|:----:|:---:| ------- |", file=todo)
     for name in list:
         node = json.get(name, {})
         code = f"[{'x' if node.get('code', False) else ' '}]"

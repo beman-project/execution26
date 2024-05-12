@@ -1,7 +1,7 @@
 # ToDo 
 
 | Section | Code | Test | Doc | Comment |
-| ------- | ---- | ---- | --- | ------- |
+| ------- |:----:|:----:|:---:| ------- |
 | [[except](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#except)] | [ ] | [ ] | [ ] |  |
 | [[except.special](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#except.special)] | [ ] | [ ] | [ ] |  |
 | [[except.terminate](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#except.terminate)] | [ ] | [ ] | [ ] |  |
