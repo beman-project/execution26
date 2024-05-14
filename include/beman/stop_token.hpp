@@ -103,6 +103,7 @@ struct beman::cpp26::detail::stop_state
     ::std::atomic<::std::size_t>              sources{};
     ::std::mutex                              lock{};
     beman::cpp26::detail::stop_callback_base* callbacks{};
+    ::std::atomic<bool>                       executing{};
 
     auto stop_possible() const -> bool { return this->sources != 0 || this->stop_requested; }
 };
@@ -126,7 +127,6 @@ public:
     auto setup() -> void;
 
     stop_callback_base*              next{};
-    ::std::atomic<bool>              executing{};
     ::std::atomic<::std::thread::id> id{};
 };
 
@@ -211,7 +211,6 @@ inline beman::cpp26::detail::stop_callback_base::stop_callback_base(
 
 inline auto beman::cpp26::detail::stop_callback_base::setup() -> void
 {
-    ::std::cout << "registering callback: " << this->state.get() << "\n";
     {
         ::std::lock_guard guard(this->state->lock);
         if (!this->state->stop_requested)
@@ -225,14 +224,13 @@ inline auto beman::cpp26::detail::stop_callback_base::setup() -> void
 
 inline beman::cpp26::detail::stop_callback_base::~stop_callback_base()
 {
-    ::std::cout << "unregistering callback: " << this->state.get() << "\n";
     ::std::unique_lock guard(this->state->lock);
-    if (this->executing && this->id != ::std::this_thread::get_id())
+    if (this->state->executing && this->id != ::std::this_thread::get_id())
     {
         using lock_again = decltype([](auto p){ p->lock(); });
         ::std::unique_ptr<decltype(guard), lock_again> relock(&guard);
         relock->unlock();
-        while (this->executing)
+        while (this->state->executing)
             ;
     }
     for (auto next = &this->state->callbacks; *next; next = &this->next)
@@ -315,17 +313,14 @@ inline auto beman::cpp26::stop_source::request_stop() -> bool
 {
     using release = decltype([](auto p){ *p = false; });
     using lock_again = decltype([](auto p){ p->lock(); });
-    ::std::cout << "request_stop: " << this->state.get() << "\n";
 
     if (not this->state->stop_requested.exchange(true))
     {
-        ::std::cout << "actually stopping\n";
         ::std::unique_lock guard(this->state->lock);
         while (this->state->callbacks)
         {
-            ::std::cout << "has callback\n";
             auto front = ::std::exchange(this->state->callbacks, this->state->callbacks->next);
-            ::std::unique_ptr<::std::atomic<bool>, release> reset(&front->executing);
+            ::std::unique_ptr<::std::atomic<bool>, release> reset(&state->executing);
             *reset = true;
             front->id = ::std::this_thread::get_id();
             ::std::unique_ptr<decltype(guard), lock_again> relock(&guard);
@@ -333,7 +328,6 @@ inline auto beman::cpp26::stop_source::request_stop() -> bool
             front->call();
         }
     }
-    ::std::cout << "request_stop done\n";
     return true;
 }
 
