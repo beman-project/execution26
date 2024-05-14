@@ -34,6 +34,7 @@ auto main() -> int
 
     type_exists<::test_std::nostopstate_t>();
     (void)::test_std::nostopstate_t();
+    static_assert(noexcept(::test_std::nostopstate_t()));
     ::test_std::nostopstate_t const& nostopstate = ::test_std::nostopstate;
     (void)nostopstate;
 

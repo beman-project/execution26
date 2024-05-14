@@ -6,7 +6,7 @@
 #include "test/execution.hpp"
 #include "test/stop_token.hpp"
 
-void test_stop_token_swap()
+auto test_stop_token_swap() -> void
 {
     // Plan:
     // - Given two pairs of stop_tokens compare equal within the pair
@@ -32,7 +32,7 @@ void test_stop_token_swap()
     assert(pair0[1] == pair1[0]);
 }
 
-void test_stop_token_stop_requested()
+auto test_stop_token_stop_requested() -> void
 {
     // Plan:
     // - Given a stop source and its stop token with stop_requested() == false.
@@ -54,7 +54,7 @@ void test_stop_token_stop_requested()
     assert(disengaged.stop_requested() == false);
 }
 
-void test_stop_token_stop_possible()
+auto test_stop_token_stop_possible() -> void
 {
     // Plan:
     // - Given a three stop sources:
@@ -89,7 +89,7 @@ void test_stop_token_stop_possible()
     assert(stopped_token.stop_possible() == true);
 }
 
-int main()
+auto main() -> int
 {
     static_assert(::test_std::stoppable_token<::test_std::stop_token>);
 
