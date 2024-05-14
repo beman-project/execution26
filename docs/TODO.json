@@ -6,5 +6,9 @@
     "thread.stoptoken.intro": { "code":true, "test":true, "doc":false },
     "thread.stoptoken.syn": { "code":true, "test":true, "doc":false },
     "stoptoken.concepts": { "code":true, "test":true, "doc":false },
+    "stoptoken": { "code":true, "test":true, "doc":true, "comment":"empty" },
+    "stoptoken.general": { "code":true, "test":true, "doc":true },
+    "stoptoken.mem": { "code":true, "test":true, "doc":true },
+    "stopsource": { "code":true, "test":true, "doc":true, "comment":"empty" },
     "": {}
 }
