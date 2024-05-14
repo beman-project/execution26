@@ -9,6 +9,11 @@ list(APPEND execution_tests
     thread-stoptoken-intro.pass
     thread-stoptoken-syn.compile.pass
     stoptoken-concepts.pass
+    stoptoken.pass
+    stoptoken-general.pass
+    stoptoken-mem.pass
+    stopsource.pass
+    stopsource-general.pass
 )
 foreach(test ${execution_tests})
     add_executable(${test} ${test}.cpp)

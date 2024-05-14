@@ -35,7 +35,8 @@ namespace test
     template <::test_std::stoppable_token Token, ::std::invocable Stop>
     auto stop_callback_dtor_same_thread(Token, Stop) -> void;
 
-    template <typename MakeStopSource> auto stop_source(MakeStopSource);
+    template <typename MakeStopSource>
+    auto stop_source(MakeStopSource) -> void;
 }
 
 // ----------------------------------------------------------------------------
@@ -257,7 +258,7 @@ inline auto test::stop_callback_dtor_same_thread(Token token, Stop stop) -> void
 // ----------------------------------------------------------------------------
 
 template <typename MakeStopSource>
-inline auto test::stop_source(MakeStopSource factory)
+inline auto test::stop_source(MakeStopSource factory) -> void
 {
     // Plan: 
     // - Given a factory function create a stoppable-source.
