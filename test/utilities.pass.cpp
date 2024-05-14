@@ -3,7 +3,7 @@
 
 #include "test/execution.hpp"
 
-int main()
+auto main() -> int
 {
     // section [utilities] is empty
 }

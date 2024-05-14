@@ -14,6 +14,9 @@ list(APPEND execution_tests
     stoptoken-mem.pass
     stopsource.pass
     stopsource-general.pass
+    stopsource-cons.pass
+    stopsource-mem.pass
+    stopcallback.pass
 )
 foreach(test ${execution_tests})
     add_executable(${test} ${test}.cpp)

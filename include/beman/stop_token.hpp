@@ -143,14 +143,16 @@ public:
     using stop_token = ::beman::cpp26::stop_token;
 
     stop_source();
+    explicit stop_source(::beman::cpp26::nostopstate_t) noexcept;
     stop_source(stop_source const&);
     auto operator= (stop_source const&) -> stop_source&;
     ~stop_source();
 
+    auto swap(stop_source&) noexcept -> void;
     auto get_token() const -> stop_token;
     auto stop_requested() const noexcept -> bool;
     auto stop_possible() const noexcept -> bool;
-    auto request_stop() -> bool;
+    auto request_stop() noexcept -> bool;
 };
 
 // ----------------------------------------------------------------------------
@@ -275,6 +277,11 @@ inline beman::cpp26::stop_source::stop_source()
     ++this->state->sources;
 }
 
+inline beman::cpp26::stop_source::stop_source(::beman::cpp26::nostopstate_t) noexcept
+    : state()
+{
+}
+
 inline beman::cpp26::stop_source::stop_source(stop_source const& other)
     : state(other.state)
 {
@@ -291,7 +298,12 @@ inline auto beman::cpp26::stop_source::operator= (stop_source const& other) -> s
 
 inline beman::cpp26::stop_source::~stop_source()
 {
-    --this->state->sources;
+    this->state && --this->state->sources;
+}
+
+inline auto beman::cpp26::stop_source::swap(::beman::cpp26::stop_source& other) noexcept -> void
+{
+    this->state.swap(other.state);
 }
 
 inline auto beman::cpp26::stop_source::get_token() const -> stop_token
@@ -301,20 +313,20 @@ inline auto beman::cpp26::stop_source::get_token() const -> stop_token
 
 inline auto beman::cpp26::stop_source::stop_requested() const noexcept -> bool
 {
-    return this->state->stop_requested;
+    return this->state && this->state->stop_requested;
 }
 
 inline auto beman::cpp26::stop_source::stop_possible() const noexcept -> bool
 {
-    return true;
+    return true && this->state;
 }
 
-inline auto beman::cpp26::stop_source::request_stop() -> bool
+inline auto beman::cpp26::stop_source::request_stop() noexcept -> bool
 {
     using release = decltype([](auto p){ *p = false; });
     using lock_again = decltype([](auto p){ p->lock(); });
 
-    if (not this->state->stop_requested.exchange(true))
+    if (this->state && not this->state->stop_requested.exchange(true))
     {
         ::std::unique_lock guard(this->state->lock);
         while (this->state->callbacks)
@@ -327,8 +339,9 @@ inline auto beman::cpp26::stop_source::request_stop() -> bool
             relock->unlock();
             front->call();
         }
+        return true;
     }
-    return true;
+    return false;
 }
 
 // ----------------------------------------------------------------------------
