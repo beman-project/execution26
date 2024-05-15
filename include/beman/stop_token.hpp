@@ -125,6 +125,7 @@ protected:
 public:
     auto call() -> void;
     auto setup() -> void;
+    auto deregister() -> void;
 
     stop_callback_base*              next{};
     ::std::atomic<::std::thread::id> id{};
@@ -201,6 +202,10 @@ public:
     {
         this->setup();
     }
+    ~stop_callback()
+    {
+        this->deregister();
+    }
 };
 
 // ----------------------------------------------------------------------------
@@ -225,6 +230,10 @@ inline auto beman::cpp26::detail::stop_callback_base::setup() -> void
 }
 
 inline beman::cpp26::detail::stop_callback_base::~stop_callback_base()
+{
+}
+
+inline auto beman::cpp26::detail::stop_callback_base::deregister() -> void
 {
     ::std::unique_lock guard(this->state->lock);
     if (this->state->executing && this->id != ::std::this_thread::get_id())
