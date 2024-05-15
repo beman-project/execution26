@@ -19,12 +19,13 @@
 | [[stoptoken.mem](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#stoptoken.mem)] | &#9745; | &#9745; | &#9745; |  |
 | [[stoptoken.nonmembers](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#stoptoken.nonmembers)] | &#9744; | &#9744; | &#9744; |  |
 | [[stopsource](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#stopsource)] | &#9745; | &#9745; | &#9745; | empty |
-| [[stopsource.general](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#stopsource.general)] | &#9744; | &#9744; | &#9744; |  |
-| [[stopsource.mem](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#stopsource.mem)] | &#9744; | &#9744; | &#9744; |  |
+| [[stopsource.general](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#stopsource.general)] | &#9745; | &#9745; | &#9745; |  |
+| [[stopsource.cons](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#stopsource.cons)] | &#9745; | &#9745; | &#9745; |  |
+| [[stopsource.mem](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#stopsource.mem)] | &#9745; | &#9745; | &#9745; |  |
 | [[stopsource.nonmembers](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#stopsource.nonmembers)] | &#9744; | &#9744; | &#9744; |  |
-| [[stopcallback](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#stopcallback)] | &#9744; | &#9744; | &#9744; |  |
-| [[stopcallback.general](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#stopcallback.general)] | &#9744; | &#9744; | &#9744; |  |
-| [[stopcallback.cons](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#stopcallback.cons)] | &#9744; | &#9744; | &#9744; |  |
+| [[stopcallback](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#stopcallback)] | &#9745; | &#9745; | &#9745; | empty |
+| [[stopcallback.general](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#stopcallback.general)] | &#9745; | &#9745; | &#9745; | empty |
+| [[stopcallback.cons](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#stopcallback.cons)] | &#9745; | &#9745; | &#9745; | empty |
 | [[stoptoken.never](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#stoptoken.never)] | &#9744; | &#9744; | &#9744; |  |
 | [[stoptoken.never.general](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#stoptoken.never.general)] | &#9744; | &#9744; | &#9744; |  |
 | [[stoptoken.inplace](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html#stoptoken.inplace)] | &#9744; | &#9744; | &#9744; |  |

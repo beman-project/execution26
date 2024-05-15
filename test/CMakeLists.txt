@@ -17,7 +17,10 @@ list(APPEND execution_tests
     stopsource-cons.pass
     stopsource-mem.pass
     stopcallback.pass
+    stopcallback-general.pass
+    stopcallback-cons.pass
 )
+
 foreach(test ${execution_tests})
     add_executable(${test} ${test}.cpp)
     add_test(NAME ${test} COMMAND $<TARGET_FILE:${test}>)
