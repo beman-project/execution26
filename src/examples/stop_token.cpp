@@ -4,6 +4,7 @@
 #include <beman/stop_token.hpp>
 #include <condition_variable>
 #include <iostream>
+#include <latch>
 #include <mutex>
 #include <thread>
 
@@ -37,12 +38,18 @@ namespace exec = beman::cpp26;
 // threads are started stopping is requested and the threads
 // are joined.
 
-// std::print isn't available every, yet. Let's try a simple placeholder.
+// TODOs:
+// The example can be simplified once standard library implementation
+// catch-up. The example as is still properly shows things.
+// - This example should really use std::latch but, sadly, that
+//   doesn't seem to be readily enabled on MacOS.
+// - std::print isn't available everywhere, yet. Let's try a simple
+//   placeholder.
+static ::std::mutex io_lock;
 void print(std::string_view text, auto&&...)
 {
-    static ::std::mutex lock;
-    std::lock_guard     guard(lock);
-    ::std::cout << text << "\n";
+    std::lock_guard     guard(io_lock);
+    ::std::cout << text;
 }
 
 template <typename Token>
@@ -57,26 +64,39 @@ auto active(Token token) -> void
     print("active thread done: {}\n" , i);
 }
 
+template <typename Token, typename Callback>
+struct stop_callback_for_t
+{
+    exec::stop_callback_for_t<Token, Callback> cb;
+    stop_callback_for_t(Token const& token, Callback callback)
+        : cb(token, callback)
+    {
+    }
+};
+
+#ifdef __cpp_lib_latch
+template <typename Token>
+auto inactive(Token token) -> void
+{
+    ::std::latch        latch(1);
+    stop_callback_for_t cb(token, [&latch]{ latch.count_down(); });
+
+    latch.wait();
+    print("inactive thread done (latch)\n");
+}
+#else
 template <typename Token>
 auto inactive(Token token) -> void
 {
     ::std::condition_variable cond;
-    struct Callback
-    {
-        ::std::condition_variable* cond;
-        Callback(::std::condition_variable* cond): cond(cond) {}
-        auto operator()() -> void
-        {
-            cond->notify_one();
-        }
-    };
-    exec::stop_callback_for_t<Token, Callback> cb(token, &cond);
-    ::std::mutex lock;
+    stop_callback_for_t cb(token, [&cond]{ cond.notify_one(); });
 
+    ::std::mutex lock;
     ::std::unique_lock guard(lock);
     cond.wait(guard, [token]{ return token.stop_requested(); });
-    print("inactive thread done\n");
+    print("inactive thread done (condition_variable)\n");
 }
+#endif
 
 auto main() -> int
 {

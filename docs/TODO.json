@@ -15,5 +15,7 @@
     "stopsource.cons": { "code":true, "test":true, "doc":true },
     "stopsource.mem": { "code":true, "test":true, "doc":true },
     "stopcallback": { "code":true, "test":true, "doc":true, "comment":"empty" },
+    "stopcallback.general": { "code":true, "test":true, "doc":true, "comment":"empty" },
+    "stopcallback.cons": { "code":true, "test":true, "doc":true, "comment":"empty" },
     "": {}
 }

@@ -10,6 +10,7 @@
 #include <memory>
 #include <mutex>
 #include <thread>
+#include <type_traits>
 #include <utility>
 
 namespace beman::inline cpp26
@@ -83,6 +84,8 @@ namespace beman::inline cpp26
     class stop_token;
     class stop_source;
     template<typename CallbackFun> class stop_callback;
+    template <typename CallbackFun>
+    stop_callback(::beman::cpp26::stop_token, CallbackFun) -> stop_callback<CallbackFun>;
 
     struct nostopstate_t {
         explicit nostopstate_t() = default;
@@ -126,8 +129,8 @@ public:
     auto setup() -> void;
     auto deregister() -> void;
 
-    stop_callback_base*              next{};
-    ::std::atomic<::std::thread::id> id{};
+    stop_callback_base* next{};
+    ::std::thread::id   id{};
 };
 
 // ----------------------------------------------------------------------------
@@ -187,17 +190,34 @@ class beman::cpp26::stop_callback final
     , beman::cpp26::detail::stop_callback_base
 {
 private:
+    static_assert(::std::invocable<CallbackFun>);
+    static_assert(::std::destructible<CallbackFun>);
+
+    using stop_token = ::beman::cpp26::stop_token;
+
     auto do_call() -> void override
     {
         (*this)();
     }
 
 public:
-    using stop_token = ::beman::cpp26::stop_token;
+    using callback_type = CallbackFun;
 
-    stop_callback(stop_token const& token, auto init)
-        : CallbackFun(::std::move(init))
+    template <typename Initializer>
+    stop_callback(stop_token const& token, Initializer&& init)
+        noexcept(::std::is_nothrow_constructible_v<CallbackFun, Initializer>)
+        requires(::std::constructible_from<CallbackFun, Initializer>)
+        : CallbackFun(::std::forward<Initializer>(init))
         , stop_callback_base(token)
+    {
+        this->setup();
+    }
+    template <typename Initializer>
+    stop_callback(stop_token&& token, Initializer&& init)
+        noexcept(::std::is_nothrow_constructible_v<CallbackFun, Initializer>)
+        requires(::std::is_constructible_v<CallbackFun, Initializer>)
+        : CallbackFun(::std::forward<Initializer>(init))
+        , stop_callback_base(::std::move(token))
     {
         this->setup();
     }
@@ -205,6 +225,7 @@ public:
     {
         this->deregister();
     }
+    stop_callback(stop_callback&&) = delete;
 };
 
 // ----------------------------------------------------------------------------
@@ -215,40 +236,46 @@ inline beman::cpp26::detail::stop_callback_base::stop_callback_base(
 {
 }
 
-inline auto beman::cpp26::detail::stop_callback_base::setup() -> void
-{
-    {
-        ::std::lock_guard guard(this->state->lock);
-        if (!this->state->stop_requested)
-        {
-            this->next = ::std::exchange(this->state->callbacks, this);
-            return;
-        }
-    }
-    this->call();
-}
-
 inline beman::cpp26::detail::stop_callback_base::~stop_callback_base()
 {
 }
 
+inline auto beman::cpp26::detail::stop_callback_base::setup() -> void
+{
+    if (this->state)
+    {
+        {
+            ::std::lock_guard guard(this->state->lock);
+            if (!this->state->stop_requested)
+            {
+                this->next = ::std::exchange(this->state->callbacks, this);
+                return;
+            }
+        }
+        this->call();
+    }
+}
+
 inline auto beman::cpp26::detail::stop_callback_base::deregister() -> void
 {
-    ::std::unique_lock guard(this->state->lock);
-    if (this->state->executing && this->id != ::std::this_thread::get_id())
+    if (this->state)
     {
-        using lock_again = decltype([](auto p){ p->lock(); });
-        ::std::unique_ptr<decltype(guard), lock_again> relock(&guard);
-        relock->unlock();
-        while (this->state->executing)
-            ;
-    }
-    for (auto next = &this->state->callbacks; *next; next = &this->next)
-    {
-        if (*next == this)
+        ::std::unique_lock guard(this->state->lock);
+        if (this->state->executing && this->id != ::std::this_thread::get_id())
         {
-            *next = this->next;
-            break;
+            using lock_again = decltype([](auto p){ p->lock(); });
+            ::std::unique_ptr<decltype(guard), lock_again> relock(&guard);
+            relock->unlock();
+            while (this->state->executing)
+                ;
+        }
+        for (auto next = &this->state->callbacks; *next; next = &this->next)
+        {
+            if (*next == this)
+            {
+                *next = this->next;
+                break;
+            }
         }
     }
 }
