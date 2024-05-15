@@ -3,8 +3,8 @@
 
 #include <beman/stop_token.hpp>
 #include <condition_variable>
+#include <iostream>
 #include <mutex>
-#include <print>
 #include <thread>
 
 namespace exec = beman::cpp26;
@@ -37,6 +37,14 @@ namespace exec = beman::cpp26;
 // threads are started stopping is requested and the threads
 // are joined.
 
+// std::print isn't available every, yet. Let's try a simple placeholder.
+void print(std::string_view text, auto&&...)
+{
+    static ::std::mutex lock;
+    std::lock_guard     guard(lock);
+    ::std::cout << text << "\n";
+}
+
 template <typename Token>
 auto active(Token token) -> void
 {
@@ -46,7 +54,7 @@ auto active(Token token) -> void
         // do work
         ++i;
     }
-    ::std::print("active thread done: {}\n" , i);
+    print("active thread done: {}\n" , i);
 }
 
 template <typename Token>
@@ -67,7 +75,7 @@ auto inactive(Token token) -> void
 
     ::std::unique_lock guard(lock);
     cond.wait(guard, [token]{ return token.stop_requested(); });
-    ::std::print("inactive thread done\n");
+    print("inactive thread done\n");
 }
 
 auto main() -> int
@@ -76,11 +84,11 @@ auto main() -> int
     ::std::thread act([&]{ active(source.get_token()); });
     ::std::thread inact([&]{ inactive(source.get_token()); });
 
-    ::std::print("threads started\n");
+    print("threads started\n");
     source.request_stop();
-    ::std::print("threads cancelled\n");
+    print("threads cancelled\n");
 
     act.join();
     inact.join();
-    ::std::print("done\n");
+    print("done\n");
 }
