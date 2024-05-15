@@ -2,26 +2,25 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <beman/stop_token.hpp>
-#include <iostream>
-#include <thread>
-#include <mutex>
 #include <condition_variable>
+#include <mutex>
+#include <print>
+#include <thread>
 
 namespace exec = beman::cpp26;
 
 template <typename Token>
-auto active(Token token, auto& outlock) -> void
+auto active(Token token) -> void
 {
     auto i{0ull};
     while (not token.stop_requested())
         // do work
         ++i;
-    std::lock_guard guard(outlock);
-    ::std::cout << "active done: i=" << i << "\n";
+    ::std::print("active thread done: {}\n" , i);
 }
 
 template <typename Token>
-auto inactive(Token token, auto& outlock) -> void
+auto inactive(Token token) -> void
 {
     ::std::condition_variable cond;
     struct Callback
@@ -38,24 +37,20 @@ auto inactive(Token token, auto& outlock) -> void
 
     ::std::unique_lock guard(lock);
     cond.wait(guard, [token]{ return token.stop_requested(); });
-    std::lock_guard oguard(outlock);
-    std::cout << "inactive done\n";
+    ::std::print("inactive thread done\n");
 }
 
 auto main() -> int
 {
     exec::stop_source source;
-    std::mutex        outlock;
-    ::std::thread act([&]{ active(source.get_token(), outlock); });
-    ::std::thread inact([&]{ inactive(source.get_token(), outlock); });
+    ::std::thread act([&]{ active(source.get_token()); });
+    ::std::thread inact([&]{ inactive(source.get_token()); });
 
-
-    { std::lock_guard guard(outlock); ::std::cout << "threads started\n"; }
-
+    ::std::print("threads started\n");
     source.request_stop();
+    ::std::print("threads cancelled\n");
 
-    { std::lock_guard guard(outlock); ::std::cout << "threads cancelled\n"; }
     act.join();
     inact.join();
-    { std::lock_guard guard(outlock); ::std::cout << "done\n"; }
+    ::std::print("done\n");
 }
