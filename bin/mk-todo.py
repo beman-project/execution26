@@ -23,8 +23,9 @@ with open("docs/TODO.md", "w") as todo:
     print(f"| ------- |:----:|:----:|:---:| ------- |", file=todo)
     for name in list:
         node = json.get(name, {})
-        code = "&#9745;" if node.get("code", False) else "&#9744;"
-        test = "&#9745;" if node.get("test", False) else "&#9744;"
-        doc  = "&#9745;" if node.get("doc", False) else "&#9744;"
-        comment = node.get("comment", "")
-        print(f"| [[{name}]({url}#{name})] | {code} | {test} | {doc} | {comment} |", file=todo) 
+        if not node.get("removed", False):
+            code = "&#9745;" if node.get("code", False) else "&#9744;"
+            test = "&#9745;" if node.get("test", False) else "&#9744;"
+            doc  = "&#9745;" if node.get("doc", False) else "&#9744;"
+            comment = node.get("comment", "")
+            print(f"| [[{name}]({url}#{name})] | {code} | {test} | {doc} | {comment} |", file=todo) 

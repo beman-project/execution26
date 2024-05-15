@@ -4,7 +4,7 @@
 SANITIZERS = none asan usan tsan
 .PHONY: default todo distclean clean build test all $(SANITIZERS)
 
-CXX_FLAGS = -O3
+CXX_FLAGS = -g
 SANITIZER = none
 BUILDROOT = build
 BUILD     = $(BUILDROOT)/none

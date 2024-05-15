@@ -5,5 +5,5 @@
 
 auto main() -> int
 {
-    // section [thread] is empty
+    // section [stoptoken] is empty
 }
