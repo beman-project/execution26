@@ -19,6 +19,10 @@ auto operator delete(void* ptr) noexcept -> void
 {
     ::std::free(ptr);
 }
+auto operator delete(void* ptr, ::std::size_t) noexcept -> void
+{
+    ::std::free(ptr);
+}
 
 auto main() -> int
 {
