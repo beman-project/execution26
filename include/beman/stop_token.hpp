@@ -230,6 +230,23 @@ public:
 
 // ----------------------------------------------------------------------------
 
+class beman::cpp26::never_stop_token
+{
+    struct private_callback_type
+    {
+        explicit private_callback_type(never_stop_token, auto&&) noexcept {}
+    };
+public:
+    template <typename>
+    using callback_type = private_callback_type;
+
+    static constexpr auto stop_requested()noexcept  -> bool { return {}; }
+    static constexpr auto stop_possible()noexcept  -> bool { return {}; }
+    auto operator== (never_stop_token const&) const -> bool = default;
+};
+
+// ----------------------------------------------------------------------------
+
 inline beman::cpp26::detail::stop_callback_base::stop_callback_base(
     ::beman::cpp26::stop_token const& token)
     : state(token.state)

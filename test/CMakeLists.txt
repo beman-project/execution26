@@ -19,6 +19,8 @@ list(APPEND execution_tests
     stopcallback.pass
     stopcallback-general.pass
     stopcallback-cons.pass
+    stoptoken-never.pass
+    stoptoken-never-general.pass
 )
 
 foreach(test ${execution_tests})
