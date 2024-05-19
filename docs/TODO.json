@@ -19,5 +19,15 @@
     "stopcallback.cons": { "code":true, "test":true, "doc":false },
     "stoptoken.never": { "code":true, "test":true, "doc":true, "comment":"empty" },
     "stoptoken.never.general": { "code":true, "test":true, "doc":false },
+    "stoptoken.inplace": { "code":true, "test":true, "doc":true, "comment":"empty" },
+    "stoptoken.inplace.general": { "code":true, "test":true, "doc":false },
+    "stoptoken.inplace.members": { "code":true, "test":true, "doc":false },
+    "stopsource.inplace": { "code":true, "test":true, "doc":true, "comment":"empty" },
+    "stopsource.inplace.general": { "code":true, "test":true, "doc":false },
+    "stopsource.inplace.cons": { "code":true, "test":true, "doc":false },
+    "stopsource.inplace.mem": { "code":true, "test":true, "doc":false },
+    "stopcalllback.inplace": { "code":true, "test":true, "doc":true, "comment":"empty" },
+    "stopcalllback.inplace.general": { "code":true, "test":true, "doc":false },
+    "stopcalllback.inplace.cons": { "code":true, "test":true, "doc":false },
     "": {}
 }
