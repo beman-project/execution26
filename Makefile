@@ -1,7 +1,7 @@
 # Copyright © 2024 Beman Project
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-SANITIZERS = none asan usan tsan
+SANITIZERS = none msan asan usan tsan
 .PHONY: default todo distclean clean build test all $(SANITIZERS)
 
 CXX_FLAGS = -g
@@ -11,6 +11,10 @@ BUILD     = $(BUILDROOT)/none
 
 ifeq ($(SANITIZER),none)
     CXX_FLAGS = -O3 -pedantic -Wall -Wextra -Werror
+endif
+ifeq ($(SANITIZER),usan)
+    SAN_FLAGS = -fsanitize=memory
+    BUILD     = $(BUILDROOT)/msan
 endif
 ifeq ($(SANITIZER),asan)
     SAN_FLAGS = -fsanitize=address -fsanitize=pointer-compare -fsanitize=pointer-subtract -fsanitize-address-use-after-scope
@@ -35,17 +39,8 @@ default: test
 all: $(SANITIZERS)
 
 none: test
-asan:
-	$(MAKE) SANITIZER=asan
-
-usan:
-	$(MAKE) SANITIZER=usan
-
-tsan:
-	$(MAKE) SANITIZER=tsan
-
-lsan:
-	$(MAKE) SANITIZER=lsan
+$(SANITIZERS):
+	$(MAKE) SANITIZER=$@
 
 build:
 	@mkdir -p $(BUILD)
