@@ -311,7 +311,13 @@ public:
     template <typename Init>
     inplace_stop_callback(::beman::cpp26::inplace_stop_token, Init&&);
     inplace_stop_callback(inplace_stop_callback&&) = delete;
-    inline ~inplace_stop_callback();
+    ~inplace_stop_callback()
+    {
+        if (this->source)
+        {
+            this->source->deregister(this);
+        }
+    }
 
 private:
     auto call() -> void override;
@@ -576,15 +582,6 @@ inline beman::cpp26::inplace_stop_callback<CallbackFun>::inplace_stop_callback(
     if (this->source)
     {
         this->source->add(this);
-    }
-}
-
-template <typename CallbackFun>
-inline beman::cpp26::inplace_stop_callback<CallbackFun>::~inplace_stop_callback<CallbackFun>()
-{
-    if (this->source)
-    {
-        this->source->deregister(this);
     }
 }
 
