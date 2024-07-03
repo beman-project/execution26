@@ -42,9 +42,12 @@ none: test
 $(SANITIZERS):
 	$(MAKE) SANITIZER=$@
 
+SYSROOT = -DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.sdk
+TOOLCHAIN = -DCMAKE_TOOLCHAIN_FILE=$(CURDIR)/etc/clang-toolchain.cmake
+
 build:
 	@mkdir -p $(BUILD)
-	cd $(BUILD); CC=$(CXX) cmake ../.. -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
+	cd $(BUILD); CC=$(CXX) cmake ../.. $(TOOLCHAIN) $(SYSROOT) -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 	cmake --build $(BUILD)
 
 test: build
