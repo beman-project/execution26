@@ -1,10 +1,10 @@
-// Copyright © 2024 Beman Project
+// include/test/execution.hpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_TEST_EXECUTION
 #define INCLUDED_TEST_EXECUTION
 
-#include <beman/stop_token.hpp>
+#include <Beman/Execution26/stop_token.hpp>
 #include <cassert>
 #include <cstddef>
 
