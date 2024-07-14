@@ -6,6 +6,7 @@
 set(BEMAN_OPTIONAL26_LIBRARY "beman_execution26")
 
 include(GNUInstallDirs)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
 set(EXAMPLES
   stop_token
