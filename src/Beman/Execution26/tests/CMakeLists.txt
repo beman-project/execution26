@@ -33,6 +33,7 @@ list(APPEND execution_tests
     stopcallback-inplace-cons.pass
 )
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../../include)
 foreach(test ${execution_tests})
     add_executable(${test} ${test}.cpp)
     target_include_directories(
