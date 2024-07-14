@@ -33,13 +33,13 @@ list(APPEND execution_tests
     stopcallback-inplace-cons.pass
 )
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../../include)
+include_directories(${beman_execution26_SOURCE_DIR}/include)
 foreach(test ${execution_tests})
     add_executable(${test} ${test}.cpp)
     target_include_directories(
       "${test}"
       PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../../../include>
+        $<BUILD_INTERFACE:${beman_execution26_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${CMAKE_LOWER_PROJECT_NAME}>
     )
     add_test(NAME ${test} COMMAND $<TARGET_FILE:${test}>)
