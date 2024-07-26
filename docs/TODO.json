@@ -1,6 +1,11 @@
 {
+    "exec.get.env": { "code":true, "test":true, "doc":false },
+    "exec.set.error": { "code":true, "test":true, "doc":false },
+    "exec.set.stopped": { "code":true, "test":true, "doc":false },
+    "exec.set.value": { "code":true, "test":true, "doc":false },
     "utilities": { "code":true, "test":true, "doc":true, "comment":"empty" },
     "function.objects": { "code":true, "test":true, "doc":true, "comment":"empty" },
+    "functional.syn": { "code":true, "test":true, "doc":false },
     "thread": { "code":true, "test":true, "doc":true, "comment":"empty" },
     "thread.stoptoken": { "code":true, "test":true, "doc":true, "comment":"empty" },
     "thread.stoptoken.intro": { "code":true, "test":true, "doc":false },

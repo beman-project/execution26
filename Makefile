@@ -43,7 +43,7 @@ $(SANITIZERS):
 	$(MAKE) SANITIZER=$@
 
 SYSROOT = -DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.sdk
-TOOLCHAIN = -DCMAKE_TOOLCHAIN_FILE=$(CURDIR)/etc/gcc-toolchain.cmake
+# TOOLCHAIN = -DCMAKE_TOOLCHAIN_FILE=$(CURDIR)/etc/gcc-toolchain.cmake
 
 build:
 	@mkdir -p $(BUILD)

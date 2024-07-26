@@ -8,8 +8,11 @@
 #include <cassert>
 #include <cstddef>
 
+namespace Beman::Execution26 {}
+
 namespace test_std    = ::beman::cpp26;
 namespace test_detail = ::beman::cpp26::detail;
+namespace test_ex     = ::Beman::Execution26;
 
 namespace test
 {

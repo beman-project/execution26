@@ -7,7 +7,7 @@ import re
 import urllib.request
 
 #-dk:TODO get from http://wg21.link/
-url = "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r9.html"
+url = "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html"
 
 with urllib.request.urlopen(url) as f:
     html = f.read().decode('utf-8')
