@@ -1,4 +1,4 @@
-// Copyright © 2024 Beman Project
+// examples/stop_token.cpp
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <Beman/Execution26/stop_token.hpp>
@@ -8,7 +8,7 @@
 #include <mutex>
 #include <thread>
 
-namespace exec = beman::cpp26;
+namespace exec = Beman::Execution26;
 
 // The stop token classes are used to cancel work. Each
 // stop token may be connected to a stop source on which

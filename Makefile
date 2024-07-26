@@ -1,4 +1,4 @@
-# Copyright © 2024 Beman Project
+# Makefile
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 SANITIZERS = none msan asan usan tsan

@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# Copyright © 2024 Beman Project
+# bin/mk-tody.py
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 import json

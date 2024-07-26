@@ -1,4 +1,4 @@
-// Copyright © 2024 Beman Project
+// src/Beman/Execution26/tests/stoptoken-inplace-members.pass.cpp
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include "test/execution.hpp"
@@ -12,7 +12,7 @@ auto test_inplace_stop_token_swap() -> void
     // - Then they compare equal to the respective opposite source's  token.
     // Reference: [stoptoken.inplace.members] p1
 
-    ::beman::cpp26::inplace_stop_source source1, source2;
+    ::test_std::inplace_stop_source source1, source2;
     auto token1(source1.get_token());
     auto token2(source2.get_token());
 

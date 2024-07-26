@@ -27,22 +27,22 @@ namespace
     auto test_callable() -> void
     {
         // can be called with non-const rvalue receiver
-        static_assert(requires{ test_ex::set_stopped(std::declval<R>()); });
-        static_assert(requires{ test_ex::set_stopped(std::declval<R&&>()); });
+        static_assert(requires{ test_std::set_stopped(std::declval<R>()); });
+        static_assert(requires{ test_std::set_stopped(std::declval<R&&>()); });
 
         // cannot be called with const or lvalue receiver
-        static_assert(not requires{ test_ex::set_stopped(std::declval<R const>()); });
-        static_assert(not requires{ test_ex::set_stopped(std::declval<R const&&>()); });
-        static_assert(not requires{ test_ex::set_stopped(std::declval<R&>()); });
-        static_assert(not requires{ test_ex::set_stopped(std::declval<R const&>()); });
-        static_assert(not requires{ test_ex::set_stopped(std::declval<R volatile&>()); });
-        static_assert(not requires{ test_ex::set_stopped(std::declval<R const volatile&>()); });
+        static_assert(not requires{ test_std::set_stopped(std::declval<R const>()); });
+        static_assert(not requires{ test_std::set_stopped(std::declval<R const&&>()); });
+        static_assert(not requires{ test_std::set_stopped(std::declval<R&>()); });
+        static_assert(not requires{ test_std::set_stopped(std::declval<R const&>()); });
+        static_assert(not requires{ test_std::set_stopped(std::declval<R volatile&>()); });
+        static_assert(not requires{ test_std::set_stopped(std::declval<R const volatile&>()); });
     }
 
     template <typename R>
     auto test_noexcept() -> void
     {
-        static_assert(not requires{ test_ex::set_stopped(R()); });
+        static_assert(not requires{ test_std::set_stopped(R()); });
     }
 }
 
@@ -50,15 +50,15 @@ namespace
 
 auto main() -> int
 {
-    static_assert(std::semiregular<test_ex::set_stopped_t>);
-    static_assert(std::same_as<test_ex::set_stopped_t const, decltype(test_ex::set_stopped)>);
+    static_assert(std::semiregular<test_std::set_stopped_t>);
+    static_assert(std::same_as<test_std::set_stopped_t const, decltype(test_std::set_stopped)>);
 
     test_callable<receiver>();
     test_noexcept<receiver_throwing>();
 
     bool called{false};
     assert(not called);
-    test_ex::set_stopped(receiver{&called});
+    test_std::set_stopped(receiver{&called});
     assert(called);
 
 }

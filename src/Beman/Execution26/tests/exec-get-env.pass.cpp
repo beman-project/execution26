@@ -39,17 +39,17 @@ namespace
 
 auto main() -> int
 {
-    static_assert(std::semiregular<test_ex::empty_env>);
+    static_assert(std::semiregular<test_std::empty_env>);
 
-    static_assert(std::semiregular<test_ex::get_env_t>);
-    static_assert(std::same_as<test_ex::get_env_t const, decltype(test_ex::get_env)>);
+    static_assert(std::semiregular<test_std::get_env_t>);
+    static_assert(std::same_as<test_std::get_env_t const, decltype(test_std::get_env)>);
 
-    auto e0 = test_ex::get_env(0);
-    static_assert(std::same_as<test_ex::empty_env, decltype(e0)>);
-    auto e1 = test_ex::get_env(non_const{});
-    static_assert(std::same_as<test_ex::empty_env, decltype(e1)>);
-    auto e2 = test_ex::get_env(normal<test_env>{});
+    auto e0 = test_std::get_env(0);
+    static_assert(std::same_as<test_std::empty_env, decltype(e0)>);
+    auto e1 = test_std::get_env(non_const{});
+    static_assert(std::same_as<test_std::empty_env, decltype(e1)>);
+    auto e2 = test_std::get_env(normal<test_env>{});
     static_assert(std::same_as<test_env, decltype(e2)>);
-    //-dk:TODO add negative compilation test: auto e3 = test_ex::get_env(normal<test_env, false>{});
-    //-dk:TODO add negative compilation test: auto e4 = test_ex::get_env(with_non_env{});
+    //-dk:TODO add negative compilation test: auto e3 = test_std::get_env(normal<test_env, false>{});
+    //-dk:TODO add negative compilation test: auto e4 = test_std::get_env(with_non_env{});
 }

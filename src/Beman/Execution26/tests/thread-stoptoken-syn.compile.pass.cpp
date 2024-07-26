@@ -1,4 +1,4 @@
-// Copyright © 2024 Beman Project
+// src/Beman/Execution26/tests/thread-stoptoken-syn.compile.pass.cpp
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <Beman/Execution26/stop_token.hpp>
@@ -23,8 +23,8 @@ auto main() -> int
     // - Then the compiler should OK doing so.
     // Reference: [thread.stoptoken.syn]
 
-    static_assert((not ::test_std::detail::stoppable_callback_for<int, int, int>));
-    static_assert((not ::test_std::detail::stoppable_source<int>));
+    static_assert((not ::test_detail::stoppable_callback_for<int, int, int>));
+    static_assert((not ::test_detail::stoppable_source<int>));
 
     static_assert((not ::test_std::stoppable_token<int>));
     static_assert((not ::test_std::unstoppable_token<int>));

@@ -34,35 +34,35 @@ namespace
     template <typename R>
     void test_callable()
     {
-        static_assert(requires{ test_ex::set_error(std::declval<R>(), 42); });
-        static_assert(requires{ test_ex::set_error(std::declval<R&&>(), 42); });
+        static_assert(requires{ test_std::set_error(std::declval<R>(), 42); });
+        static_assert(requires{ test_std::set_error(std::declval<R&&>(), 42); });
 
-        static_assert(not requires{ test_ex::set_error(std::declval<R const>(), 42); });
-        static_assert(not requires{ test_ex::set_error(std::declval<R const&&>(), 42); });
-        static_assert(not requires{ test_ex::set_error(std::declval<R&>(), 42); });
-        static_assert(not requires{ test_ex::set_error(std::declval<R const&>(), 42); });
-        static_assert(not requires{ test_ex::set_error(std::declval<R volatile&>(), 42); });
-        static_assert(not requires{ test_ex::set_error(std::declval<R const volatile&>(), 42); });
+        static_assert(not requires{ test_std::set_error(std::declval<R const>(), 42); });
+        static_assert(not requires{ test_std::set_error(std::declval<R const&&>(), 42); });
+        static_assert(not requires{ test_std::set_error(std::declval<R&>(), 42); });
+        static_assert(not requires{ test_std::set_error(std::declval<R const&>(), 42); });
+        static_assert(not requires{ test_std::set_error(std::declval<R volatile&>(), 42); });
+        static_assert(not requires{ test_std::set_error(std::declval<R const volatile&>(), 42); });
     }
 
     template <typename R>
     auto test_noexcept()
     {
-        static_assert(requires{ test_ex::set_error(std::declval<R>(), arg()); });
-        static_assert(not requires{ test_ex::set_error(std::declval<R>(), throws()); });
-        static_assert(not requires{ test_ex::set_error(std::declval<R>(), arg_throwing()); });
+        static_assert(requires{ test_std::set_error(std::declval<R>(), arg()); });
+        static_assert(not requires{ test_std::set_error(std::declval<R>(), throws()); });
+        static_assert(not requires{ test_std::set_error(std::declval<R>(), arg_throwing()); });
     }
 }
 
 auto main() -> int
 {
-    static_assert(std::semiregular<test_ex::set_error_t>);
-    static_assert(std::same_as<test_ex::set_error_t const, decltype(test_ex::set_error)>);
+    static_assert(std::semiregular<test_std::set_error_t>);
+    static_assert(std::same_as<test_std::set_error_t const, decltype(test_std::set_error)>);
 
     test_callable<receiver>();
 
-    test_ex::set_error(receiver{}, 42);
-    test_ex::set_error(receiver{}, arg{43});
+    test_std::set_error(receiver{}, 42);
+    test_std::set_error(receiver{}, arg{43});
 
     test_noexcept<receiver>();
 }

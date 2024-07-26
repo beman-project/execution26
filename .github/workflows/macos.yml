@@ -1,4 +1,4 @@
-# Copyright © 2024 Beman Project
+# .github/workflows/macos.yml
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 name: Macos Build

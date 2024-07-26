@@ -10,9 +10,8 @@
 
 namespace Beman::Execution26 {}
 
-namespace test_std    = ::beman::cpp26;
-namespace test_detail = ::beman::cpp26::detail;
-namespace test_ex     = ::Beman::Execution26;
+namespace test_std    = ::Beman::Execution26;
+namespace test_detail = ::Beman::Execution26::Detail;
 
 namespace test
 {

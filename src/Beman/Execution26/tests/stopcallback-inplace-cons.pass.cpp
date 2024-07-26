@@ -1,4 +1,4 @@
-// Copyright © 2024 Beman Project
+// src/Beman/Execution26/tests/stopcallback-inplace-cons.pass.cpp
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <Beman/Execution26/stop_token.hpp>

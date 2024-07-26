@@ -10,7 +10,7 @@ namespace
 {
     template <typename T>
     concept has_foo
-        = test_ex::Detail::queryable<T>
+        = test_std::Detail::queryable<T>
         && requires(T t) { t.foo; }
         ;
 
@@ -38,8 +38,8 @@ namespace
 
 auto main() -> int
 {
-    static_assert(test_ex::Detail::queryable<int>);
-    static_assert(not test_ex::Detail::queryable<non_destructible>);
+    static_assert(test_std::Detail::queryable<int>);
+    static_assert(not test_std::Detail::queryable<non_destructible>);
 
     assert(f(0) == 0);
     assert(f(bar{}) == 1);
