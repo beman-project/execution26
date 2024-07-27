@@ -16,6 +16,9 @@ json = json.loads(open("docs/TODO.json").read())
 
 list = re.findall('<a class="self-link" href="#spec-([^"]*)">', html)
 
+fail = "&#x2705;"  # "&#9744;"
+ok   = "&#x1F534;" # "&#9745;"
+
 with open("docs/TODO.md", "w") as todo:
     print(f"# ToDo ", file=todo)
     print(f"", file=todo)
@@ -24,8 +27,8 @@ with open("docs/TODO.md", "w") as todo:
     for name in list:
         node = json.get(name, {})
         if not node.get("removed", False):
-            code = "&#9745;" if node.get("code", False) else "&#9744;"
-            test = "&#9745;" if node.get("test", False) else "&#9744;"
-            doc  = "&#9745;" if node.get("doc", False) else "&#9744;"
+            code = fail if node.get("code", False) else ok
+            test = fail if node.get("test", False) else ok
+            doc  = fail if node.get("doc",  False) else ok
             comment = node.get("comment", "")
             print(f"| [[{name}]({url}#{name})] | {code} | {test} | {doc} | {comment} |", file=todo) 
