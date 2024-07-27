@@ -9,6 +9,13 @@
 #include <Beman/Execution26/detail/queryable.hpp>
 #include <Beman/Execution26/detail/get_env.hpp>
 
+#include <Beman/Execution26/detail/completion_signature.hpp>
+#include <Beman/Execution26/detail/completion_signatures.hpp>
+#include <Beman/Execution26/detail/valid_completion_signatures.hpp>
+#include <Beman/Execution26/detail/movable_value.hpp>
+#include <Beman/Execution26/detail/matching_sig.hpp>
+#include <Beman/Execution26/detail/as_except_ptr.hpp>
+
 #include <Beman/Execution26/detail/receiver.hpp>
 #include <Beman/Execution26/detail/valid_completion_for.hpp>
 #include <Beman/Execution26/detail/set_value.hpp>

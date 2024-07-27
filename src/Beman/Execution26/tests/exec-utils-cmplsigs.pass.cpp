@@ -1,9 +1,6 @@
 // src/Beman/Execution26/tests/exec-utils-cmplsigs.pass.cpp           -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <Beman/Execution26/detail/completion_signature.hpp>
-#include <Beman/Execution26/detail/completion_signatures.hpp>
-#include <Beman/Execution26/detail/valid_completion_signatures.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 
@@ -74,4 +71,11 @@ auto main() -> int
     test_completion_signature();
     test_completion_signatures();
     test_valid_completion_signatures();
+    //-dk:TODO add other components mentioned by [exec.utils.cmplsigs]:
+    //-dk:TODO test indirect_meta_apply
+    //-dk:TODO test always_true
+    //-dk:TODO test gather-signatures
+    //-dk:TODO test value_types_of_t
+    //-dk:TODO test error_types_of_t
+    //-dk:TODO test sends_stopped
 }
