@@ -1,6 +1,10 @@
 {
+    "allocator.requirements.general": { "code":true, "test":true, "doc":false },
     "execution": { "code":true, "test":true, "doc":true, "comment":"empty" },
     "execution.queries": { "code":true, "test":true, "doc":true, "comment":"empty" },
+    "execution.queryable": { "code":true, "test":true, "doc":true, "comment":"empty" },
+    "execution.queryable.general]": { "code":true, "test":true, "doc":false, "comment":"nothing testable" },
+    "execution.queryable.concepts": { "code":true, "test":true, "doc":false },
     "execution.receivers": { "code":true, "test":true, "doc":true, "comment":"empty" },
     "execution.senders": { "code":true, "test":true, "doc":true, "comment":"empty" },
     "execution.senders.factories": { "code":true, "test":true, "doc":true, "comment":"empty" },
