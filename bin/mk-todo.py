@@ -15,6 +15,8 @@ with urllib.request.urlopen(url) as f:
 json = json.loads(open("docs/TODO.json").read())
 
 list = re.findall('<a class="self-link" href="#spec-([^"]*)">', html)
+list.append("allocator.requirements.general")
+list.append("exec.awaitables")
 
 fail = "&#x2705;"  # "&#9744;"
 ok   = "&#x1F534;" # "&#9745;"

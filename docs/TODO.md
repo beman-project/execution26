@@ -41,14 +41,14 @@
 | [[stopcallback.inplace](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#stopcallback.inplace)] | &#x2705; | &#x2705; | &#x2705; | empty |
 | [[stopcallback.inplace.general](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#stopcallback.inplace.general)] | &#x2705; | &#x2705; | &#x1F534; |  |
 | [[stopcallback.inplace.cons](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#stopcallback.inplace.cons)] | &#x2705; | &#x2705; | &#x1F534; |  |
-| [[execution](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
-| [[execution.general](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.general)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
+| [[execution](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution)] | &#x2705; | &#x2705; | &#x2705; | empty |
+| [[execution.general](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.general)] | &#x2705; | &#x2705; | &#x1F534; |  |
 | [[execution.queryable](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.queryable)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.queryable.general](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.queryable.general)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.queryable.concept](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.queryable.concept)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution-async.ops](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution-async.ops)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.syn](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.syn)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
-| [[execution.queries](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.queries)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
+| [[execution.queries](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.queries)] | &#x2705; | &#x2705; | &#x2705; | empty |
 | [[execution.forwarding_query](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.forwarding_query)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.get_allocator](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.get_allocator)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.get_stop_token](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.get_stop_token)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
@@ -59,14 +59,14 @@
 | [[execution.get_forward_progress_guarantee](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.get_forward_progress_guarantee)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.get_completion_scheduler](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.get_completion_scheduler)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.schedulers](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.schedulers)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
-| [[execution.receivers](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.receivers)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
+| [[execution.receivers](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.receivers)] | &#x2705; | &#x2705; | &#x2705; | empty |
 | [[execution.receiver_concepts](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.receiver_concepts)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
-| [[execution.receivers.set_value](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.receivers.set_value)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
-| [[execution.receivers.set_error](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.receivers.set_error)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
-| [[execution.receivers.set_stopped](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.receivers.set_stopped)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
+| [[execution.receivers.set_value](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.receivers.set_value)] | &#x2705; | &#x2705; | &#x1F534; |  |
+| [[execution.receivers.set_error](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.receivers.set_error)] | &#x2705; | &#x2705; | &#x1F534; |  |
+| [[execution.receivers.set_stopped](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.receivers.set_stopped)] | &#x2705; | &#x2705; | &#x1F534; |  |
 | [[execution.opstate](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.opstate)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.opstate.start](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.opstate.start)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
-| [[execution.senders](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
+| [[execution.senders](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders)] | &#x2705; | &#x2705; | &#x2705; | empty |
 | [[execution.senders.general](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders.general)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.snd.concepts](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.snd.concepts)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.default_domain](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.default_domain)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
@@ -76,11 +76,11 @@
 | [[execution.apply_sender](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.apply_sender)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.getcomplsigs](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.getcomplsigs)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.senders.connect](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders.connect)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
-| [[execution.senders.factories](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders.factories)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
+| [[execution.senders.factories](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders.factories)] | &#x2705; | &#x2705; | &#x2705; | empty |
 | [[execution.senders.schedule](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders.schedule)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.senders.just](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders.just)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.senders.read.env](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders.read.env)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
-| [[execution.senders.adapt](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders.adapt)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
+| [[execution.senders.adapt](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders.adapt)] | &#x2705; | &#x2705; | &#x2705; | empty |
 | [[execution.senders.adapt.general](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders.adapt.general)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.senders.adaptor.objects](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders.adaptor.objects)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.senders.adapt.starts.on](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders.adapt.starts.on)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
@@ -95,16 +95,18 @@
 | [[execution.senders.adapt.into_variant](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders.adapt.into_variant)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.senders.adapt.stopped_as_optional](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders.adapt.stopped_as_optional)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.senders.adapt.stopped_as_error](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders.adapt.stopped_as_error)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
-| [[execution.senders.consumers](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders.consumers)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
+| [[execution.senders.consumers](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders.consumers)] | &#x2705; | &#x2705; | &#x2705; | empty |
 | [[execution.senders.consumers.sync_wait](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.senders.consumers.sync_wait)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
-| [[execution.snd_rec_utils](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.snd_rec_utils)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
+| [[execution.snd_rec_utils](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.snd_rec_utils)] | &#x2705; | &#x2705; | &#x2705; | empty |
 | [[execution.snd_rec_utils.completion_sigs](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.snd_rec_utils.completion_sigs)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.snd_rec_utils.transform_completion_sigs](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.snd_rec_utils.transform_completion_sigs)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
-| [[execution.contexts](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.contexts)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
+| [[execution.contexts](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.contexts)] | &#x2705; | &#x2705; | &#x2705; | empty |
 | [[execution.contexts.run_loop](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.contexts.run_loop)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.contexts.run_loop.types](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.contexts.run_loop.types)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.contexts.run_loop.ctor](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.contexts.run_loop.ctor)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.contexts.run_loop.members](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.contexts.run_loop.members)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
-| [[execution.coro_utils](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.coro_utils)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
+| [[execution.coro_utils](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.coro_utils)] | &#x2705; | &#x2705; | &#x2705; | empty |
 | [[execution.coro_utils.as_awaitable](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.coro_utils.as_awaitable)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
 | [[execution.coro_utils.with_awaitable_senders](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#execution.coro_utils.with_awaitable_senders)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
+| [[allocator.requirements.general](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#allocator.requirements.general)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
+| [[exec.awaitables](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p2300r10.html#exec.awaitables)] | &#x1F534; | &#x1F534; | &#x1F534; |  |
