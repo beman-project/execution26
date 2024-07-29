@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 list(APPEND execution_tests
+    exec-opstate.pass
+    exec-opstate-start.pass
     allocator-requirements-general.pass
     exec-general.pass
     exec-utils-cmplsigs.pass
