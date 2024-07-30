@@ -36,7 +36,7 @@ e.g.:
 
 | Library | Linux | MacOS | Windows |
 | ------- | ----- | ----- | ------- |
-| build | ![Linux build status](https://github.com/dietmarkuehl/beman-execution/actions/workflows/linux.yml/badge.svg) | ![MacOS build status](https://github.com/dietmarkuehl/beman-execution/actions/workflows/macos.yml/badge.svg) | ![Window build status](https://github.com/dietmarkuehl/beman-execution/actions/workflows/windows.yml/badge.svg) |
+| build | ![Linux build status](https://github.com/beman-project/Execution26/actions/workflows/linux.yml/badge.svg) | ![MacOS build status](https://github.com/beman-project/Execution26/actions/workflows/macos.yml/badge.svg) | ![Window build status](https://github.com/beman-project/Execution26/actions/workflows/windows.yml/badge.svg) |
 
 You can just use `make` in the current directory. It will invoke `cmake`,
 build the code, and run tests. To have more control over the build-process

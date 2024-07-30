@@ -4,6 +4,7 @@
     "execution.queries": { "code":true, "test":true, "doc":true, "comment":"empty" },
     "execution.queryable": { "code":true, "test":true, "doc":true, "comment":"empty" },
     "execution.queryable.general]": { "code":true, "test":true, "doc":false, "comment":"nothing testable" },
+    "execution.forwarding_query": { "code":true, "test":true, "doc":false },
     "execution.queryable.concepts": { "code":true, "test":true, "doc":false },
     "execution.receivers": { "code":true, "test":true, "doc":true, "comment":"empty" },
     "execution.senders": { "code":true, "test":true, "doc":true, "comment":"empty" },
