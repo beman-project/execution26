@@ -8,6 +8,8 @@
 
 #include <Beman/Execution26/detail/queryable.hpp>
 #include <Beman/Execution26/detail/forwarding_query.hpp>
+#include <Beman/Execution26/detail/get_allocator.hpp>
+#include <Beman/Execution26/detail/get_stop_token.hpp>
 #include <Beman/Execution26/detail/get_env.hpp>
 
 #include <Beman/Execution26/detail/completion_signature.hpp>
