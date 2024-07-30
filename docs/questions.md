@@ -12,3 +12,6 @@ likely observable.
 - [exec.general] use "Mandates: err != exception_ptr() is true."
     However, the condition can only be determined at run-time =>
     The "Mandates" should be "Precondition".
+- [exec.fwd.env] states "Mandates: ... is a core constant expression if
+    `q` is a core constant expression": I don't know how to possibly
+    implement that.
