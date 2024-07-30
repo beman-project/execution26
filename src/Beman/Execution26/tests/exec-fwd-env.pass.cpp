@@ -1,7 +1,6 @@
 // src/Beman/Execution26/tests/exec-fwd-env.pass.cpp                  -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <Beman/Execution26/detail/forwarding_query.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
