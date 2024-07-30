@@ -11,6 +11,7 @@
 #include <Beman/Execution26/detail/stop_callback_for_t.hpp>
 #include <Beman/Execution26/detail/stop_source.hpp>
 #include <Beman/Execution26/detail/stoppable_source.hpp>
+#include <Beman/Execution26/detail/stoppable_token.hpp>
 #include <Beman/Execution26/detail/unstoppable_token.hpp>
 
 // ----------------------------------------------------------------------------

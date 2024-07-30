@@ -1,7 +1,6 @@
-// src/Beman/Execution26/tests/exec.get.allocator.pass.cpp            -*-C++-*-
+// src/Beman/Execution26/tests/exec-get-allocator.pass.cpp            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <Beman/Execution26/detail/get_allocator.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
