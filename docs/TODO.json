@@ -7,7 +7,7 @@
     "execution.forwarding_query": { "code":true, "test":true, "doc":false },
     "execution.get_allocator": { "code":true, "test":true, "doc":false },
     "execution.get_stop_token": { "code":true, "test":true, "doc":false },
-    "execution.get_env": { "code":true, "test":true, "doc":false },
+    "execution.environment.get_env": { "code":true, "test":true, "doc":false },
     "execution.get_domain": { "code":true, "test":true, "doc":false },
     "execution.queryable.concepts": { "code":true, "test":true, "doc":false },
     "execution.receivers": { "code":true, "test":true, "doc":true, "comment":"empty" },
