@@ -15,3 +15,6 @@ likely observable.
 - [exec.fwd.env] states "Mandates: ... is a core constant expression if
     `q` is a core constant expression": I don't know how to possibly
     implement that.
+- [exec.snd.expos] uses query-or-default; it seems only query-with-default
+    is defined.
+- [exec.snd.concepts] "The type tag_of_t<Sndr> is +defined+ as follows:"

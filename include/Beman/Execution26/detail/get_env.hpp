@@ -5,6 +5,7 @@
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_GET_ENV
 
 #include <Beman/Execution26/detail/queryable.hpp>
+#include <Beman/Execution26/detail/empty_env.hpp>
 #include <type_traits>
 #include <utility>
 
@@ -12,8 +13,6 @@
 
 namespace Beman::Execution26
 {
-    struct empty_env {};
-
     struct get_env_t
     {
         template <typename Object>
