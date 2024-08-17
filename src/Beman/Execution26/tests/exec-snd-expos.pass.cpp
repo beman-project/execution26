@@ -5,6 +5,7 @@
 
 #include <Beman/Execution26/detail/query_with_default.hpp>
 #include <Beman/Execution26/detail/fwd_env.hpp>
+#include <Beman/Execution26/detail/make_env.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
@@ -27,6 +28,13 @@ namespace
     {
     } forwardable;
     struct non_forwardable_t {};
+
+    constexpr struct custom_query_t {} custom_query;
+    struct custom_result
+    {
+        int value;
+        auto operator== (custom_result const&) const -> bool = default;
+    };
 
     struct env
     {
@@ -53,6 +61,15 @@ namespace
         assert(129 == test_detail::fwd_env(e).query(forwardable, 1, 3));
     }
 
+    auto test_make_env() -> void
+    {
+        auto env{test_detail::make_env(custom_query, custom_result{43})};
+        auto const cenv{env};
+        static_assert(test_std::Detail::queryable<decltype(env)>);
+        assert(env.query(custom_query) == custom_result{43});
+        assert(cenv.query(custom_query) == custom_result{43});
+    }
+
     auto test_query_with_default() -> void
     {
         auto result1{test_detail::query_with_default(test_std::get_domain,
@@ -72,5 +89,6 @@ namespace
 auto main() -> int
 {
     test_fwd_env();
+    test_make_env();
     test_query_with_default();
 }

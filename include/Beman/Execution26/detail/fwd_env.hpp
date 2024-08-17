@@ -16,7 +16,7 @@ namespace Beman::Execution26::Detail
     struct fwd_env
     {
         Env env;
-        fwd_env(Env env): env(::std::forward<Env>(env)) {}
+        fwd_env(Env&& env): env(::std::forward<Env>(env)) {}
 
         template <typename Query, typename... Args>
             requires (::Beman::Execution26::forwarding_query(::std::remove_cvref_t<Query>()))
@@ -25,6 +25,8 @@ namespace Beman::Execution26::Detail
             return env.query(q, ::std::forward<Args>(args)...);
         }
     };
+    template <typename Env>
+    fwd_env(Env&&) -> fwd_env<Env>;
 }
 
 // ----------------------------------------------------------------------------
