@@ -12,9 +12,12 @@
 namespace Beman::Execution26::Detail
 {
     template <typename Query, typename Value>
-    struct make_env
+    class make_env
     {
+    private:
         Value value;
+    
+    public:
         template <typename V>
         make_env(Query const&, V&& value): value(::std::forward<V>(value)) {}
         constexpr auto query(Query const&) const -> Value const& { return this->value; }

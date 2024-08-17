@@ -1,11 +1,10 @@
 // src/Beman/Execution26/tests/exe-snd-expos.pass.cpp                 -*-C++-*-
-// ----------------------------------------------------------------------------
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-// ----------------------------------------------------------------------------
 
-#include <Beman/Execution26/detail/query_with_default.hpp>
 #include <Beman/Execution26/detail/fwd_env.hpp>
 #include <Beman/Execution26/detail/make_env.hpp>
+#include <Beman/Execution26/detail/join_env.hpp>
+#include <Beman/Execution26/detail/query_with_default.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
@@ -29,7 +28,10 @@ namespace
     } forwardable;
     struct non_forwardable_t {};
 
-    constexpr struct custom_query_t {} custom_query;
+    template <int>
+    struct custom_query_t {};
+    template <int I>
+    constexpr custom_query_t<I> custom_query;
     struct custom_result
     {
         int value;
@@ -43,6 +45,21 @@ namespace
         auto query(non_forwardable_t const&) const noexcept { return true; }
         auto query(forwardable_t const&, int a, int b) const noexcept { return (value + a) * b; }
     };
+
+    struct env1
+    {
+        int value{};
+        auto query(custom_query_t<0>, int a) const { return this->value + a; }
+        auto query(custom_query_t<1>, int a) const { return this->value + a; }
+    };
+
+    struct env2
+    {
+        int value{};
+        auto query(custom_query_t<0>, int a) const { return this->value + a; }
+        auto query(custom_query_t<2>, int a) const { return this->value + a; }
+    };
+
 
     template <bool Expect, typename Query>
     auto test_fwd_env_helper() -> void
@@ -63,11 +80,54 @@ namespace
 
     auto test_make_env() -> void
     {
-        auto env{test_detail::make_env(custom_query, custom_result{43})};
+        auto env{test_detail::make_env(custom_query<0>, custom_result{43})};
         auto const cenv{env};
         static_assert(test_std::Detail::queryable<decltype(env)>);
-        assert(env.query(custom_query) == custom_result{43});
-        assert(cenv.query(custom_query) == custom_result{43});
+        assert(env.query(custom_query<0>) == custom_result{43});
+        assert(cenv.query(custom_query<0>) == custom_result{43});
+    }
+
+    template <bool Expect, typename Query, typename Env>
+    auto test_join_env(Env&& env) -> void
+    {
+        static_assert(Expect == requires{ env.query(Query(), 17); });
+    }
+    auto test_join_env() -> void
+    {
+        env1        e1{42};
+        env1 const  ce1{e1};
+        env2        e2{17};
+        env2 const  ce2{e2};
+        
+        test_join_env<true, custom_query_t<0>>(e1);
+        test_join_env<true, custom_query_t<0>>(ce1);
+        test_join_env<true, custom_query_t<1>>(e1);
+        test_join_env<true, custom_query_t<1>>(ce1);
+        test_join_env<false, custom_query_t<2>>(e1);
+        test_join_env<false, custom_query_t<2>>(ce1);
+        test_join_env<false, custom_query_t<3>>(e1);
+        test_join_env<false, custom_query_t<3>>(ce1);
+        test_join_env<true, custom_query_t<0>>(e2);
+        test_join_env<true, custom_query_t<0>>(ce2);
+        test_join_env<false, custom_query_t<1>>(e2);
+        test_join_env<false, custom_query_t<1>>(ce2);
+        test_join_env<true, custom_query_t<2>>(e2);
+        test_join_env<true, custom_query_t<2>>(ce2);
+        test_join_env<false, custom_query_t<3>>(e2);
+        test_join_env<false, custom_query_t<3>>(ce2);
+
+        auto        env{test_detail::join_env(e1, e2)};
+        auto const& cenv{env};
+        
+        static_assert(test_std::Detail::queryable<decltype(env)>);
+        test_join_env<true, custom_query_t<0>>(env);
+        test_join_env<true, custom_query_t<0>>(cenv);
+        test_join_env<true, custom_query_t<1>>(env);
+        test_join_env<true, custom_query_t<1>>(cenv);
+        test_join_env<true, custom_query_t<2>>(env);
+        test_join_env<true, custom_query_t<2>>(cenv);
+        test_join_env<false, custom_query_t<3>>(env);
+        test_join_env<false, custom_query_t<3>>(cenv);
     }
 
     auto test_query_with_default() -> void
@@ -90,5 +150,6 @@ auto main() -> int
 {
     test_fwd_env();
     test_make_env();
+    test_join_env();
     test_query_with_default();
 }
