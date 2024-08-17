@@ -5,6 +5,7 @@
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_FORWARDING_QUERY
 
 #include <concepts>
+#include <type_traits>
 #include <utility>
 
 // ----------------------------------------------------------------------------
@@ -25,7 +26,7 @@ namespace Beman::Execution26
         template <typename Object>
         constexpr auto operator()(Object&&) const noexcept -> bool
         {
-            return ::std::derived_from<Object, ::Beman::Execution26::forwarding_query_t>;
+            return ::std::derived_from<::std::remove_cvref_t<Object>, ::Beman::Execution26::forwarding_query_t>;
         }
     };
 

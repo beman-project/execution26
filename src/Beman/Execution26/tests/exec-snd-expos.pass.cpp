@@ -4,6 +4,8 @@
 #include <Beman/Execution26/detail/fwd_env.hpp>
 #include <Beman/Execution26/detail/make_env.hpp>
 #include <Beman/Execution26/detail/join_env.hpp>
+#include <Beman/Execution26/detail/sched_attrs.hpp>
+#include <Beman/Execution26/detail/sched_env.hpp>
 #include <Beman/Execution26/detail/query_with_default.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
@@ -16,6 +18,7 @@ namespace
     struct domain
     {
         int value{};
+        auto operator== (domain const&) const -> bool = default;
     };
     struct default_domain
     {
@@ -60,6 +63,15 @@ namespace
         auto query(custom_query_t<2>, int a) const { return this->value + a; }
     };
 
+    struct scheduler
+    {
+        int value{};
+        auto query(test_std::get_domain_t) const { return domain{this->value}; }
+
+        auto operator== (scheduler const&) const -> bool = default;
+    };
+
+    // ------------------------------------------------------------------------
 
     template <bool Expect, typename Query>
     auto test_fwd_env_helper() -> void
@@ -128,6 +140,55 @@ namespace
         test_join_env<true, custom_query_t<2>>(cenv);
         test_join_env<false, custom_query_t<3>>(env);
         test_join_env<false, custom_query_t<3>>(cenv);
+
+        assert(env.query(custom_query<0>, 13) == 55);
+        assert(cenv.query(custom_query<0>, 13) == 55);
+        assert(env.query(custom_query<1>, 13) == 55);
+        assert(cenv.query(custom_query<1>, 13) == 55);
+        assert(env.query(custom_query<2>, 13) == 30);
+        assert(cenv.query(custom_query<2>, 13) == 30);
+    }
+
+    auto test_sched_attrs() -> void
+    {
+        scheduler sched{17};
+        assert(sched.query(test_std::get_domain) == domain{17});
+
+        auto attrs{test_detail::sched_attrs(sched)};
+        static_assert(test_detail::queryable<decltype(attrs)>);
+
+        auto sched_error{attrs.query(test_std::get_completion_scheduler<test_std::set_error_t>)};
+        static_assert(::std::same_as<scheduler, decltype(sched_error)>);
+        assert(sched_error == sched);
+
+        auto sched_stopped{attrs.query(test_std::get_completion_scheduler<test_std::set_stopped_t>)};
+        static_assert(::std::same_as<scheduler, decltype(sched_stopped)>);
+        assert(sched_stopped == sched);
+
+        auto sched_value{attrs.query(test_std::get_completion_scheduler<test_std::set_value_t>)};
+        static_assert(::std::same_as<scheduler, decltype(sched_value)>);
+        assert(sched_value == sched);
+
+        auto dom{attrs.query(test_std::get_domain)};
+        static_assert(::std::same_as<domain, decltype(dom)>);
+        assert(dom == domain{17});
+    }
+
+    auto test_sched_env() -> void
+    {
+        scheduler sched{17};
+        assert(sched.query(test_std::get_domain) == domain{17});
+
+        auto env{test_detail::sched_env(sched)};
+        static_assert(test_detail::queryable<decltype(env)>);
+
+        auto qsched{env.query(test_std::get_scheduler)};
+        static_assert(::std::same_as<scheduler, decltype(qsched)>);
+        assert(qsched == sched);
+
+        auto dom{env.query(test_std::get_domain)};
+        static_assert(::std::same_as<domain, decltype(dom)>);
+        assert(dom == domain{17});
     }
 
     auto test_query_with_default() -> void
@@ -151,5 +212,7 @@ auto main() -> int
     test_fwd_env();
     test_make_env();
     test_join_env();
+    test_sched_attrs();
+    test_sched_env();
     test_query_with_default();
 }
