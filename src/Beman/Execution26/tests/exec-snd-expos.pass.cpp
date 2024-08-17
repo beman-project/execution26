@@ -4,6 +4,7 @@
 // ----------------------------------------------------------------------------
 
 #include <Beman/Execution26/detail/query_with_default.hpp>
+#include <Beman/Execution26/detail/fwd_env.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
@@ -21,13 +22,38 @@ namespace
         int default_value{};
     };
 
+    constexpr struct forwardable_t
+        : test_std::forwarding_query_t
+    {
+    } forwardable;
+    struct non_forwardable_t {};
+
     struct env
     {
         int value{};
         auto query(test_std::get_domain_t const&) const noexcept { return domain{value}; }
+        auto query(non_forwardable_t const&) const noexcept { return true; }
+        auto query(forwardable_t const&, int a, int b) const noexcept { return (value + a) * b; }
     };
 
-    auto test_query_with_default()
+    template <bool Expect, typename Query>
+    auto test_fwd_env_helper() -> void
+    {
+        env e{42};
+        static_assert(Expect == requires(){
+            test_detail::fwd_env(e).query(Query());
+        });
+    }
+    auto test_fwd_env() -> void
+    {
+        env e{42};
+        static_assert(test_std::Detail::queryable<decltype(test_detail::fwd_env(e))>);
+        test_fwd_env_helper<true, test_std::get_domain_t>();
+        test_fwd_env_helper<false, non_forwardable_t>();
+        assert(129 == test_detail::fwd_env(e).query(forwardable, 1, 3));
+    }
+
+    auto test_query_with_default() -> void
     {
         auto result1{test_detail::query_with_default(test_std::get_domain,
                                                      env{43},
@@ -45,5 +71,6 @@ namespace
 
 auto main() -> int
 {
+    test_fwd_env();
     test_query_with_default();
 }
