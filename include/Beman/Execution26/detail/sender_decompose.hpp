@@ -59,6 +59,10 @@ namespace Beman::Execution26::Detail
             auto&& [tag, data] = sender;
             return ::Beman::Execution26::Detail::sender_meta<decltype(tag), decltype(data), ::std::tuple<>>{};
         }
+        else
+        {
+            return ::Beman::Execution26::Detail::sender_meta<void, void, void>{};
+        }
     }
 }
 

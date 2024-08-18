@@ -14,4 +14,5 @@ auto main() -> int
 {
     static_assert(std::same_as<test_std::get_completion_signatures_t const,
                                decltype(test_std::get_completion_signatures)>);
+    //-dk:TODO add actual tests
 }

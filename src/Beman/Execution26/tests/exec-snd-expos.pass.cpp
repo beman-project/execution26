@@ -6,7 +6,9 @@
 #include <Beman/Execution26/detail/join_env.hpp>
 #include <Beman/Execution26/detail/sched_attrs.hpp>
 #include <Beman/Execution26/detail/sched_env.hpp>
+#include <Beman/Execution26/detail/sender.hpp>
 #include <Beman/Execution26/detail/query_with_default.hpp>
+#include <Beman/Execution26/detail/get_domain_late.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
@@ -61,6 +63,11 @@ namespace
         int value{};
         auto query(custom_query_t<0>, int a) const { return this->value + a; }
         auto query(custom_query_t<2>, int a) const { return this->value + a; }
+    };
+
+    struct test_sender
+    {
+        using sender_concept = test_std::sender_t;
     };
 
     struct scheduler
@@ -205,6 +212,15 @@ namespace
         static_assert(std::same_as<default_domain, decltype(result2)>);
         assert(result2.default_value == 74);
     }
+
+    auto test_get_domain_late() -> void
+    {
+        static_assert(test_std::sender<test_sender>);
+        env const e;
+        test_sender const sndr;
+        auto dom{test_detail::get_domain_late(sndr, e)};
+        (void)dom;
+    }
 }
 
 auto main() -> int
@@ -215,4 +231,5 @@ auto main() -> int
     test_sched_attrs();
     test_sched_env();
     test_query_with_default();
+    test_get_domain_late();
 }

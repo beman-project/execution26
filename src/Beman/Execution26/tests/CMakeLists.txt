@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 list(APPEND execution_tests
+    exec-domain-default.pass
     exec-get-scheduler.pass
     exec-get-compl-sched.pass
     exec-snd-expos.pass

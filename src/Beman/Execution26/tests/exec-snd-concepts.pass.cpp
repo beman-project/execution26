@@ -61,6 +61,17 @@ namespace
         int   child4;
     };
 
+    // -------------------------------------------------------------------------
+
+    auto test_valid_completion_signatures()
+    {
+        static_assert(not test_detail::valid_completion_signatures<int>);
+        static_assert(test_detail::valid_completion_signatures<
+            test_std::completion_signatures<>>);
+        static_assert(test_detail::valid_completion_signatures<
+            test_std::completion_signatures<test_std::set_error_t(int)>>);
+    }
+
     auto test_is_sender() -> void
     {
         static_assert(not test_detail::is_sender<non_sender>);
@@ -118,6 +129,7 @@ namespace
 
 auto main() -> int
 {
+    test_valid_completion_signatures();
     test_is_sender();
     test_enable_sender();
     test_sender();
