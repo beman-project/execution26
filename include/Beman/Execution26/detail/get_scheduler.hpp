@@ -15,6 +15,11 @@ namespace Beman::Execution26
         : ::Beman::Execution26::forwarding_query_t
     {
         template <typename Env>
+            requires requires(get_scheduler_t const& self, Env&& env)
+            {
+                ::std::as_const(env).query(self); 
+
+            }
         auto operator()(Env&& env) const noexcept
         {
             static_assert(noexcept(::std::as_const(env).query(*this)));
