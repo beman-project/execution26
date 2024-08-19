@@ -14,6 +14,13 @@
 
 // ----------------------------------------------------------------------------
 
+namespace Beman::Execution26::Detail
+{
+    template <typename T0, typename T1>
+    concept decayed_same_as
+        = ::std::same_as<::std::remove_cvref_t<T0>, ::std::remove_cvref_t<T1>>
+        ;
+}
 namespace Beman::Execution26
 {
     template <typename Scheduler>
@@ -21,14 +28,14 @@ namespace Beman::Execution26
         = ::Beman::Execution26::Detail::almost_scheduler<Scheduler>
         && requires(Scheduler&& sched) {
             {
-                auto(::Beman::Execution26::get_completion_scheduler<::Beman::Execution26::set_value_t>(
+                ::Beman::Execution26::get_completion_scheduler<::Beman::Execution26::set_value_t>(
                     ::Beman::Execution26::get_env(
                         ::Beman::Execution26::schedule(
                             ::std::forward<Scheduler>(sched)
                         )
                     )
-                ))
-            } -> ::std::same_as<::std::remove_cvref_t<Scheduler>>;
+                )
+            } -> ::Beman::Execution26::Detail::decayed_same_as<Scheduler>;
         }
         ;
 }
