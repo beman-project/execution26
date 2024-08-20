@@ -5,6 +5,7 @@
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_SCHEDULER
 
 #include <Beman/Execution26/detail/almost_scheduler.hpp>
+#include <Beman/Execution26/detail/decayed_same_as.hpp>
 #include <Beman/Execution26/detail/get_completion_scheduler.hpp>
 #include <Beman/Execution26/detail/get_env.hpp>
 #include <Beman/Execution26/detail/schedule.hpp>
@@ -14,13 +15,6 @@
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26::Detail
-{
-    template <typename T0, typename T1>
-    concept decayed_same_as
-        = ::std::same_as<::std::remove_cvref_t<T0>, ::std::remove_cvref_t<T1>>
-        ;
-}
 namespace Beman::Execution26
 {
     template <typename Scheduler>

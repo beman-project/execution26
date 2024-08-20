@@ -79,20 +79,44 @@ namespace
         auto schedule() -> sender<env<scheduler>> { return {}; }
         auto operator== (bad_completion_scheduler const&) const -> bool = default;
     };
+
+    template <bool Expect, typename Signal, typename Result, typename Env>
+    auto test_get_completion_scheduler(Result&& result, Env&& env) ->void
+    {
+        static_assert(Expect == requires{
+            test_std::get_completion_scheduler<Signal>(env);
+        });
+        if constexpr (Expect)
+        {
+            static_assert(::std::same_as<
+                std::remove_cvref_t<Result>,
+                std::remove_cvref_t<decltype(test_std::get_completion_scheduler<Signal>(env))>
+                >
+            );
+            assert(result == test_std::get_completion_scheduler<Signal>(env));
+        }
+    }
+
+    template <bool Expect, typename Scheduler>
+    auto test_scheduler() -> void
+    {
+        static_assert(Expect == test_std::scheduler<Scheduler>);
+    }
 }
 
 auto main() -> int
 {
     static_assert(test_std::sender<sender<env<scheduler>>>);
     static_assert(std::same_as<env<scheduler>, decltype(test_std::get_env(sender<env<scheduler>>{}))>);
-    static_assert(std::same_as<int, decltype(test_std::get_completion_scheduler<test_std::set_value_t>(bad_env{}))>);
 
-    static_assert(not test_std::scheduler<int>);
-    static_assert(not test_std::scheduler<no_scheduler_concept>);
-    static_assert(not test_std::scheduler<not_queryable>);
-    static_assert(not test_std::scheduler<no_schedule>);
-    static_assert(not test_std::scheduler<not_equality_comparable>);
-    static_assert(not test_std::scheduler<not_copy_constructible>);
-    static_assert(not test_std::scheduler<bad_completion_scheduler>);
-    static_assert(test_std::scheduler<scheduler>);
+    test_get_completion_scheduler<false, test_std::set_value_t>(0, bad_env{});
+
+    test_scheduler<false, int>();
+    test_scheduler<false, no_scheduler_concept>();
+    test_scheduler<false, not_queryable>();
+    test_scheduler<false, no_schedule>();
+    test_scheduler<false, not_equality_comparable>();
+    test_scheduler<false, not_copy_constructible>();
+    test_scheduler<false, bad_completion_scheduler>();
+    test_scheduler<true, scheduler>();
 }

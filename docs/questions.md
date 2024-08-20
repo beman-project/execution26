@@ -18,3 +18,5 @@ likely observable.
 - [exec.snd.expos] uses query-or-default; it seems only query-with-default
     is defined.
 - [exec.snd.concepts] "The type tag_of_t<Sndr> is +defined+ as follows:"
+- [exec.sched] uses `auto(get_completion_scheduler<set_value_t>(...))`
+    which is OK for clang but doesn't seem to compile for g++ os MSVC.

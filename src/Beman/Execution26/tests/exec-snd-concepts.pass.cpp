@@ -4,6 +4,7 @@
 #include <Beman/Execution26/detail/sender_for.hpp>
 #include <Beman/Execution26/detail/sender_decompose.hpp>
 #include <Beman/Execution26/detail/sender.hpp>
+#include <Beman/Execution26/detail/sender_in.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <tuple>
@@ -105,6 +106,23 @@ namespace
         static_assert(test_std::sender<own_sender>);
     }
 
+    auto test_sender_in() -> void
+    {
+        struct non_queryable { ~non_queryable() = delete; };
+        struct queryable {};
+        struct non_sender_in {};
+        struct sender_in
+        {
+            using sender_concept = test_std::sender_t;
+        };
+
+        static_assert(not test_std::sender_in<non_sender_in>);
+        static_assert(not test_std::sender_in<sender_in, non_queryable>);
+        static_assert(test_std::sender_in<sender_in>);
+        static_assert(test_std::sender_in<sender_in, queryable>);
+        //-dk:TODO add missing test cases
+    }
+
     auto test_tag_of_t() -> void
     {
         //auto&& [tag, data, ...children] = tagged_sender();
@@ -133,6 +151,7 @@ auto main() -> int
     test_is_sender();
     test_enable_sender();
     test_sender();
+    test_sender_in();
     test_tag_of_t();
     test_sender_for();
 }

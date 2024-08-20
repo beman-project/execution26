@@ -4,13 +4,20 @@
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_GET_COMPLETION_SIGNATURES
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_GET_COMPLETION_SIGNATURES
 
+#include <Beman/Execution26/detail/completion_signatures.hpp> //-dk:TODO remove
+
 // ----------------------------------------------------------------------------
 
 namespace Beman::Execution26
 {
     struct get_completion_signatures_t
     {
-        //-dk:TODO add implementation
+        template <typename Sender, typename Env>
+        auto operator()(Sender&&, Env&&) const noexcept
+        {
+            return ::Beman::Execution26::completion_signatures<>{};
+            //-dk:TODO implement!
+        }
     };
     inline constexpr get_completion_signatures_t get_completion_signatures{};
 }

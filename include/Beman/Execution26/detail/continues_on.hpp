@@ -8,6 +8,7 @@
 
 namespace Beman::Execution26
 {
+    // specialize default_domain appropriately
     struct continues_on_t
     {
         //-dk:TODO provide actual implementation
