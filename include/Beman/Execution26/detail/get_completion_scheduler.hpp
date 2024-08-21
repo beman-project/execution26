@@ -37,15 +37,27 @@ namespace Beman::Execution26
             = BEMAN_EXECUTION26_DELETE("The environment needs a query(get_completion_scheduler_t) member");
 
         template <typename Env>
-            requires (not requires(get_completion_scheduler_t const& self,
+            requires (requires(get_completion_scheduler_t const& self,
+                                   ::std::remove_cvref_t<Env> const& env) {
+                env.query(self);
+            }
+            && (not requires(get_completion_scheduler_t const& self,
                                    ::std::remove_cvref_t<Env> const& env) {
                 { env.query(self) } noexcept;
-            })
+            }))
         auto operator()(Env&&) const noexcept
             = BEMAN_EXECUTION26_DELETE("The environment's query(get_completion_scheduler_t) has to be noexcept");
 
         template <typename Env>
-            requires (not requires(get_completion_scheduler_t const& self,
+            requires (requires(get_completion_scheduler_t const& self,
+                                   ::std::remove_cvref_t<Env> const& env) {
+                env.query(self);
+            }
+            && requires(get_completion_scheduler_t const& self,
+                                   ::std::remove_cvref_t<Env> const& env) {
+                { env.query(self) } noexcept;
+            }
+            && (not requires(get_completion_scheduler_t const& self,
                                    get_completion_scheduler_t<::Beman::Execution26::set_value_t> const& value_self,
                                    ::std::remove_cvref_t<Env> const& env) {
                 {
@@ -56,7 +68,7 @@ namespace Beman::Execution26
                         ::Beman::Execution26::schedule(env.query(self))
                     ).query(value_self)
                 } -> ::Beman::Execution26::Detail::decayed_same_as<decltype(env.query(self))>;
-            })
+            }))
         auto operator()(Env&&) const noexcept
             = BEMAN_EXECUTION26_DELETE("The environment's query(get_completion_scheduler_t) has to return a scheduler");
 

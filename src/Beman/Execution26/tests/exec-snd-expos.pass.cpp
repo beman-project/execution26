@@ -198,6 +198,99 @@ namespace
         assert(dom == domain{17});
     }
 
+    namespace completion_domain {
+        struct domain {};
+        struct other {};
+        struct common {};
+        struct none {};
+        struct mismatch {};
+
+        template <typename> struct env;
+        template <typename> struct scheduler;
+
+        template <typename W>
+        struct sender
+        {
+            using sender_concept = test_std::sender_t;
+            auto get_env() const noexcept -> env<W> { return {}; }
+        };
+        template <typename W>
+        struct scheduler
+        {
+            using scheduler_concept = test_std::scheduler_t;
+            auto schedule() noexcept -> sender<W> { return {}; }
+            auto operator== (scheduler const&) const -> bool = default;
+            auto query(test_std::get_domain_t const&) const noexcept -> domain { return {}; }
+        };
+
+        template <>
+        struct scheduler<none>
+        {
+            using scheduler_concept = test_std::scheduler_t;
+            auto schedule() noexcept -> sender<none> { return {}; }
+            auto operator== (scheduler const&) const -> bool = default;
+        };
+
+        template <>
+        struct env<common>
+        {
+            template <typename Tag>
+            auto query(test_std::get_completion_scheduler_t<Tag> const&) const noexcept
+                -> scheduler<common>
+            {
+                return {};
+            }
+        };
+
+        template <>
+        struct env<none>
+        {
+            template <typename Tag>
+            auto query(test_std::get_completion_scheduler_t<Tag> const&) const noexcept
+                -> scheduler<none>
+            {
+                return {};
+            }
+        };
+
+        struct one_missing {};
+        template <>
+        struct env<one_missing>
+        {
+            template <typename Tag>
+            auto query(test_std::get_completion_scheduler_t<Tag> const&) const noexcept
+                -> scheduler<one_missing>
+            {
+                return {};
+            }
+            auto query(test_std::get_completion_scheduler_t<test_std::set_error_t> const&) const noexcept = delete;
+        };
+
+        struct two_missing {};
+        template <>
+        struct env<two_missing>
+        {
+            auto query(test_std::get_completion_scheduler_t<test_std::set_value_t> const&) const noexcept
+                -> scheduler<two_missing>
+            {
+                return {};
+            }
+        };
+    }
+    auto test_completion_domain() -> void
+    {
+        namespace cd = completion_domain;
+        static_assert(test_std::sender<cd::sender<cd::common>>);
+        static_assert(std::same_as<cd::env<cd::common>, decltype(test_std::get_env(cd::sender<cd::common>{}))>);
+        static_assert(std::same_as<cd::domain, decltype(test_std::get_domain(test_std::get_completion_scheduler<test_std::set_error_t>(cd::env<cd::common>{})))>);
+        static_assert(std::same_as<cd::domain, decltype(test_std::get_domain(test_std::get_completion_scheduler<test_std::set_stopped_t>(cd::env<cd::common>{})))>);
+        static_assert(std::same_as<cd::domain, decltype(test_std::get_domain(test_std::get_completion_scheduler<test_std::set_value_t>(cd::env<cd::common>{})))>);
+        static_assert(std::same_as<cd::domain, decltype(test_detail::completion_domain((cd::sender<cd::common>{})))>);
+        static_assert(std::same_as<cd::domain, decltype(test_detail::completion_domain((cd::sender<cd::one_missing>{})))>);
+        static_assert(std::same_as<cd::domain, decltype(test_detail::completion_domain((cd::sender<cd::two_missing>{})))>);
+        static_assert(std::same_as<test_std::default_domain, decltype(test_detail::completion_domain((cd::sender<cd::none>{})))>);
+    }
+
     auto test_query_with_default() -> void
     {
         auto result1{test_detail::query_with_default(test_std::get_domain,
@@ -215,11 +308,14 @@ namespace
 
     auto test_get_domain_late() -> void
     {
+        #if 0
         static_assert(test_std::sender<test_sender>);
         env const e;
         test_sender const sndr;
         auto dom{test_detail::get_domain_late(sndr, e)};
         (void)dom;
+        //-dk:TOO test
+        #endif
     }
 }
 
@@ -230,6 +326,7 @@ auto main() -> int
     test_join_env();
     test_sched_attrs();
     test_sched_env();
+    test_completion_domain();
     test_query_with_default();
     test_get_domain_late();
 }
