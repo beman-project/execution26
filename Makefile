@@ -53,11 +53,10 @@ build:
 test: build
 	cd $(BUILD); $(MAKE) test
 
-<<<<<<< HEAD
 ce:
 	@mkdir -p $(BUILD)
 	bin/mk-compiler-explorer.py $(BUILD)
-=======
+
 check:
 	@for h in `find include -name \*.hpp`; \
 	do \
@@ -65,7 +64,6 @@ check:
 		< $$h sed -n "/^ *# *include <Beman\//s@.*[</]Beman/\(.*\).hpp>.*@$$from \1@p"; \
 	done | tsort > /dev/null
 
->>>>>>> 3ed6667 (added completion_domain implementation)
 todo:
 	bin/mk-todo.py
 
