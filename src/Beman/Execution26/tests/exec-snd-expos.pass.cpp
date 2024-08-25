@@ -15,6 +15,7 @@
 #include <Beman/Execution26/detail/basic_state.hpp>
 #include <Beman/Execution26/detail/indices_for.hpp>
 #include <Beman/Execution26/detail/valid_specialization.hpp>
+#include <Beman/Execution26/detail/env_type.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
@@ -542,6 +543,39 @@ namespace
         static_assert(not test_detail::valid_specialization<test_valid_specializaton_template, int>);
         static_assert(not test_detail::valid_specialization<test_valid_specializaton_template, int, int, int>);
     }
+
+    auto test_env_type() -> void
+    {
+        using index = std::integral_constant<int, 0>;
+        struct tag {};
+        struct data {};
+        struct env {};
+        struct sender
+        {
+            tag t;
+            data d;
+        };
+        struct sender_with_env
+        {
+            tag t;
+            data d;
+            auto get_env() const noexcept -> env { return {}; }
+        };
+        struct receiver
+        {
+        };
+        struct receiver_with_env
+        {
+            auto get_env() const noexcept -> env { return {}; }
+        };
+
+        static_assert(std::same_as<test_detail::fwd_env<test_std::empty_env>,
+                                   test_detail::env_type<index, sender, receiver>>);
+        static_assert(std::same_as<test_detail::fwd_env<test_std::empty_env>,
+                                   test_detail::env_type<index, sender_with_env, receiver>>);
+        static_assert(std::same_as<test_detail::fwd_env<env>,
+                                   test_detail::env_type<index, sender, receiver_with_env>>);
+    }
 }
 
 auto main() -> int
@@ -560,4 +594,5 @@ auto main() -> int
     test_basic_state();
     test_indices_for();
     test_valid_specialization();
+    test_env_type();
 }

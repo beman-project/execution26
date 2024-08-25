@@ -29,6 +29,7 @@ basic_receiver set_value
 basic_receiver state_type
 basic_receiver tag_of_t
 basic_receiver valid_specialization
+basic_receiver env_type
 basic_sender basic_operation
 basic_sender impls_for
 basic_sender product_type
@@ -106,7 +107,7 @@ env_promise env_promise
 env_promise with_await_transform
 env_type call_result_t
 env_type impls_for
-env_type state_t
+env_type state_type
 env_type tag_of_t
 error_types_of_t gather_signatures
 error_types_of_t set_error
