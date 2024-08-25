@@ -16,6 +16,7 @@
 #include <Beman/Execution26/detail/indices_for.hpp>
 #include <Beman/Execution26/detail/valid_specialization.hpp>
 #include <Beman/Execution26/detail/env_type.hpp>
+#include <Beman/Execution26/detail/basic_receiver.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
@@ -576,6 +577,81 @@ namespace
         static_assert(std::same_as<test_detail::fwd_env<env>,
                                    test_detail::env_type<index, sender, receiver_with_env>>);
     }
+
+    template <typename T>
+    auto test_basic_receiver() -> void
+    {
+        using index = std::integral_constant<int, 0>;
+        struct tag {};
+        struct data {};
+        struct err
+        {
+            int value{};
+            auto operator== (err const&) const -> bool = default;
+        };
+        struct sender
+        {
+            tag  t{};
+            data d{};
+        };
+        struct receiver
+        {
+            T    value{};
+            err  error{};
+            bool stopped{};
+
+            auto set_value(T val) noexcept { this->value = val; }
+            auto set_error(err error) noexcept { this->error = error; }
+            auto set_stopped() noexcept { this->stopped = true; }
+        };
+        struct unstoppable_receiver
+        {
+            T value;
+        };
+        using basic_receiver = test_detail::basic_receiver<sender, receiver, index>;
+        static_assert(test_std::receiver<basic_receiver>);
+        static_assert(std::same_as<tag, typename basic_receiver::tag_t>);
+        static_assert(std::same_as<test_detail::state_type<sender, receiver>,
+                                   typename basic_receiver::state_t>);
+        assert(&basic_receiver::complete == &test_detail::default_impls::complete);
+
+        {
+            test_detail::basic_state<sender, receiver> op(sender{}, receiver{});
+            basic_receiver br{&op};
+            static_assert(not requires{ std::move(br).set_value(); });
+            static_assert(not requires{ std::move(br).set_value(42, 1); });
+            static_assert(requires{ std::move(br).set_value(42); });
+            static_assert(noexcept(std::move(br).set_value(42)));
+            assert(op.receiver.value == 0);
+            std::move(br).set_value(42);
+            assert(op.receiver.value == 42);
+        }
+        {
+            test_detail::basic_state<sender, receiver> op(sender{}, receiver{});
+            basic_receiver br{&op};
+            static_assert(not requires{ std::move(br).set_error(); });
+            static_assert(not requires{ std::move(br).set_error(0); });
+            static_assert(requires{ std::move(br).set_error(err{42}); });
+            static_assert(noexcept(std::move(br).set_error(err{42})));
+            assert(op.receiver.error == err{});
+            std::move(br).set_error(err{42});
+            assert(op.receiver.error == err{42});
+        }
+        {
+            test_detail::basic_state<sender, receiver> op(sender{}, receiver{});
+            basic_receiver br{&op};
+            static_assert(requires{ std::move(br).set_stopped(); });
+            static_assert(noexcept(std::move(br).set_stopped()));
+            assert(op.receiver.stopped == false);
+            std::move(br).set_stopped();
+            assert(op.receiver.stopped == true);
+        }
+        {
+            test_detail::basic_state<sender, unstoppable_receiver> op(sender{}, unstoppable_receiver{});
+            test_detail::basic_receiver<sender, unstoppable_receiver, index> br{&op};
+            static_assert(not requires{ std::move(br).set_stopped(); });
+        }
+    }
 }
 
 auto main() -> int
@@ -595,4 +671,5 @@ auto main() -> int
     test_indices_for();
     test_valid_specialization();
     test_env_type();
+    test_basic_receiver<int>();
 }
