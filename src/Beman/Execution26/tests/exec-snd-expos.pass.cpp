@@ -11,6 +11,7 @@
 #include <Beman/Execution26/detail/get_domain_late.hpp>
 #include <Beman/Execution26/detail/default_impls.hpp>
 #include <Beman/Execution26/detail/impls_for.hpp>
+#include <Beman/Execution26/detail/state_type.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
@@ -479,12 +480,26 @@ namespace
         test_default_impls_complete(test_detail::default_impls{});
     }
 
-    auto test_impls_for()
+    auto test_impls_for() -> void
     {
         struct tag {};
 
         static_assert(std::derived_from<test_detail::impls_for<tag>,
                                         test_detail::default_impls>);
+    }
+
+    auto test_state_type() -> void
+    {
+        struct tag {};
+        struct state {};
+        struct sender
+        {
+            tag t;
+            state s;
+        };
+        struct receiver {};
+
+        static_assert(std::same_as<state, test_detail::state_type<sender, receiver>>);
     }
 }
 
@@ -500,4 +515,5 @@ auto main() -> int
     test_get_domain_late();
     test_default_impls();
     test_impls_for();
+    test_state_type();
 }
