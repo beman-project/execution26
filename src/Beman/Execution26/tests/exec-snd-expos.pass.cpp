@@ -14,6 +14,7 @@
 #include <Beman/Execution26/detail/state_type.hpp>
 #include <Beman/Execution26/detail/basic_state.hpp>
 #include <Beman/Execution26/detail/indices_for.hpp>
+#include <Beman/Execution26/detail/valid_specialization.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
@@ -532,6 +533,15 @@ namespace
         static_assert(::std::same_as<indices, test_detail::indices_for<sender const&>>);
         static_assert(::std::same_as<indices, test_detail::indices_for<sender const&&>>);
     }
+
+    template <typename, typename> struct test_valid_specializaton_template {};
+
+    auto test_valid_specialization() -> void
+    {
+        static_assert(test_detail::valid_specialization<test_valid_specializaton_template, int, int>);
+        static_assert(not test_detail::valid_specialization<test_valid_specializaton_template, int>);
+        static_assert(not test_detail::valid_specialization<test_valid_specializaton_template, int, int, int>);
+    }
 }
 
 auto main() -> int
@@ -549,4 +559,5 @@ auto main() -> int
     test_state_type();
     test_basic_state();
     test_indices_for();
+    test_valid_specialization();
 }
