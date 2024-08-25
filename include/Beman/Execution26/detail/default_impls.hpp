@@ -24,7 +24,7 @@ namespace Beman::Execution26::Detail
         template <typename U>
         static auto forward(U&& u) -> ::std::remove_cvref_t<U>&&
         {
-            return ::std::forward<U&&>(u);
+            return ::std::move(u);
         }
     };
     template <typename T>
@@ -42,7 +42,7 @@ namespace Beman::Execution26::Detail
         template <typename U>
         static auto forward(U&& u) -> ::std::remove_cvref_t<U> const&&
         {
-            return ::std::forward<U&&>(u);
+            return ::std::move(u);
         }
     };
     template <typename T>
@@ -89,7 +89,7 @@ namespace Beman::Execution26::Detail
             = []<typename Sender, typename Receiver>(Sender&& sender, Receiver&) noexcept -> decltype(auto)
             {
                 auto&& decompose = ::Beman::Execution26::Detail::get_sender_data(::std::forward<Sender>(sender));
-                return ::std::forward_like<Sender>(decompose.data);
+                return ::Beman::Execution26::Detail::forward_like<Sender>(decompose.data);
             };
         static constexpr auto start
             = [](auto&, auto&, auto&... ops) noexcept -> void
