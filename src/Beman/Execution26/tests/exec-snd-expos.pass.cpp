@@ -12,6 +12,7 @@
 #include <Beman/Execution26/detail/default_impls.hpp>
 #include <Beman/Execution26/detail/impls_for.hpp>
 #include <Beman/Execution26/detail/state_type.hpp>
+#include <Beman/Execution26/detail/basic_state.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
@@ -501,6 +502,20 @@ namespace
 
         static_assert(std::same_as<state, test_detail::state_type<sender, receiver>>);
     }
+
+    auto test_basic_state() -> void
+    {
+        struct tag {};
+        struct data {};
+        struct sender
+        {
+            tag t;
+            data d;
+        };
+        struct receiver {};
+
+        test_detail::basic_state<sender, receiver> state(sender{}, receiver{});
+    }
 }
 
 auto main() -> int
@@ -516,4 +531,5 @@ auto main() -> int
     test_default_impls();
     test_impls_for();
     test_state_type();
+    test_basic_state();
 }
