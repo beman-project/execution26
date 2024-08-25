@@ -13,6 +13,7 @@
 #include <Beman/Execution26/detail/impls_for.hpp>
 #include <Beman/Execution26/detail/state_type.hpp>
 #include <Beman/Execution26/detail/basic_state.hpp>
+#include <Beman/Execution26/detail/indices_for.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
@@ -516,6 +517,21 @@ namespace
 
         test_detail::basic_state<sender, receiver> state(sender{}, receiver{});
     }
+
+    auto test_indices_for() -> void
+    {
+        using indices = ::std::make_index_sequence<5>;
+        struct sender
+        {
+            using indices_for = indices;
+        };
+
+        static_assert(::std::same_as<indices, test_detail::indices_for<sender>>);
+        static_assert(::std::same_as<indices, test_detail::indices_for<sender&>>);
+        static_assert(::std::same_as<indices, test_detail::indices_for<sender&&>>);
+        static_assert(::std::same_as<indices, test_detail::indices_for<sender const&>>);
+        static_assert(::std::same_as<indices, test_detail::indices_for<sender const&&>>);
+    }
 }
 
 auto main() -> int
@@ -532,4 +548,5 @@ auto main() -> int
     test_impls_for();
     test_state_type();
     test_basic_state();
+    test_indices_for();
 }
