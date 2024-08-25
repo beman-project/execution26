@@ -89,6 +89,11 @@ continues_on sender_for
 default_domain queryable
 default_domain sender
 default_domain tag_of_t
+default_impls fwd_env
+default_impls get_env
+default_impls empty_env
+default_impls start
+default_impls callable
 default_set_error completion_signatures
 default_set_error set_value
 default_set_value completion_signatures

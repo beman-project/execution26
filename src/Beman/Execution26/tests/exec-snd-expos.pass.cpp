@@ -9,6 +9,7 @@
 #include <Beman/Execution26/detail/sender.hpp>
 #include <Beman/Execution26/detail/query_with_default.hpp>
 #include <Beman/Execution26/detail/get_domain_late.hpp>
+#include <Beman/Execution26/detail/default_impls.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
@@ -317,6 +318,165 @@ namespace
         //-dk:TOO test
         #endif
     }
+
+    auto test_default_impls_get_attrs() -> void
+    {
+        struct env { int value; };
+        struct child1 { auto get_env() const noexcept { return env{1}; } };
+        struct child2 { auto get_env() const noexcept { return env{2}; } };
+
+        static_assert(noexcept(test_detail::default_impls::get_attrs(0, child1{})));
+        static_assert(std::same_as<test_detail::fwd_env<env>,
+            decltype(test_detail::default_impls::get_attrs(0, child1{}))>);
+        static_assert(std::same_as<test_std::empty_env,
+            decltype(test_detail::default_impls::get_attrs(0, child1{}, child2{}))>);
+    }
+
+    auto test_default_impls_get_env() -> void
+    {
+        struct env { int value; };
+        struct receiver { auto get_env() const noexcept { return env{1}; } };
+
+        int arg{};
+        static_assert(noexcept(test_detail::default_impls::get_env(0, arg, receiver{})));
+        static_assert(std::same_as<test_detail::fwd_env<env>,
+            decltype(test_detail::default_impls::get_env(0, arg, receiver{}))>);
+    }
+
+    auto test_default_impls_get_state() -> void
+    {
+        struct tag {};
+        struct data
+        {
+            int v1{}; int v2{};
+            auto operator== (data const&) const -> bool = default;
+        };
+        struct sender0
+        {
+            tag t;
+            data d{1, 2};
+        };
+        struct sender1
+        {
+            tag t;
+            data d{1, 2};
+            int i1;
+        };
+        struct sender2
+        {
+            tag t;
+            data d{1, 2};
+            int i1;
+            int i2;
+        };
+        struct sender3
+        {
+            tag t;
+            data d{1, 2};
+            int i1;
+            int i2;
+            int i3;
+        };
+        struct sender4
+        {
+            tag t;
+            data d{1, 2};
+            int i1;
+            int i2;
+            int i3;
+            int i4;
+        };
+        struct receiver
+        {
+        };
+
+        sender0       s{};
+        sender0 const cs{};
+        receiver      r{};
+        static_assert(noexcept(test_detail::default_impls::get_state(sender0{}, r)));
+        static_assert(std::same_as<data&&,
+            decltype(test_detail::default_impls::get_state(sender0{}, r))>);
+        assert((data{1, 2}) == test_detail::default_impls::get_state(sender0{}, r));
+        static_assert(std::same_as<data&&,
+            decltype(test_detail::default_impls::get_state(sender1{}, r))>);
+        assert((data{1, 2}) == test_detail::default_impls::get_state(sender1{}, r));
+        static_assert(std::same_as<data&&,
+            decltype(test_detail::default_impls::get_state(sender2{}, r))>);
+        assert((data{1, 2}) == test_detail::default_impls::get_state(sender2{}, r));
+        static_assert(std::same_as<data&&,
+            decltype(test_detail::default_impls::get_state(sender3{}, r))>);
+        assert((data{1, 2}) == test_detail::default_impls::get_state(sender3{}, r));
+        static_assert(std::same_as<data&&,
+            decltype(test_detail::default_impls::get_state(sender4{}, r))>);
+        assert((data{1, 2}) == test_detail::default_impls::get_state(sender4{}, r));
+        static_assert(std::same_as<data&,
+            decltype(test_detail::default_impls::get_state(s, r))>);
+        static_assert(std::same_as<data const&,
+            decltype(test_detail::default_impls::get_state(cs, r))>);
+    }
+    auto test_default_impls_start() -> void
+    {
+        struct state
+        {
+            bool called{false};
+            auto start() noexcept -> void { called = true; }
+        };
+        int a0{};
+        int a1{};
+        state s1;
+        state s2;
+        state s3;
+        state s4;
+        state s5;
+        static_assert(noexcept(test_detail::default_impls::start(a0, a1, s1, s2, s3, s4, s5)));
+        assert(s1.called == false);
+        assert(s2.called == false);
+        assert(s3.called == false);
+        assert(s4.called == false);
+        assert(s5.called == false);
+        test_detail::default_impls::start(a0, a1, s1, s2, s3, s4, s5);
+        assert(s1.called == true);
+        assert(s2.called == true);
+        assert(s3.called == true);
+        assert(s4.called == true);
+        assert(s5.called == true);
+    }
+    template <typename Impls>
+    auto test_default_impls_complete(Impls) -> void
+    {
+        struct arg {};
+        struct receiver { bool& called; };
+        struct state {};
+
+        bool called{false};
+        auto non_tag = [](receiver&&, int){};
+        auto tag = [](receiver&& r, int, arg){ r.called = true; };
+        receiver r{called};
+        state s{};
+
+        static_assert(not requires{
+            Impls::complete(::std::integral_constant<int, 0>{}, s, r, non_tag, 0, arg{});
+        });
+        static_assert(requires{
+            Impls::complete(::std::integral_constant<int, 0>{}, s, r, tag, 0, arg{});
+        });
+        static_assert(noexcept(
+            Impls::complete(::std::integral_constant<int, 0>{}, s, r, tag, 0, arg{})
+        ));
+
+        assert(r.called == false);
+        Impls::complete(::std::integral_constant<int, 0>{}, s, r, tag, 0, arg{});
+        assert(r.called == true);
+    }
+
+    auto test_default_impls() -> void
+    {
+        test_default_impls_get_attrs();
+        test_default_impls_get_env();
+        test_default_impls_get_state();
+        test_default_impls_start();
+        test_default_impls_complete(test_detail::default_impls{});
+    }
 }
 
 auto main() -> int
@@ -329,4 +489,5 @@ auto main() -> int
     test_completion_domain();
     test_query_with_default();
     test_get_domain_late();
+    test_default_impls();
 }
