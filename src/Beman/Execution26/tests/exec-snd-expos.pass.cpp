@@ -10,6 +10,7 @@
 #include <Beman/Execution26/detail/query_with_default.hpp>
 #include <Beman/Execution26/detail/get_domain_late.hpp>
 #include <Beman/Execution26/detail/default_impls.hpp>
+#include <Beman/Execution26/detail/impls_for.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
@@ -477,6 +478,14 @@ namespace
         test_default_impls_start();
         test_default_impls_complete(test_detail::default_impls{});
     }
+
+    auto test_impls_for()
+    {
+        struct tag {};
+
+        static_assert(std::derived_from<test_detail::impls_for<tag>,
+                                        test_detail::default_impls>);
+    }
 }
 
 auto main() -> int
@@ -490,4 +499,5 @@ auto main() -> int
     test_query_with_default();
     test_get_domain_late();
     test_default_impls();
+    test_impls_for();
 }

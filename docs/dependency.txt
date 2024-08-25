@@ -21,7 +21,6 @@ basic_operation tag_of_t
 basic_operation valid_specialization
 basic_receiver basic_state
 basic_receiver callable
-basic_receiver complete
 basic_receiver impls_for
 basic_receiver receiver_t
 basic_receiver set_error
@@ -55,7 +54,7 @@ completion_signature set_stopped
 completion_signature set_value
 completion_signatures_for completion_signatures
 completion_tag set_error
-completion_tag set_set_stopped
+completion_tag set_stopped
 completion_tag set_value
 connect env_of_t
 connect get_domain_late
@@ -140,7 +139,7 @@ get_domain_late continues_on_t
 get_domain_late default_domain
 get_domain_late get_domain
 get_domain_late get_scheduler
-get_domain_late query_or_default
+get_domain_late query_with_default
 get_domain_late sender_for
 get_env empty_env
 get_env mandate_nothrow
@@ -272,7 +271,7 @@ on get_domain
 on get_env
 on get_scheduler
 on make_sender
-on query_or_default
+on query_with_default
 on sched_env
 on scheduler
 on sender
@@ -331,7 +330,7 @@ schedule_from impls_for
 schedule_from join_env
 schedule_from make_sender
 schedule_from op_state
-schedule_from query_or_default
+schedule_from query_with_default
 schedule_from receiver_t
 schedule_from sched_attrs
 schedule_from sched_t
@@ -404,7 +403,7 @@ starts_on get_domain
 starts_on join_env
 starts_on let_value
 starts_on make_sender
-starts_on query_or_default
+starts_on query_with_default
 starts_on sched_env
 starts_on schedule
 starts_on scheduler
