@@ -42,28 +42,28 @@ namespace Beman::Execution26::Detail
         return sender_meta<decltype(tag), decltype(data), ::std::tuple<decltype(children)...>>;
         #endif
         using sender_type = ::std::remove_cvref_t<Sender>;
-        static constexpr ::Beman::Execution26::Detail::sender_any_t any{};
-        if constexpr (requires(){ sender_type{ any, any, any, any, any, any }; })
+        static constexpr ::Beman::Execution26::Detail::sender_any_t at{};
+        if constexpr (requires(){ sender_type{ at, at, at, at, at, at }; })
         {
             auto&& [tag, data, c0, c1, c2, c3] = sender;
             return ::Beman::Execution26::Detail::sender_meta<decltype(tag), decltype(data), ::std::tuple<decltype(c0), decltype(c1), decltype(c2), decltype(c3)>>{};
         }
-        else if constexpr (requires(){ sender_type{ any, any, any, any, any }; })
+        else if constexpr (requires(){ sender_type{ at, at, at, at, at }; })
         {
             auto&& [tag, data, c0, c1, c2] = sender;
             return ::Beman::Execution26::Detail::sender_meta<decltype(tag), decltype(data), ::std::tuple<decltype(c0), decltype(c1), decltype(c2)>>{};
         }
-        else if constexpr (requires(){ sender_type{ any, any, any, any }; })
+        else if constexpr (requires(){ sender_type{ at, at, at, at }; })
         {
             auto&& [tag, data, c0, c1] = sender;
             return ::Beman::Execution26::Detail::sender_meta<decltype(tag), decltype(data), ::std::tuple<decltype(c0), decltype(c1)>>{};
         }
-        else if constexpr (requires(){ sender_type{ any, any, any }; })
+        else if constexpr (requires(){ sender_type{ at, at, at }; })
         {
             auto&& [tag, data, c0] = sender;
             return ::Beman::Execution26::Detail::sender_meta<decltype(tag), decltype(data), ::std::tuple<decltype(c0)>>{};
         }
-        else if constexpr (requires(){ sender_type{ any, any }; })
+        else if constexpr (requires(){ sender_type{ at, at }; })
         {
             auto&& [tag, data] = sender;
             return ::Beman::Execution26::Detail::sender_meta<decltype(tag), decltype(data), ::std::tuple<>>{};
@@ -83,36 +83,36 @@ namespace Beman::Execution26::Detail
         return sender_meta<decltype(tag), decltype(data), ::std::tuple<decltype(children)...>>;
         #endif
         using sender_type = ::std::remove_cvref_t<Sender>;
-        static constexpr ::Beman::Execution26::Detail::sender_any_t any{};
-        if constexpr (requires(){ sender_type{ any, any, any, any, any, any }; })
+        static constexpr ::Beman::Execution26::Detail::sender_any_t at{};
+        if constexpr (requires(){ sender_type{ at, at, at, at, at, at }; })
         {
             auto&& [tag, data, c0, c1, c2, c3] = sender;
             return ::Beman::Execution26::Detail::sender_data<decltype(tag), decltype(data), decltype(::std::tie(c0, c1, c2, c3))>{
                 tag, data, ::std::tie(c0, c1, c2, c3)
             };
         }
-        else if constexpr (requires(){ sender_type{ any, any, any, any, any }; })
+        else if constexpr (requires(){ sender_type{ at, at, at, at, at }; })
         {
             auto&& [tag, data, c0, c1, c2] = sender;
             return ::Beman::Execution26::Detail::sender_data<decltype(tag), decltype(data), decltype(::std::tie(c0, c1, c2))>{
                 tag, data, ::std::tie(c0, c1, c2)
             };
         }
-        else if constexpr (requires(){ sender_type{ any, any, any, any }; })
+        else if constexpr (requires(){ sender_type{ at, at, at, at }; })
         {
             auto&& [tag, data, c0, c1] = sender;
             return ::Beman::Execution26::Detail::sender_data<decltype(tag), decltype(data), decltype(::std::tie(c0, c1))>{
                 tag, data, ::std::tie(c0, c1)
             };
         }
-        else if constexpr (requires(){ sender_type{ any, any, any }; })
+        else if constexpr (requires(){ sender_type{ at, at, at }; })
         {
             auto&& [tag, data, c0] = sender;
             return ::Beman::Execution26::Detail::sender_data<decltype(tag), decltype(data), decltype(::std::tie(c0))>{
                 tag, data, ::std::tie(c0)
             };
         }
-        else if constexpr (requires(){ sender_type{ any, any }; })
+        else if constexpr (requires(){ sender_type{ at, at }; })
         {
             auto&& [tag, data] = sender;
             return ::Beman::Execution26::Detail::sender_data<decltype(tag), decltype(data), ::std::tuple<>>{

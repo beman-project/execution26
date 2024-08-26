@@ -387,7 +387,7 @@ split decayed_tuple
 split env_of_t
 split get_domain_early
 split get_stop_token
-split implace_stop_token
+split inplace_stop_token
 split make_sender
 split receiver_t
 split sender_in

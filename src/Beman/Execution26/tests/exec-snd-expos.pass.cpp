@@ -17,6 +17,7 @@
 #include <Beman/Execution26/detail/valid_specialization.hpp>
 #include <Beman/Execution26/detail/env_type.hpp>
 #include <Beman/Execution26/detail/basic_receiver.hpp>
+#include <Beman/Execution26/detail/completion_tag.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
@@ -652,6 +653,17 @@ namespace
             static_assert(not requires{ std::move(br).set_stopped(); });
         }
     }
+
+    auto test_completion_tag() -> void
+    {
+        struct no_completion {};
+
+        static_assert(test_detail::completion_tag<test_std::set_error_t>);
+        static_assert(test_detail::completion_tag<test_std::set_stopped_t>);
+        static_assert(test_detail::completion_tag<test_std::set_value_t>);
+        static_assert(not test_detail::completion_tag<int>);
+        static_assert(not test_detail::completion_tag<no_completion>);
+    }
 }
 
 auto main() -> int
@@ -672,4 +684,5 @@ auto main() -> int
     test_valid_specialization();
     test_env_type();
     test_basic_receiver<int>();
+    test_completion_tag();
 }

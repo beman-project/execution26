@@ -5,6 +5,7 @@
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_GET_COMPLETION_SCHEDULER
 
 #include <Beman/Execution26/detail/common.hpp>
+#include <Beman/Execution26/detail/completion_tag.hpp>
 #include <Beman/Execution26/detail/decayed_same_as.hpp>
 #include <Beman/Execution26/detail/forwarding_query.hpp>
 #include <Beman/Execution26/detail/get_env.hpp>
@@ -91,12 +92,7 @@ namespace Beman::Execution26
         }
     };
 
-    template <typename Tag>
-        requires(
-            ::std::same_as<Tag, ::Beman::Execution26::set_error_t>
-            || ::std::same_as<Tag, ::Beman::Execution26::set_stopped_t>
-            || ::std::same_as<Tag, ::Beman::Execution26::set_value_t>
-        )
+    template <::Beman::Execution26::Detail::completion_tag Tag>
     inline constexpr get_completion_scheduler_t<Tag> get_completion_scheduler{};
 }
 
