@@ -1,4 +1,4 @@
-// include/Beman/Execution26/detail/make_env.hpp                      -*-C++-*-
+// include/beman/execution26/detail/make_env.hpp                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_MAKE_ENV
@@ -9,7 +9,7 @@
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26::Detail
+namespace beman::execution26::detail
 {
     template <typename Query, typename Value>
     class make_env

@@ -1,15 +1,15 @@
-// include/Beman/Execution26/detail/set_stopped.hpp                   -*-C++-*-
+// include/beman/execution26/detail/set_stopped.hpp                   -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_SET_STOPPED
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_SET_STOPPED
 
-#include <Beman/Execution26/detail/common.hpp>
+#include <beman/execution26/detail/common.hpp>
 #include <utility>
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26
+namespace beman::execution26
 {
     struct set_stopped_t
     {

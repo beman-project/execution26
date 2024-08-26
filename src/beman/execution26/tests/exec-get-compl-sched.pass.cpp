@@ -1,14 +1,14 @@
-// src/Beman/Execution26/tests/exec-get-compl-sched.pass.cpp          -*-C++-*-
+// src/beman/execution26/tests/exec-get-compl-sched.pass.cpp          -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <Beman/Execution26/detail/get_completion_scheduler.hpp>
-#include <Beman/Execution26/detail/forwarding_query.hpp>
-#include <Beman/Execution26/detail/schedule.hpp>
-#include <Beman/Execution26/detail/scheduler.hpp>
-#include <Beman/Execution26/detail/sender.hpp>
-#include <Beman/Execution26/detail/set_error.hpp>
-#include <Beman/Execution26/detail/set_stopped.hpp>
-#include <Beman/Execution26/detail/set_value.hpp>
+#include <beman/execution26/detail/get_completion_scheduler.hpp>
+#include <beman/execution26/detail/forwarding_query.hpp>
+#include <beman/execution26/detail/schedule.hpp>
+#include <beman/execution26/detail/scheduler.hpp>
+#include <beman/execution26/detail/sender.hpp>
+#include <beman/execution26/detail/set_error.hpp>
+#include <beman/execution26/detail/set_stopped.hpp>
+#include <beman/execution26/detail/set_value.hpp>
 #include <concepts>
 #include <test/execution.hpp>
 

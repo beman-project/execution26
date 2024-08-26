@@ -1,15 +1,15 @@
-// inclue/Beman/Execution26/detail/set_error.hpp -*-C++-*-
+// inclue/beman/execution26/detail/set_error.hpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_SET_ERROR
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_SET_ERROR
 
-#include <Beman/Execution26/detail/common.hpp>
+#include <beman/execution26/detail/common.hpp>
 #include <utility>
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26
+namespace beman::execution26
 {
     struct set_error_t
     {

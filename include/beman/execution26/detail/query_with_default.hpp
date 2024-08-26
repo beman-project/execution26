@@ -1,4 +1,4 @@
-// include/Beman/Execution26/detail/query_with_default.hpp            -*-C++-*-
+// include/beman/execution26/detail/query_with_default.hpp            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_QUERY_WITH_DEFAULT
@@ -8,7 +8,7 @@
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26::Detail
+namespace beman::execution26::detail
 {
     template <typename Tag, typename Env, typename Value>
         requires requires(Tag const& tag, Env const& env)

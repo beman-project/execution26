@@ -1,18 +1,18 @@
-// include/Beman/Execution26/detail/get_allocator.hpp                 -*-C++-*-
+// include/beman/execution26/detail/get_allocator.hpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_GET_ALLOCATOR
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_GET_ALLOCATOR
 
-#include <Beman/Execution26/detail/common.hpp>
-#include <Beman/Execution26/detail/forwarding_query.hpp>
-#include <Beman/Execution26/detail/simple_allocator.hpp>
+#include <beman/execution26/detail/common.hpp>
+#include <beman/execution26/detail/forwarding_query.hpp>
+#include <beman/execution26/detail/simple_allocator.hpp>
 #include <concepts>
 #include <utility>
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26
+namespace beman::execution26
 {
     struct get_allocator_t
     {
@@ -40,7 +40,7 @@ namespace Beman::Execution26
         template <typename Object>
             requires (not requires(Object const& object, get_allocator_t const& tag)
             {
-                { object.query(tag) } noexcept -> ::Beman::Execution26::Detail::simple_allocator<>;
+                { object.query(tag) } noexcept -> ::beman::execution26::detail::simple_allocator<>;
             })
         auto operator()(Object&&) const
             = BEMAN_EXECUTION26_DELETE("the query(get_allocator_t) overload needs to be noexcept");
@@ -51,7 +51,7 @@ namespace Beman::Execution26
             return ::std::as_const(object).query(*this);
         }
 
-        constexpr auto query(::Beman::Execution26::forwarding_query_t const&) const noexcept -> bool
+        constexpr auto query(::beman::execution26::forwarding_query_t const&) const noexcept -> bool
         {
             return true;
         }

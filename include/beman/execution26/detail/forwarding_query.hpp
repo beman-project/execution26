@@ -1,4 +1,4 @@
-// include/Beman/Execution26/detail/forwarding_query.hpp              -*-C++-*-
+// include/beman/execution26/detail/forwarding_query.hpp              -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_FORWARDING_QUERY
@@ -10,7 +10,7 @@
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26
+namespace beman::execution26
 {
     struct forwarding_query_t
     {
@@ -26,7 +26,7 @@ namespace Beman::Execution26
         template <typename Object>
         constexpr auto operator()(Object&&) const noexcept -> bool
         {
-            return ::std::derived_from<::std::remove_cvref_t<Object>, ::Beman::Execution26::forwarding_query_t>;
+            return ::std::derived_from<::std::remove_cvref_t<Object>, ::beman::execution26::forwarding_query_t>;
         }
     };
 

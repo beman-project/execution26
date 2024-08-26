@@ -1,4 +1,4 @@
-// include/Beman/Execution26/detail/as_except_ptr.hpp                 -*-C++-*-
+// include/beman/execution26/detail/as_except_ptr.hpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_AS_EXCEPT_PTR
@@ -13,7 +13,7 @@
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26::Detail
+namespace beman::execution26::detail
 {
     template <typename Error>
     decltype(auto) as_except_ptr(Error&& error)

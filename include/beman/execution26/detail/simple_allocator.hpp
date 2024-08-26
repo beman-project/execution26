@@ -1,4 +1,4 @@
-// include/Beman/Execution26/detail/simple_allocator.hpp              -*-C++-*-
+// include/beman/execution26/detail/simple_allocator.hpp              -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_SIMPLE_ALLOCATOR
@@ -9,7 +9,7 @@
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26::Detail
+namespace beman::execution26::detail
 {
     template <typename Alloc = bool>
     concept simple_allocator

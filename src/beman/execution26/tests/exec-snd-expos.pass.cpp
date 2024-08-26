@@ -1,25 +1,25 @@
-// src/Beman/Execution26/tests/exe-snd-expos.pass.cpp                 -*-C++-*-
+// src/beman/execution26/tests/exe-snd-expos.pass.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <Beman/Execution26/detail/fwd_env.hpp>
-#include <Beman/Execution26/detail/make_env.hpp>
-#include <Beman/Execution26/detail/join_env.hpp>
-#include <Beman/Execution26/detail/sched_attrs.hpp>
-#include <Beman/Execution26/detail/sched_env.hpp>
-#include <Beman/Execution26/detail/sender.hpp>
-#include <Beman/Execution26/detail/query_with_default.hpp>
-#include <Beman/Execution26/detail/get_domain_late.hpp>
-#include <Beman/Execution26/detail/default_impls.hpp>
-#include <Beman/Execution26/detail/impls_for.hpp>
-#include <Beman/Execution26/detail/state_type.hpp>
-#include <Beman/Execution26/detail/basic_state.hpp>
-#include <Beman/Execution26/detail/indices_for.hpp>
-#include <Beman/Execution26/detail/valid_specialization.hpp>
-#include <Beman/Execution26/detail/env_type.hpp>
-#include <Beman/Execution26/detail/basic_receiver.hpp>
-#include <Beman/Execution26/detail/completion_tag.hpp>
-#include <Beman/Execution26/detail/scheduler.hpp>
-#include <Beman/Execution26/execution.hpp>
+#include <beman/execution26/detail/fwd_env.hpp>
+#include <beman/execution26/detail/make_env.hpp>
+#include <beman/execution26/detail/join_env.hpp>
+#include <beman/execution26/detail/sched_attrs.hpp>
+#include <beman/execution26/detail/sched_env.hpp>
+#include <beman/execution26/detail/sender.hpp>
+#include <beman/execution26/detail/query_with_default.hpp>
+#include <beman/execution26/detail/get_domain_late.hpp>
+#include <beman/execution26/detail/default_impls.hpp>
+#include <beman/execution26/detail/impls_for.hpp>
+#include <beman/execution26/detail/state_type.hpp>
+#include <beman/execution26/detail/basic_state.hpp>
+#include <beman/execution26/detail/indices_for.hpp>
+#include <beman/execution26/detail/valid_specialization.hpp>
+#include <beman/execution26/detail/env_type.hpp>
+#include <beman/execution26/detail/basic_receiver.hpp>
+#include <beman/execution26/detail/completion_tag.hpp>
+#include <beman/execution26/detail/scheduler.hpp>
+#include <beman/execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
 
@@ -101,7 +101,7 @@ namespace
     auto test_fwd_env() -> void
     {
         env e{42};
-        static_assert(test_std::Detail::queryable<decltype(test_detail::fwd_env(e))>);
+        static_assert(test_std::detail::queryable<decltype(test_detail::fwd_env(e))>);
         test_fwd_env_helper<true, test_std::get_domain_t>();
         test_fwd_env_helper<false, non_forwardable_t>();
         assert(129 == test_detail::fwd_env(e).query(forwardable, 1, 3));
@@ -111,7 +111,7 @@ namespace
     {
         auto env{test_detail::make_env(custom_query<0>, custom_result{43})};
         auto const cenv{env};
-        static_assert(test_std::Detail::queryable<decltype(env)>);
+        static_assert(test_std::detail::queryable<decltype(env)>);
         assert(env.query(custom_query<0>) == custom_result{43});
         assert(cenv.query(custom_query<0>) == custom_result{43});
     }
@@ -148,7 +148,7 @@ namespace
         auto        env{test_detail::join_env(e1, e2)};
         auto const& cenv{env};
         
-        static_assert(test_std::Detail::queryable<decltype(env)>);
+        static_assert(test_std::detail::queryable<decltype(env)>);
         test_join_env<true, custom_query_t<0>>(env);
         test_join_env<true, custom_query_t<0>>(cenv);
         test_join_env<true, custom_query_t<1>>(env);

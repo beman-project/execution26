@@ -1,14 +1,14 @@
-// include/Beman/Execution26/detail/start.hpp                         -*-C++-*-
+// include/beman/execution26/detail/start.hpp                         -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_START
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_START
 
-#include <Beman/Execution26/detail/common.hpp>
+#include <beman/execution26/detail/common.hpp>
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26
+namespace beman::execution26
 {
     struct start_t
     {

@@ -1,4 +1,4 @@
-// include/Beman/Execution26/detail/callable.hpp                      -*-C++-*-
+// include/beman/execution26/detail/callable.hpp                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_CALLABLE
@@ -8,7 +8,7 @@
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26::Detail
+namespace beman::execution26::detail
 {
     template <typename Fun, typename... Args>
     concept callable

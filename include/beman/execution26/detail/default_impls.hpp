@@ -1,21 +1,21 @@
-// include/Beman/Execution26/detail/default_impls.hpp                 -*-C++-*-
+// include/beman/execution26/detail/default_impls.hpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_DEFAULT_IMPLS
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_DEFAULT_IMPLS
 
-#include <Beman/Execution26/detail/fwd_env.hpp>
-#include <Beman/Execution26/detail/get_env.hpp>
-#include <Beman/Execution26/detail/empty_env.hpp>
-#include <Beman/Execution26/detail/start.hpp>
-#include <Beman/Execution26/detail/sender_decompose.hpp>
-#include <Beman/Execution26/detail/callable.hpp>
+#include <beman/execution26/detail/fwd_env.hpp>
+#include <beman/execution26/detail/get_env.hpp>
+#include <beman/execution26/detail/empty_env.hpp>
+#include <beman/execution26/detail/start.hpp>
+#include <beman/execution26/detail/sender_decompose.hpp>
+#include <beman/execution26/detail/callable.hpp>
 #include <utility>
 #include <type_traits>
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26::Detail
+namespace beman::execution26::detail
 {
 #if __cpp_lib_forward_like < 202207
     template <typename T>
@@ -62,7 +62,7 @@ namespace Beman::Execution26::Detail
 #if 202207 <= __cpp_lib_forward_like
         return ::std::forward_like<T>(::std::forward<U>(u));
 #else
-        return ::Beman::Execution26::Detail::forward_like_helper<T>::forward(::std::forward<U>(u));
+        return ::beman::execution26::detail::forward_like_helper<T>::forward(::std::forward<U>(u));
 #endif
     }
 
@@ -72,34 +72,34 @@ namespace Beman::Execution26::Detail
             = [](auto const&, auto const&... child) noexcept -> decltype(auto)
             {
                 if constexpr (1 == sizeof...(child))
-                    return (::Beman::Execution26::Detail::fwd_env(
-                        ::Beman::Execution26::get_env(child)
+                    return (::beman::execution26::detail::fwd_env(
+                        ::beman::execution26::get_env(child)
                     ), ...);
                 else
-                    return ::Beman::Execution26::empty_env{};
+                    return ::beman::execution26::empty_env{};
             };
         static constexpr auto get_env
             = [](auto, auto&, auto const& receiver) noexcept -> decltype(auto)
             {
-                return ::Beman::Execution26::Detail::fwd_env(
-                    ::Beman::Execution26::get_env(receiver)
+                return ::beman::execution26::detail::fwd_env(
+                    ::beman::execution26::get_env(receiver)
                 );
             };
         static constexpr auto get_state
             = []<typename Sender, typename Receiver>(Sender&& sender, Receiver&) noexcept -> decltype(auto)
             {
-                auto&& decompose = ::Beman::Execution26::Detail::get_sender_data(::std::forward<Sender>(sender));
-                return ::Beman::Execution26::Detail::forward_like<Sender>(decompose.data);
+                auto&& decompose = ::beman::execution26::detail::get_sender_data(::std::forward<Sender>(sender));
+                return ::beman::execution26::detail::forward_like<Sender>(decompose.data);
             };
         static constexpr auto start
             = [](auto&, auto&, auto&... ops) noexcept -> void
             {
-                (::Beman::Execution26::start(ops), ...);
+                (::beman::execution26::start(ops), ...);
             };
         static constexpr auto complete
             = []<typename Index, typename Receiver, typename Tag, typename... Args>(
                 Index, auto&, Receiver& receiver, Tag, Args&&... args) noexcept -> void
-                requires ::Beman::Execution26::Detail::callable<Tag, Receiver, Args...>
+                requires ::beman::execution26::detail::callable<Tag, Receiver, Args...>
             {
                 static_assert(Index::value == 0);
                 Tag()(::std::move(receiver), ::std::forward<Args>(args)...);

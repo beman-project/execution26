@@ -1,4 +1,4 @@
-// include/Beman/Execution26/detail/movable_value.hpp                 -*-C++-*-
+// include/beman/execution26/detail/movable_value.hpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_MOVABLE_VALUE
@@ -9,7 +9,7 @@
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26::Detail
+namespace beman::execution26::detail
 {
     template <typename T>
     concept movable_value

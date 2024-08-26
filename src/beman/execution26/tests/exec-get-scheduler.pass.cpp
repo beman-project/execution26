@@ -1,8 +1,8 @@
-// src/Beman/Execution26/tests/exec-get-scheduler.pass.cpp            -*-C++-*-
+// src/beman/execution26/tests/exec-get-scheduler.pass.cpp            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <Beman/Execution26/detail/get_scheduler.hpp>
-#include <Beman/Execution26/detail/forwarding_query.hpp>
+#include <beman/execution26/detail/get_scheduler.hpp>
+#include <beman/execution26/detail/forwarding_query.hpp>
 #include <test/execution.hpp>
 #include <concepts>
 

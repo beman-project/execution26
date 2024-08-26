@@ -1,8 +1,8 @@
-// src/Beman/Execution26/execution.cpp -*-C++-*-
+// src/beman/execution26/execution.cpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26
+namespace beman::execution26
 {
     int version{000};
 }

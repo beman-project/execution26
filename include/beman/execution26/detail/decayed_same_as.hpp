@@ -1,4 +1,4 @@
-// include/Beman/Execution26/detail/decayed_same_as.hpp               -*-C++-*-
+// include/beman/execution26/detail/decayed_same_as.hpp               -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_DECAYED_SAME_AS
@@ -8,7 +8,7 @@
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26::Detail
+namespace beman::execution26::detail
 {
     //-dk:TODO thoroughly test the concept
     template <typename T0, typename T1>

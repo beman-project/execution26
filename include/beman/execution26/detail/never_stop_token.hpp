@@ -1,4 +1,4 @@
-// include/Beman/Execution26/detail/never_stop_token.hpp              -*-C++-*-
+// include/beman/execution26/detail/never_stop_token.hpp              -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_NEVER_STOP_TOKEN
@@ -6,14 +6,14 @@
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26
+namespace beman::execution26
 {
     class never_stop_token;
 }
 
 // ----------------------------------------------------------------------------
 
-class Beman::Execution26::never_stop_token
+class beman::execution26::never_stop_token
 {
     struct private_callback_type
     {

@@ -1,4 +1,4 @@
-// include/Beman/Execution26/detail/common.hpp                        -*-C++-*-
+// include/beman/execution26/detail/common.hpp                        -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_COMMON

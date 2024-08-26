@@ -1,8 +1,8 @@
-// src/Beman/Execution26/tests/exec-connect.pass.cpp                  -*-C++-*-
+// src/beman/execution26/tests/exec-connect.pass.cpp                  -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <Beman/Execution26/detail/connect.hpp>
-#include <Beman/Execution26/detail/receiver.hpp>
+#include <beman/execution26/detail/connect.hpp>
+#include <beman/execution26/detail/receiver.hpp>
 #include <test/execution.hpp>
 #include <concepts>
 

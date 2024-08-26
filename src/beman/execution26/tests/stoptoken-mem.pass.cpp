@@ -1,7 +1,7 @@
-// src/Beman/Execution26/tests/stoptoken-mem.pass.cpp
+// src/beman/execution26/tests/stoptoken-mem.pass.cpp
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <Beman/Execution26/stop_token.hpp>
+#include <beman/execution26/stop_token.hpp>
 #include <memory>
 #include "test/execution.hpp"
 #include "test/stop_token.hpp"

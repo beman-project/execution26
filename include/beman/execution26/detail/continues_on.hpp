@@ -1,4 +1,4 @@
-// include/Beman/Execution26/detail/continues_on.hpp                  -*-C++-*-
+// include/beman/execution26/detail/continues_on.hpp                  -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_CONTINUES_ON
@@ -6,7 +6,7 @@
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26
+namespace beman::execution26
 {
     // specialize default_domain appropriately
     struct continues_on_t

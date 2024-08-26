@@ -1,7 +1,7 @@
-// src/Beman/Execution26/tests/exec-sched.pass.cpp                    -*-C++-*-
+// src/beman/execution26/tests/exec-sched.pass.cpp                    -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <Beman/Execution26/detail/scheduler.hpp>
+#include <beman/execution26/detail/scheduler.hpp>
 #include <test/execution.hpp>
 
 // ----------------------------------------------------------------------------

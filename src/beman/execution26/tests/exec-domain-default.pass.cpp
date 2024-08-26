@@ -1,9 +1,9 @@
-// src/Beman/Execution26/tests/exec-domain-default.pass.cpp           -*-C++-*-
+// src/beman/execution26/tests/exec-domain-default.pass.cpp           -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <Beman/Execution26/detail/default_domain.hpp>
-#include <Beman/Execution26/detail/sender.hpp>
-#include <Beman/Execution26/detail/sender_decompose.hpp>
+#include <beman/execution26/detail/default_domain.hpp>
+#include <beman/execution26/detail/sender.hpp>
+#include <beman/execution26/detail/sender_decompose.hpp>
 #include <test/execution.hpp>
 #include <concepts>
 

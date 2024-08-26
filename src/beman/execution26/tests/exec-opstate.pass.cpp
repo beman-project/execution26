@@ -1,7 +1,7 @@
-// src/Beman/Execution26/tests/exec-opstate.pass.cpp                  -*-C++-*-
+// src/beman/execution26/tests/exec-opstate.pass.cpp                  -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <Beman/Execution26/detail/operation_state.hpp>
+#include <beman/execution26/detail/operation_state.hpp>
 #include <test/execution.hpp>
 
 // ----------------------------------------------------------------------------

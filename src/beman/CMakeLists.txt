@@ -1,6 +1,6 @@
 # cmake-format: off
-# src/Beman/CMakeLists.txt -*-makefile-*-
+# src/beman/CMakeLists.txt -*-makefile-*-
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # cmake-format: on
 
-add_subdirectory(Execution26)
+add_subdirectory(execution26)

@@ -5,7 +5,7 @@
 #ifndef INCLUDED_TEST_STOP_TOKEN
 #define INCLUDED_TEST_STOP_TOKEN
 
-#include <Beman/Execution26/stop_token.hpp>
+#include <beman/execution26/stop_token.hpp>
 #include <test/execution.hpp>
 
 #include <algorithm>

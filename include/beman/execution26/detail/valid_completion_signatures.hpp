@@ -1,15 +1,15 @@
-// include/Beman/Execution26/detail/valid_completion_signatures.hpp   -*-C++-*-
+// include/beman/execution26/detail/valid_completion_signatures.hpp   -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_VALID_COMPLETION_SIGNATURES
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_VALID_COMPLETION_SIGNATURES
 
-#include <Beman/Execution26/detail/completion_signatures.hpp>
+#include <beman/execution26/detail/completion_signatures.hpp>
 #include <type_traits>
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26::Detail
+namespace beman::execution26::detail
 {
     template <typename>
     struct valid_completion_signatures_helper
@@ -17,7 +17,7 @@ namespace Beman::Execution26::Detail
     {
     };
     template <typename... Sigs>
-    struct valid_completion_signatures_helper<::Beman::Execution26::completion_signatures<Sigs...>>
+    struct valid_completion_signatures_helper<::beman::execution26::completion_signatures<Sigs...>>
         : ::std::true_type
     {
     };

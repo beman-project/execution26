@@ -1,15 +1,15 @@
-// include/Beman/Execution26/detail/set_value.hpp -*-C++-*-
+// include/beman/execution26/detail/set_value.hpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_SET_VALUE
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_SET_VALUE
 
-#include <Beman/Execution26/detail/common.hpp>
+#include <beman/execution26/detail/common.hpp>
 #include <utility>
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26
+namespace beman::execution26
 {
     struct set_value_t
     {

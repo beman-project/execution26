@@ -1,4 +1,4 @@
-// include/Beman/Execution26/detail/join_env.hpp                      -*-C++-*-
+// include/beman/execution26/detail/join_env.hpp                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_JOIN_ENV
@@ -9,7 +9,7 @@
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26::Detail
+namespace beman::execution26::detail
 {
     template <typename Env1, typename Env2>
     class join_env

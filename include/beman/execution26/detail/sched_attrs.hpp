@@ -1,21 +1,21 @@
-// include/Beman/Execution26/detail/sched_attrs.hpp                   -*-C++-*-
+// include/beman/execution26/detail/sched_attrs.hpp                   -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_SCHED_ATTRS
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_SCHED_ATTRS
 
-#include <Beman/Execution26/detail/get_domain.hpp>
-#include <Beman/Execution26/detail/get_completion_scheduler.hpp>
-#include <Beman/Execution26/detail/set_error.hpp>
-#include <Beman/Execution26/detail/set_stopped.hpp>
-#include <Beman/Execution26/detail/set_value.hpp>
+#include <beman/execution26/detail/get_domain.hpp>
+#include <beman/execution26/detail/get_completion_scheduler.hpp>
+#include <beman/execution26/detail/set_error.hpp>
+#include <beman/execution26/detail/set_stopped.hpp>
+#include <beman/execution26/detail/set_value.hpp>
 #include <concepts>
 #include <type_traits>
 #include <utility>
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26::Detail
+namespace beman::execution26::detail
 {
     template <typename Scheduler>
     class sched_attrs
@@ -28,11 +28,11 @@ namespace Beman::Execution26::Detail
         sched_attrs(S&& sched): sched(::std::forward<S>(sched)) {}
 
         template <typename Tag>
-        auto query(::Beman::Execution26::get_completion_scheduler_t<Tag> const&) const noexcept
+        auto query(::beman::execution26::get_completion_scheduler_t<Tag> const&) const noexcept
         {
             return this->sched;
         }
-        auto query(::Beman::Execution26::get_domain_t const& q) const noexcept
+        auto query(::beman::execution26::get_domain_t const& q) const noexcept
         {
             return this->sched.query(q);
         }

@@ -1,35 +1,35 @@
-// include/Beman/Execution26/detail/scheduler.hpp                     -*-C++-*-
+// include/beman/execution26/detail/scheduler.hpp                     -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_SCHEDULER
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_SCHEDULER
 
-#include <Beman/Execution26/detail/almost_scheduler.hpp>
-#include <Beman/Execution26/detail/decayed_same_as.hpp>
-#include <Beman/Execution26/detail/get_completion_scheduler.hpp>
-#include <Beman/Execution26/detail/get_env.hpp>
-#include <Beman/Execution26/detail/schedule.hpp>
-#include <Beman/Execution26/detail/set_value.hpp>
+#include <beman/execution26/detail/almost_scheduler.hpp>
+#include <beman/execution26/detail/decayed_same_as.hpp>
+#include <beman/execution26/detail/get_completion_scheduler.hpp>
+#include <beman/execution26/detail/get_env.hpp>
+#include <beman/execution26/detail/schedule.hpp>
+#include <beman/execution26/detail/set_value.hpp>
 #include <concepts>
 #include <type_traits>
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26
+namespace beman::execution26
 {
     template <typename Scheduler>
     concept scheduler
-        = ::Beman::Execution26::Detail::almost_scheduler<Scheduler>
+        = ::beman::execution26::detail::almost_scheduler<Scheduler>
         && requires(Scheduler&& sched) {
             {
-                ::Beman::Execution26::get_completion_scheduler<::Beman::Execution26::set_value_t>(
-                    ::Beman::Execution26::get_env(
-                        ::Beman::Execution26::schedule(
+                ::beman::execution26::get_completion_scheduler<::beman::execution26::set_value_t>(
+                    ::beman::execution26::get_env(
+                        ::beman::execution26::schedule(
                             ::std::forward<Scheduler>(sched)
                         )
                     )
                 )
-            } -> ::Beman::Execution26::Detail::decayed_same_as<Scheduler>;
+            } -> ::beman::execution26::detail::decayed_same_as<Scheduler>;
         }
         ;
 }

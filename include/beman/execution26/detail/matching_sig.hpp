@@ -1,4 +1,4 @@
-// include/Beman/Execution26/detail/matching_sig.hpp                  -*-C++-*-
+// include/beman/execution26/detail/matching_sig.hpp                  -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_MATCHING_SIG
@@ -8,7 +8,7 @@
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26::Detail
+namespace beman::execution26::detail
 {
     template <typename Fun>
     struct matching_sig_transform
@@ -24,8 +24,8 @@ namespace Beman::Execution26::Detail
     template <typename Fun1, typename Fun2>
     inline constexpr bool matching_sig
         = ::std::same_as<
-            typename ::Beman::Execution26::Detail::matching_sig_transform<Fun1>::type,
-            typename ::Beman::Execution26::Detail::matching_sig_transform<Fun2>::type
+            typename ::beman::execution26::detail::matching_sig_transform<Fun1>::type,
+            typename ::beman::execution26::detail::matching_sig_transform<Fun2>::type
             >
         ;
 }

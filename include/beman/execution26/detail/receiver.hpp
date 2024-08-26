@@ -1,26 +1,26 @@
-// include/Beman/Execution26/detail/receiver.hpp                      -*-C++-*-
+// include/beman/execution26/detail/receiver.hpp                      -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_RECEIVER
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_RECEIVER
 
-#include <Beman/Execution26/detail/queryable.hpp>
+#include <beman/execution26/detail/queryable.hpp>
 #include <concepts>
 #include <type_traits>
 
 // ----------------------------------------------------------------------------
 
-namespace Beman::Execution26
+namespace beman::execution26
 {
     struct receiver_t {};
 
     template <typename Rcvr>
     concept receiver
         =  ::std::derived_from<typename ::std::remove_cvref_t<Rcvr>::receiver_concept,
-                             ::Beman::Execution26::receiver_t>
+                             ::beman::execution26::receiver_t>
         && requires(::std::remove_cvref_t<Rcvr> const& rcvr)
             {
-                { ::Beman::Execution26::get_env(rcvr) } -> ::Beman::Execution26::Detail::queryable;
+                { ::beman::execution26::get_env(rcvr) } -> ::beman::execution26::detail::queryable;
             }
         && ::std::move_constructible<::std::remove_cvref_t<Rcvr>>
         && ::std::constructible_from<::std::remove_cvref_t<Rcvr>, Rcvr>

@@ -1,4 +1,4 @@
-# src/Beman/Execution26/tests/CMakeLists.txt
+# src/beman/execution26/tests/CMakeLists.txt
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 list(APPEND execution_tests
