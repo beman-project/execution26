@@ -27,6 +27,8 @@
 #include <Beman/Execution26/detail/set_error.hpp>
 #include <Beman/Execution26/detail/set_stopped.hpp>
 #include <Beman/Execution26/detail/start.hpp>
+#include <Beman/Execution26/detail/scheduler.hpp>
+#include <Beman/Execution26/detail/schedule.hpp>
 
 // ----------------------------------------------------------------------------
 
