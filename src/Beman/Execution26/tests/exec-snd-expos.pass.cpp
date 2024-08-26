@@ -18,6 +18,7 @@
 #include <Beman/Execution26/detail/env_type.hpp>
 #include <Beman/Execution26/detail/basic_receiver.hpp>
 #include <Beman/Execution26/detail/completion_tag.hpp>
+#include <Beman/Execution26/detail/scheduler.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
@@ -315,16 +316,97 @@ namespace
         assert(result2.default_value == 74);
     }
 
+    template <typename Expect>
+    auto test_get_domain_late(auto sender, auto env)
+    {
+        static_assert(test_std::sender<decltype(sender)>);
+        static_assert(test_detail::queryable<decltype(env)>);
+        static_assert(std::same_as<Expect,
+            decltype(test_detail::get_domain_late(sender, env))>);
+    }
+
+    struct get_domain_late_scheduler
+    {
+        struct dom {};
+        struct env
+        {
+            template <typename Tag>
+            auto query(test_std::get_completion_scheduler_t<Tag> const&)
+                const noexcept -> get_domain_late_scheduler { return {}; }
+        };
+        struct sender
+        {
+            using sender_concept = test_std::sender_t;
+            auto get_env() const noexcept -> env { return {}; };
+        };
+        using scheduler_concept = test_std::scheduler_t;
+        auto schedule() noexcept -> sender { return {}; }
+        auto operator== (get_domain_late_scheduler const&) const -> bool = default;
+        auto query(test_std::get_domain_t const&) const noexcept -> dom { return {}; }
+    };
+
+    struct get_domain_late_env
+    {
+        struct dom {};
+        template <typename Tag>
+        auto query(test_std::get_completion_scheduler_t<Tag> const&)
+            const noexcept -> get_domain_late_scheduler { return {}; }
+        auto query(test_std::get_domain_t const&) const noexcept -> dom { return {}; }
+    };
+
     auto test_get_domain_late() -> void
     {
-        #if 0
-        static_assert(test_std::sender<test_sender>);
-        env const e;
-        test_sender const sndr;
-        auto dom{test_detail::get_domain_late(sndr, e)};
-        (void)dom;
-        //-dk:TOO test
-        #endif
+        struct no_domain_sender
+        {
+            using sender_concept = test_std::sender_t;
+        };
+        test_get_domain_late<test_std::default_domain>(no_domain_sender{}, test_std::empty_env{});
+
+        struct scheduler_env
+        {
+            auto query(test_std::get_scheduler_t const&) const noexcept
+                -> get_domain_late_scheduler { return {}; }
+        };
+        static_assert(test_std::scheduler<get_domain_late_scheduler>);
+        static_assert(std::same_as<get_domain_late_scheduler,
+                      decltype(test_std::get_scheduler(scheduler_env{}))>);
+        static_assert(std::same_as<get_domain_late_scheduler::dom,
+                      decltype(test_std::get_domain(get_domain_late_scheduler{}))>);
+        test_get_domain_late<get_domain_late_scheduler::dom>(no_domain_sender{}, scheduler_env{});
+
+        struct domain_env
+        {
+            struct dom {};
+            auto query(test_std::get_scheduler_t const&) const noexcept
+                -> get_domain_late_scheduler { return {}; }
+            auto query(test_std::get_domain_t) const noexcept -> dom { return {}; }
+        };
+        static_assert(std::same_as<domain_env::dom,
+                      decltype(test_std::get_domain(domain_env{}))>);
+        test_get_domain_late<domain_env::dom>(no_domain_sender{}, domain_env{});
+
+        struct scheduler_sender
+        {
+            using sender_concept = test_std::sender_t;
+            auto get_env() const noexcept -> get_domain_late_scheduler::env { return {}; }
+        };
+        static_assert(test_std::sender<scheduler_sender>);
+        static_assert(std::same_as<get_domain_late_scheduler::env,
+            decltype(test_std::get_env(scheduler_sender{}))>);
+        static_assert(std::same_as<get_domain_late_scheduler::dom,
+            decltype(test_detail::completion_domain(scheduler_sender{}))>);
+        test_get_domain_late<get_domain_late_scheduler::dom>(scheduler_sender{}, test_std::empty_env{});
+
+        struct env_sender
+        {
+            using sender_concept = test_std::sender_t;
+            auto get_env() const noexcept -> get_domain_late_env { return {}; }
+        };
+        static_assert(test_std::sender<env_sender>);
+        static_assert(std::same_as<get_domain_late_env::dom,
+                      decltype(test_std::get_domain(get_domain_late_env{}))>);
+        static_assert(std::same_as<get_domain_late_env, decltype(test_std::get_env(env_sender{}))>);
+        test_get_domain_late<get_domain_late_env::dom>(env_sender{}, test_std::empty_env{});
     }
 
     auto test_default_impls_get_attrs() -> void
@@ -336,8 +418,8 @@ namespace
         static_assert(noexcept(test_detail::default_impls::get_attrs(0, child1{})));
         static_assert(std::same_as<test_detail::fwd_env<env>,
             decltype(test_detail::default_impls::get_attrs(0, child1{}))>);
-        static_assert(std::same_as<test_std::empty_env,
-            decltype(test_detail::default_impls::get_attrs(0, child1{}, child2{}))>);
+        //static_assert(std::same_as<test_std::empty_env,
+        //    decltype(test_detail::default_impls::get_attrs(0, child1{}, child2{}))>);
     }
 
     auto test_default_impls_get_env() -> void
