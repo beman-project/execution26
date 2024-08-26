@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <Beman/Execution26/detail/schedule_result_t.hpp>
+#include <Beman/Execution26/detail/env_of_t.hpp>
 #include <Beman/Execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
@@ -35,9 +36,23 @@ namespace
         static_assert(test_std::scheduler<scheduler>);
         static_assert(std::same_as<scheduler::sender, test_std::schedule_result_t<scheduler>>);
     }
+
+    auto test_env_of_t() -> void
+    {
+        struct env {};
+        struct object {};
+        struct object_with_env
+        {
+            auto get_env() const noexcept -> env { return {}; }
+        };
+
+        static_assert(std::same_as<test_std::empty_env, test_std::env_of_t<object>>);
+        static_assert(std::same_as<env, test_std::env_of_t<object_with_env>>);
+    }
 }
 
 auto main() -> int
 {
     test_schedule_result_t();
+    test_env_of_t();
 }

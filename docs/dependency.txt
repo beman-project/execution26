@@ -1,3 +1,4 @@
+connect_result_t connect
 apply_sender is_sender
 as_awaitable is_awaitable
 await_result_type get_awaiter
@@ -68,6 +69,7 @@ connect with_await_transform
 connect with_connect_awaitable_promise
 connect_all basic_receiver
 connect_all basic_state
+connect_all connect
 connect_all product_type
 connect_all_result basic_state
 connect_all_result call_result
