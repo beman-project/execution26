@@ -45,8 +45,8 @@ namespace
 
     struct allocate_size_type_mismatch
     {
-        using value_type = int; //-dk:TODO long;
-        auto allocate(size_type n) -> int* { return new int[::std::size_t(n)]; }
+        using value_type = long;
+        auto allocate(::std::size_t n) -> int* { return new int[::std::size_t(n)]; }
         auto deallocate(int*, ::std::size_t) -> void {}
 
         auto operator== (allocate_size_type_mismatch const&) const -> bool = default;

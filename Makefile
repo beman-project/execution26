@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 SANITIZERS = none msan asan usan tsan
-.PHONY: default todo ce distclean clean build test all $(SANITIZERS)
+.PHONY: default check ce todo distclean clean build test all $(SANITIZERS)
 
 CXX_FLAGS = -g
 SANITIZER = none
@@ -56,6 +56,14 @@ test: build
 ce:
 	@mkdir -p $(BUILD)
 	bin/mk-compiler-explorer.py $(BUILD)
+
+check:
+	@for h in `find include -name \*.hpp`; \
+	do \
+		from=`echo -n $$h | sed -n 's@.*Beman/\(.*\).hpp.*@\1@p'`; \
+		< $$h sed -n "/^ *# *include <Beman\//s@.*[</]Beman/\(.*\).hpp>.*@$$from \1@p"; \
+	done | tsort > /dev/null
+
 todo:
 	bin/mk-todo.py
 

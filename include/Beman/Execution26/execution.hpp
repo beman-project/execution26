@@ -7,6 +7,7 @@
 // ----------------------------------------------------------------------------
 
 #include <Beman/Execution26/detail/queryable.hpp>
+#include <Beman/Execution26/detail/empty_env.hpp>
 #include <Beman/Execution26/detail/forwarding_query.hpp>
 #include <Beman/Execution26/detail/get_allocator.hpp>
 #include <Beman/Execution26/detail/get_stop_token.hpp>
@@ -26,6 +27,8 @@
 #include <Beman/Execution26/detail/set_error.hpp>
 #include <Beman/Execution26/detail/set_stopped.hpp>
 #include <Beman/Execution26/detail/start.hpp>
+#include <Beman/Execution26/detail/scheduler.hpp>
+#include <Beman/Execution26/detail/schedule.hpp>
 
 // ----------------------------------------------------------------------------
 

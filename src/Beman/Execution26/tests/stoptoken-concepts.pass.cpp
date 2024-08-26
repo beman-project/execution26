@@ -92,7 +92,7 @@ namespace stoppable_token
 
     struct non_template_callback_type
     {
-        struct callback_type {}; //-dk:TODO
+        struct callback_type {};
         auto stop_requested() const noexcept -> bool;
         auto stop_possible() const noexcept -> bool;
         auto operator== (non_template_callback_type const&) const -> bool = default;
