@@ -1,6 +1,8 @@
 // src/beman/execution26/tests/exec-utils-cmplsigs.pass.cpp           -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/value_types_of_t.hpp>
+#include <beman/execution26/detail/gather_signatures.hpp>
 #include <beman/execution26/execution.hpp>
 #include <test/execution.hpp>
 

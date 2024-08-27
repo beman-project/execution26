@@ -3,6 +3,8 @@
 
 #include <beman/execution26/detail/schedule_result_t.hpp>
 #include <beman/execution26/detail/env_of_t.hpp>
+#include <beman/execution26/detail/decayed_tuple.hpp>
+#include <beman/execution26/detail/variant_or_empty.hpp>
 #include <beman/execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
@@ -49,10 +51,42 @@ namespace
         static_assert(std::same_as<test_std::empty_env, test_std::env_of_t<object>>);
         static_assert(std::same_as<env, test_std::env_of_t<object_with_env>>);
     }
+
+    auto test_decayed_tuple() -> void
+    {
+        static_assert(std::same_as<std::tuple<int, bool, char>,
+            test_detail::decayed_tuple<int, bool, char>>);
+        static_assert(std::same_as<std::tuple<int, bool, char>,
+            test_detail::decayed_tuple<int const, bool volatile, char const volatile>>);
+        static_assert(std::same_as<std::tuple<int, bool, char*>,
+            test_detail::decayed_tuple<int&, bool&&, char[5]>>);
+        static_assert(std::same_as<std::tuple<int, bool, char*>,
+            test_detail::decayed_tuple<int const&, bool volatile&&, char[5]>>);
+    }
+
+    auto test_variant_or_empty() -> void
+    {
+        static_assert(not std::default_initializable<test_detail::empty_variant>);
+
+        static_assert(std::same_as<
+            test_detail::variant_or_empty<>,
+            test_detail::empty_variant
+            >);
+        static_assert(std::same_as<
+            test_detail::variant_or_empty<int&>,
+            std::variant<int>
+            >);
+        static_assert(std::same_as<
+            test_detail::variant_or_empty<int&, int const>,
+            std::variant<int>
+            >);
+    }
 }
 
 auto main() -> int
 {
     test_schedule_result_t();
     test_env_of_t();
+    test_decayed_tuple();
+    test_variant_or_empty();
 }
