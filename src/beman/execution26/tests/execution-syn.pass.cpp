@@ -85,13 +85,19 @@ namespace
 
     struct sender_in
     {
+        struct arg {};
+
         using sender_concept = test_std::sender_t;
-        using completion_signatures = test_std::completion_signatures<>;
+        using completion_signatures = test_std::completion_signatures<
+            test_std::set_value_t(arg),
+            test_std::set_stopped_t()
+        >;
     };
 
     template <typename T>
     auto test_completion_signatures_of_t() -> void
     {
+        struct env {};
         struct non_sender {};
         static_assert(not requires{
             typename T;
@@ -100,7 +106,50 @@ namespace
 
         static_assert(test_std::sender<sender_in>);
         static_assert(test_std::sender_in<sender_in>);
-        //-dk:TODO add actually meaningful test
+        static_assert(requires{
+            typename test_std::completion_signatures_of_t<sender_in>;
+            { test_std::completion_signatures_of_t<sender_in>{} }
+            -> std::same_as<sender_in::completion_signatures>;
+        });
+
+        struct sender_with_get
+        {
+            struct arg {};
+
+            using sender_concept = test_std::sender_t;
+
+            using empty_sigs = test_std::completion_signatures<
+                test_std::set_value_t(arg),
+                test_std::set_stopped_t()
+            >;
+            auto get_completion_signatures(test_std::empty_env) const noexcept
+            {
+                return empty_sigs{};
+            }
+
+            using env_sigs = test_std::completion_signatures<
+                test_std::set_value_t(arg, arg),
+                test_std::set_stopped_t()
+            >;
+            auto get_completion_signatures(env) const noexcept
+            {
+                return env_sigs{};
+            }
+        };
+        static_assert(not std::same_as<typename sender_with_get::empty_sigs,
+            typename sender_with_get::env_sigs>);
+        static_assert(test_std::sender<sender_with_get>);
+        static_assert(test_std::sender_in<sender_with_get>);
+        static_assert(requires{
+            typename test_std::completion_signatures_of_t<sender_with_get>;
+            { test_std::completion_signatures_of_t<sender_with_get>{} }
+            -> std::same_as<typename sender_with_get::empty_sigs>;
+        });
+        static_assert(requires{
+            typename test_std::completion_signatures_of_t<sender_with_get>;
+            { test_std::completion_signatures_of_t<sender_with_get, env>{} }
+            -> std::same_as<typename sender_with_get::env_sigs>;
+        });
 
     }
 }

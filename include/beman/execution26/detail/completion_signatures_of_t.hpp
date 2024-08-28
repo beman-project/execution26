@@ -13,9 +13,13 @@
 
 namespace beman::execution26
 {
-    template <typename Sender>
-        requires beman::execution26::sender_in<Sender>
-    using completion_signatures_of_t = int;
+    template <typename Sender, typename Env = ::beman::execution26::empty_env>
+        requires ::beman::execution26::sender_in<Sender>
+    using completion_signatures_of_t
+        = ::beman::execution26::detail::call_result_t<
+            ::beman::execution26::get_completion_signatures_t, Sender, Env
+        >
+        ;
 }
 
 // ----------------------------------------------------------------------------
