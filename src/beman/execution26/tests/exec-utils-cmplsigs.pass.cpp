@@ -88,20 +88,93 @@ namespace
 
     auto test_always_true() -> void
     {
-        struct arg {};
         static_assert(test_detail::always_true<>);
-        static_assert(test_detail::always_true<arg>);
-        static_assert(test_detail::always_true<arg, bool, char, double>);
+        static_assert(test_detail::always_true<arg<0>>);
+        static_assert(test_detail::always_true<arg<0>, bool, char, double>);
     }
 
     auto test_gather_signatures() -> void
     {
-        using type = test_detail::gather_signatures<
-            test_std::set_error_t,
-            test_std::completion_signatures<test_std::set_stopped_t()>,
-            tuple,
-            variant>;
-        static_assert(std::same_as<variant<>, type>);
+        static_assert(std::same_as<
+            variant<>,
+            test_detail::gather_signatures<
+                test_std::set_error_t,
+                test_std::completion_signatures<test_std::set_stopped_t()>,
+                tuple,
+                variant>
+        >);
+
+        static_assert(std::same_as<
+            variant<>,
+            test_detail::gather_signatures<
+                test_std::set_error_t,
+                test_std::completion_signatures<test_std::set_stopped_t()>,
+                std::type_identity_t,
+                variant>
+        >);
+
+        static_assert(std::same_as<
+            variant<tuple<>>,
+            test_detail::gather_signatures<
+                test_std::set_stopped_t,
+                test_std::completion_signatures<test_std::set_stopped_t()>,
+                tuple,
+                variant>
+        >);
+
+        static_assert(std::same_as<
+            tuple<>,
+            test_detail::gather_signatures<
+                test_std::set_stopped_t,
+                test_std::completion_signatures<test_std::set_stopped_t()>,
+                tuple,
+                std::type_identity_t>
+        >);
+
+        static_assert(std::same_as<
+            variant<tuple<int>, tuple<arg<0>>>,
+            test_detail::gather_signatures<
+                test_std::set_error_t,
+                test_std::completion_signatures<
+                    test_std::set_value_t(),
+                    test_std::set_value_t(int, arg<0>),
+                    test_std::set_error_t(int),
+                    test_std::set_error_t(arg<0>),
+                    test_std::set_stopped_t()
+                >,
+                tuple,
+                variant>
+        >);
+
+        static_assert(std::same_as<
+            variant<int, arg<0>>,
+            test_detail::gather_signatures<
+                test_std::set_error_t,
+                test_std::completion_signatures<
+                    test_std::set_value_t(),
+                    test_std::set_value_t(int, arg<0>),
+                    test_std::set_error_t(int),
+                    test_std::set_error_t(arg<0>),
+                    test_std::set_stopped_t()
+                >,
+                std::type_identity_t,
+                variant>
+        >);
+
+        static_assert(std::same_as<
+            variant<tuple<>, tuple<int, arg<0>, arg<1>>>,
+            test_detail::gather_signatures<
+                test_std::set_value_t,
+                test_std::completion_signatures<
+                    test_std::set_value_t(),
+                    test_std::set_value_t(int, arg<0>, arg<1>),
+                    test_std::set_error_t(int),
+                    test_std::set_error_t(arg<0>),
+                    test_std::set_stopped_t()
+                >,
+                tuple,
+                variant>
+        >);
     }
 }
 
