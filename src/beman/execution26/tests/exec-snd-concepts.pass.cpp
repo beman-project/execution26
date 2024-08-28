@@ -114,13 +114,15 @@ namespace
         struct sender_in
         {
             using sender_concept = test_std::sender_t;
+            using completion_signatures = test_std::completion_signatures<>;
         };
 
+        static_assert(test_std::sender<sender_in>);
         static_assert(not test_std::sender_in<non_sender_in>);
         static_assert(not test_std::sender_in<sender_in, non_queryable>);
         static_assert(test_std::sender_in<sender_in>);
         static_assert(test_std::sender_in<sender_in, queryable>);
-        //-dk:TODO add missing test cases
+        //-dk:TODO add missing test cases for sender_in
     }
 
     auto test_tag_of_t() -> void

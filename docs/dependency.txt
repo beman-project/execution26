@@ -1,4 +1,3 @@
-connect_result_t connect
 apply_sender is_sender
 as_awaitable is_awaitable
 await_result_type get_awaiter
@@ -22,6 +21,7 @@ basic_operation tag_of_t
 basic_operation valid_specialization
 basic_receiver basic_state
 basic_receiver callable
+basic_receiver env_type
 basic_receiver impls_for
 basic_receiver receiver_t
 basic_receiver set_error
@@ -30,7 +30,6 @@ basic_receiver set_value
 basic_receiver state_type
 basic_receiver tag_of_t
 basic_receiver valid_specialization
-basic_receiver env_type
 basic_sender basic_operation
 basic_sender impls_for
 basic_sender product_type
@@ -55,6 +54,10 @@ completion_signature set_error
 completion_signature set_stopped
 completion_signature set_value
 completion_signatures_for completion_signatures
+completion_signatures_of_t empty_env
+completion_signatures_of_t sender_in
+completion_signatures_of_t call_result_t
+completion_signatures_of_t get_completion_signatures
 completion_tag set_error
 completion_tag set_stopped
 completion_tag set_value
@@ -75,6 +78,7 @@ connect_all_result basic_state
 connect_all_result call_result
 connect_all_result connect_all
 connect_all_result indices_for
+connect_result_t connect
 continues_on default_impls
 continues_on fwd_env
 continues_on get_domain_early
@@ -91,11 +95,11 @@ continues_on sender_for
 default_domain queryable
 default_domain sender
 default_domain tag_of_t
+default_impls callable
+default_impls empty_env
 default_impls fwd_env
 default_impls get_env
-default_impls empty_env
 default_impls start
-default_impls callable
 default_set_error completion_signatures
 default_set_error set_value
 default_set_value completion_signatures
@@ -138,7 +142,7 @@ get_domain_early default_domain
 get_domain_early get_domain
 get_domain_early get_env
 get_domain_late completion_domain
-get_domain_late continues_on_t
+get_domain_late continues_on-break
 get_domain_late default_domain
 get_domain_late get_domain
 get_domain_late get_scheduler

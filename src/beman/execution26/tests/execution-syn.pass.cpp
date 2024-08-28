@@ -5,6 +5,7 @@
 #include <beman/execution26/detail/env_of_t.hpp>
 #include <beman/execution26/detail/decayed_tuple.hpp>
 #include <beman/execution26/detail/variant_or_empty.hpp>
+#include <beman/execution26/detail/completion_signatures_of_t.hpp>
 #include <beman/execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
@@ -81,6 +82,25 @@ namespace
             std::variant<int>
             >);
     }
+
+    template <typename T>
+    auto test_completion_signatures_of_t() -> void
+    {
+        struct non_sender {};
+        static_assert(not requires{
+            typename T;
+            typename test_std::completion_signatures_of_t<non_sender>;
+        });
+
+        struct sender_in
+        {
+            using sender_concept = test_std::sender_t;
+            using completion_signatures = test_std::completion_signatures<>;
+        };
+        static_assert(test_std::sender_in<sender_in>);
+        //-dk:TODO add actually meaningful test
+
+    }
 }
 
 auto main() -> int
@@ -89,4 +109,5 @@ auto main() -> int
     test_env_of_t();
     test_decayed_tuple();
     test_variant_or_empty();
+    test_completion_signatures_of_t<int>();
 }
