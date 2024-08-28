@@ -16,38 +16,38 @@ auto main() -> int
 {
     static_assert(std::same_as<
         type_list<>,
-        test_detail::meta::unique<type_list>
+        test_detail::meta::unique<type_list<>>
         >);
     static_assert(std::same_as<
         type_list<bool>,
-        test_detail::meta::unique<type_list, bool>
+        test_detail::meta::unique<type_list<bool>>
         >);
     static_assert(std::same_as<
         type_list<bool>,
-        test_detail::meta::unique<type_list, bool, bool>
+        test_detail::meta::unique<type_list<bool, bool>>
         >);
     static_assert(std::same_as<
         type_list<bool>,
-        test_detail::meta::unique<type_list, bool, bool, bool>
+        test_detail::meta::unique<type_list<bool, bool, bool>>
         >);
     static_assert(std::same_as<
         type_list<bool, char>,
-        test_detail::meta::unique<type_list, bool, bool, bool, char>
+        test_detail::meta::unique<type_list<bool, bool, bool, char>>
         >);
     static_assert(std::same_as<
         type_list<bool, char, double>,
-        test_detail::meta::unique<type_list, bool, char, double>
+        test_detail::meta::unique<type_list<bool, char, double>>
         >);
     static_assert(std::same_as<
         type_list<bool, char, double>,
-        test_detail::meta::unique<type_list, bool, bool, char, char, double, double>
+        test_detail::meta::unique<type_list<bool, bool, char, char, double, double>>
         >);
     static_assert(std::same_as<
         type_list<double, char, bool>,
-        test_detail::meta::unique<type_list, bool, char, double, char, bool>
+        test_detail::meta::unique<type_list<bool, char, double, char, bool>>
         >);
     static_assert(std::same_as<
         type_list<double, bool, char>,
-        test_detail::meta::unique<type_list, bool, char, double, bool, char>
+        test_detail::meta::unique<type_list<bool, char, double, bool, char>>
         >);
 }

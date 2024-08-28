@@ -120,7 +120,6 @@ error_types_of_t set_error
 fwd_env queryable
 gather_signatures always_true
 gather_signatures indirect_meta_apply
-gather_signatures meta_apply
 gather_signatures valid_completion_signatures
 get_allocator mandate_nothrow
 get_completion_schedulder completion_tag
@@ -167,7 +166,6 @@ has_completions completion_signatures
 has_completions valid_completions_for
 impls_for default_impls
 impls_for write_env-break
-indirect_meta_apply meta_apply
 into_variant child_type
 into_variant decayed_tuple
 into_variant default_impls

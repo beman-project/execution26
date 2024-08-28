@@ -16,18 +16,18 @@ auto main() -> int
 {
     static_assert(std::same_as<
         type_list<bool>,
-        test_detail::meta::prepend<type_list, bool, type_list<>>
+        test_detail::meta::prepend<bool, type_list<>>
         >);
     static_assert(std::same_as<
         type_list<bool, char>,
-        test_detail::meta::prepend<type_list, bool, type_list<char>>
+        test_detail::meta::prepend<bool, type_list<char>>
         >);
     static_assert(std::same_as<
         type_list<bool, char, double>,
-        test_detail::meta::prepend<type_list, bool, type_list<char, double>>
+        test_detail::meta::prepend<bool, type_list<char, double>>
         >);
     static_assert(std::same_as<
         type_list<bool, char, double, int>,
-        test_detail::meta::prepend<type_list, bool, type_list<char, double, int>>
+        test_detail::meta::prepend<bool, type_list<char, double, int>>
         >);
 }

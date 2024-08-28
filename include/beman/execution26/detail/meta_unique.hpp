@@ -13,37 +13,36 @@
 
 namespace beman::execution26::detail::meta::detail
 {
-    template <template <typename...> class List, typename... T>
-    struct unique;
+    template <typename> struct unique;
 
     template <template <typename...> class List>
-    struct unique<List>
+    struct unique<List<>>
     {
         using type = List<>;
     };
     template <template <typename...> class List, typename T>
-    struct unique<List, T>
+    struct unique<List<T>>
     {
         using type = List<T>;
     };
 
-    template <template <typename...> class List, typename T, typename... S>
-    struct unique<List, T, S...>
+    template <template <typename...> class List, typename H, typename... T>
+    struct unique<List<H, T...>>
     {
-        using tail = ::beman::execution26::detail::meta::detail::unique<List, S...>::type;
+        using tail = ::beman::execution26::detail::meta::detail::unique<List<T...>>::type;
         using type = ::std::conditional_t<
-            ::beman::execution26::detail::meta::contains<T, S...>,
+            ::beman::execution26::detail::meta::contains<H, T...>,
             tail,
-            ::beman::execution26::detail::meta::prepend<List, T, tail>
+            ::beman::execution26::detail::meta::prepend<H, tail>
             >;
     };
 }
 
 namespace beman::execution26::detail::meta
 {
-    template <template <typename...> class List, typename... T>
+    template <typename T>
     using unique
-        = ::beman::execution26::detail::meta::detail::unique<List, T...>::type;
+        = ::beman::execution26::detail::meta::detail::unique<T>::type;
 }
 
 // ----------------------------------------------------------------------------

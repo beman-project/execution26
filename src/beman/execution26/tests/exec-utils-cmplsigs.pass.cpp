@@ -15,6 +15,8 @@ namespace
     template <int> struct arg {};
 
     template <typename...> struct type_list {};
+    template <typename...> struct variant {};
+    template <typename...> struct tuple {};
     template <typename, typename> struct two_types {};
 
     auto test_completion_signature()
@@ -82,7 +84,24 @@ namespace
             two_types<bool, char>,
             test_detail::indirect_meta_apply<true>::meta_apply<two_types, bool, char>
             >);
+    }
 
+    auto test_always_true() -> void
+    {
+        struct arg {};
+        static_assert(test_detail::always_true<>);
+        static_assert(test_detail::always_true<arg>);
+        static_assert(test_detail::always_true<arg, bool, char, double>);
+    }
+
+    auto test_gather_signatures() -> void
+    {
+        using type = test_detail::gather_signatures<
+            test_std::set_error_t,
+            test_std::completion_signatures<test_std::set_stopped_t()>,
+            tuple,
+            variant>;
+        static_assert(std::same_as<variant<>, type>);
     }
 }
 
@@ -93,9 +112,9 @@ auto main() -> int
     test_valid_completion_signatures();
     test_indirect_meta_apply();
     //-dk:TODO add other components mentioned by [exec.utils.cmplsigs]:
-    //-dk:TODO test always_true
-    //-dk:TODO test gather-signatures
-    //-dk:TODO test value_types_of_t
-    //-dk:TODO test error_types_of_t
-    //-dk:TODO test sends_stopped
+    test_always_true();
+    test_gather_signatures();
+    //-dk:TODO test_value_types_of_t();
+    //-dk:TODO test_error_types_of_t();
+    //-dk:TODO test_sends_stopped();
 }

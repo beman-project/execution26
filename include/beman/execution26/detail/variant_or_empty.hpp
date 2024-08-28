@@ -29,7 +29,7 @@ namespace beman::execution26::detail
     struct variant_or_empty_helper
     {
         using type = ::beman::execution26::detail::meta::unique<
-            ::std::variant, ::std::decay_t<T>...
+            ::std::variant<::std::decay_t<T>...>
         >;
     };
 
