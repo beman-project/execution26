@@ -3,6 +3,7 @@
 
 #include <beman/execution26/detail/value_types_of_t.hpp>
 #include <beman/execution26/detail/gather_signatures.hpp>
+#include <beman/execution26/detail/indirect_meta_apply.hpp>
 #include <beman/execution26/execution.hpp>
 #include <test/execution.hpp>
 
@@ -12,6 +13,9 @@ namespace
 {
     struct error {};
     template <int> struct arg {};
+
+    template <typename...> struct type_list {};
+    template <typename, typename> struct two_types {};
 
     auto test_completion_signature()
     {
@@ -66,6 +70,20 @@ namespace
         static_assert(test_detail::valid_completion_signatures<
             test_std::completion_signatures<test_std::set_value_t()>>);
     }
+
+    auto test_indirect_meta_apply() -> void
+    {
+        static_assert(std::same_as<
+            type_list<bool, char, double>,
+            test_detail::indirect_meta_apply<true>::meta_apply<type_list, bool, char, double>
+            >);
+
+        static_assert(std::same_as<
+            two_types<bool, char>,
+            test_detail::indirect_meta_apply<true>::meta_apply<two_types, bool, char>
+            >);
+
+    }
 }
 
 auto main() -> int
@@ -73,8 +91,8 @@ auto main() -> int
     test_completion_signature();
     test_completion_signatures();
     test_valid_completion_signatures();
+    test_indirect_meta_apply();
     //-dk:TODO add other components mentioned by [exec.utils.cmplsigs]:
-    //-dk:TODO test indirect_meta_apply
     //-dk:TODO test always_true
     //-dk:TODO test gather-signatures
     //-dk:TODO test value_types_of_t

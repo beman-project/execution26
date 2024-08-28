@@ -54,10 +54,10 @@ completion_signature set_error
 completion_signature set_stopped
 completion_signature set_value
 completion_signatures_for completion_signatures
-completion_signatures_of_t empty_env
-completion_signatures_of_t sender_in
 completion_signatures_of_t call_result_t
+completion_signatures_of_t empty_env
 completion_signatures_of_t get_completion_signatures
+completion_signatures_of_t sender_in
 completion_tag set_error
 completion_tag set_stopped
 completion_tag set_value
@@ -118,6 +118,10 @@ env_type tag_of_t
 error_types_of_t gather_signatures
 error_types_of_t set_error
 fwd_env queryable
+gather_signatures always_true
+gather_signatures indirect_meta_apply
+gather_signatures meta_apply
+gather_signatures valid_completion_signatures
 get_allocator mandate_nothrow
 get_completion_schedulder completion_tag
 get_completion_schedulder forwarding_query
@@ -163,6 +167,7 @@ has_completions completion_signatures
 has_completions valid_completions_for
 impls_for default_impls
 impls_for write_env-break
+indirect_meta_apply meta_apply
 into_variant child_type
 into_variant decayed_tuple
 into_variant default_impls
