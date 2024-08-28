@@ -83,6 +83,12 @@ namespace
             >);
     }
 
+    struct sender_in
+    {
+        using sender_concept = test_std::sender_t;
+        using completion_signatures = test_std::completion_signatures<>;
+    };
+
     template <typename T>
     auto test_completion_signatures_of_t() -> void
     {
@@ -92,11 +98,7 @@ namespace
             typename test_std::completion_signatures_of_t<non_sender>;
         });
 
-        struct sender_in
-        {
-            using sender_concept = test_std::sender_t;
-            using completion_signatures = test_std::completion_signatures<>;
-        };
+        static_assert(test_std::sender<sender_in>);
         static_assert(test_std::sender_in<sender_in>);
         //-dk:TODO add actually meaningful test
 
