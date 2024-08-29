@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <beman/execution26/detail/product_type.hpp>
+#include <beman/execution26/detail/operation_state.hpp>
 #include <beman/execution26/detail/basic_operation.hpp>
 #include <beman/execution26/detail/connect_all.hpp>
 #include <beman/execution26/detail/fwd_env.hpp>
@@ -30,6 +31,8 @@
 
 namespace
 {
+    auto use(auto&&) {}
+
     struct domain
     {
         int value{};
@@ -93,11 +96,66 @@ namespace
 
     struct tag {};
 
+    template <typename Receiver>
+    struct operation_state
+    {
+        using operation_state_concept = test_std::operation_state_t;
+        auto start() noexcept -> void {}
+    };
+
     struct sender0
     {
         using sender_concept = test_std::sender_t;
         tag t{};
         int data{};
+        template <typename Receiver>
+        auto connect(Receiver&&) const noexcept -> operation_state<Receiver> { return {}; }
+    };
+
+    struct sender1
+    {
+        using sender_concept = test_std::sender_t;
+        tag t{};
+        int data{};
+        sender0 c0{};
+        template <typename Receiver>
+        auto connect(Receiver&&) const noexcept -> operation_state<Receiver> { return {}; }
+    };
+
+    struct sender2
+    {
+        using sender_concept = test_std::sender_t;
+        tag t{};
+        int data{};
+        sender0 c0{};
+        sender0 c1{};
+        template <typename Receiver>
+        auto connect(Receiver&&) const noexcept -> operation_state<Receiver> { return {}; }
+    };
+
+    struct sender3
+    {
+        using sender_concept = test_std::sender_t;
+        tag t{};
+        int data{};
+        sender0 c0{};
+        sender0 c1{};
+        sender0 c2{};
+        template <typename Receiver>
+        auto connect(Receiver&&) const noexcept -> operation_state<Receiver> { return {}; }
+    };
+
+    struct sender4
+    {
+        using sender_concept = test_std::sender_t;
+        tag t{};
+        int data{};
+        sender0 c0{};
+        sender0 c1{};
+        sender0 c2{};
+        sender0 c3{};
+        template <typename Receiver>
+        auto connect(Receiver&&) const noexcept -> operation_state<Receiver> { return {}; }
     };
 
     struct receiver
@@ -813,19 +871,90 @@ namespace
     }
     auto test_connect_all() -> void
     {
+        static_assert(test_std::operation_state<operation_state<receiver>>);
         {
             sender0 s{};
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<>{})};
-            (void)product;
+            assert(product.size == 0);
+            use(product);
         }
-        if constexpr (false)
         {
             sender0 const s{};
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<>{})};
-            (void)product;
+            assert(product.size == 0);
+            use(product);
         }
+        {
+            static_assert(requires{ sender1{}.connect(receiver{}); });
+            static_assert(requires{ test_std::connect(sender1{}, receiver{}); });
+            test_detail::basic_state state{sender1{}, receiver{}};
+            auto product{test_detail::connect_all(&state, sender1{}, std::index_sequence<0>{})};
+            assert(product.size == 1);
+            use(product);
+        }
+        {
+            sender1 const s{};
+            static_assert(requires{ s.connect(receiver{}); });
+            static_assert(requires{ test_std::connect(s, receiver{}); });
+            test_detail::basic_state state{std::move(s), receiver{}};
+            auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0>{})};
+            assert(product.size == 1);
+            use(product);
+        }
+        {
+            static_assert(requires{ sender2{}.connect(receiver{}); });
+            static_assert(requires{ test_std::connect(sender2{}, receiver{}); });
+            test_detail::basic_state state{sender2{}, receiver{}};
+            auto product{test_detail::connect_all(&state, sender2{}, std::index_sequence<0, 1>{})};
+            assert(product.size == 2);
+            use(product);
+        }
+        {
+            sender2 const s{};
+            static_assert(requires{ s.connect(receiver{}); });
+            static_assert(requires{ test_std::connect(s, receiver{}); });
+            test_detail::basic_state state{std::move(s), receiver{}};
+            auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1>{})};
+            assert(product.size == 2);
+            use(product);
+        }
+        {
+            static_assert(requires{ sender3{}.connect(receiver{}); });
+            static_assert(requires{ test_std::connect(sender3{}, receiver{}); });
+            test_detail::basic_state state{sender3{}, receiver{}};
+            auto product{test_detail::connect_all(&state, sender3{}, std::index_sequence<0, 1, 2>{})};
+            assert(product.size == 3);
+            use(product);
+        }
+        {
+            sender3 const s{};
+            static_assert(requires{ s.connect(receiver{}); });
+            static_assert(requires{ test_std::connect(s, receiver{}); });
+            test_detail::basic_state state{std::move(s), receiver{}};
+            auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1, 2>{})};
+            assert(product.size == 3);
+            use(product);
+        }
+        {
+            static_assert(requires{ sender4{}.connect(receiver{}); });
+            static_assert(requires{ test_std::connect(sender4{}, receiver{}); });
+            test_detail::basic_state state{sender4{}, receiver{}};
+            auto product{test_detail::connect_all(&state, sender4{}, std::index_sequence<0, 1, 2, 3>{})};
+            assert(product.size == 4);
+            use(product);
+        }
+        {
+            sender4 const s{};
+            static_assert(requires{ s.connect(receiver{}); });
+            static_assert(requires{ test_std::connect(s, receiver{}); });
+            test_detail::basic_state state{std::move(s), receiver{}};
+            auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1, 2, 3>{})};
+            assert(product.size == 4);
+            use(product);
+        }
+
         //-dk: TODO test connect_all
     }
 
