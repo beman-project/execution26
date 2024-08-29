@@ -259,7 +259,15 @@ namespace
         >);
     }
 
-    template <typename T>
+    template <bool Expect, typename Sender, typename Env>
+    auto test_single_sender_value_type(Sender, Env) -> void
+    {
+        static_assert(test_std::sender_in<Sender>);
+	static_assert(Expect == requires{
+            typename test_detail::single_sender_value_type<Sender, Env>;
+	});
+    }
+
     auto test_single_sender_value_type() -> void
     {
         static_assert(test_std::sender<single_type_sender>);
@@ -296,24 +304,21 @@ namespace
             std::tuple<multi_type_sender::arg, bool, int>,
             test_detail::single_sender_value_type<multi_type_sender, test_std::empty_env>
         >);
-        static_assert(not requires{
-            typename T;
-            typename test_detail::single_sender_value_type<multi_single_sender, test_std::empty_env>;
-        });
-        static_assert(not requires{
-            typename T;
-            typename test_detail::single_sender_value_type<no_value_sender, test_std::empty_env>;
-        });
+        test_single_sender_value_type<true>(single_type_sender{}, test_std::empty_env{});
+        test_single_sender_value_type<true>(single_type_sender{}, test_env{});
+        test_single_sender_value_type<false>(single_type_sender{}, no_value_env{});
+        test_single_sender_value_type<false>(multi_single_sender{}, test_std::empty_env{});
+        test_single_sender_value_type<false>(no_value_sender{}, test_std::empty_env{});
     }
 
     auto test_single_sender() -> void
     {
-        //static_assert(test_std::single_sender<single_type_sender, test_std::empty_env>);
-        //static_assert(test_std::single_sender<single_type_sender, no_value_env>);
-        //static_assert(test_std::single_sender<void_sender, test_std::empty_env>);
-        //static_assert(test_std::single_sender<multi_single_sender, test_std::empty_env>);
-        //static_assert(not test_std::single_sender<multi_type_sender, test_std::empty_env>);
-        //static_assert(not test_std::single_sender<no_value_sender, test_std::empty_env>);
+        static_assert(test_detail::single_sender<single_type_sender, test_std::empty_env>);
+        static_assert(not test_detail::single_sender<single_type_sender, no_value_env>);
+        static_assert(test_detail::single_sender<void_sender, test_std::empty_env>);
+        static_assert(not test_detail::single_sender<multi_single_sender, test_std::empty_env>);
+        static_assert(test_detail::single_sender<multi_type_sender, test_std::empty_env>);
+        static_assert(not test_detail::single_sender<no_value_sender, test_std::empty_env>);
     }
 }
 
@@ -325,6 +330,6 @@ auto main() -> int
     test_variant_or_empty();
     test_completion_signatures_of_t<int>();
     test_type_list();
-    test_single_sender_value_type<int>();
+    test_single_sender_value_type();
     test_single_sender();
 }

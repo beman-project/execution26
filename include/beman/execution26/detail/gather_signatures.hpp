@@ -53,7 +53,7 @@ namespace beman::execution26::detail
               template <typename...> class Tuple,
               template <typename...> class Variant>
         requires requires{
-            always_true<
+            requires always_true<
                 typename ::beman::execution26::detail::gather_signatures_apply<Signatures, Tuple>::type...
             >;
         }

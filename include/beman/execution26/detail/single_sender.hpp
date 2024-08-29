@@ -11,7 +11,7 @@
 
 namespace beman::execution26::detail
 {
-#if 0
+#if 1
     template <typename Sender, typename Env>
     concept single_sender
         =  ::beman::execution26::sender_in<Sender, Env>
