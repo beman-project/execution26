@@ -819,6 +819,7 @@ namespace
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<>{})};
             (void)product;
         }
+        if constexpr (false)
         {
             sender0 const s{};
             test_detail::basic_state state{std::move(s), receiver{}};

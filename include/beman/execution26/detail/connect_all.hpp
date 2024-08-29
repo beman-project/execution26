@@ -6,6 +6,9 @@
 
 #include <beman/execution26/detail/connect_result_t.hpp>
 #include <beman/execution26/detail/connect.hpp>
+#include <beman/execution26/detail/basic_receiver.hpp>
+#include <beman/execution26/detail/basic_state.hpp>
+#include <beman/execution26/detail/product_type.hpp>
 #include <tuple>
 #include <utility>
 
