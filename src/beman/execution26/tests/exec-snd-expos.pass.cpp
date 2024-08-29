@@ -1,6 +1,7 @@
 // src/beman/execution26/tests/exe-snd-expos.pass.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/product_type.hpp>
 #include <beman/execution26/detail/basic_operation.hpp>
 #include <beman/execution26/detail/connect_all.hpp>
 #include <beman/execution26/detail/fwd_env.hpp>
@@ -766,6 +767,50 @@ namespace
         static_assert(not test_detail::completion_tag<no_completion>);
     }
 
+    auto test_product_type() -> void
+    {
+        struct nm
+        {
+            int value{};
+            nm() = default;
+            nm(int value): value(value) {}
+            nm(nm&&) = delete;
+            auto operator== (nm const&) const -> bool = default;
+        };
+        auto p0{test_detail::product_type{}};
+        static_assert(p0.size == 0u);
+        assert(p0 == p0);
+
+        auto p1{test_detail::product_type{nm(1)}};
+        static_assert(p1.size == 1u);
+        assert(p1.value1 == 1);
+
+        auto p2{test_detail::product_type{nm(1), nm(2)}};
+        static_assert(p2.size == 2u);
+        assert(p2.value1 == 1);
+        assert(p2.value2 == 2);
+
+        auto p3{test_detail::product_type{nm(1), nm(2), nm(3)}};
+        static_assert(p3.size == 3u);
+        assert(p3.value1 == 1);
+        assert(p3.value2 == 2);
+        assert(p3.value3 == 3);
+
+        auto p4{test_detail::product_type{nm(1), nm(2), nm(3), nm(4)}};
+        static_assert(p4.size == 4u);
+        assert(p4.value1 == 1);
+        assert(p4.value2 == 2);
+        assert(p4.value3 == 3);
+        assert(p4.value4 == 4);
+
+        auto p5{test_detail::product_type{nm(1), nm(2), nm(3), nm(4), nm(5)}};
+        static_assert(p5.size == 5u);
+        assert(p5.value1 == 1);
+        assert(p5.value2 == 2);
+        assert(p5.value3 == 3);
+        assert(p5.value4 == 4);
+        assert(p5.value5 == 5);
+    }
     auto test_connect_all() -> void
     {
         {
@@ -777,9 +822,10 @@ namespace
         {
             sender0 const s{};
             test_detail::basic_state state{std::move(s), receiver{}};
-            auto product{test_detail::connect_all(&state, s, std::index_sequence<>{})};
+            auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<>{})};
             (void)product;
         }
+        //-dk: TODO test connect_all
     }
 
     auto test_basic_operation() -> void
@@ -809,6 +855,7 @@ auto main() -> int
     test_env_type();
     test_basic_receiver<int>();
     test_completion_tag();
+    test_product_type();
     test_connect_all();
     test_basic_operation();
 }
