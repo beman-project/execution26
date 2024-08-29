@@ -40,7 +40,7 @@ namespace beman::execution26::detail
                     ::beman::execution26::value_types_of_t<
                         Sender, Env, ::beman::execution26::detail::decayed_tuple, ::std::type_identity_t>>();
             else
-                return ::std::enable_if<false>();
+                return ::std::enable_if<false, Sender>();
         }())::type;
 }
 
