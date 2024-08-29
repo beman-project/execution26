@@ -101,7 +101,10 @@ namespace
     struct operation_state
     {
         using operation_state_concept = test_std::operation_state_t;
-        auto start() noexcept -> void {}
+        int* counter;
+        operation_state(int* counter): counter(counter) {}
+        operation_state(operation_state&&) = delete;
+        auto start() & noexcept -> void { ++*counter; }
     };
 
     struct sender0
@@ -109,9 +112,9 @@ namespace
         using sender_concept = test_std::sender_t;
         using indices_for = ::std::index_sequence_for<>;
         tag t{};
-        int data{};
+        int* data{};
         template <typename Receiver>
-        auto connect(Receiver&&) const noexcept -> operation_state<Receiver> { return {}; }
+        auto connect(Receiver&&) const noexcept { return operation_state<Receiver>(data); }
     };
 
     struct sender1
@@ -119,10 +122,10 @@ namespace
         using sender_concept = test_std::sender_t;
         using indices_for = ::std::index_sequence_for<sender0>;
         tag t{};
-        int data{};
+        int* data{};
         sender0 c0{};
         template <typename Receiver>
-        auto connect(Receiver&&) const noexcept -> operation_state<Receiver> { return {}; }
+        auto connect(Receiver&&) const noexcept { return operation_state<Receiver>(data); }
     };
 
     struct sender2
@@ -130,11 +133,11 @@ namespace
         using sender_concept = test_std::sender_t;
         using indices_for = ::std::index_sequence_for<sender0, sender0>;
         tag t{};
-        int data{};
+        int* data{};
         sender0 c0{};
         sender0 c1{};
         template <typename Receiver>
-        auto connect(Receiver&&) const noexcept -> operation_state<Receiver> { return {}; }
+        auto connect(Receiver&&) const noexcept { return operation_state<Receiver>(data); }
     };
 
     struct sender3
@@ -142,12 +145,12 @@ namespace
         using sender_concept = test_std::sender_t;
         using indices_for = ::std::index_sequence_for<sender0, sender0, sender0>;
         tag t{};
-        int data{};
+        int* data{};
         sender0 c0{};
         sender0 c1{};
         sender0 c2{};
         template <typename Receiver>
-        auto connect(Receiver&&) const noexcept -> operation_state<Receiver> { return {}; }
+        auto connect(Receiver&&) const noexcept { return operation_state<Receiver>(data); }
     };
 
     struct sender4
@@ -155,13 +158,13 @@ namespace
         using sender_concept = test_std::sender_t;
         using indices_for = ::std::index_sequence_for<sender0, sender0, sender0, sender0>;
         tag t{};
-        int data{};
+        int* data{};
         sender0 c0{};
         sender0 c1{};
         sender0 c2{};
         sender0 c3{};
         template <typename Receiver>
-        auto connect(Receiver&&) const noexcept -> operation_state<Receiver> { return {}; }
+        auto connect(Receiver&&) const noexcept { return operation_state<Receiver>(data); }
     };
 
     struct receiver
@@ -1005,9 +1008,16 @@ namespace
 
     auto test_basic_operation() -> void
     {
-        test_detail::basic_operation op{sender0{}, receiver{}};
-        (void)op;
-        //-dk:TODO test basic_operation
+        int data{};
+        test_detail::basic_operation op{sender4{tag{}, &data,
+            sender0{tag{}, &data},
+            sender0{tag{}, &data},
+            sender0{tag{}, &data},
+            sender0{tag{}, &data}}, receiver{}};
+        static_assert(test_std::operation_state<decltype(op)>);
+        static_assert(requires{ typename decltype(op)::tag_t; });
+        op.start();
+        assert(data == 4);
     }
 }
 
