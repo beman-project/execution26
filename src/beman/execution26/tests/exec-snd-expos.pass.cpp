@@ -1,6 +1,8 @@
 // src/beman/execution26/tests/exe-snd-expos.pass.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/basic_operation.hpp>
+#include <beman/execution26/detail/connect_all.hpp>
 #include <beman/execution26/detail/fwd_env.hpp>
 #include <beman/execution26/detail/make_env.hpp>
 #include <beman/execution26/detail/join_env.hpp>
@@ -86,6 +88,23 @@ namespace
         auto query(test_std::get_domain_t) const { return domain{this->value}; }
 
         auto operator== (scheduler const&) const -> bool = default;
+    };
+
+    struct tag {};
+
+    struct sender0
+    {
+        using sender_concept = test_std::sender_t;
+        tag t{};
+        int data{};
+    };
+
+    struct receiver
+    {
+        using receiver_concept = test_std::receiver_t;
+        auto set_value(auto&&...) noexcept -> void {}
+        auto set_error(auto&&) noexcept -> void {}
+        auto set_stopped() noexcept -> void {}
     };
 
     // ------------------------------------------------------------------------
@@ -746,6 +765,29 @@ namespace
         static_assert(not test_detail::completion_tag<int>);
         static_assert(not test_detail::completion_tag<no_completion>);
     }
+
+    auto test_connect_all() -> void
+    {
+        {
+            sender0 s{};
+            test_detail::basic_state state{std::move(s), receiver{}};
+            auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<>{})};
+            (void)product;
+        }
+        {
+            sender0 const s{};
+            test_detail::basic_state state{std::move(s), receiver{}};
+            auto product{test_detail::connect_all(&state, s, std::index_sequence<>{})};
+            (void)product;
+        }
+    }
+
+    auto test_basic_operation() -> void
+    {
+        test_detail::basic_operation op{sender0{}, receiver{}};
+        (void)op;
+        //-dk:TODO test basic_operation
+    }
 }
 
 auto main() -> int
@@ -767,4 +809,6 @@ auto main() -> int
     test_env_type();
     test_basic_receiver<int>();
     test_completion_tag();
+    test_connect_all();
+    test_basic_operation();
 }

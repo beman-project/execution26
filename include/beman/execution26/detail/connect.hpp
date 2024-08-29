@@ -39,7 +39,7 @@ namespace beman::execution26
             }
             else
             {
-                static_assert(::std::same_as<int, Sender>);
+                static_assert(::std::same_as<int, Sender>, "can't connect the sender");
             }
         }
     };

@@ -1,6 +1,8 @@
 // src/beman/execution26/tests/execution-syn.pass.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/connect_result_t.hpp>
+#include <beman/execution26/detail/connect.hpp>
 #include <beman/execution26/detail/single_sender.hpp>
 #include <beman/execution26/detail/single_sender_value_type.hpp>
 #include <beman/execution26/detail/type_list.hpp>
@@ -320,6 +322,45 @@ namespace
         static_assert(test_detail::single_sender<multi_type_sender, test_std::empty_env>);
         static_assert(not test_detail::single_sender<no_value_sender, test_std::empty_env>);
     }
+
+    struct connect_sender
+    {
+        using sender_concept = test_std::sender_t;
+        template <typename Receiver>
+        struct state
+        {
+            using operation_state_concept = test_std::operation_state_t;
+            auto start() noexcept -> void {}
+        };
+        struct tag {};
+
+        tag t{};
+        int d{};
+
+        template <test_std::receiver Receiver>
+        auto connect(Receiver&&) const noexcept -> state<Receiver>
+        {
+            return {};
+        }
+    };
+
+    auto test_conect_result_t() -> void
+    {
+        struct receiver
+        {
+            using receiver_concept = test_std::receiver_t;
+        };
+
+        static_assert(test_std::sender<connect_sender>);
+        static_assert(test_std::receiver<receiver>);
+        static_assert(requires{ connect_sender{}.connect(receiver{}); });
+        
+        auto op{test_std::connect(connect_sender{}, receiver{})};
+        static_assert(std::same_as<
+            decltype(op),
+            test_std::connect_result_t<connect_sender, receiver>
+        >);
+    }
 }
 
 auto main() -> int
@@ -332,4 +373,5 @@ auto main() -> int
     test_type_list();
     test_single_sender_value_type();
     test_single_sender();
+    test_conect_result_t();
 }
