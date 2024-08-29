@@ -1,6 +1,7 @@
 // src/beman/execution26/tests/execution-syn.pass.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/single_sender_value_type.hpp>
 #include <beman/execution26/detail/type_list.hpp>
 #include <beman/execution26/detail/schedule_result_t.hpp>
 #include <beman/execution26/detail/env_of_t.hpp>
@@ -33,6 +34,85 @@ namespace
         auto schedule() const noexcept -> sender { return {}; }
         auto operator== (scheduler const&) const -> bool = default;
     };
+
+    struct test_env {};
+    struct single_type_sender
+    {
+        struct arg {};
+        struct error {};
+        using sender_concept = test_std::sender_t;
+        using test_signatures = test_std::completion_signatures<
+            test_std::set_error_t(error),
+            test_std::set_error_t(int),
+            test_std::set_value_t(arg&),
+            test_std::set_stopped_t()
+            >;
+        auto get_completion_signatures(test_env const&) const noexcept
+        {
+            return test_signatures();
+        }
+        using empty_signatures = test_std::completion_signatures<
+            test_std::set_error_t(error),
+            test_std::set_error_t(int),
+            test_std::set_value_t(bool&),
+            test_std::set_stopped_t()
+            >;
+        auto get_completion_signatures(test_std::empty_env const&) const noexcept
+        {
+            return empty_signatures();
+        }
+    };
+
+    struct void_sender
+    {
+        struct error {};
+        using sender_concept = test_std::sender_t;
+        using completion_signatures = test_std::completion_signatures<
+            test_std::set_error_t(error),
+            test_std::set_error_t(int),
+            test_std::set_value_t(),
+            test_std::set_stopped_t()
+            >;
+    };
+
+    struct no_value_sender
+    {
+        struct error {};
+        using sender_concept = test_std::sender_t;
+        using completion_signatures = test_std::completion_signatures<
+            test_std::set_error_t(error),
+            test_std::set_error_t(int),
+            test_std::set_stopped_t()
+            >;
+    };
+
+    struct multi_single_sender
+    {
+        struct arg {};
+        struct error {};
+        using sender_concept = test_std::sender_t;
+        using completion_signatures = test_std::completion_signatures<
+            test_std::set_error_t(error),
+            test_std::set_error_t(int),
+            test_std::set_value_t(arg&),
+            test_std::set_value_t(int),
+            test_std::set_stopped_t()
+            >;
+    };
+
+    struct multi_type_sender
+    {
+        struct arg {};
+        struct error {};
+        using sender_concept = test_std::sender_t;
+        using completion_signatures = test_std::completion_signatures<
+            test_std::set_error_t(error),
+            test_std::set_error_t(int),
+            test_std::set_value_t(arg&, bool const&, int),
+            test_std::set_stopped_t()
+            >;
+    };
+
 
     auto test_schedule_result_t() -> void
     {
@@ -167,6 +247,55 @@ namespace
             test_detail::type_list<arg, bool, char&, double const&, long&&>
         >);
     }
+
+    template <typename T>
+    auto test_single_sender_value_type() -> void
+    {
+        static_assert(test_std::sender<single_type_sender>);
+        static_assert(test_std::sender<void_sender>);
+        static_assert(test_std::sender<multi_single_sender>);
+        static_assert(test_std::sender<multi_type_sender>);
+        static_assert(test_std::sender<no_value_sender>);
+
+        static_assert(requires{
+            typename test_detail::single_sender_value_type<single_type_sender, test_env>;
+        });
+        static_assert(std::same_as<
+            single_type_sender::arg,
+            test_detail::single_sender_value_type<single_type_sender, test_env>
+        >);
+        static_assert(requires{
+            typename test_detail::single_sender_value_type<single_type_sender, test_std::empty_env>;
+        });
+        static_assert(std::same_as<
+            bool,
+            test_detail::single_sender_value_type<single_type_sender, test_std::empty_env>
+        >);
+        static_assert(requires{
+            typename test_detail::single_sender_value_type<void_sender, test_std::empty_env>;
+        });
+        static_assert(std::same_as<
+            void,
+            test_detail::single_sender_value_type<void_sender, test_std::empty_env>
+        >);
+        static_assert(requires{
+            typename test_detail::single_sender_value_type<multi_type_sender, test_std::empty_env>;
+        });
+        static_assert(std::same_as<
+            std::tuple<multi_type_sender::arg, bool, int>,
+            test_detail::single_sender_value_type<multi_type_sender, test_std::empty_env>
+        >);
+#if 1
+        static_assert(not requires{
+            typename T;
+            typename test_detail::single_sender_value_type<multi_single_sender, test_std::empty_env>;
+        });
+        static_assert(not requires{
+            typename T;
+            typename test_detail::single_sender_value_type<no_value_sender, test_std::empty_env>;
+        });
+#endif
+    }
 }
 
 auto main() -> int
@@ -177,4 +306,5 @@ auto main() -> int
     test_variant_or_empty();
     test_completion_signatures_of_t<int>();
     test_type_list();
+    test_single_sender_value_type<int>();
 }

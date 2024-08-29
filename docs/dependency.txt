@@ -194,7 +194,6 @@ just_stopped decayed_typeof
 just_stopped default_impls
 just_stopped impls_for
 just_stopped set_stopped
-let_error as_tuple
 let_error completion_signatures_of_t
 let_error connect_result_t
 let_error decayed_tuple
@@ -220,7 +219,6 @@ let_error set_stopped
 let_error set_value
 let_error transform_sender
 let_error try_eval
-let_stopped as_tuple
 let_stopped completion_signatures_of_t
 let_stopped connect_result_t
 let_stopped decayed_tuple
@@ -246,7 +244,6 @@ let_stopped set_stopped
 let_stopped set_value
 let_stopped transform_sender
 let_stopped try_eval
-let_value as_tuple
 let_value completion_signatures_of_t
 let_value connect_result_t
 let_value decayed_tuple
@@ -325,7 +322,6 @@ sched_env get_domain
 sched_env get_scheduler
 sched_env queryable
 schedule sender
-schedule_from as_tuple
 schedule_from child_type
 schedule_from completion_signatures_of_t
 schedule_from connect
@@ -339,11 +335,9 @@ schedule_from get_env
 schedule_from impls_for
 schedule_from join_env
 schedule_from make_sender
-schedule_from op_state
 schedule_from query_with_default
 schedule_from receiver_t
 schedule_from sched_attrs
-schedule_from sched_t
 schedule_from schedule
 schedule_from schedule_result_t
 schedule_from scheduler
