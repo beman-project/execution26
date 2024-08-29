@@ -1,6 +1,7 @@
 // src/beman/execution26/tests/execution-syn.pass.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/single_sender.hpp>
 #include <beman/execution26/detail/single_sender_value_type.hpp>
 #include <beman/execution26/detail/type_list.hpp>
 #include <beman/execution26/detail/schedule_result_t.hpp>
@@ -36,6 +37,7 @@ namespace
     };
 
     struct test_env {};
+    struct no_value_env {};
     struct single_type_sender
     {
         struct arg {};
@@ -60,6 +62,15 @@ namespace
         auto get_completion_signatures(test_std::empty_env const&) const noexcept
         {
             return empty_signatures();
+        }
+        using no_value_signatures = test_std::completion_signatures<
+            test_std::set_error_t(error),
+            test_std::set_error_t(int),
+            test_std::set_stopped_t()
+            >;
+        auto get_completion_signatures(no_value_env const&) const noexcept
+        {
+            return no_value_signatures();
         }
     };
 
@@ -285,7 +296,6 @@ namespace
             std::tuple<multi_type_sender::arg, bool, int>,
             test_detail::single_sender_value_type<multi_type_sender, test_std::empty_env>
         >);
-#if 1
         static_assert(not requires{
             typename T;
             typename test_detail::single_sender_value_type<multi_single_sender, test_std::empty_env>;
@@ -294,7 +304,16 @@ namespace
             typename T;
             typename test_detail::single_sender_value_type<no_value_sender, test_std::empty_env>;
         });
-#endif
+    }
+
+    auto test_single_sender() -> void
+    {
+        //static_assert(test_std::single_sender<single_type_sender, test_std::empty_env>);
+        //static_assert(test_std::single_sender<single_type_sender, no_value_env>);
+        //static_assert(test_std::single_sender<void_sender, test_std::empty_env>);
+        //static_assert(test_std::single_sender<multi_single_sender, test_std::empty_env>);
+        //static_assert(not test_std::single_sender<multi_type_sender, test_std::empty_env>);
+        //static_assert(not test_std::single_sender<no_value_sender, test_std::empty_env>);
     }
 }
 
@@ -307,4 +326,5 @@ auto main() -> int
     test_completion_signatures_of_t<int>();
     test_type_list();
     test_single_sender_value_type<int>();
+    test_single_sender();
 }
