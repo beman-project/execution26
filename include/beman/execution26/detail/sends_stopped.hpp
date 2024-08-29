@@ -9,14 +9,10 @@
 #include <beman/execution26/detail/gather_signatures.hpp>
 #include <beman/execution26/detail/sender_in.hpp>
 #include <beman/execution26/detail/set_stopped.hpp>
+#include <beman/execution26/detail/type_list.hpp>
 #include <concepts>
 
 // ----------------------------------------------------------------------------
-
-namespace beman::execution26::detail
-{
-    template <typename...> struct type_list {};
-}
 
 namespace beman::execution26
 {

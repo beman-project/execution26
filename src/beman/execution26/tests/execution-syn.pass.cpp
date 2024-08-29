@@ -1,6 +1,7 @@
 // src/beman/execution26/tests/execution-syn.pass.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/type_list.hpp>
 #include <beman/execution26/detail/schedule_result_t.hpp>
 #include <beman/execution26/detail/env_of_t.hpp>
 #include <beman/execution26/detail/decayed_tuple.hpp>
@@ -153,6 +154,19 @@ namespace
         });
 
     }
+
+    auto test_type_list() -> void
+    {
+        struct arg {};
+        static_assert(std::same_as<
+            test_detail::type_list<>,
+            test_detail::type_list<>
+        >);
+        static_assert(std::same_as<
+            test_detail::type_list<arg, bool, char&, double const&, long&&>,
+            test_detail::type_list<arg, bool, char&, double const&, long&&>
+        >);
+    }
 }
 
 auto main() -> int
@@ -162,4 +176,5 @@ auto main() -> int
     test_decayed_tuple();
     test_variant_or_empty();
     test_completion_signatures_of_t<int>();
+    test_type_list();
 }
