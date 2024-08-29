@@ -4,11 +4,12 @@
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_VALUE_TYPE_OF
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_VALUE_TYPE_OF
 
+#include <beman/execution26/detail/completion_signatures_of_t.hpp>
 #include <beman/execution26/detail/decayed_tuple.hpp>
 #include <beman/execution26/detail/empty_env.hpp>
-#include <beman/execution26/detail/variant_or_empty.hpp>
 #include <beman/execution26/detail/gather_signatures.hpp>
-#include <beman/execution26/detail/completion_signatures_of_t.hpp>
+#include <beman/execution26/detail/set_value.hpp>
+#include <beman/execution26/detail/variant_or_empty.hpp>
 
 // ----------------------------------------------------------------------------
 

@@ -1,6 +1,7 @@
 // src/beman/execution26/tests/exec-utils-cmplsigs.pass.cpp           -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/error_types_of_t.hpp>
 #include <beman/execution26/detail/value_types_of_t.hpp>
 #include <beman/execution26/detail/gather_signatures.hpp>
 #include <beman/execution26/detail/indirect_meta_apply.hpp>
@@ -28,6 +29,7 @@ namespace
     {
         using sender_concept = test_std::sender_t;
         using empty_signatures = test_std::completion_signatures<
+                test_std::set_error_t(error&&),
                 test_std::set_error_t(error const&),
                 test_std::set_value_t(),
                 test_std::set_value_t(arg<0>, arg<1>&, arg<2>&&, arg<3> const&),
@@ -42,6 +44,7 @@ namespace
                 test_std::set_error_t(std::exception_ptr),
                 test_std::set_value_t(arg<0>),
                 test_std::set_value_t(arg<1>&),
+                test_std::set_value_t(arg<1> const&),
                 test_std::set_value_t(arg<0>, arg<1>&, arg<2>&&, arg<3> const&),
                 test_std::set_stopped_t()
                 >;
@@ -255,11 +258,56 @@ namespace
             test_std::value_types_of_t<sender, env>
         >);
         static_assert(std::same_as<
+            test_detail::empty_variant,
+            test_std::value_types_of_t<sender, none_env>
+        >);
+
+        static_assert(std::same_as<
             variant<
                 tuple<>,
                 tuple<arg<0>, arg<1>&, arg<2>&&, arg<3> const&>
                 >,
             test_std::value_types_of_t<sender, test_std::empty_env, tuple, variant>
+        >);
+    }
+
+    auto test_error_types_of_t() -> void
+    {
+        static_assert(test_std::sender_in<sender, test_std::empty_env>);
+        static_assert(std::same_as<
+            sender::empty_signatures,
+            test_std::completion_signatures_of_t<sender, test_std::empty_env>
+            >);
+        static_assert(test_std::sender_in<sender, env>);
+        static_assert(std::same_as<
+            sender::env_signatures,
+            test_std::completion_signatures_of_t<sender, env>
+            >);
+        static_assert(test_std::sender_in<sender, none_env>);
+        static_assert(std::same_as<
+            sender::none_signatures,
+            test_std::completion_signatures_of_t<sender, none_env>
+            >);
+
+        static_assert(std::same_as<
+            std::variant<error>,
+            test_std::error_types_of_t<sender>
+        >);
+        static_assert(std::same_as<
+            std::variant<error>,
+            test_std::error_types_of_t<sender, test_std::empty_env>
+        >);
+        static_assert(std::same_as<
+            std::variant<error, std::exception_ptr>,
+            test_std::error_types_of_t<sender, env>
+        >);
+        static_assert(std::same_as<
+            test_detail::empty_variant,
+            test_std::error_types_of_t<sender, none_env>
+        >);
+        static_assert(std::same_as<
+            variant<error const&, std::exception_ptr>,
+            test_std::error_types_of_t<sender, env, variant>
         >);
     }
 }
@@ -274,6 +322,6 @@ auto main() -> int
     test_always_true();
     test_gather_signatures();
     test_value_types_of_t();
-    //-dk:TODO test_error_types_of_t();
+    test_error_types_of_t();
     //-dk:TODO test_sends_stopped();
 }
