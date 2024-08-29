@@ -1,6 +1,7 @@
 // src/beman/execution26/tests/exe-snd-expos.pass.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/connect_all_result.hpp>
 #include <beman/execution26/detail/product_type.hpp>
 #include <beman/execution26/detail/operation_state.hpp>
 #include <beman/execution26/detail/basic_operation.hpp>
@@ -106,6 +107,7 @@ namespace
     struct sender0
     {
         using sender_concept = test_std::sender_t;
+        using indices_for = ::std::index_sequence_for<>;
         tag t{};
         int data{};
         template <typename Receiver>
@@ -115,6 +117,7 @@ namespace
     struct sender1
     {
         using sender_concept = test_std::sender_t;
+        using indices_for = ::std::index_sequence_for<sender0>;
         tag t{};
         int data{};
         sender0 c0{};
@@ -125,6 +128,7 @@ namespace
     struct sender2
     {
         using sender_concept = test_std::sender_t;
+        using indices_for = ::std::index_sequence_for<sender0, sender0>;
         tag t{};
         int data{};
         sender0 c0{};
@@ -136,6 +140,7 @@ namespace
     struct sender3
     {
         using sender_concept = test_std::sender_t;
+        using indices_for = ::std::index_sequence_for<sender0, sender0, sender0>;
         tag t{};
         int data{};
         sender0 c0{};
@@ -148,6 +153,7 @@ namespace
     struct sender4
     {
         using sender_concept = test_std::sender_t;
+        using indices_for = ::std::index_sequence_for<sender0, sender0, sender0, sender0>;
         tag t{};
         int data{};
         sender0 c0{};
@@ -958,6 +964,45 @@ namespace
         //-dk: TODO test connect_all
     }
 
+    auto test_connect_all_result() -> void
+    {
+        {
+            test_detail::basic_state state{sender0{}, receiver{}};
+            static_assert(std::same_as<
+                decltype(test_detail::connect_all(&state, sender0{}, std::index_sequence<0, 1, 2, 3>{})),
+                test_detail::connect_all_result<sender0, receiver>
+            >);
+        }
+        {
+            test_detail::basic_state state{sender1{}, receiver{}};
+            static_assert(std::same_as<
+                decltype(test_detail::connect_all(&state, sender1{}, std::index_sequence<0, 1, 2, 3>{})),
+                test_detail::connect_all_result<sender1, receiver>
+            >);
+        }
+        {
+            test_detail::basic_state state{sender2{}, receiver{}};
+            static_assert(std::same_as<
+                decltype(test_detail::connect_all(&state, sender2{}, std::index_sequence<0, 1, 2, 3>{})),
+                test_detail::connect_all_result<sender2, receiver>
+            >);
+        }
+        {
+            test_detail::basic_state state{sender3{}, receiver{}};
+            static_assert(std::same_as<
+                decltype(test_detail::connect_all(&state, sender3{}, std::index_sequence<0, 1, 2, 3>{})),
+                test_detail::connect_all_result<sender3, receiver>
+            >);
+        }
+        {
+            test_detail::basic_state state{sender4{}, receiver{}};
+            static_assert(std::same_as<
+                decltype(test_detail::connect_all(&state, sender4{}, std::index_sequence<0, 1, 2, 3>{})),
+                test_detail::connect_all_result<sender4, receiver>
+            >);
+        }
+    }
+
     auto test_basic_operation() -> void
     {
         test_detail::basic_operation op{sender0{}, receiver{}};
@@ -987,5 +1032,6 @@ auto main() -> int
     test_completion_tag();
     test_product_type();
     test_connect_all();
+    test_connect_all_result();
     test_basic_operation();
 }
