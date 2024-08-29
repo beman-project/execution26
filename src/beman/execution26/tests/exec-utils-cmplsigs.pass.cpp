@@ -1,6 +1,7 @@
 // src/beman/execution26/tests/exec-utils-cmplsigs.pass.cpp           -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/sends_stopped.hpp>
 #include <beman/execution26/detail/error_types_of_t.hpp>
 #include <beman/execution26/detail/value_types_of_t.hpp>
 #include <beman/execution26/detail/gather_signatures.hpp>
@@ -310,6 +311,30 @@ namespace
             test_std::error_types_of_t<sender, env, variant>
         >);
     }
+
+    auto test_sends_stopped() -> void
+    {
+        static_assert(test_std::sender_in<sender, test_std::empty_env>);
+        static_assert(std::same_as<
+            sender::empty_signatures,
+            test_std::completion_signatures_of_t<sender, test_std::empty_env>
+            >);
+        static_assert(test_std::sender_in<sender, env>);
+        static_assert(std::same_as<
+            sender::env_signatures,
+            test_std::completion_signatures_of_t<sender, env>
+            >);
+        static_assert(test_std::sender_in<sender, none_env>);
+        static_assert(std::same_as<
+            sender::none_signatures,
+            test_std::completion_signatures_of_t<sender, none_env>
+            >);
+
+        static_assert(test_std::sends_stopped<sender>);
+        static_assert(test_std::sends_stopped<sender, test_std::empty_env>);
+        static_assert(test_std::sends_stopped<sender, env>);
+        static_assert(not test_std::sends_stopped<sender, none_env>);
+    }
 }
 
 auto main() -> int
@@ -323,5 +348,5 @@ auto main() -> int
     test_gather_signatures();
     test_value_types_of_t();
     test_error_types_of_t();
-    //-dk:TODO test_sends_stopped();
+    test_sends_stopped();
 }

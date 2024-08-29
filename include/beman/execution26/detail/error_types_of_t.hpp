@@ -7,6 +7,7 @@
 #include <beman/execution26/detail/completion_signatures_of_t.hpp>
 #include <beman/execution26/detail/empty_env.hpp>
 #include <beman/execution26/detail/gather_signatures.hpp>
+#include <beman/execution26/detail/sender_in.hpp>
 #include <beman/execution26/detail/set_error.hpp>
 #include <beman/execution26/detail/variant_or_empty.hpp>
 #include <type_traits>
@@ -18,6 +19,7 @@ namespace beman::execution26
     template <typename Sender,
               typename Env = ::beman::execution26::empty_env,
               template <typename...> class Variant = ::beman::execution26::detail::variant_or_empty>
+        requires ::beman::execution26::sender_in<Sender, Env>
     using error_types_of_t
         = ::beman::execution26::detail::gather_signatures<
             ::beman::execution26::set_error_t,
