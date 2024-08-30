@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 SANITIZERS = none msan asan usan tsan
-.PHONY: default check ce todo distclean clean build test all $(SANITIZERS)
+.PHONY: default update check ce todo distclean clean build test all $(SANITIZERS)
 
 CXX_FLAGS = -g
 SANITIZER = none
@@ -56,6 +56,10 @@ test: build
 ce:
 	@mkdir -p $(BUILD)
 	bin/mk-compiler-explorer.py $(BUILD)
+
+SOURCE_CMAKELISTS = src/beman/execution26/CMakeLists.txt
+update:
+	bin/update-cmake-headers.py $(SOURCE_CMAKELISTS)
 
 check:
 	@for h in `find include -name \*.hpp`; \

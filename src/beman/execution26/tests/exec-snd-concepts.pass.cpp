@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <beman/execution26/detail/sender_for.hpp>
+#include <beman/execution26/detail/product_type.hpp>
 #include <beman/execution26/detail/sender_decompose.hpp>
 #include <beman/execution26/detail/sender.hpp>
 #include <beman/execution26/detail/sender_in.hpp>
@@ -61,6 +62,31 @@ namespace
         int   child3;
         int   child4;
     };
+    struct product_sender0
+        : test_detail::product_type<tag_t, int>
+    {
+        using sender_concept = test_std::sender_t;
+    };
+    struct product_sender1
+        : test_detail::product_type<tag_t, int, int>
+    {
+        using sender_concept = test_std::sender_t;
+    };
+    struct product_sender2
+        : test_detail::product_type<tag_t, int, int, int>
+    {
+        using sender_concept = test_std::sender_t;
+    };
+    struct product_sender3
+        : test_detail::product_type<tag_t, int, int, int, int>
+    {
+        using sender_concept = test_std::sender_t;
+    };
+    struct product_sender4
+        : test_detail::product_type<tag_t, int, int, int, int, int>
+    {
+        using sender_concept = test_std::sender_t;
+    };
 
     // -------------------------------------------------------------------------
 
@@ -114,13 +140,15 @@ namespace
         struct sender_in
         {
             using sender_concept = test_std::sender_t;
+            using completion_signatures = test_std::completion_signatures<>;
         };
 
+        static_assert(test_std::sender<sender_in>);
         static_assert(not test_std::sender_in<non_sender_in>);
         static_assert(not test_std::sender_in<sender_in, non_queryable>);
         static_assert(test_std::sender_in<sender_in>);
         static_assert(test_std::sender_in<sender_in, queryable>);
-        //-dk:TODO add missing test cases
+        //-dk:TODO add missing test cases for sender_in
     }
 
     auto test_tag_of_t() -> void
@@ -131,6 +159,12 @@ namespace
         static_assert(std::same_as<tag_t, test_std::tag_of_t<tagged_sender2>>);
         static_assert(std::same_as<tag_t, test_std::tag_of_t<tagged_sender3>>);
         static_assert(std::same_as<tag_t, test_std::tag_of_t<tagged_sender4>>);
+
+        static_assert(std::same_as<tag_t, test_std::tag_of_t<product_sender0>>);
+        static_assert(std::same_as<tag_t, test_std::tag_of_t<product_sender1>>);
+        static_assert(std::same_as<tag_t, test_std::tag_of_t<product_sender2>>);
+        static_assert(std::same_as<tag_t, test_std::tag_of_t<product_sender3>>);
+        static_assert(std::same_as<tag_t, test_std::tag_of_t<product_sender4>>);
     }
 
     auto test_sender_for() -> void
