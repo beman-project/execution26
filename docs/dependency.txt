@@ -31,6 +31,7 @@ basic_receiver state_type
 basic_receiver tag_of_t
 basic_receiver valid_specialization
 basic_sender basic_operation
+basic_sender completion_signatures_for
 basic_sender impls_for
 basic_sender product_type
 basic_sender sender_t

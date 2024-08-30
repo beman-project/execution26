@@ -1,6 +1,7 @@
 // src/beman/execution26/tests/exe-snd-expos.pass.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/completion_signatures_for.hpp>
 #include <beman/execution26/detail/connect_all_result.hpp>
 #include <beman/execution26/detail/product_type.hpp>
 #include <beman/execution26/detail/operation_state.hpp>
@@ -1019,6 +1020,48 @@ namespace
         op.start();
         assert(data == 4);
     }
+
+    auto test_completion_signatures_for() -> void
+    {
+        struct arg {};
+        struct env {};
+        struct bad_env {};
+        struct sender
+        {
+            using sender_concept = test_std::sender_t;
+            using empty_env_sigs = test_std::completion_signatures<
+                    test_std::set_value_t(arg)
+                >;
+            using env_sigs = test_std::completion_signatures<
+                    test_std::set_value_t(arg, arg)
+                >;
+            
+            auto get_completion_signatures(test_std::empty_env const&)
+                -> empty_env_sigs { return {}; }
+            auto get_completion_signatures(env const&)
+                -> env_sigs { return {}; }
+        };
+
+        static_assert(test_std::sender_in<sender, test_std::empty_env>);
+        static_assert(test_std::sender_in<sender, env>);
+        static_assert(not test_std::sender_in<sender, bad_env>);
+
+        static_assert(std::same_as<
+            test_detail::completion_signatures_for<sender, test_std::empty_env>,
+            sender::empty_env_sigs
+        >);
+        static_assert(std::same_as<
+            test_detail::completion_signatures_for<sender, env>,
+            sender::env_sigs
+        >);
+        static_assert(not test_detail::valid_completion_signatures<
+            test_detail::no_completion_signatures_defined_in_sender
+        >);
+        static_assert(std::same_as<
+            test_detail::completion_signatures_for<sender, bad_env>,
+            test_detail::no_completion_signatures_defined_in_sender
+        >);
+    }
 }
 
 auto main() -> int
@@ -1044,4 +1087,5 @@ auto main() -> int
     test_connect_all();
     test_connect_all_result();
     test_basic_operation();
+    test_completion_signatures_for();
 }
