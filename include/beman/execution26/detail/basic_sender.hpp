@@ -21,27 +21,28 @@ namespace beman::execution26::detail
         using sender_concept = ::beman::execution26::sender_t;
         using indices_for = ::std::index_sequence_for<Child...>;
 
+#if 0
 #if __cpp_explicit_this_parameter < 302110L
         template <typename Env>
-        auto get_completion_signatures(Env&&) && noexcept
+        auto get_completion_signatures(Env&&) &&
             -> ::beman::execution26::detail::completion_signatures_for<basic_sender&&, Env>
         {
             return {};
         }
         template <typename Env>
-        auto get_completion_signatures(Env&&) const&& noexcept
+        auto get_completion_signatures(Env&&) const&&
             -> ::beman::execution26::detail::completion_signatures_for<basic_sender const&&, Env>
         {
             return {};
         }
         template <typename Env>
-        auto get_completion_signatures(Env&&) & noexcept
+        auto get_completion_signatures(Env&&) &
             -> ::beman::execution26::detail::completion_signatures_for<basic_sender&, Env>
         {
             return {};
         }
         template <typename Env>
-        auto get_completion_signatures(Env&&) const& noexcept
+        auto get_completion_signatures(Env&&) const& 
             -> ::beman::execution26::detail::completion_signatures_for<basic_sender const&, Env>
         {
             return {};
@@ -54,6 +55,7 @@ namespace beman::execution26::detail
         {
             return {};
         }
+#endif
 #endif
     };
 }

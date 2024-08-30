@@ -1109,6 +1109,7 @@ namespace
 
         basic_sender bs{ basic_sender_tag{}, data{}, sender0 {} };
         basic_sender const& cbs{bs};
+        use(cbs);
 
         auto&&[a, b, c] = bs;
         use(a);
@@ -1133,6 +1134,7 @@ namespace
             basic_sender_tag::sender::completion_signatures,
             test_detail::completion_signatures_for<basic_sender, env>
         >);
+#if 0
         static_assert(std::same_as<
             basic_sender_tag::sender::completion_signatures,
             decltype(bs.get_completion_signatures(env{}))
@@ -1146,6 +1148,7 @@ namespace
             decltype(basic_sender{ basic_sender_tag{}, data{}, sender0 {} }
                 .get_completion_signatures(env{}))
         >);
+#endif
         static_assert(std::same_as<
             std::index_sequence_for<sender0>,
             basic_sender::indices_for
