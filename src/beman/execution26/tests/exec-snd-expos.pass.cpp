@@ -1,6 +1,7 @@
 // src/beman/execution26/tests/exe-snd-expos.pass.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/basic_sender.hpp>
 #include <beman/execution26/detail/completion_signatures_for.hpp>
 #include <beman/execution26/detail/connect_all_result.hpp>
 #include <beman/execution26/detail/product_type.hpp>
@@ -1062,6 +1063,16 @@ namespace
             test_detail::no_completion_signatures_defined_in_sender
         >);
     }
+    auto test_basic_sender() -> void
+    {
+        struct tag {};
+        struct data {};
+        struct env {};
+
+        using basic_sender = test_detail::basic_sender<tag, data, sender0>;
+        static_assert(test_std::sender<basic_sender>);
+        //-dk:TODO static_assert(test_std::sender_in<basic_sender>);
+    }
 }
 
 auto main() -> int
@@ -1088,4 +1099,5 @@ auto main() -> int
     test_connect_all_result();
     test_basic_operation();
     test_completion_signatures_for();
+    test_basic_sender();
 }

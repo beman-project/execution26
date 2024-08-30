@@ -1,6 +1,7 @@
 // src/beman/execution26/tests/execution-syn.pass.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/decays_to.hpp>
 #include <beman/execution26/detail/connect_result_t.hpp>
 #include <beman/execution26/detail/connect.hpp>
 #include <beman/execution26/detail/single_sender.hpp>
@@ -361,6 +362,21 @@ namespace
             test_std::connect_result_t<connect_sender, receiver>
         >);
     }
+    auto test_decays_to() -> void
+    {
+        struct type {};
+        struct other {};
+
+        static_assert(test_detail::decays_to<type, type>);
+        static_assert(test_detail::decays_to<type&, type>);
+        static_assert(test_detail::decays_to<type&&, type>);
+        static_assert(test_detail::decays_to<type const&, type>);
+        static_assert(test_detail::decays_to<type[1], type*>);
+        static_assert(test_detail::decays_to<type[], type*>);
+        static_assert(not test_detail::decays_to<type&, type&>);
+        static_assert(not test_detail::decays_to<type, type&>);
+        static_assert(not test_detail::decays_to<other, type>);
+    }
 }
 
 auto main() -> int
@@ -374,4 +390,5 @@ auto main() -> int
     test_single_sender_value_type();
     test_single_sender();
     test_conect_result_t();
+    test_decays_to();
 }
