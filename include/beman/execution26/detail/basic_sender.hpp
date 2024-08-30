@@ -4,12 +4,13 @@
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_BASIC_SENDER
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_BASIC_SENDER
 
-#include <beman/execution26/detail/decays_to.hpp>
+#include <beman/execution26/detail/basic_operation.hpp>
 #include <beman/execution26/detail/completion_signatures_for.hpp>
-#include <beman/execution26/detail/sender.hpp>
-#include <beman/execution26/detail/product_type.hpp>
-#include <beman/execution26/detail/sender_decompose.hpp>
+#include <beman/execution26/detail/decays_to.hpp>
 #include <beman/execution26/detail/impls_for.hpp>
+#include <beman/execution26/detail/product_type.hpp>
+#include <beman/execution26/detail/sender.hpp>
+#include <beman/execution26/detail/sender_decompose.hpp>
 #include <utility>
 
 // ----------------------------------------------------------------------------
@@ -23,7 +24,6 @@ namespace beman::execution26::detail
         using sender_concept = ::beman::execution26::sender_t;
         using indices_for = ::std::index_sequence_for<Child...>;
 
-#if 1
         auto get_env() const noexcept -> decltype(auto)
         {
             static constexpr ::beman::execution26::detail::sender_any_t at{};
@@ -73,6 +73,38 @@ namespace beman::execution26::detail
                 return ::beman::execution26::detail::impls_for<Tag>
                     ::get_attrs(data);
             }
+        }
+
+#if __cpp_explicit_this_parameter < 202110L
+        template <::beman::execution26::receiver Receiver>
+        auto connect(Receiver receiver) &
+            noexcept(true/*-dk:TODO*/)
+            -> ::beman::execution26::detail::basic_operation<basic_sender&, Receiver>
+        {
+            return { *this, ::std::move(receiver) };
+        }
+        template <::beman::execution26::receiver Receiver>
+        auto connect(Receiver receiver) const&
+            noexcept(true/*-dk:TODO*/)
+            -> ::beman::execution26::detail::basic_operation<basic_sender const&, Receiver>
+        {
+            return { *this, ::std::move(receiver) };
+        }
+        template <::beman::execution26::receiver Receiver>
+        auto connect(Receiver receiver) &&
+            noexcept(true/*-dk:TODO*/)
+            -> ::beman::execution26::detail::basic_operation<basic_sender, Receiver>
+        {
+            return { ::std::move(*this), ::std::move(receiver) };
+        }
+#else
+        template <::beman::execution26::detail::decays_to<basic_sender> Self,
+                  ::beman::execution26::receiver Receiver>
+        auto connect(this Self&& self, Receiver receiver)
+            noexcept(true/*-dk:TODO*/)
+            -> ::beman::execution26::detail::basic_operation<basic_sender, Receiver>
+        {
+            return { ::std::forward<Self>(self), ::std::move(receiver) };
         }
 #endif
 #if 0

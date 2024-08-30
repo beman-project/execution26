@@ -111,12 +111,14 @@ namespace
 
     struct sender0
     {
+        struct env {};
         using sender_concept = test_std::sender_t;
         using indices_for = ::std::index_sequence_for<>;
         tag t{};
         int* data{};
         template <typename Receiver>
         auto connect(Receiver&&) const noexcept { return operation_state<Receiver>(data); }
+        auto get_env() const noexcept -> env { return {}; }
     };
 
     struct sender1
@@ -1066,10 +1068,18 @@ namespace
 
     struct basic_sender_tag
     {
+        template <typename>
+        struct state
+        {
+            using operation_state_concept = test_std::operation_state_t;
+            auto start() & noexcept -> void {}
+        };
         struct sender
         {
             using sender_concept = test_std::sender_t;
             using completion_signatures = test_std::completion_signatures<>;
+            template <test_std::receiver Receiver>
+            auto connect(Receiver) noexcept -> state<Receiver> { return {}; }
         };
         auto transform_sender(auto&&...) noexcept { return sender{}; }
     };
@@ -1094,6 +1104,7 @@ namespace
         static_assert(test_std::sender<basic_sender_tag::sender>);
         static_assert(test_std::sender_in<basic_sender_tag::sender>);
         static_assert(test_std::sender_in<basic_sender_tag::sender, env>);
+        static_assert(test_std::operation_state<basic_sender_tag::state<receiver>>);
         static_assert(test_std::sender<tagged_sender>);
         static_assert(std::same_as<
             basic_sender_tag,
@@ -1134,6 +1145,16 @@ namespace
             basic_sender_tag::sender::completion_signatures,
             test_detail::completion_signatures_for<basic_sender, env>
         >);
+        
+        auto ge{test_std::get_env(bs)};
+        use(ge);
+        static_assert(std::same_as<
+            test_detail::fwd_env<sender0::env>,
+            decltype(ge)
+        >);
+
+        auto op{test_std::connect(bs, receiver{})};
+        use(op);
 #if 0
         static_assert(std::same_as<
             basic_sender_tag::sender::completion_signatures,

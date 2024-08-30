@@ -39,7 +39,8 @@ namespace beman::execution26
             }
             else
             {
-                static_assert(::std::same_as<int, Sender>, "can't connect the sender");
+                static_assert(::std::same_as<int, Sender>,
+                              "result from transform_sender has no suitable connect()");
             }
         }
     };
