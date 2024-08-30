@@ -1063,15 +1063,49 @@ namespace
             test_detail::no_completion_signatures_defined_in_sender
         >);
     }
+
+    struct basic_sender_tag
+    {
+        struct sender
+        {
+            using sender_concept = test_std::sender_t;
+            using completion_signatures = test_std::completion_signatures<>;
+        };
+        auto transform_sender(auto&&...) noexcept { return sender{}; }
+    };
     auto test_basic_sender() -> void
     {
-        struct tag {};
         struct data {};
         struct env {};
+        struct tagged_sender
+            : test_detail::product_type<basic_sender_tag, data, sender0>
+        {
+            using sender_concept = test_std::sender_t;
+        };
 
-        using basic_sender = test_detail::basic_sender<tag, data, sender0>;
+#if 1
+        auto&&[a, b, c] = tagged_sender{basic_sender_tag{}, data{}, sender0{}};
+        use(a);
+        use(b);
+        use(c);
+#endif
+
+        static_assert(test_std::sender<basic_sender_tag::sender>);
+        static_assert(test_std::sender_in<basic_sender_tag::sender>);
+        static_assert(test_std::sender_in<basic_sender_tag::sender, env>);
+        static_assert(test_std::sender<tagged_sender>);
+        static_assert(std::same_as<
+            basic_sender_tag,
+            test_std::tag_of_t<tagged_sender>
+        >);
+        //static_assert(std::same_as<
+        //    basic_sender_tag::sender,
+        //    decltype(test_std::transform_sender(test_std::default_domain{}, tagged_sender{}, env{}))
+        //>);
+
+        using basic_sender = test_detail::basic_sender<basic_sender_tag, data, sender0>;
         static_assert(test_std::sender<basic_sender>);
-        //-dk:TODO static_assert(test_std::sender_in<basic_sender>);
+        //static_assert(test_std::sender_in<basic_sender>);
     }
 }
 

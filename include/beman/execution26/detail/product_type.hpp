@@ -73,6 +73,19 @@ namespace beman::execution26::detail
         T4 value4;
         T5 value5;
     };
+
+    template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
+    struct product_type<T1, T2, T3, T4, T5, T6>
+    {
+        static constexpr ::std::size_t size{6u};
+        auto operator== (product_type const&) const -> bool = default;
+        T1 value1;
+        T2 value2;
+        T3 value3;
+        T4 value4;
+        T5 value5;
+        T6 value6;
+    };
 }
 
 // ----------------------------------------------------------------------------
