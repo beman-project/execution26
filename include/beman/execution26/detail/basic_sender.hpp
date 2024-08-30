@@ -7,6 +7,8 @@
 #include <beman/execution26/detail/decays_to.hpp>
 #include <beman/execution26/detail/completion_signatures_for.hpp>
 #include <beman/execution26/detail/sender.hpp>
+#include <beman/execution26/detail/product_type.hpp>
+#include <utility>
 
 // ----------------------------------------------------------------------------
 
@@ -14,8 +16,10 @@ namespace beman::execution26::detail
 {
     template <typename Tag, typename Data, typename... Child>
     struct basic_sender
+        : ::beman::execution26::detail::product_type<Tag, Data, Child...>
     {
         using sender_concept = ::beman::execution26::sender_t;
+        using indices_for = ::std::index_sequence_for<Child...>;
 
 #if __cpp_explicit_this_parameter < 302110L
         template <typename Env>

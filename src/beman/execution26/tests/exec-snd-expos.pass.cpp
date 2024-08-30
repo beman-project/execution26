@@ -1083,12 +1083,13 @@ namespace
             using sender_concept = test_std::sender_t;
         };
 
-#if 1
-        auto&&[a, b, c] = tagged_sender{basic_sender_tag{}, data{}, sender0{}};
-        use(a);
-        use(b);
-        use(c);
-#endif
+        {
+            auto&&[a, b, c] = tagged_sender{basic_sender_tag{}, data{}, sender0{}};
+            use(a);
+            use(b);
+            use(c);
+            static_assert(std::same_as<basic_sender_tag, std::remove_cvref_t<decltype(a)>>);
+        }
 
         static_assert(test_std::sender<basic_sender_tag::sender>);
         static_assert(test_std::sender_in<basic_sender_tag::sender>);
@@ -1098,14 +1099,57 @@ namespace
             basic_sender_tag,
             test_std::tag_of_t<tagged_sender>
         >);
-        //static_assert(std::same_as<
-        //    basic_sender_tag::sender,
-        //    decltype(test_std::transform_sender(test_std::default_domain{}, tagged_sender{}, env{}))
-        //>);
+        static_assert(std::same_as<
+            basic_sender_tag::sender,
+            decltype(test_std::transform_sender(test_std::default_domain{}, tagged_sender{}, env{}))
+        >);
 
         using basic_sender = test_detail::basic_sender<basic_sender_tag, data, sender0>;
         static_assert(test_std::sender<basic_sender>);
-        //static_assert(test_std::sender_in<basic_sender>);
+
+        basic_sender bs{ basic_sender_tag{}, data{}, sender0 {} };
+        basic_sender const& cbs{bs};
+
+        auto&&[a, b, c] = bs;
+        use(a);
+        use(b);
+        use(c);
+        static_assert(std::same_as<basic_sender_tag, std::remove_cvref_t<decltype(a)>>);
+
+        static_assert(std::same_as<
+            basic_sender_tag,
+            test_std::tag_of_t<basic_sender>
+        >);
+        static_assert(std::same_as<
+            basic_sender_tag::sender,
+            decltype(test_std::transform_sender(test_std::default_domain{}, basic_sender{}, env{}))
+        >);
+        static_assert(test_std::sender_in<basic_sender>);
+        static_assert(std::same_as<
+            basic_sender_tag::sender::completion_signatures,
+            test_detail::completion_signatures_for<basic_sender, env>
+        >);
+        static_assert(std::same_as<
+            basic_sender_tag::sender::completion_signatures,
+            test_detail::completion_signatures_for<basic_sender, env>
+        >);
+        static_assert(std::same_as<
+            basic_sender_tag::sender::completion_signatures,
+            decltype(bs.get_completion_signatures(env{}))
+        >);
+        static_assert(std::same_as<
+            basic_sender_tag::sender::completion_signatures,
+            decltype(cbs.get_completion_signatures(env{}))
+        >);
+        static_assert(std::same_as<
+            basic_sender_tag::sender::completion_signatures,
+            decltype(basic_sender{ basic_sender_tag{}, data{}, sender0 {} }
+                .get_completion_signatures(env{}))
+        >);
+        static_assert(std::same_as<
+            std::index_sequence_for<sender0>,
+            basic_sender::indices_for
+        >);
     }
 }
 
