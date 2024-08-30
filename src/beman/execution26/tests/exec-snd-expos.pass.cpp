@@ -15,6 +15,7 @@
 #include <beman/execution26/detail/sched_env.hpp>
 #include <beman/execution26/detail/sender.hpp>
 #include <beman/execution26/detail/query_with_default.hpp>
+#include <beman/execution26/detail/get_domain_early.hpp>
 #include <beman/execution26/detail/get_domain_late.hpp>
 #include <beman/execution26/detail/default_impls.hpp>
 #include <beman/execution26/detail/impls_for.hpp>
@@ -333,6 +334,17 @@ namespace
         };
 
         template <>
+        struct env<domain>
+        {
+            template <typename Tag>
+            auto query(test_std::get_completion_scheduler_t<Tag> const&) const noexcept
+                -> scheduler<domain>
+            {
+                return {};
+            }
+        };
+
+        template <>
         struct env<common>
         {
             template <typename Tag>
@@ -407,8 +419,52 @@ namespace
         assert(result2.default_value == 74);
     }
 
+    auto test_get_domain_early() -> void
+    {
+        struct plain_sender
+        {
+            using sender_concept = test_std::sender_t;
+        };
+        static_assert(test_std::sender<plain_sender>);
+        static_assert(std::same_as<
+            test_std::default_domain,
+            decltype(test_detail::get_domain_early(plain_sender{}))
+        >);
+
+        namespace cd = completion_domain;
+        static_assert(test_std::sender<cd::sender<cd::domain>>);
+        static_assert(std::same_as<
+            cd::domain,
+            decltype(test_detail::get_domain_early(cd::sender<cd::domain>{}))
+        >);
+
+        struct sender_with_domain
+        {
+            using sender_concept = test_std::sender_t;
+            struct domain {};
+            struct env
+            {
+                auto query(test_std::get_domain_t const&) const noexcept -> domain { return {}; }
+            };
+            auto get_env() const noexcept -> env { return {}; }
+        };
+        static_assert(test_std::sender<sender_with_domain>);
+        static_assert(std::same_as<
+            sender_with_domain::env,
+            decltype(test_std::get_env(sender_with_domain{}))
+        >);
+        static_assert(std::same_as<
+            sender_with_domain::domain,
+            decltype(test_std::get_domain(sender_with_domain::env{}))
+        >);
+        static_assert(std::same_as<
+            sender_with_domain::domain,
+            decltype(test_detail::get_domain_early(sender_with_domain{}))
+        >);
+    }
+
     template <typename Expect>
-    auto test_get_domain_late(auto sender, auto env)
+    auto test_get_domain_late(auto sender, auto env) -> void
     {
         static_assert(test_std::sender<decltype(sender)>);
         static_assert(test_detail::queryable<decltype(env)>);
@@ -1186,6 +1242,7 @@ auto main() -> int
     test_sched_env();
     test_completion_domain();
     test_query_with_default();
+    test_get_domain_early();
     test_get_domain_late();
     test_default_impls();
     test_impls_for();
