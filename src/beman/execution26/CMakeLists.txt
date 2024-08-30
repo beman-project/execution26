@@ -92,6 +92,8 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/valid_completion_signatures.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/valid_specialization.hpp
 )
+get_property(DETAIL_HEADER_FILES TARGET ${TARGET_LIBRARY} PROPERTY HEADER_SET_${TARGET_LIBRARY}_detail_headers)
+source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
 
 include(GNUInstallDirs)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
