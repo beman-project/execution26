@@ -8,6 +8,8 @@
 #include <beman/execution26/detail/completion_signatures_for.hpp>
 #include <beman/execution26/detail/sender.hpp>
 #include <beman/execution26/detail/product_type.hpp>
+#include <beman/execution26/detail/sender_decompose.hpp>
+#include <beman/execution26/detail/impls_for.hpp>
 #include <utility>
 
 // ----------------------------------------------------------------------------
@@ -21,8 +23,60 @@ namespace beman::execution26::detail
         using sender_concept = ::beman::execution26::sender_t;
         using indices_for = ::std::index_sequence_for<Child...>;
 
+#if 1
+        auto get_env() const noexcept -> decltype(auto)
+        {
+            static constexpr ::beman::execution26::detail::sender_any_t at{};
+
+            if constexpr (
+                    requires{ basic_sender{ at, at, at, at, at, at }; }
+                    || requires{ basic_sender{ { at, at, at, at, at, at } }; }
+                )
+            {
+                auto&[_, data, child0, child1, child2, child3] = *this;
+                return ::beman::execution26::detail::impls_for<Tag>
+                    ::get_attrs(data, child0, child1, child2, child3);
+            }
+            else if constexpr (
+                    requires{ basic_sender{ at, at, at, at, at }; }
+                    || requires{ basic_sender{ { at, at, at, at, at } }; }
+                )
+            {
+                auto&[_, data, child0, child1, child2] = *this;
+                return ::beman::execution26::detail::impls_for<Tag>
+                    ::get_attrs(data, child0, child1, child2);
+            }
+            else if constexpr (
+                    requires{ basic_sender{ at, at, at, at }; }
+                    || requires{ basic_sender{ { at, at, at, at } }; }
+                )
+            {
+                auto&[_, data, child0, child1] = *this;
+                return ::beman::execution26::detail::impls_for<Tag>
+                    ::get_attrs(data, child0, child1);
+            }
+            else if constexpr (
+                    requires{ basic_sender{ at, at, at }; }
+                    || requires{ basic_sender{ { at, at, at } }; }
+                )
+            {
+                auto&[_, data, child0] = *this;
+                return ::beman::execution26::detail::impls_for<Tag>
+                    ::get_attrs(data, child0);
+            }
+            else if constexpr (
+                    requires{ basic_sender{ at, at }; }
+                    || requires{ basic_sender{ { at, at } }; }
+                )
+            {
+                auto&[_, data] = *this;
+                return ::beman::execution26::detail::impls_for<Tag>
+                    ::get_attrs(data);
+            }
+        }
+#endif
 #if 0
-#if __cpp_explicit_this_parameter < 302110L
+#if __cpp_explicit_this_parameter < 202110L
         template <typename Env>
         auto get_completion_signatures(Env&&) &&
             -> ::beman::execution26::detail::completion_signatures_for<basic_sender&&, Env>
