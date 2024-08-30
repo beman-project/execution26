@@ -60,14 +60,8 @@ list(APPEND execution_tests
     stopcallback-inplace-cons.pass
 )
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../../include)
 foreach(test ${execution_tests})
     add_executable(${test} ${test}.cpp)
-    target_include_directories(
-      "${test}"
-      PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../../../include>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${CMAKE_LOWER_PROJECT_NAME}>
-    )
+    target_link_libraries(${test} PRIVATE ${TARGET_LIBRARY})
     add_test(NAME ${test} COMMAND $<TARGET_FILE:${test}>)
 endforeach()
