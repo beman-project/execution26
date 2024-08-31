@@ -24,20 +24,17 @@ namespace beman::execution26::detail
         template <::beman::execution26::sender Sender>
         static auto apply(Sender&& sender, auto&& self)
         {
-            using base_type = ::beman::execution26::detail::product_type<
-                ::std::decay_t<Adaptor>, ::std::decay_t<T0>, ::std::decay_t<T>...>;
-            static constexpr ::beman::execution26::detail::sender_any_t at{};
-            if constexpr (requires{ base_type{ at, at, at, at }; })
+            if constexpr (requires{ []{ auto&&[adaptor, arg0, arg1, arg2] = ::std::declval<sender_adaptor>(); }(); })
             {
                 auto&&[adaptor, arg0, arg1, arg2] = self;
                 return adaptor(::std::forward<Sender>(sender), arg0, arg1, arg2);
             }
-            if constexpr (requires{ base_type{ at, at, at }; })
+            else if constexpr (requires{ []{ auto&&[adaptor, arg0, arg1] = ::std::declval<sender_adaptor>(); }(); })
             {
                 auto&&[adaptor, arg0, arg1] = self;
                 return adaptor(::std::forward<Sender>(sender), arg0, arg1);
             }
-            else if constexpr (requires{ base_type{ at, at }; })
+            else if constexpr (requires{ []{ auto&&[adaptor, arg0] = ::std::declval<sender_adaptor>(); }(); })
             {
                 auto&&[adaptor, arg0] = self;
                 return adaptor(::std::forward<Sender>(sender), arg0);

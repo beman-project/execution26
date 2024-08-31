@@ -165,7 +165,7 @@ get_stop_token never_stop_token
 get_stop_token stoppable_token
 has_as_awaitable is_awaitable
 has_completions completion_signatures
-has_completions valid_completions_for
+has_completions valid_completion_for
 impls_for default_impls
 impls_for write_env-break
 into_variant child_type
