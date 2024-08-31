@@ -61,6 +61,7 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_completion_scheduler.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_completion_signatures.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_domain.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_domain_early.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_domain_late.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_env.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_scheduler.hpp
@@ -71,6 +72,7 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/inplace_stop_source.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/join_env.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/make_env.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/make_sender.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/matching_sig.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_contains.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_filter.hpp
@@ -91,6 +93,8 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/schedule_result_t.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/scheduler.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/sender.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/sender_adaptor.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/sender_adaptor_closure.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/sender_decompose.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/sender_for.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/sender_in.hpp
