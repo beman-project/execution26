@@ -20,13 +20,6 @@ include(GNUInstallDirs)
 
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake)
 
-#-dk:TODO detect if deleted functions can have a message: BEMAN_EXECUTION26_HAS_DELETED_MESSAGE
-
-#-dk:TODO install(
-#-dk:TODO   EXPORT ${TARGETS_EXPORT_NAME}
-#-dk:TODO   NAMESPACE ${CMAKE_PROJECT_NAME}
-#-dk:TODO   DESTINATION ${INSTALL_CONFIGDIR})
-
 include(CMakePackageConfigHelpers)
 
 write_basic_package_version_file(

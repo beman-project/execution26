@@ -1326,33 +1326,54 @@ namespace
     struct write_env_receiver
     {
         using receiver_concept = test_std::receiver_t;
+
+        bool* result{nullptr};
+
         auto get_env() const noexcept -> write_env_env { return {42}; }
+        auto set_value(bool value) && noexcept -> void
+        {
+            *this->result = value;
+        }
     };
 
     struct write_env_sender
     {
         using sender_concept = test_std::sender_t;
+        using completion_signatures = test_std::completion_signatures<
+                test_std::set_value_t(bool)
+            >;
         template <typename Receiver>
         struct state
         {
             using operation_state_concept = test_std::operation_state_t;
             std::remove_cvref_t<Receiver> receiver;
-            auto start() & noexcept -> void {}
+
+            auto start() & noexcept -> void
+            {
+                using base_property = property<write_env_env::base>;
+                using added_property = property<write_env_added::added>;
+                bool result{false};
+
+                if constexpr (requires{
+                    test_std::get_env(receiver).query(base_property{});
+                    test_std::get_env(receiver).query(added_property{});
+                })
+                {
+                    result =
+                            (base_property::data{42}
+                             == test_std::get_env(receiver).query(base_property{}))
+                        &&  (added_property::data{43}
+                             == test_std::get_env(receiver).query(added_property{}))
+                        ;
+                }
+
+                test_std::set_value(::std::move(receiver), result);
+            }
         };
 
         template <typename Receiver>
         auto connect(Receiver&& receiver) noexcept -> state<Receiver>
         {
-#if 0
-            //-dk:TODO remove
-            using base_property = property<write_env_env::base>;
-            assert(base_property::data{42}
-                == test_std::get_env(receiver).query(base_property{}));
-            static_assert(std::same_as<int, decltype(test_std::get_env(receiver))>);
-            //using added_property = property<write_env_added::added>;
-            //assert(added_property::data{43}
-            //    == test_std::get_env(receiver).query(added_property{}));
-#endif
             return { std::forward<Receiver>(receiver) };
         }
     };
@@ -1375,38 +1396,33 @@ namespace
         assert(base_property::data{42}
                == test_std::get_env(plain_op.receiver).query(base_property{}));
 
-        std::cout << "----START----\n";
-        auto we_sender{test_detail::write_env(write_env_sender{}, env{43})};
+        auto we_sender{test_detail::write_env(write_env_sender{},
+                                              write_env_added{43})};
+
+        static_assert(test_std::sender_in<write_env_sender>);
+        static_assert(std::same_as<
+            test_std::completion_signatures<test_std::set_value_t(bool)>,
+            decltype(test_std::get_completion_signatures(write_env_sender{}, write_env_env{}))
+        >);
+#if 0
+        static_assert(test_std::sender_in<decltype(we_sender)>);
+        static_assert(std::same_as<
+            test_std::completion_signatures<test_std::set_value_t(bool)>,
+            decltype(test_std::get_completion_signatures(we_sender, write_env_env{}))
+        >);
+#endif
         static_assert(test_std::sender<decltype(we_sender)>);
         static_assert(std::same_as<
             test_detail::write_env_t,
             test_std::tag_of_t<decltype(we_sender)>
         >);
-        auto&&[tag, data, children] = test_detail::get_sender_data(we_sender);
-        use(tag, data, children);
-        static_assert(std::same_as<test_detail::write_env_t, std::decay_t<decltype(tag)>>);
-        static_assert(std::same_as<write_env_sender, std::decay_t<decltype(std::get<0>(children))>>);
 
-        auto we_op{test_std::connect(we_sender, write_env_receiver{})};
+        bool has_both_properties{false};
+        assert(not has_both_properties);
+        auto we_op{test_std::connect(we_sender, write_env_receiver{&has_both_properties})};
+        we_op.start();
+        assert(has_both_properties);
         use(we_op);
-        assert(base_property::data{42}
-               == test_std::get_env(we_op.receiver).query(base_property{}));
-
-        using added_property = property<write_env_added::added>;
-        assert(added_property::data{43}
-               == write_env_added{43}.query(added_property{}));
-        using impls = test_detail::impls_for<test_detail::write_env_t>;
-        auto ge{impls::get_env(test_detail::write_env, write_env_added{43}, write_env_receiver{})};
-        use(ge);
-#if 0
-        static_assert(std::same_as<
-            env,
-            decltype(test_std::get_env(we_op.receiver))
-        >);
-        //assert(added_property::data{43}
-        //       == test_std::get_env(we_op.receiver).query(added_property{}));
-#endif
-        std::cout << "----END----\n";
     }
 }
 

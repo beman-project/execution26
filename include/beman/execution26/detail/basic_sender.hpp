@@ -65,7 +65,7 @@ namespace beman::execution26::detail
             return { ::std::forward<Self>(self), ::std::move(receiver) };
         }
 #endif
-#if 0
+#if 1
 #if __cpp_explicit_this_parameter < 202110L
         template <typename Env>
         auto get_completion_signatures(Env&&) &&

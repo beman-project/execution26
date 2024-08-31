@@ -13,7 +13,6 @@
 #include <beman/execution26/detail/state_type.hpp>
 #include <beman/execution26/detail/valid_specialization.hpp>
 #include <utility>
-#include <iostream> //-dk:TODO remove
 
 // ----------------------------------------------------------------------------
 
@@ -73,7 +72,6 @@ namespace beman::execution26::detail
         auto get_env() const noexcept
             -> ::beman::execution26::detail::env_type<Index, Sender, Receiver>
         {
-            std::cout << "basic_receiver::get_env tag=" << tag_t::name() << "\n";
             return ::beman::execution26::detail::impls_for<tag_t>
                 ::get_env(Index(), this->op->state, this->op->receiver);
         }

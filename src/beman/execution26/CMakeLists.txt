@@ -119,6 +119,7 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/valid_specialization.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/value_types_of_t.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/variant_or_empty.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/write_env.hpp
 )
 get_property(DETAIL_HEADER_FILES TARGET ${TARGET_LIBRARY} PROPERTY HEADER_SET_${TARGET_LIBRARY}_detail_headers)
 source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
