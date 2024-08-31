@@ -1,6 +1,7 @@
 // src/beman/execution26/tests/exe-snd-expos.pass.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/make_sender.hpp>
 #include <beman/execution26/detail/basic_sender.hpp>
 #include <beman/execution26/detail/completion_signatures_for.hpp>
 #include <beman/execution26/detail/connect_all_result.hpp>
@@ -1231,6 +1232,31 @@ namespace
             basic_sender::indices_for
         >);
     }
+
+    template <typename T>
+    auto test_make_sender() -> void
+    {
+        {
+            auto sender{test_detail::make_sender(tag{}, {})};
+            static_assert(test_std::sender<decltype(sender)>);
+        }
+        {
+            auto sender{test_detail::make_sender(tag{}, int{17})};
+            static_assert(test_std::sender<decltype(sender)>);
+            static_assert(std::same_as<test_detail::basic_sender<tag, int>, decltype(sender)>);
+        }
+        {
+            static_assert(not requires{ test_detail::make_sender(tag{}, int{17}, T()); });
+        }
+        {
+            auto sender{test_detail::make_sender(tag{}, int{17}, sender0{})};
+            static_assert(test_std::sender<decltype(sender)>);
+            static_assert(std::same_as<
+                test_detail::basic_sender<tag, int, sender0>,
+                decltype(sender)
+            >);
+        }
+    }
 }
 
 auto main() -> int
@@ -1259,4 +1285,5 @@ auto main() -> int
     test_basic_operation();
     test_completion_signatures_for();
     test_basic_sender();
+    test_make_sender<int>();
 }
