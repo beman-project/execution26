@@ -42,7 +42,17 @@ namespace beman::execution26::detail
         #endif
         using sender_type = ::std::remove_cvref_t<Sender>;
         
-        if constexpr (requires(){
+        if constexpr (requires{sender.template get<0>(); sender.size();})
+            return [&sender]<::std::size_t... I>(::std::index_sequence<I...>){
+                return ::beman::execution26::detail::sender_data<
+                    decltype(sender.template get<0>()),
+                    decltype(sender.template get<1>()),
+                    decltype(::std::tie(sender.template get<2 + I>()...))
+                    >{
+                        sender.template get<0>(), sender.template get<1>(), ::std::tie(sender.template get<2 + I>()...)
+                    };
+            }(::std::make_index_sequence<::std::decay_t<decltype(sender)>::size() - 2u>{});
+        else if constexpr (requires{
             []{ auto&&[tag, data, c0, c1, c2, c3] = *static_cast<sender_type*>(nullptr); };
             })
         {
@@ -51,7 +61,7 @@ namespace beman::execution26::detail
                 tag, data, ::std::tie(c0, c1, c2, c3)
             };
         }
-        else if constexpr (requires(){
+        else if constexpr (requires{
             []{ auto&&[tag, data, c0, c1, c2] = *static_cast<sender_type*>(nullptr); };
             })
         {
@@ -60,7 +70,7 @@ namespace beman::execution26::detail
                 tag, data, ::std::tie(c0, c1, c2)
             };
         }
-        else if constexpr (requires(){
+        else if constexpr (requires{
             []{ auto&&[tag, data, c0, c1] = *static_cast<sender_type*>(nullptr); };
             })
         {
@@ -69,7 +79,7 @@ namespace beman::execution26::detail
                 tag, data, ::std::tie(c0, c1)
             };
         }
-        else if constexpr (requires(){
+        else if constexpr (requires{
             []{ auto&&[tag, data, c0] = *static_cast<sender_type*>(nullptr); };
             })
         {
@@ -78,7 +88,7 @@ namespace beman::execution26::detail
                 tag, data, ::std::tie(c0)
             };
         }
-        else if constexpr (requires(){
+        else if constexpr (requires{
             []{ auto&&[tag, data] = *static_cast<sender_type*>(nullptr); };
             })
         {

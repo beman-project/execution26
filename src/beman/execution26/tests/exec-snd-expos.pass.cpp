@@ -929,38 +929,38 @@ namespace
             auto operator== (nm const&) const -> bool = default;
         };
         auto p0{test_detail::product_type{}};
-        static_assert(p0.size == 0u);
+        static_assert(p0.size() == 0u);
         assert(p0 == p0);
 
         auto p1{test_detail::product_type{nm(1)}};
-        static_assert(p1.size == 1u);
-        assert(p1.value1 == 1);
+        static_assert(p1.size() == 1u);
+        assert(p1.get<0>() == 1);
 
         auto p2{test_detail::product_type{nm(1), nm(2)}};
-        static_assert(p2.size == 2u);
-        assert(p2.value1 == 1);
-        assert(p2.value2 == 2);
+        static_assert(p2.size() == 2u);
+        assert(p2.get<0>() == 1);
+        assert(p2.get<1>() == 2);
 
         auto p3{test_detail::product_type{nm(1), nm(2), nm(3)}};
-        static_assert(p3.size == 3u);
-        assert(p3.value1 == 1);
-        assert(p3.value2 == 2);
-        assert(p3.value3 == 3);
+        static_assert(p3.size() == 3u);
+        assert(p3.get<0>() == 1);
+        assert(p3.get<1>() == 2);
+        assert(p3.get<2>() == 3);
 
         auto p4{test_detail::product_type{nm(1), nm(2), nm(3), nm(4)}};
-        static_assert(p4.size == 4u);
-        assert(p4.value1 == 1);
-        assert(p4.value2 == 2);
-        assert(p4.value3 == 3);
-        assert(p4.value4 == 4);
+        static_assert(p4.size() == 4u);
+        assert(p4.get<0>() == 1);
+        assert(p4.get<1>() == 2);
+        assert(p4.get<2>() == 3);
+        assert(p4.get<3>() == 4);
 
         auto p5{test_detail::product_type{nm(1), nm(2), nm(3), nm(4), nm(5)}};
-        static_assert(p5.size == 5u);
-        assert(p5.value1 == 1);
-        assert(p5.value2 == 2);
-        assert(p5.value3 == 3);
-        assert(p5.value4 == 4);
-        assert(p5.value5 == 5);
+        static_assert(p5.size() == 5u);
+        assert(p5.get<0>() == 1);
+        assert(p5.get<1>() == 2);
+        assert(p5.get<2>() == 3);
+        assert(p5.get<3>() == 4);
+        assert(p5.get<4>() == 5);
     }
     auto test_connect_all() -> void
     {
@@ -969,14 +969,14 @@ namespace
             sender0 s{};
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<>{})};
-            assert(product.size == 0);
+            assert(product.size() == 0);
             use(product);
         }
         {
             sender0 const s{};
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<>{})};
-            assert(product.size == 0);
+            assert(product.size() == 0);
             use(product);
         }
         {
@@ -984,7 +984,7 @@ namespace
             static_assert(requires{ test_std::connect(sender1{}, receiver{}); });
             test_detail::basic_state state{sender1{}, receiver{}};
             auto product{test_detail::connect_all(&state, sender1{}, std::index_sequence<0>{})};
-            assert(product.size == 1);
+            assert(product.size() == 1);
             use(product);
         }
         {
@@ -993,7 +993,7 @@ namespace
             static_assert(requires{ test_std::connect(s, receiver{}); });
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0>{})};
-            assert(product.size == 1);
+            assert(product.size() == 1);
             use(product);
         }
         {
@@ -1001,7 +1001,7 @@ namespace
             static_assert(requires{ test_std::connect(sender2{}, receiver{}); });
             test_detail::basic_state state{sender2{}, receiver{}};
             auto product{test_detail::connect_all(&state, sender2{}, std::index_sequence<0, 1>{})};
-            assert(product.size == 2);
+            assert(product.size() == 2);
             use(product);
         }
         {
@@ -1010,7 +1010,7 @@ namespace
             static_assert(requires{ test_std::connect(s, receiver{}); });
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1>{})};
-            assert(product.size == 2);
+            assert(product.size() == 2);
             use(product);
         }
         {
@@ -1018,7 +1018,7 @@ namespace
             static_assert(requires{ test_std::connect(sender3{}, receiver{}); });
             test_detail::basic_state state{sender3{}, receiver{}};
             auto product{test_detail::connect_all(&state, sender3{}, std::index_sequence<0, 1, 2>{})};
-            assert(product.size == 3);
+            assert(product.size() == 3);
             use(product);
         }
         {
@@ -1027,7 +1027,7 @@ namespace
             static_assert(requires{ test_std::connect(s, receiver{}); });
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1, 2>{})};
-            assert(product.size == 3);
+            assert(product.size() == 3);
             use(product);
         }
         {
@@ -1035,7 +1035,7 @@ namespace
             static_assert(requires{ test_std::connect(sender4{}, receiver{}); });
             test_detail::basic_state state{sender4{}, receiver{}};
             auto product{test_detail::connect_all(&state, sender4{}, std::index_sequence<0, 1, 2, 3>{})};
-            assert(product.size == 4);
+            assert(product.size() == 4);
             use(product);
         }
         {
@@ -1044,7 +1044,7 @@ namespace
             static_assert(requires{ test_std::connect(s, receiver{}); });
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1, 2, 3>{})};
-            assert(product.size == 4);
+            assert(product.size() == 4);
             use(product);
         }
 
@@ -1163,15 +1163,32 @@ namespace
         };
         auto transform_sender(auto&&...) noexcept { return sender{}; }
     };
+
+    struct data {};
+    struct tagged_sender
+        : test_detail::product_type<basic_sender_tag, data, sender0>
+    {
+        using sender_concept = test_std::sender_t;
+    };
+}
+namespace std
+{
+    template <>
+    struct tuple_size<tagged_sender>
+        : ::std::integral_constant<std::size_t, 3>
+    {
+    };
+    template <::std::size_t I>
+    struct tuple_element<I, tagged_sender>
+    {
+        using type = ::std::decay_t<decltype(::std::declval<tagged_sender>().template get<I>())>;
+    };
+}
+namespace
+{
     auto test_basic_sender() -> void
     {
-        struct data {};
         struct env {};
-        struct tagged_sender
-            : test_detail::product_type<basic_sender_tag, data, sender0>
-        {
-            using sender_concept = test_std::sender_t;
-        };
 
         {
             auto&&[a, b, c] = tagged_sender{basic_sender_tag{}, data{}, sender0{}};
@@ -1202,11 +1219,9 @@ namespace
         basic_sender const& cbs{bs};
         use(cbs);
 
-        auto&&[a, b, c] = bs;
-        use(a);
-        use(b);
-        use(c);
-        static_assert(std::same_as<basic_sender_tag, std::remove_cvref_t<decltype(a)>>);
+        auto&&[tag, data, children] = test_detail::get_sender_data(bs);
+        use(tag, data, children);
+        static_assert(std::same_as<basic_sender_tag, std::remove_cvref_t<decltype(tag)>>);
 
         static_assert(std::same_as<
             basic_sender_tag,
@@ -1367,10 +1382,10 @@ namespace
             test_detail::write_env_t,
             test_std::tag_of_t<decltype(we_sender)>
         >);
-        auto&&[tag, data, sender] = we_sender;
-        use(tag, data, sender);
+        auto&&[tag, data, children] = test_detail::get_sender_data(we_sender);
+        use(tag, data, children);
         static_assert(std::same_as<test_detail::write_env_t, std::decay_t<decltype(tag)>>);
-        static_assert(std::same_as<write_env_sender, std::decay_t<decltype(sender)>>);
+        static_assert(std::same_as<write_env_sender, std::decay_t<decltype(std::get<0>(children))>>);
 
         auto we_op{test_std::connect(we_sender, write_env_receiver{})};
         use(we_op);

@@ -24,21 +24,12 @@ namespace beman::execution26::detail
         template <::beman::execution26::sender Sender>
         static auto apply(Sender&& sender, auto&& self)
         {
-            if constexpr (requires{ []{ auto&&[adaptor, arg0, arg1, arg2] = ::std::declval<sender_adaptor>(); }(); })
-            {
-                auto&&[adaptor, arg0, arg1, arg2] = self;
-                return adaptor(::std::forward<Sender>(sender), arg0, arg1, arg2);
-            }
-            else if constexpr (requires{ []{ auto&&[adaptor, arg0, arg1] = ::std::declval<sender_adaptor>(); }(); })
-            {
-                auto&&[adaptor, arg0, arg1] = self;
-                return adaptor(::std::forward<Sender>(sender), arg0, arg1);
-            }
-            else if constexpr (requires{ []{ auto&&[adaptor, arg0] = ::std::declval<sender_adaptor>(); }(); })
-            {
-                auto&&[adaptor, arg0] = self;
-                return adaptor(::std::forward<Sender>(sender), arg0);
-            }
+            return [&self, &sender]<::std::size_t... I>(::std::index_sequence<I...>){
+                return (self.template get<0>())(
+                    ::std::forward<Sender>(sender),
+                    self.template get<I + 1>()...
+                );
+            }(::std::make_index_sequence<sender_adaptor::size() - 1u>{});
         }
         template <::beman::execution26::sender Sender>
         auto operator()(Sender&& sender)

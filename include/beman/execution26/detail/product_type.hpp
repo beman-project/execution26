@@ -10,81 +10,86 @@
 
 namespace beman::execution26::detail
 {
-    // This should really be a generic implementation, possibly based on
-    // http://wg21.link/p1061
+    template <::std::size_t, typename T>
+    struct product_type_element
+    {
+        T value;
+        auto operator== (product_type_element const&) const -> bool = default;
+    };
 
-    template <typename...> struct product_type;
+    template <typename, typename...>
+    struct product_type_base;
+
+    template <::std::size_t... I, typename... T>
+    struct product_type_base<::std::index_sequence<I...>, T...>
+        : ::beman::execution26::detail::product_type_element<I, T>...
+    {
+        static constexpr ::std::size_t size() { return sizeof...(T); }
+
+        template <::std::size_t J, typename S>
+        static auto element_get(
+            ::beman::execution26::detail::product_type_element<J, S>& self)
+            noexcept
+            -> S&
+        {
+            return self.value;
+        }
+        template <::std::size_t J, typename S>
+        static auto element_get(
+            ::beman::execution26::detail::product_type_element<J, S>&& self)
+            noexcept
+            -> S&&
+        {
+            return ::std::move(self.value);
+        }
+        template <::std::size_t J, typename S>
+        static auto element_get(
+            ::beman::execution26::detail::product_type_element<J, S> const& self)
+            noexcept
+            -> S const&
+        {
+            return self.value;
+        }
+
+        template <::std::size_t J>
+        auto get() & -> decltype(auto)
+        {
+            return this->element_get<J>(*this);
+        }
+        template <::std::size_t J>
+        auto get() && -> decltype(auto)
+        {
+            return this->element_get<J>(::std::move(*this));
+        }
+        template <::std::size_t J>
+        auto get() const& -> decltype(auto)
+        {
+            return this->element_get<J>(::std::move(*this));
+        }
+
+        auto operator== (product_type_base const&) const -> bool = default;
+    };
+
     template <typename... T>
-    product_type(T...) -> product_type<T...>;
-
-    template <>
-    struct product_type<>
+    struct product_type
+        : ::beman::execution26::detail::product_type_base<::std::index_sequence_for<T...>, T...>
     {
-        static constexpr ::std::size_t size{0u};
-        auto operator== (product_type const&) const -> bool = default;
     };
+    template <typename... T>
+    product_type(T&&...) -> product_type<::std::decay_t<T>...>;
+}
 
-    template <typename T1>
-    struct product_type<T1>
+namespace std
+{
+    template <typename...T>
+    struct tuple_size<::beman::execution26::detail::product_type<T...>>
+        : ::std::integral_constant<std::size_t, sizeof...(T)>
     {
-        static constexpr ::std::size_t size{1u};
-        auto operator== (product_type const&) const -> bool = default;
-        T1 value1;
     };
-
-    template <typename T1, typename T2>
-    struct product_type<T1, T2>
+    template <::std::size_t I, typename...T>
+    struct tuple_element<I, ::beman::execution26::detail::product_type<T...>>
     {
-        static constexpr ::std::size_t size{2u};
-        auto operator== (product_type const&) const -> bool = default;
-        T1 value1;
-        T2 value2;
-    };
-
-    template <typename T1, typename T2, typename T3>
-    struct product_type<T1, T2, T3>
-    {
-        static constexpr ::std::size_t size{3u};
-        auto operator== (product_type const&) const -> bool = default;
-        T1 value1;
-        T2 value2;
-        T3 value3;
-    };
-
-    template <typename T1, typename T2, typename T3, typename T4>
-    struct product_type<T1, T2, T3, T4>
-    {
-        static constexpr ::std::size_t size{4u};
-        auto operator== (product_type const&) const -> bool = default;
-        T1 value1;
-        T2 value2;
-        T3 value3;
-        T4 value4;
-    };
-
-    template <typename T1, typename T2, typename T3, typename T4, typename T5>
-    struct product_type<T1, T2, T3, T4, T5>
-    {
-        static constexpr ::std::size_t size{5u};
-        auto operator== (product_type const&) const -> bool = default;
-        T1 value1;
-        T2 value2;
-        T3 value3;
-        T4 value4;
-        T5 value5;
-    };
-
-    template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
-    struct product_type<T1, T2, T3, T4, T5, T6>
-    {
-        static constexpr ::std::size_t size{6u};
-        auto operator== (product_type const&) const -> bool = default;
-        T1 value1;
-        T2 value2;
-        T3 value3;
-        T4 value4;
-        T5 value5;
-        T6 value6;
+        using type = ::std::decay_t<decltype(::std::declval<::beman::execution26::detail::product_type<T...>>().template get<I>())>;
     };
 }
 

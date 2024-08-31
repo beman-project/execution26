@@ -27,7 +27,6 @@ namespace beman::execution26::detail
                         ::std::index_sequence<I...>) const noexcept(true/*-dk:TODO*/)
         {
             auto data{::beman::execution26::detail::get_sender_data(::std::forward<Sender>(sender))};
-            use(data);
             return ::std::apply([&op](auto&&... c){
                 return [&op]<::std::size_t...J>(::std::index_sequence<J...>, auto&&... c){
                     use(op);

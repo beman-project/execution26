@@ -11,6 +11,7 @@ project(beman_execution26 VERSION 0.0.0 LANGUAGES CXX)
 enable_testing()
 
 set(CMAKE_CXX_STANDARD 23)
+add_compile_options(-Wno-missing-braces)
 set(TARGETS_EXPORT_NAME ${CMAKE_PROJECT_NAME}Targets)
 
 add_subdirectory(src)
