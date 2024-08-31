@@ -508,6 +508,7 @@ namespace
         {
             using sender_concept = test_std::sender_t;
         };
+        static_assert(test_std::sender<no_domain_sender>);
         test_get_domain_late<test_std::default_domain>(no_domain_sender{}, test_std::empty_env{});
 
         struct scheduler_env
