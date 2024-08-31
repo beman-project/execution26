@@ -23,61 +23,14 @@ namespace beman::execution26::detail
     template <typename Tag, typename Data, typename Children>
     struct sender_data
     {
-        ::std::remove_cvref_t<Tag> tag;
-        Data&                      data;
-        Children                   children;
+        using tag_type      = ::std::remove_cvref_t<Tag>;
+        using data_type     = ::std::remove_cvref_t<Data>;
+        using children_type = ::std::remove_cvref_t<Children>;
+
+        tag_type  tag;
+        Data&     data;
+        Children  children;
     };
-
-    template <typename Sender>
-    auto get_sender_meta(Sender&& sender)
-    {
-        #if 0
-        //-dk:TODO should use a dynamic/language approach:
-        auto&& [tag, data, ... children] = sender;
-        return sender_meta<decltype(tag), decltype(data), ::std::tuple<decltype(children)...>>;
-        #endif
-        using sender_type = ::std::remove_cvref_t<Sender>;
-
-        if constexpr (requires(){
-            []{ auto&&[tag, data, c0, c1, c2, c3] = *static_cast<sender_type*>(nullptr); };
-            })
-        {
-            auto&& [tag, data, c0, c1, c2, c3] = sender;
-            return ::beman::execution26::detail::sender_meta<decltype(tag), decltype(data), ::std::tuple<decltype(c0), decltype(c1), decltype(c2), decltype(c3)>>{};
-        }
-        else if constexpr (requires(){
-            []{ auto&&[tag, data, c0, c1, c2] = *static_cast<sender_type*>(nullptr); };
-            })
-        {
-            auto&& [tag, data, c0, c1, c2] = sender;
-            return ::beman::execution26::detail::sender_meta<decltype(tag), decltype(data), ::std::tuple<decltype(c0), decltype(c1), decltype(c2)>>{};
-        }
-        else if constexpr (requires(){
-            []{ auto&&[tag, data, c0, c1] = *static_cast<sender_type*>(nullptr); };
-            })
-        {
-            auto&& [tag, data, c0, c1] = sender;
-            return ::beman::execution26::detail::sender_meta<decltype(tag), decltype(data), ::std::tuple<decltype(c0), decltype(c1)>>{};
-        }
-        else if constexpr (requires(){
-            []{ auto&&[tag, data, c0] = *static_cast<sender_type*>(nullptr); };
-            })
-        {
-            auto&& [tag, data, c0] = sender;
-            return ::beman::execution26::detail::sender_meta<decltype(tag), decltype(data), ::std::tuple<decltype(c0)>>{};
-        }
-        else if constexpr (requires(){
-            []{ auto&&[tag, data] = *static_cast<sender_type*>(nullptr); };
-            })
-        {
-            auto&& [tag, data] = sender;
-            return ::beman::execution26::detail::sender_meta<decltype(tag), decltype(data), ::std::tuple<>>{};
-        }
-        else
-        {
-            return ::beman::execution26::detail::sender_meta<void, void, void>{};
-        }
-    }
 
     template <typename Sender>
     auto get_sender_data(Sender&& sender)
@@ -139,6 +92,18 @@ namespace beman::execution26::detail
             return ::beman::execution26::detail::sender_meta<void, void, void>{};
         }
     }
+
+    template <typename Sender>
+    auto get_sender_meta(Sender&& sender)
+    {
+        using type = decltype(get_sender_data(sender));
+        return sender_meta<
+            typename type::tag_type,
+            typename type::data_type,
+            typename type::children_type
+        >{};
+    }
+
 }
 
 namespace beman::execution26

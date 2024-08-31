@@ -26,46 +26,11 @@ namespace beman::execution26::detail
 
         auto get_env() const noexcept -> decltype(auto)
         {
-            if constexpr (requires(){
-                []{ auto&&[tag, data, c0, c1, c2, c3] = *static_cast<basic_sender*>(nullptr); };
-                })
-            {
-                auto&[_, data, child0, child1, child2, child3] = *this;
+            auto data{::beman::execution26::detail::get_sender_data(*this)};
+            return ::std::apply([&data](auto&&... c){
                 return ::beman::execution26::detail::impls_for<Tag>
-                    ::get_attrs(data, child0, child1, child2, child3);
-            }
-            else if constexpr (requires(){
-                []{ auto&&[tag, data, c0, c1, c2] = *static_cast<basic_sender*>(nullptr); };
-                })
-            {
-                auto&[_, data, child0, child1, child2] = *this;
-                return ::beman::execution26::detail::impls_for<Tag>
-                    ::get_attrs(data, child0, child1, child2);
-            }
-            else if constexpr (requires(){
-                []{ auto&&[tag, data, c0, c1] = *static_cast<basic_sender*>(nullptr); };
-                })
-            {
-                auto&[_, data, child0, child1] = *this;
-                return ::beman::execution26::detail::impls_for<Tag>
-                    ::get_attrs(data, child0, child1);
-            }
-            else if constexpr (requires(){
-                []{ auto&&[tag, data, c0] = *static_cast<basic_sender*>(nullptr); };
-                })
-            {
-                auto&[_, data, child0] = *this;
-                return ::beman::execution26::detail::impls_for<Tag>
-                    ::get_attrs(data, child0);
-            }
-            else if constexpr (requires(){
-                []{ auto&&[tag, data] = *static_cast<basic_sender*>(nullptr); };
-                })
-            {
-                auto&[_, data] = *this;
-                return ::beman::execution26::detail::impls_for<Tag>
-                    ::get_attrs(data);
-            }
+                    ::get_attrs(data.data, c...);
+            }, data.children);
         }
 
 #if __cpp_explicit_this_parameter < 202110L
