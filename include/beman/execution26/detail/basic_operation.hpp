@@ -44,23 +44,30 @@ namespace beman::execution26::detail
 
         auto start() & noexcept -> void
         {
-            static constexpr ::beman::execution26::detail::sender_any_t at{};
-            if constexpr (requires{ inner_ops_t{at, at, at, at}; })
+            if constexpr (requires(){
+                []{ auto&&[op0, op1, op2, op3] = *static_cast<inner_ops_t*>(nullptr); };
+                })
             {
                 auto&[op0, op1, op2, op3] = this->inner_ops;
                 ::beman::execution26::detail::impls_for<tag_t>::start(this->state, this->receiver, op0, op1, op2, op3);
             }
-            else if constexpr (requires{ inner_ops_t{at, at, at}; })
+            else if constexpr (requires(){
+                []{ auto&&[op0, op1, op2] = *static_cast<inner_ops_t*>(nullptr); };
+                })
             {
                 auto&[op0, op1, op2] = this->inner_ops;
                 ::beman::execution26::detail::impls_for<tag_t>::start(this->state, this->receiver, op0, op1, op2);
             }
-            else if constexpr (requires{ inner_ops_t{at, at}; })
+            else if constexpr (requires(){
+                []{ auto&&[op0, op1] = *static_cast<inner_ops_t*>(nullptr); };
+                })
             {
                 auto&[op0, op1] = this->inner_ops;
                 ::beman::execution26::detail::impls_for<tag_t>::start(this->state, this->receiver, op0, op1);
             }
-            else if constexpr (requires{ inner_ops_t{at}; })
+            else if constexpr (requires(){
+                []{ auto&&[op0] = *static_cast<inner_ops_t*>(nullptr); };
+                })
             {
                 auto&[op0] = this->inner_ops;
                 ::beman::execution26::detail::impls_for<tag_t>::start(this->state, this->receiver, op0);

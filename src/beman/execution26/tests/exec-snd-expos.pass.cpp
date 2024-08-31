@@ -1,6 +1,7 @@
 // src/beman/execution26/tests/exe-snd-expos.pass.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/write_env.hpp>
 #include <beman/execution26/detail/make_sender.hpp>
 #include <beman/execution26/detail/basic_sender.hpp>
 #include <beman/execution26/detail/completion_signatures_for.hpp>
@@ -36,7 +37,7 @@
 
 namespace
 {
-    auto use(auto&&) {}
+    auto use(auto&&...) {}
 
     struct domain
     {
@@ -99,7 +100,9 @@ namespace
         auto operator== (scheduler const&) const -> bool = default;
     };
 
-    struct tag {};
+    struct tag {
+        static auto name() { return "expos test anonymous"; }
+    };
 
     template <typename Receiver>
     struct operation_state
@@ -584,7 +587,10 @@ namespace
 
     auto test_default_impls_get_state() -> void
     {
-        struct tag {};
+        struct tag
+        {
+            static auto name() { return "test_default_impls_get_state"; }
+        };
         struct data
         {
             int v1{}; int v2{};
@@ -719,7 +725,10 @@ namespace
 
     auto test_impls_for() -> void
     {
-        struct tag {};
+        struct tag
+        {
+            static auto name() { return "test_impls_for"; }
+        };
 
         static_assert(std::derived_from<test_detail::impls_for<tag>,
                                         test_detail::default_impls>);
@@ -727,7 +736,10 @@ namespace
 
     auto test_state_type() -> void
     {
-        struct tag {};
+        struct tag
+        {
+            static auto name() { return "test_state_type"; }
+        };
         struct state {};
         struct sender
         {
@@ -741,7 +753,10 @@ namespace
 
     auto test_basic_state() -> void
     {
-        struct tag {};
+        struct tag
+        {
+            static auto name() { return "test_basic_state"; }
+        };
         struct data {};
         struct sender
         {
@@ -780,7 +795,10 @@ namespace
     auto test_env_type() -> void
     {
         using index = std::integral_constant<int, 0>;
-        struct tag {};
+        struct tag
+        {
+            static auto name() { return "test_env_type"; }
+        };
         struct data {};
         struct env {};
         struct sender
@@ -814,7 +832,10 @@ namespace
     auto test_basic_receiver() -> void
     {
         using index = std::integral_constant<int, 0>;
-        struct tag {};
+        struct tag
+        {
+            static auto name() { return "test_basic_receiver"; }
+        };
         struct data {};
         struct err
         {
@@ -883,6 +904,7 @@ namespace
             test_detail::basic_receiver<sender, unstoppable_receiver, index> br{&op};
             static_assert(not requires{ std::move(br).set_stopped(); });
         }
+        //-dk:TODO test basic_receiver::get_env
     }
 
     auto test_completion_tag() -> void
@@ -1258,6 +1280,119 @@ namespace
             >);
         }
     }
+
+    template <typename>
+    struct property
+    {
+        struct data
+        {
+            int value{};
+            auto operator== (data const&) const -> bool = default;
+        };
+    };
+
+    struct write_env_env
+    {
+        struct base {};
+        int value{};
+        auto query(property<base> const&) const -> property<base>::data
+        { return {this->value}; }
+    };
+    struct write_env_added
+    {
+        int value{};
+        struct added {};
+        auto query(property<added> const&) const noexcept -> property<added>::data
+        {
+            return {this->value};
+        }
+    };
+
+    struct write_env_receiver
+    {
+        using receiver_concept = test_std::receiver_t;
+        auto get_env() const noexcept -> write_env_env { return {42}; }
+    };
+
+    struct write_env_sender
+    {
+        using sender_concept = test_std::sender_t;
+        template <typename Receiver>
+        struct state
+        {
+            using operation_state_concept = test_std::operation_state_t;
+            std::remove_cvref_t<Receiver> receiver;
+            auto start() & noexcept -> void {}
+        };
+
+        template <typename Receiver>
+        auto connect(Receiver&& receiver) noexcept -> state<Receiver>
+        {
+#if 0
+            //-dk:TODO remove
+            using base_property = property<write_env_env::base>;
+            assert(base_property::data{42}
+                == test_std::get_env(receiver).query(base_property{}));
+            static_assert(std::same_as<int, decltype(test_std::get_env(receiver))>);
+            //using added_property = property<write_env_added::added>;
+            //assert(added_property::data{43}
+            //    == test_std::get_env(receiver).query(added_property{}));
+#endif
+            return { std::forward<Receiver>(receiver) };
+        }
+    };
+
+    auto test_write_env() -> void
+    {
+        static_assert(test_std::sender<write_env_sender>);
+        static_assert(test_std::receiver<write_env_receiver>);
+        static_assert(test_detail::queryable<write_env_added>);
+        auto plain_op(test_std::connect(write_env_sender{}, write_env_receiver{}));
+        static_assert(std::same_as<
+            write_env_env,
+            decltype(test_std::get_env(write_env_receiver{}))
+        >);
+        static_assert(std::same_as<
+            write_env_env,
+            decltype(test_std::get_env(plain_op.receiver))
+        >);
+        using base_property = property<write_env_env::base>;
+        assert(base_property::data{42}
+               == test_std::get_env(plain_op.receiver).query(base_property{}));
+
+        std::cout << "----START----\n";
+        auto we_sender{test_detail::write_env(write_env_sender{}, env{43})};
+        static_assert(test_std::sender<decltype(we_sender)>);
+        static_assert(std::same_as<
+            test_detail::write_env_t,
+            test_std::tag_of_t<decltype(we_sender)>
+        >);
+        auto&&[tag, data, sender] = we_sender;
+        use(tag, data, sender);
+        static_assert(std::same_as<test_detail::write_env_t, std::decay_t<decltype(tag)>>);
+        static_assert(std::same_as<write_env_sender, std::decay_t<decltype(sender)>>);
+
+        auto we_op{test_std::connect(we_sender, write_env_receiver{})};
+        use(we_op);
+        assert(base_property::data{42}
+               == test_std::get_env(we_op.receiver).query(base_property{}));
+
+        using added_property = property<write_env_added::added>;
+        assert(added_property::data{43}
+               == write_env_added{43}.query(added_property{}));
+        using impls = test_detail::impls_for<test_detail::write_env_t>;
+        auto ge{impls::get_env(test_detail::write_env, write_env_added{43}, write_env_receiver{})};
+        use(ge);
+#if 0
+        static_assert(std::same_as<
+            env,
+            decltype(test_std::get_env(we_op.receiver))
+        >);
+        //assert(added_property::data{43}
+        //       == test_std::get_env(we_op.receiver).query(added_property{}));
+#endif
+        std::cout << "----END----\n";
+    }
 }
 
 auto main() -> int
@@ -1287,4 +1422,5 @@ auto main() -> int
     test_completion_signatures_for();
     test_basic_sender();
     test_make_sender<int>();
+    test_write_env();
 }

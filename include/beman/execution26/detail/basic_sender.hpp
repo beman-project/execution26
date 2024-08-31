@@ -26,48 +26,41 @@ namespace beman::execution26::detail
 
         auto get_env() const noexcept -> decltype(auto)
         {
-            static constexpr ::beman::execution26::detail::sender_any_t at{};
-
-            if constexpr (
-                    requires{ basic_sender{ at, at, at, at, at, at }; }
-                    || requires{ basic_sender{ { at, at, at, at, at, at } }; }
-                )
+            if constexpr (requires(){
+                []{ auto&&[tag, data, c0, c1, c2, c3] = *static_cast<basic_sender*>(nullptr); };
+                })
             {
                 auto&[_, data, child0, child1, child2, child3] = *this;
                 return ::beman::execution26::detail::impls_for<Tag>
                     ::get_attrs(data, child0, child1, child2, child3);
             }
-            else if constexpr (
-                    requires{ basic_sender{ at, at, at, at, at }; }
-                    || requires{ basic_sender{ { at, at, at, at, at } }; }
-                )
+            else if constexpr (requires(){
+                []{ auto&&[tag, data, c0, c1, c2] = *static_cast<basic_sender*>(nullptr); };
+                })
             {
                 auto&[_, data, child0, child1, child2] = *this;
                 return ::beman::execution26::detail::impls_for<Tag>
                     ::get_attrs(data, child0, child1, child2);
             }
-            else if constexpr (
-                    requires{ basic_sender{ at, at, at, at }; }
-                    || requires{ basic_sender{ { at, at, at, at } }; }
-                )
+            else if constexpr (requires(){
+                []{ auto&&[tag, data, c0, c1] = *static_cast<basic_sender*>(nullptr); };
+                })
             {
                 auto&[_, data, child0, child1] = *this;
                 return ::beman::execution26::detail::impls_for<Tag>
                     ::get_attrs(data, child0, child1);
             }
-            else if constexpr (
-                    requires{ basic_sender{ at, at, at }; }
-                    || requires{ basic_sender{ { at, at, at } }; }
-                )
+            else if constexpr (requires(){
+                []{ auto&&[tag, data, c0] = *static_cast<basic_sender*>(nullptr); };
+                })
             {
                 auto&[_, data, child0] = *this;
                 return ::beman::execution26::detail::impls_for<Tag>
                     ::get_attrs(data, child0);
             }
-            else if constexpr (
-                    requires{ basic_sender{ at, at }; }
-                    || requires{ basic_sender{ { at, at } }; }
-                )
+            else if constexpr (requires(){
+                []{ auto&&[tag, data] = *static_cast<basic_sender*>(nullptr); };
+                })
             {
                 auto&[_, data] = *this;
                 return ::beman::execution26::detail::impls_for<Tag>

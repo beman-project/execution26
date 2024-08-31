@@ -27,8 +27,9 @@ namespace beman::execution26::detail
                         ::std::index_sequence<I...>) const noexcept(true/*-dk:TODO*/)
         {
             using sender_type = ::std::remove_cvref_t<Sender>;
-            static constexpr ::beman::execution26::detail::sender_any_t at{};
-            if constexpr (requires(){ sender_type{ at, at, at, at, at, at }; })
+            if constexpr (requires(){
+                []{ auto&&[tag, data, c0, c1, c2, c3] = *static_cast<sender_type*>(nullptr); };
+                })
             {
                 auto&& [tag, data, c0, c1, c2, c3] = sender;
                 use(tag);
@@ -52,7 +53,9 @@ namespace beman::execution26::detail
                             ::std::integral_constant<::size_t, 3>>{op})
                 };
             }
-            else if constexpr (requires(){ sender_type{ at, at, at, at, at }; })
+            else if constexpr (requires(){
+                []{ auto&&[tag, data, c0, c1, c2] = *static_cast<sender_type*>(nullptr); };
+                })
             {
                 auto&& [tag, data, c0, c1, c2] = sender;
                 use(tag);
@@ -72,7 +75,9 @@ namespace beman::execution26::detail
                             ::std::integral_constant<::size_t, 2>>{op})
                 };
             }
-            else if constexpr (requires(){ sender_type{ at, at, at, at }; })
+            else if constexpr (requires(){
+                []{ auto&&[tag, data, c0, c1] = *static_cast<sender_type*>(nullptr); };
+                })
             {
                 auto&& [tag, data, c0, c1] = sender;
                 use(tag);
@@ -88,7 +93,9 @@ namespace beman::execution26::detail
                             ::std::integral_constant<::size_t, 1>>{op})
                 };
             }
-            else if constexpr (requires(){ sender_type{ at, at, at }; })
+            else if constexpr (requires(){
+                []{ auto&&[tag, data, c0] = *static_cast<sender_type*>(nullptr); };
+                })
             {
                 auto&& [tag, data, c0] = sender;
                 use(tag);
@@ -100,7 +107,9 @@ namespace beman::execution26::detail
                             ::std::integral_constant<::size_t, 0>>{op})
                 };
             }
-            else if constexpr (requires(){ sender_type{ at, at }; })
+            else if constexpr (requires(){
+                []{ auto&&[tag, data] = *static_cast<sender_type*>(nullptr); };
+                })
             {
                 auto&& [tag, data] = sender;
                 use(tag);
