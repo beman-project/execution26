@@ -11,6 +11,7 @@
 #include <beman/execution26/detail/make_sender.hpp>
 #include <beman/execution26/detail/queryable.hpp>
 #include <beman/execution26/detail/sender.hpp>
+#include <type_traits>
 #include <utility>
 
 // ----------------------------------------------------------------------------
@@ -28,6 +29,19 @@ namespace beman::execution26::detail
             );
         }
         static auto name() { return "write_env_t"; }
+    };
+
+    template <typename NewEnv, typename Child, typename Env>
+    struct completion_signatures_for_impl<
+        ::beman::execution26::detail::basic_sender<
+            ::beman::execution26::detail::write_env_t, NewEnv, Child>
+        , Env>
+    {
+        using type = decltype(::beman::execution26::get_completion_signatures(
+            ::std::declval<Child>(), 
+            ::beman::execution26::detail::join_env(
+                ::std::declval<NewEnv>(), ::std::declval<Env>())
+            ));
     };
 
     template <>

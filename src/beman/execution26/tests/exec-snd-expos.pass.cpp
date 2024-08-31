@@ -1404,13 +1404,25 @@ namespace
             test_std::completion_signatures<test_std::set_value_t(bool)>,
             decltype(test_std::get_completion_signatures(write_env_sender{}, write_env_env{}))
         >);
-#if 0
+
+        static_assert(std::same_as<
+            test_detail::completion_signatures_for<decltype(we_sender), write_env_env>,
+            test_std::completion_signatures<test_std::set_value_t(bool)>
+        >);
+        static_assert(std::same_as<
+            test_detail::completion_signatures_for<decltype(we_sender), test_std::empty_env>,
+            test_std::completion_signatures<test_std::set_value_t(bool)>
+        >);
+        static_assert(std::same_as<
+            test_detail::completion_signatures_for<decltype(we_sender)&, test_std::empty_env>,
+            test_std::completion_signatures<test_std::set_value_t(bool)>
+        >);
         static_assert(test_std::sender_in<decltype(we_sender)>);
         static_assert(std::same_as<
             test_std::completion_signatures<test_std::set_value_t(bool)>,
             decltype(test_std::get_completion_signatures(we_sender, write_env_env{}))
         >);
-#endif
+
         static_assert(test_std::sender<decltype(we_sender)>);
         static_assert(std::same_as<
             test_detail::write_env_t,
