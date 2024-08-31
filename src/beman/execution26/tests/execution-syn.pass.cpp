@@ -425,7 +425,7 @@ namespace
         }
         auto operator()(int value) const
         {
-            return test_detail::sender_adaptor<arg_closure_t, int>{{*this, value}};
+            return test_detail::sender_adaptor<arg_closure_t, int>{{*this, value}, {}};
         }
     };
     constexpr arg_closure_t arg_closure{};
