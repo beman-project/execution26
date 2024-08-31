@@ -928,33 +928,33 @@ namespace
             nm(nm&&) = delete;
             auto operator== (nm const&) const -> bool = default;
         };
-        auto p0{test_detail::product_type{}};
+        auto p0{test_detail::product_type<>{}};
         static_assert(p0.size() == 0u);
         assert(p0 == p0);
 
-        auto p1{test_detail::product_type{nm(1)}};
+        auto p1{test_detail::product_type<nm>{nm(1)}};
         static_assert(p1.size() == 1u);
         assert(p1.get<0>() == 1);
 
-        auto p2{test_detail::product_type{nm(1), nm(2)}};
+        auto p2{test_detail::product_type<nm, nm>{{{nm(1)}, {nm(2)}}}};
         static_assert(p2.size() == 2u);
         assert(p2.get<0>() == 1);
         assert(p2.get<1>() == 2);
 
-        auto p3{test_detail::product_type{nm(1), nm(2), nm(3)}};
+        auto p3{test_detail::product_type<nm, nm, nm>{{{nm(1)}, {nm(2)}, {nm(3)}}}};
         static_assert(p3.size() == 3u);
         assert(p3.get<0>() == 1);
         assert(p3.get<1>() == 2);
         assert(p3.get<2>() == 3);
 
-        auto p4{test_detail::product_type{nm(1), nm(2), nm(3), nm(4)}};
+        auto p4{test_detail::product_type<nm, nm, nm, nm>{{{nm(1)}, {nm(2)}, {nm(3)}, {nm(4)}}}};
         static_assert(p4.size() == 4u);
         assert(p4.get<0>() == 1);
         assert(p4.get<1>() == 2);
         assert(p4.get<2>() == 3);
         assert(p4.get<3>() == 4);
 
-        auto p5{test_detail::product_type{nm(1), nm(2), nm(3), nm(4), nm(5)}};
+        auto p5{test_detail::product_type<nm, nm, nm, nm, nm>{{{nm(1)}, {nm(2)}, {nm(3)}, {nm(4)}, {nm(5)}}}};
         static_assert(p5.size() == 5u);
         assert(p5.get<0>() == 1);
         assert(p5.get<1>() == 2);
@@ -1191,7 +1191,7 @@ namespace
         struct env {};
 
         {
-            auto&&[a, b, c] = tagged_sender{basic_sender_tag{}, data{}, sender0{}};
+            auto&&[a, b, c] = tagged_sender{{{{basic_sender_tag{}}, {data{}}, {sender0{}}}}};
             use(a);
             use(b);
             use(c);
@@ -1215,7 +1215,7 @@ namespace
         using basic_sender = test_detail::basic_sender<basic_sender_tag, data, sender0>;
         static_assert(test_std::sender<basic_sender>);
 
-        basic_sender bs{ basic_sender_tag{}, data{}, sender0 {} };
+        basic_sender bs{{{{basic_sender_tag{}}, {data{}}, {sender0 {}}}}};
         basic_sender const& cbs{bs};
         use(cbs);
 
