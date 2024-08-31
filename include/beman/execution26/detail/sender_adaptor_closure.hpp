@@ -6,6 +6,7 @@
 
 #include <beman/execution26/detail/sender.hpp>
 #include <concepts>
+#include <type_traits>
 #include <utility>
 
 // ----------------------------------------------------------------------------
@@ -28,12 +29,13 @@ namespace beman::execution26::detail::pipeable
 {
     template <::beman::execution26::sender Sender, typename Adaptor>
         requires (not ::beman::execution26::sender<Adaptor>)
-        && ::std::derived_from<Adaptor, ::beman::execution26::sender_adaptor_closure<Adaptor>>
-        && requires(Sender&& sender, Adaptor const& adaptor)
+        && ::std::derived_from<::std::decay_t<Adaptor>,
+            ::beman::execution26::sender_adaptor_closure<::std::decay_t<Adaptor>>>
+        && requires(Sender&& sender, Adaptor&& adaptor)
         {
             { adaptor(::std::forward<Sender>(sender)) } -> ::beman::execution26::sender;
         }
-    auto operator| (Sender&& sender, Adaptor const& adaptor)
+    auto operator| (Sender&& sender, Adaptor&& adaptor)
     {
         return adaptor(::std::forward<Sender>(sender));
     }

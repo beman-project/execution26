@@ -1,6 +1,7 @@
 // src/beman/execution26/tests/execution-syn.pass.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/sender_adaptor.hpp>
 #include <beman/execution26/detail/sender_adaptor_closure.hpp>
 #include <beman/execution26/detail/decays_to.hpp>
 #include <beman/execution26/detail/connect_result_t.hpp>
@@ -412,7 +413,37 @@ namespace
         auto direct{closure(sender{})};
         static_assert(std::same_as<adapted_sender<sender>, decltype(direct)>);
         auto via_op{sender{} | closure };
-        use(via_op);
+        static_assert(std::same_as<adapted_sender<sender>, decltype(via_op)>);
+    }
+
+    struct arg_closure_t
+    {
+        template <test_std::sender Sender>
+        auto operator()(Sender&&, int) const -> adapted_sender<Sender>
+        {
+            return {};
+        }
+        auto operator()(int value) const
+        {
+            return test_detail::sender_adaptor<arg_closure_t, int>{{*this, value}};
+        }
+    };
+    constexpr arg_closure_t arg_closure{};
+
+    auto test_sender_adaptor() -> void
+    {
+        struct sender
+        {
+            using sender_concept = test_std::sender_t;
+        };
+        static_assert(test_std::sender<sender>);
+
+        auto closure{arg_closure(17)};
+        static_assert(std::same_as<
+            test_detail::sender_adaptor<arg_closure_t, int>, decltype(closure)>);
+        auto direct{closure(sender{})};
+        static_assert(std::same_as<adapted_sender<sender>, decltype(direct)>);
+        auto via_op{sender{} | closure };
         static_assert(std::same_as<adapted_sender<sender>, decltype(via_op)>);
     }
 }
@@ -430,4 +461,5 @@ auto main() -> int
     test_conect_result_t();
     test_decays_to();
     test_sender_adaptor_closure();
+    test_sender_adaptor();
 }
