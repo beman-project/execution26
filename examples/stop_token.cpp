@@ -101,8 +101,8 @@ auto inactive(Token token) -> void
 auto main() -> int
 {
     exec::stop_source source;
-    ::std::thread act([&]{ active(source.get_token()); });
-    ::std::thread inact([&]{ inactive(source.get_token()); });
+    ::std::thread act([token = source.get_token()] { active(token); });
+    ::std::thread inact([token = source.get_token()] { inactive(token); });
 
     print("threads started\n");
     source.request_stop();
