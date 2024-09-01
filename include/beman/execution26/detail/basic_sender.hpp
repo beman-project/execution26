@@ -33,6 +33,10 @@ namespace beman::execution26::detail
             }, data.children);
         }
 
+        template <typename Receiver>
+            requires (not ::beman::execution26::receiver<Receiver>)
+        auto connect(Receiver receiver)
+            = BEMAN_EXECUTION26_DELETE("the passed receiver doesn't model receiver");
 #if __cpp_explicit_this_parameter < 202110L
         template <::beman::execution26::receiver Receiver>
         auto connect(Receiver receiver) &

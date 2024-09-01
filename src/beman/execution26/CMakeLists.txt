@@ -71,6 +71,7 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/indirect_meta_apply.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/inplace_stop_source.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/join_env.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/just.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/make_env.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/make_sender.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/matching_sig.hpp
@@ -111,6 +112,7 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/stop_source.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/stoppable_source.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/stoppable_token.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/tag_of_t.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/transform_sender.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/type_list.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/unstoppable_token.hpp

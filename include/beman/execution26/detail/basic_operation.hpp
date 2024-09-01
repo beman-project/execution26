@@ -8,6 +8,7 @@
 #include <beman/execution26/detail/basic_state.hpp>
 #include <beman/execution26/detail/state_type.hpp>
 #include <beman/execution26/detail/sender_decompose.hpp>
+#include <beman/execution26/detail/tag_of_t.hpp>
 #include <beman/execution26/detail/impls_for.hpp>
 #include <beman/execution26/detail/connect_all_result.hpp>
 #include <beman/execution26/detail/valid_specialization.hpp>

@@ -6,6 +6,7 @@
 
 #include <beman/execution26/detail/impls_for.hpp>
 #include <beman/execution26/detail/sender_decompose.hpp>
+#include <beman/execution26/detail/tag_of_t.hpp>
 #include <beman/execution26/detail/state_type.hpp>
 #include <utility>
 
