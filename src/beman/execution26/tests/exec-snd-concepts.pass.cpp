@@ -4,6 +4,7 @@
 #include <beman/execution26/detail/sender_for.hpp>
 #include <beman/execution26/detail/product_type.hpp>
 #include <beman/execution26/detail/sender_decompose.hpp>
+#include <beman/execution26/detail/tag_of_t.hpp>
 #include <beman/execution26/detail/sender.hpp>
 #include <beman/execution26/detail/sender_in.hpp>
 #include <beman/execution26/execution.hpp>

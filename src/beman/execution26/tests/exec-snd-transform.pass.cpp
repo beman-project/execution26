@@ -4,6 +4,7 @@
 #include <beman/execution26/detail/transform_sender.hpp>
 #include <beman/execution26/detail/sender.hpp>
 #include <beman/execution26/execution.hpp>
+#include <beman/execution26/detail/tag_of_t.hpp>
 #include <test/execution.hpp>
 #include <concepts>
 #include <type_traits>

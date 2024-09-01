@@ -20,3 +20,5 @@ likely observable.
 - [exec.snd.concepts] "The type tag_of_t<Sndr> is +defined+ as follows:"
 - [exec.sched] uses `auto(get_completion_scheduler<set_value_t>(...))`
     which is OK for clang but doesn't seem to compile for g++ os MSVC.
+- [exec.just] p2.1: movable-value<Ts> doesn't seems right: movable-value<decay_t<Ts>>
+- [exec.just] Otherwise after p2.3 is missing <ts...>

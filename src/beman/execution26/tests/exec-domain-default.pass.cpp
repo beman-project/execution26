@@ -4,6 +4,7 @@
 #include <beman/execution26/detail/default_domain.hpp>
 #include <beman/execution26/detail/sender.hpp>
 #include <beman/execution26/detail/sender_decompose.hpp>
+#include <beman/execution26/detail/tag_of_t.hpp>
 #include <test/execution.hpp>
 #include <concepts>
 

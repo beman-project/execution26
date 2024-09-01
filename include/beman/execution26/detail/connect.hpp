@@ -39,8 +39,8 @@ namespace beman::execution26
             }
             else
             {
-                static_assert(::std::same_as<int, Sender>,
-                              "result from transform_sender has no suitable connect()");
+                enum bad_sender {};
+                static_assert(::std::same_as<bad_sender, decltype(new_sender())>, "result from transform_sender has no suitable connect()");
             }
         }
     };

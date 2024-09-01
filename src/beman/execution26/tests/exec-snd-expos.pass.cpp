@@ -30,6 +30,7 @@
 #include <beman/execution26/detail/completion_tag.hpp>
 #include <beman/execution26/detail/scheduler.hpp>
 #include <beman/execution26/execution.hpp>
+#include <beman/execution26/detail/tag_of_t.hpp>
 #include <test/execution.hpp>
 #include <concepts>
 
