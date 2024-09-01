@@ -69,6 +69,13 @@ namespace beman::execution26::detail
                            ::beman::execution26::set_stopped_t());
         }
 
+        auto get_env() const noexcept
+            -> ::beman::execution26::detail::env_type<Index, Sender, Receiver>
+        {
+            return ::beman::execution26::detail::impls_for<tag_t>
+                ::get_env(Index(), this->op->state, this->op->receiver);
+        }
+
         ::beman::execution26::detail::basic_state<Sender, Receiver>* op{};
     };  
 }

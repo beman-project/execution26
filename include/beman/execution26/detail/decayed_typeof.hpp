@@ -4,13 +4,14 @@
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_DECAYED_TYPEOF
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_DECAYED_TYPEOF
 
+#include <type_traits>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail
 {
-    template <auto const& Tag>
-    // using decayed_typeof = decltype(auto(Tag));
-    using decayed_typeof = decltype([]{ return Tag; }());
+    template <auto&& Tag>
+    using decayed_typeof = ::std::decay_t<decltype(Tag)>;
 }
 
 // ----------------------------------------------------------------------------

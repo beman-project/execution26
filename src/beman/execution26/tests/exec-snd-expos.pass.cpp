@@ -1,6 +1,7 @@
 // src/beman/execution26/tests/exe-snd-expos.pass.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/write_env.hpp>
 #include <beman/execution26/detail/make_sender.hpp>
 #include <beman/execution26/detail/basic_sender.hpp>
 #include <beman/execution26/detail/completion_signatures_for.hpp>
@@ -36,7 +37,7 @@
 
 namespace
 {
-    auto use(auto&&) {}
+    auto use(auto&&...) {}
 
     struct domain
     {
@@ -99,7 +100,9 @@ namespace
         auto operator== (scheduler const&) const -> bool = default;
     };
 
-    struct tag {};
+    struct tag {
+        static auto name() { return "expos test anonymous"; }
+    };
 
     template <typename Receiver>
     struct operation_state
@@ -584,7 +587,10 @@ namespace
 
     auto test_default_impls_get_state() -> void
     {
-        struct tag {};
+        struct tag
+        {
+            static auto name() { return "test_default_impls_get_state"; }
+        };
         struct data
         {
             int v1{}; int v2{};
@@ -719,7 +725,10 @@ namespace
 
     auto test_impls_for() -> void
     {
-        struct tag {};
+        struct tag
+        {
+            static auto name() { return "test_impls_for"; }
+        };
 
         static_assert(std::derived_from<test_detail::impls_for<tag>,
                                         test_detail::default_impls>);
@@ -727,7 +736,10 @@ namespace
 
     auto test_state_type() -> void
     {
-        struct tag {};
+        struct tag
+        {
+            static auto name() { return "test_state_type"; }
+        };
         struct state {};
         struct sender
         {
@@ -741,7 +753,10 @@ namespace
 
     auto test_basic_state() -> void
     {
-        struct tag {};
+        struct tag
+        {
+            static auto name() { return "test_basic_state"; }
+        };
         struct data {};
         struct sender
         {
@@ -780,7 +795,10 @@ namespace
     auto test_env_type() -> void
     {
         using index = std::integral_constant<int, 0>;
-        struct tag {};
+        struct tag
+        {
+            static auto name() { return "test_env_type"; }
+        };
         struct data {};
         struct env {};
         struct sender
@@ -814,7 +832,10 @@ namespace
     auto test_basic_receiver() -> void
     {
         using index = std::integral_constant<int, 0>;
-        struct tag {};
+        struct tag
+        {
+            static auto name() { return "test_basic_receiver"; }
+        };
         struct data {};
         struct err
         {
@@ -883,6 +904,7 @@ namespace
             test_detail::basic_receiver<sender, unstoppable_receiver, index> br{&op};
             static_assert(not requires{ std::move(br).set_stopped(); });
         }
+        //-dk:TODO test basic_receiver::get_env
     }
 
     auto test_completion_tag() -> void
@@ -906,39 +928,39 @@ namespace
             nm(nm&&) = delete;
             auto operator== (nm const&) const -> bool = default;
         };
-        auto p0{test_detail::product_type{}};
-        static_assert(p0.size == 0u);
+        auto p0{test_detail::product_type<>{}};
+        static_assert(p0.size() == 0u);
         assert(p0 == p0);
 
-        auto p1{test_detail::product_type{nm(1)}};
-        static_assert(p1.size == 1u);
-        assert(p1.value1 == 1);
+        auto p1{test_detail::product_type<nm>{nm(1)}};
+        static_assert(p1.size() == 1u);
+        assert(p1.get<0>() == 1);
 
-        auto p2{test_detail::product_type{nm(1), nm(2)}};
-        static_assert(p2.size == 2u);
-        assert(p2.value1 == 1);
-        assert(p2.value2 == 2);
+        auto p2{test_detail::product_type<nm, nm>{{{nm(1)}, {nm(2)}}}};
+        static_assert(p2.size() == 2u);
+        assert(p2.get<0>() == 1);
+        assert(p2.get<1>() == 2);
 
-        auto p3{test_detail::product_type{nm(1), nm(2), nm(3)}};
-        static_assert(p3.size == 3u);
-        assert(p3.value1 == 1);
-        assert(p3.value2 == 2);
-        assert(p3.value3 == 3);
+        auto p3{test_detail::product_type<nm, nm, nm>{{{nm(1)}, {nm(2)}, {nm(3)}}}};
+        static_assert(p3.size() == 3u);
+        assert(p3.get<0>() == 1);
+        assert(p3.get<1>() == 2);
+        assert(p3.get<2>() == 3);
 
-        auto p4{test_detail::product_type{nm(1), nm(2), nm(3), nm(4)}};
-        static_assert(p4.size == 4u);
-        assert(p4.value1 == 1);
-        assert(p4.value2 == 2);
-        assert(p4.value3 == 3);
-        assert(p4.value4 == 4);
+        auto p4{test_detail::product_type<nm, nm, nm, nm>{{{nm(1)}, {nm(2)}, {nm(3)}, {nm(4)}}}};
+        static_assert(p4.size() == 4u);
+        assert(p4.get<0>() == 1);
+        assert(p4.get<1>() == 2);
+        assert(p4.get<2>() == 3);
+        assert(p4.get<3>() == 4);
 
-        auto p5{test_detail::product_type{nm(1), nm(2), nm(3), nm(4), nm(5)}};
-        static_assert(p5.size == 5u);
-        assert(p5.value1 == 1);
-        assert(p5.value2 == 2);
-        assert(p5.value3 == 3);
-        assert(p5.value4 == 4);
-        assert(p5.value5 == 5);
+        auto p5{test_detail::product_type<nm, nm, nm, nm, nm>{{{nm(1)}, {nm(2)}, {nm(3)}, {nm(4)}, {nm(5)}}}};
+        static_assert(p5.size() == 5u);
+        assert(p5.get<0>() == 1);
+        assert(p5.get<1>() == 2);
+        assert(p5.get<2>() == 3);
+        assert(p5.get<3>() == 4);
+        assert(p5.get<4>() == 5);
     }
     auto test_connect_all() -> void
     {
@@ -947,14 +969,14 @@ namespace
             sender0 s{};
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<>{})};
-            assert(product.size == 0);
+            assert(product.size() == 0);
             use(product);
         }
         {
             sender0 const s{};
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<>{})};
-            assert(product.size == 0);
+            assert(product.size() == 0);
             use(product);
         }
         {
@@ -962,7 +984,7 @@ namespace
             static_assert(requires{ test_std::connect(sender1{}, receiver{}); });
             test_detail::basic_state state{sender1{}, receiver{}};
             auto product{test_detail::connect_all(&state, sender1{}, std::index_sequence<0>{})};
-            assert(product.size == 1);
+            assert(product.size() == 1);
             use(product);
         }
         {
@@ -971,7 +993,7 @@ namespace
             static_assert(requires{ test_std::connect(s, receiver{}); });
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0>{})};
-            assert(product.size == 1);
+            assert(product.size() == 1);
             use(product);
         }
         {
@@ -979,7 +1001,7 @@ namespace
             static_assert(requires{ test_std::connect(sender2{}, receiver{}); });
             test_detail::basic_state state{sender2{}, receiver{}};
             auto product{test_detail::connect_all(&state, sender2{}, std::index_sequence<0, 1>{})};
-            assert(product.size == 2);
+            assert(product.size() == 2);
             use(product);
         }
         {
@@ -988,7 +1010,7 @@ namespace
             static_assert(requires{ test_std::connect(s, receiver{}); });
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1>{})};
-            assert(product.size == 2);
+            assert(product.size() == 2);
             use(product);
         }
         {
@@ -996,7 +1018,7 @@ namespace
             static_assert(requires{ test_std::connect(sender3{}, receiver{}); });
             test_detail::basic_state state{sender3{}, receiver{}};
             auto product{test_detail::connect_all(&state, sender3{}, std::index_sequence<0, 1, 2>{})};
-            assert(product.size == 3);
+            assert(product.size() == 3);
             use(product);
         }
         {
@@ -1005,7 +1027,7 @@ namespace
             static_assert(requires{ test_std::connect(s, receiver{}); });
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1, 2>{})};
-            assert(product.size == 3);
+            assert(product.size() == 3);
             use(product);
         }
         {
@@ -1013,7 +1035,7 @@ namespace
             static_assert(requires{ test_std::connect(sender4{}, receiver{}); });
             test_detail::basic_state state{sender4{}, receiver{}};
             auto product{test_detail::connect_all(&state, sender4{}, std::index_sequence<0, 1, 2, 3>{})};
-            assert(product.size == 4);
+            assert(product.size() == 4);
             use(product);
         }
         {
@@ -1022,7 +1044,7 @@ namespace
             static_assert(requires{ test_std::connect(s, receiver{}); });
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1, 2, 3>{})};
-            assert(product.size == 4);
+            assert(product.size() == 4);
             use(product);
         }
 
@@ -1141,18 +1163,35 @@ namespace
         };
         auto transform_sender(auto&&...) noexcept { return sender{}; }
     };
+
+    struct data {};
+    struct tagged_sender
+        : test_detail::product_type<basic_sender_tag, data, sender0>
+    {
+        using sender_concept = test_std::sender_t;
+    };
+}
+namespace std
+{
+    template <>
+    struct tuple_size<tagged_sender>
+        : ::std::integral_constant<std::size_t, 3>
+    {
+    };
+    template <::std::size_t I>
+    struct tuple_element<I, tagged_sender>
+    {
+        using type = ::std::decay_t<decltype(::std::declval<tagged_sender>().template get<I>())>;
+    };
+}
+namespace
+{
     auto test_basic_sender() -> void
     {
-        struct data {};
         struct env {};
-        struct tagged_sender
-            : test_detail::product_type<basic_sender_tag, data, sender0>
-        {
-            using sender_concept = test_std::sender_t;
-        };
 
         {
-            auto&&[a, b, c] = tagged_sender{basic_sender_tag{}, data{}, sender0{}};
+            auto&&[a, b, c] = tagged_sender{{{{basic_sender_tag{}}, {data{}}, {sender0{}}}}};
             use(a);
             use(b);
             use(c);
@@ -1176,15 +1215,13 @@ namespace
         using basic_sender = test_detail::basic_sender<basic_sender_tag, data, sender0>;
         static_assert(test_std::sender<basic_sender>);
 
-        basic_sender bs{ basic_sender_tag{}, data{}, sender0 {} };
+        basic_sender bs{{{{basic_sender_tag{}}, {data{}}, {sender0 {}}}}};
         basic_sender const& cbs{bs};
         use(cbs);
 
-        auto&&[a, b, c] = bs;
-        use(a);
-        use(b);
-        use(c);
-        static_assert(std::same_as<basic_sender_tag, std::remove_cvref_t<decltype(a)>>);
+        auto&&[tag, data, children] = test_detail::get_sender_data(bs);
+        use(tag, data, children);
+        static_assert(std::same_as<basic_sender_tag, std::remove_cvref_t<decltype(tag)>>);
 
         static_assert(std::same_as<
             basic_sender_tag,
@@ -1258,6 +1295,147 @@ namespace
             >);
         }
     }
+
+    template <typename>
+    struct property
+    {
+        struct data
+        {
+            int value{};
+            auto operator== (data const&) const -> bool = default;
+        };
+    };
+
+    struct write_env_env
+    {
+        struct base {};
+        int value{};
+        auto query(property<base> const&) const -> property<base>::data
+        { return {this->value}; }
+    };
+    struct write_env_added
+    {
+        int value{};
+        struct added {};
+        auto query(property<added> const&) const noexcept -> property<added>::data
+        {
+            return {this->value};
+        }
+    };
+
+    struct write_env_receiver
+    {
+        using receiver_concept = test_std::receiver_t;
+
+        bool* result{nullptr};
+
+        auto get_env() const noexcept -> write_env_env { return {42}; }
+        auto set_value(bool value) && noexcept -> void
+        {
+            *this->result = value;
+        }
+    };
+
+    struct write_env_sender
+    {
+        using sender_concept = test_std::sender_t;
+        using completion_signatures = test_std::completion_signatures<
+                test_std::set_value_t(bool)
+            >;
+        template <typename Receiver>
+        struct state
+        {
+            using operation_state_concept = test_std::operation_state_t;
+            std::remove_cvref_t<Receiver> receiver;
+
+            auto start() & noexcept -> void
+            {
+                using base_property = property<write_env_env::base>;
+                using added_property = property<write_env_added::added>;
+                bool result{false};
+
+                if constexpr (requires{
+                    test_std::get_env(receiver).query(base_property{});
+                    test_std::get_env(receiver).query(added_property{});
+                })
+                {
+                    result =
+                            (base_property::data{42}
+                             == test_std::get_env(receiver).query(base_property{}))
+                        &&  (added_property::data{43}
+                             == test_std::get_env(receiver).query(added_property{}))
+                        ;
+                }
+
+                test_std::set_value(::std::move(receiver), result);
+            }
+        };
+
+        template <typename Receiver>
+        auto connect(Receiver&& receiver) noexcept -> state<Receiver>
+        {
+            return { std::forward<Receiver>(receiver) };
+        }
+    };
+
+    auto test_write_env() -> void
+    {
+        static_assert(test_std::sender<write_env_sender>);
+        static_assert(test_std::receiver<write_env_receiver>);
+        static_assert(test_detail::queryable<write_env_added>);
+        auto plain_op(test_std::connect(write_env_sender{}, write_env_receiver{}));
+        static_assert(std::same_as<
+            write_env_env,
+            decltype(test_std::get_env(write_env_receiver{}))
+        >);
+        static_assert(std::same_as<
+            write_env_env,
+            decltype(test_std::get_env(plain_op.receiver))
+        >);
+        using base_property = property<write_env_env::base>;
+        assert(base_property::data{42}
+               == test_std::get_env(plain_op.receiver).query(base_property{}));
+
+        auto we_sender{test_detail::write_env(write_env_sender{},
+                                              write_env_added{43})};
+
+        static_assert(test_std::sender_in<write_env_sender>);
+        static_assert(std::same_as<
+            test_std::completion_signatures<test_std::set_value_t(bool)>,
+            decltype(test_std::get_completion_signatures(write_env_sender{}, write_env_env{}))
+        >);
+
+        static_assert(std::same_as<
+            test_detail::completion_signatures_for<decltype(we_sender), write_env_env>,
+            test_std::completion_signatures<test_std::set_value_t(bool)>
+        >);
+        static_assert(std::same_as<
+            test_detail::completion_signatures_for<decltype(we_sender), test_std::empty_env>,
+            test_std::completion_signatures<test_std::set_value_t(bool)>
+        >);
+        static_assert(std::same_as<
+            test_detail::completion_signatures_for<decltype(we_sender)&, test_std::empty_env>,
+            test_std::completion_signatures<test_std::set_value_t(bool)>
+        >);
+        static_assert(test_std::sender_in<decltype(we_sender)>);
+        static_assert(std::same_as<
+            test_std::completion_signatures<test_std::set_value_t(bool)>,
+            decltype(test_std::get_completion_signatures(we_sender, write_env_env{}))
+        >);
+
+        static_assert(test_std::sender<decltype(we_sender)>);
+        static_assert(std::same_as<
+            test_detail::write_env_t,
+            test_std::tag_of_t<decltype(we_sender)>
+        >);
+
+        bool has_both_properties{false};
+        assert(not has_both_properties);
+        auto we_op{test_std::connect(we_sender, write_env_receiver{&has_both_properties})};
+        we_op.start();
+        assert(has_both_properties);
+        use(we_op);
+    }
 }
 
 auto main() -> int
@@ -1287,4 +1465,5 @@ auto main() -> int
     test_completion_signatures_for();
     test_basic_sender();
     test_make_sender<int>();
+    test_write_env();
 }

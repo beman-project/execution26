@@ -24,24 +24,12 @@ namespace beman::execution26::detail
         template <::beman::execution26::sender Sender>
         static auto apply(Sender&& sender, auto&& self)
         {
-            using base_type = ::beman::execution26::detail::product_type<
-                ::std::decay_t<Adaptor>, ::std::decay_t<T0>, ::std::decay_t<T>...>;
-            static constexpr ::beman::execution26::detail::sender_any_t at{};
-            if constexpr (requires{ base_type{ at, at, at, at }; })
-            {
-                auto&&[adaptor, arg0, arg1, arg2] = self;
-                return adaptor(::std::forward<Sender>(sender), arg0, arg1, arg2);
-            }
-            if constexpr (requires{ base_type{ at, at, at }; })
-            {
-                auto&&[adaptor, arg0, arg1] = self;
-                return adaptor(::std::forward<Sender>(sender), arg0, arg1);
-            }
-            else if constexpr (requires{ base_type{ at, at }; })
-            {
-                auto&&[adaptor, arg0] = self;
-                return adaptor(::std::forward<Sender>(sender), arg0);
-            }
+            return [&self, &sender]<::std::size_t... I>(::std::index_sequence<I...>){
+                return (self.template get<0>())(
+                    ::std::forward<Sender>(sender),
+                    self.template get<I + 1>()...
+                );
+            }(::std::make_index_sequence<sender_adaptor::size() - 1u>{});
         }
         template <::beman::execution26::sender Sender>
         auto operator()(Sender&& sender)

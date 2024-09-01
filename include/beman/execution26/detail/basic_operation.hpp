@@ -11,6 +11,7 @@
 #include <beman/execution26/detail/impls_for.hpp>
 #include <beman/execution26/detail/connect_all_result.hpp>
 #include <beman/execution26/detail/valid_specialization.hpp>
+#include <functional>
 #include <utility>
 
 // ----------------------------------------------------------------------------
@@ -44,27 +45,16 @@ namespace beman::execution26::detail
 
         auto start() & noexcept -> void
         {
-            static constexpr ::beman::execution26::detail::sender_any_t at{};
-            if constexpr (requires{ inner_ops_t{at, at, at, at}; })
-            {
-                auto&[op0, op1, op2, op3] = this->inner_ops;
-                ::beman::execution26::detail::impls_for<tag_t>::start(this->state, this->receiver, op0, op1, op2, op3);
-            }
-            else if constexpr (requires{ inner_ops_t{at, at, at}; })
-            {
-                auto&[op0, op1, op2] = this->inner_ops;
-                ::beman::execution26::detail::impls_for<tag_t>::start(this->state, this->receiver, op0, op1, op2);
-            }
-            else if constexpr (requires{ inner_ops_t{at, at}; })
-            {
-                auto&[op0, op1] = this->inner_ops;
-                ::beman::execution26::detail::impls_for<tag_t>::start(this->state, this->receiver, op0, op1);
-            }
-            else if constexpr (requires{ inner_ops_t{at}; })
-            {
-                auto&[op0] = this->inner_ops;
-                ::beman::execution26::detail::impls_for<tag_t>::start(this->state, this->receiver, op0);
-            }
+            ::std::invoke([this]<::std::size_t... I>(::std::index_sequence<I...>)
+                {
+                    ::beman::execution26::detail::impls_for<tag_t>::start(
+                        this->state,
+                        this->receiver,
+                        this->inner_ops.template get<I>()...
+                        );
+                },
+                ::std::make_index_sequence<inner_ops_t::size()>{}
+            );
         }
     };
 }

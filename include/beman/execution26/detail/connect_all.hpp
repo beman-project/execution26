@@ -20,94 +20,32 @@ namespace beman::execution26::detail
 {
     struct connect_all_t
     {
-        auto use(auto&&) const {}
+        static auto use(auto&&...) {}
         template <typename Sender, typename Receiver, ::std::size_t... I>
         auto operator()(::beman::execution26::detail::basic_state<Sender, Receiver>* op,
                         Sender&& sender,
                         ::std::index_sequence<I...>) const noexcept(true/*-dk:TODO*/)
         {
-            using sender_type = ::std::remove_cvref_t<Sender>;
-            static constexpr ::beman::execution26::detail::sender_any_t at{};
-            if constexpr (requires(){ sender_type{ at, at, at, at, at, at }; })
-            {
-                auto&& [tag, data, c0, c1, c2, c3] = sender;
-                use(tag);
-                use(data);
-                return ::beman::execution26::detail::product_type{
-                    ::beman::execution26::connect(
-                        ::beman::execution26::detail::forward_like<Sender>(c0),
-                        ::beman::execution26::detail::basic_receiver<Sender, Receiver,
-                            ::std::integral_constant<::size_t, 0>>{op}),
-                    ::beman::execution26::connect(
-                        ::beman::execution26::detail::forward_like<Sender>(c1),
-                        ::beman::execution26::detail::basic_receiver<Sender, Receiver,
-                            ::std::integral_constant<::size_t, 1>>{op}),
-                    ::beman::execution26::connect(
-                        ::beman::execution26::detail::forward_like<Sender>(c2),
-                        ::beman::execution26::detail::basic_receiver<Sender, Receiver,
-                            ::std::integral_constant<::size_t, 2>>{op}),
-                    ::beman::execution26::connect(
-                        ::beman::execution26::detail::forward_like<Sender>(c3),
-                        ::beman::execution26::detail::basic_receiver<Sender, Receiver,
-                            ::std::integral_constant<::size_t, 3>>{op})
-                };
-            }
-            else if constexpr (requires(){ sender_type{ at, at, at, at, at }; })
-            {
-                auto&& [tag, data, c0, c1, c2] = sender;
-                use(tag);
-                use(data);
-                return ::beman::execution26::detail::product_type{
-                    ::beman::execution26::connect(
-                        ::beman::execution26::detail::forward_like<Sender>(c0),
-                        ::beman::execution26::detail::basic_receiver<Sender, Receiver,
-                            ::std::integral_constant<::size_t, 0>>{op}),
-                    ::beman::execution26::connect(
-                        ::beman::execution26::detail::forward_like<Sender>(c1),
-                        ::beman::execution26::detail::basic_receiver<Sender, Receiver,
-                            ::std::integral_constant<::size_t, 1>>{op}),
-                    ::beman::execution26::connect(
-                        ::beman::execution26::detail::forward_like<Sender>(c2),
-                        ::beman::execution26::detail::basic_receiver<Sender, Receiver,
-                            ::std::integral_constant<::size_t, 2>>{op})
-                };
-            }
-            else if constexpr (requires(){ sender_type{ at, at, at, at }; })
-            {
-                auto&& [tag, data, c0, c1] = sender;
-                use(tag);
-                use(data);
-                return ::beman::execution26::detail::product_type{
-                    ::beman::execution26::connect(
-                        ::beman::execution26::detail::forward_like<Sender>(c0),
-                        ::beman::execution26::detail::basic_receiver<Sender, Receiver,
-                            ::std::integral_constant<::size_t, 0>>{op}),
-                    ::beman::execution26::connect(
-                        ::beman::execution26::detail::forward_like<Sender>(c1),
-                        ::beman::execution26::detail::basic_receiver<Sender, Receiver,
-                            ::std::integral_constant<::size_t, 1>>{op})
-                };
-            }
-            else if constexpr (requires(){ sender_type{ at, at, at }; })
-            {
-                auto&& [tag, data, c0] = sender;
-                use(tag);
-                use(data);
-                return ::beman::execution26::detail::product_type{
-                    ::beman::execution26::connect(
-                        ::beman::execution26::detail::forward_like<Sender>(c0),
-                        ::beman::execution26::detail::basic_receiver<Sender, Receiver,
-                            ::std::integral_constant<::size_t, 0>>{op})
-                };
-            }
-            else if constexpr (requires(){ sender_type{ at, at }; })
-            {
-                auto&& [tag, data] = sender;
-                use(tag);
-                use(data);
-                return ::beman::execution26::detail::product_type{
-                };
-            }
+            auto data{::beman::execution26::detail::get_sender_data(::std::forward<Sender>(sender))};
+            return ::std::apply([&op](auto&&... c){
+                return [&op]<::std::size_t...J>(::std::index_sequence<J...>, auto&&... c){
+                    use(op);
+                    return ::beman::execution26::detail::product_type<
+                        decltype(
+                            ::beman::execution26::connect(
+                                ::beman::execution26::detail::forward_like<Sender>(c),
+                                ::beman::execution26::detail::basic_receiver<Sender, Receiver,
+                                    ::std::integral_constant<::size_t, J>>{op}
+                        ))...
+                    >{{
+                        {::beman::execution26::connect(
+                            ::beman::execution26::detail::forward_like<Sender>(c),
+                            ::beman::execution26::detail::basic_receiver<Sender, Receiver,
+                                ::std::integral_constant<::size_t, J>>{op}
+                        )}...
+                    }};
+                }(::std::make_index_sequence<::std::tuple_size_v<::std::decay_t<decltype(data.children)>>>{}, c...);
+            }, data.children);
         }
     };
     inline constexpr connect_all_t connect_all{};

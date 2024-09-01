@@ -26,53 +26,11 @@ namespace beman::execution26::detail
 
         auto get_env() const noexcept -> decltype(auto)
         {
-            static constexpr ::beman::execution26::detail::sender_any_t at{};
-
-            if constexpr (
-                    requires{ basic_sender{ at, at, at, at, at, at }; }
-                    || requires{ basic_sender{ { at, at, at, at, at, at } }; }
-                )
-            {
-                auto&[_, data, child0, child1, child2, child3] = *this;
+            auto data{::beman::execution26::detail::get_sender_data(*this)};
+            return ::std::apply([&data](auto&&... c){
                 return ::beman::execution26::detail::impls_for<Tag>
-                    ::get_attrs(data, child0, child1, child2, child3);
-            }
-            else if constexpr (
-                    requires{ basic_sender{ at, at, at, at, at }; }
-                    || requires{ basic_sender{ { at, at, at, at, at } }; }
-                )
-            {
-                auto&[_, data, child0, child1, child2] = *this;
-                return ::beman::execution26::detail::impls_for<Tag>
-                    ::get_attrs(data, child0, child1, child2);
-            }
-            else if constexpr (
-                    requires{ basic_sender{ at, at, at, at }; }
-                    || requires{ basic_sender{ { at, at, at, at } }; }
-                )
-            {
-                auto&[_, data, child0, child1] = *this;
-                return ::beman::execution26::detail::impls_for<Tag>
-                    ::get_attrs(data, child0, child1);
-            }
-            else if constexpr (
-                    requires{ basic_sender{ at, at, at }; }
-                    || requires{ basic_sender{ { at, at, at } }; }
-                )
-            {
-                auto&[_, data, child0] = *this;
-                return ::beman::execution26::detail::impls_for<Tag>
-                    ::get_attrs(data, child0);
-            }
-            else if constexpr (
-                    requires{ basic_sender{ at, at }; }
-                    || requires{ basic_sender{ { at, at } }; }
-                )
-            {
-                auto&[_, data] = *this;
-                return ::beman::execution26::detail::impls_for<Tag>
-                    ::get_attrs(data);
-            }
+                    ::get_attrs(data.data, c...);
+            }, data.children);
         }
 
 #if __cpp_explicit_this_parameter < 202110L
@@ -107,7 +65,6 @@ namespace beman::execution26::detail
             return { ::std::forward<Self>(self), ::std::move(receiver) };
         }
 #endif
-#if 0
 #if __cpp_explicit_this_parameter < 202110L
         template <typename Env>
         auto get_completion_signatures(Env&&) &&
@@ -141,7 +98,6 @@ namespace beman::execution26::detail
         {
             return {};
         }
-#endif
 #endif
     };
 }
