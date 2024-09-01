@@ -66,6 +66,7 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_env.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_scheduler.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_stop_token.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/has_completions.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/impls_for.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/indices_for.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/indirect_meta_apply.hpp
