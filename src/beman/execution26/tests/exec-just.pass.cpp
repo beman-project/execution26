@@ -60,26 +60,24 @@ namespace
         test_just_constraints<false, Error>(test_std::just_error, not_movable{});
     }
 
-    struct result
-    {
-        bool* called{};
-    };
-    template <typename, typename...> struct value_receiver;
-    template <std::size_t... I, typename... T>
-    struct value_receiver<std::index_sequence<I...>, T...>
-        : result
-        , test_detail::product_type<std::decay_t<T>...>
+    template <typename... T>
+    struct value_receiver
     {
         using receiver_concept = test_std::receiver_t;
+        bool* called;
+        test_detail::product_type<std::decay_t<T>...> expect{};
+
         template <typename... A>
         auto set_value(A&&... a) && noexcept -> void
         {
             *this->called = true;
-            assert((this->template get<I>() == a) && ...);
+	    [this, &a...]<std::size_t... I>(std::index_sequence<I...>){
+                assert(((this->expect.template get<I>() == a) && ...));
+	    }(std::index_sequence_for<T...>{});
         }
     };
     template <typename... T>
-    value_receiver(bool*, T&&...) -> value_receiver<std::index_sequence_for<T...>, T...>;
+    value_receiver(bool*, T&&...) -> value_receiver<T...>;
 
     template <typename T>
     struct error_receiver
