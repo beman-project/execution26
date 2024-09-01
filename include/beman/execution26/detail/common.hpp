@@ -6,8 +6,13 @@
 
 // ----------------------------------------------------------------------------
 
-#pragma GCC diagnostic ignored "-Wmissing-braces"
-#pragma clang diagnostic ignored "-Wmissing-braces"
+#if defined(__GNUC__)
+#    pragma GCC diagnostic ignored "-Wmissing-braces"
+#endif
+
+#if defined(__clang__)
+#    pragma clang diagnostic ignored "-Wmissing-braces"
+#endif
 
 // ----------------------------------------------------------------------------
 
