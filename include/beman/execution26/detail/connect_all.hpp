@@ -30,20 +30,14 @@ namespace beman::execution26::detail
             return ::std::apply([&op](auto&&... c){
                 return [&op]<::std::size_t...J>(::std::index_sequence<J...>, auto&&... c){
                     use(op);
-                    return ::beman::execution26::detail::product_type<
-                        decltype(
-                            ::beman::execution26::connect(
-                                ::beman::execution26::detail::forward_like<Sender>(c),
-                                ::beman::execution26::detail::basic_receiver<Sender, Receiver,
-                                    ::std::integral_constant<::size_t, J>>{op}
-                        ))...
-                    >{{
-                        {::beman::execution26::connect(
+                    return ::beman::execution26::detail::product_type
+                    {
+                        ::beman::execution26::connect(
                             ::beman::execution26::detail::forward_like<Sender>(c),
                             ::beman::execution26::detail::basic_receiver<Sender, Receiver,
                                 ::std::integral_constant<::size_t, J>>{op}
-                        )}...
-                    }};
+                        )...
+                    };
                 }(::std::make_index_sequence<::std::tuple_size_v<::std::decay_t<decltype(data.children)>>>{}, c...);
             }, data.children);
         }
