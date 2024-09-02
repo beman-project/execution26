@@ -5,6 +5,7 @@
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_RECEIVER
 
 #include <beman/execution26/detail/queryable.hpp>
+#include <beman/execution26/detail/get_env.hpp>
 #include <concepts>
 #include <type_traits>
 

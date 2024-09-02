@@ -18,7 +18,8 @@ namespace beman::execution26
     struct connect_t
     {
         template <typename Sender, typename Receiver>
-        auto operator()(Sender&& sender, Receiver&& receiver)  const
+        auto operator()(Sender&& sender, Receiver&& receiver) const
+            noexcept(true/*-dk:TODO*/)
         {
             auto new_sender = [&sender, &receiver]() -> decltype(auto) {
                 return ::beman::execution26::transform_sender(
