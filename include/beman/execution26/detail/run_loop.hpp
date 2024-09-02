@@ -44,7 +44,7 @@ namespace beman::execution26
         };
         struct opstate_base
         {
-            opstate_base* next;
+            opstate_base* next{};
             virtual auto execute() noexcept -> void = 0;
         };
         template <typename Receiver>
@@ -142,6 +142,8 @@ namespace beman::execution26
             ::std::unique_lock guard(this->mutex);
             this->condition.wait(guard,
                 [this]{ return this->front || this->current_state == state::finishing; });
+            if (this->front == this->back)
+                this->back = nullptr;
             return this->front? ::std::exchange(this->front, this->front->next): nullptr;
         }
 
