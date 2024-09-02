@@ -22,3 +22,6 @@ likely observable.
     which is OK for clang but doesn't seem to compile for g++ os MSVC.
 - [exec.just] p2.1: movable-value<Ts> doesn't seems right: movable-value<decay_t<Ts>>
 - [exec.just] Otherwise after p2.3 is missing <ts...>
+- [exec.run.loop.types] p9.1: "refers remains" -> "refers to remains"
+- [exec.run.loop.types] p9.2: "get_stop_token(REC(o))": REC is a receiver, any
+     environment would be attached to get_env(REC(o)).

@@ -89,6 +89,8 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/query_with_default.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/queryable.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/receiver.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/receiver_of.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/run_loop.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/sched_attrs.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/sched_env.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/schedule.hpp

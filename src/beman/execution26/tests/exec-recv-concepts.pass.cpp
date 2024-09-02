@@ -1,6 +1,7 @@
 // src/beman/execution26/tests/exec-recv-concepts.pass.cpp            -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/receiver_of.hpp>
 #include <beman/execution26/detail/has_completions.hpp>
 #include <beman/execution26/detail/valid_completion_for.hpp>
 #include <beman/execution26/execution.hpp>
@@ -33,9 +34,10 @@ namespace
         auto set_stopped() && noexcept -> void {}
     };
 
+    template <typename Concept = test_std::receiver_t>
     struct multi_receiver
     {
-        using receiver_concept = test_std::receiver_t;
+        using receiver_concept = Concept;
 
         auto set_value(int) && noexcept -> void {}
         auto set_value(int, arg) && noexcept -> void {}
@@ -120,7 +122,7 @@ namespace
 
         static_assert(test_std::receiver<stopped_receiver>);
         static_assert(test_detail::has_completions<
-            multi_receiver,
+            multi_receiver<>,
             test_std::completion_signatures<
                 test_std::set_value_t(int),
                 test_std::set_value_t(int, arg),
@@ -130,7 +132,7 @@ namespace
             >
         >);
         static_assert(not test_detail::has_completions<
-            multi_receiver,
+            multi_receiver<>,
             test_std::completion_signatures<
                 test_std::set_value_t(int),
                 test_std::set_value_t(arg, int),
@@ -140,7 +142,86 @@ namespace
             >
         >);
         static_assert(not test_detail::has_completions<
-            multi_receiver,
+            multi_receiver<>,
+            test_std::completion_signatures<
+                test_std::set_value_t(int),
+                test_std::set_value_t(int, arg),
+                test_std::set_value_t(arg, arg),
+                test_std::set_error_t(int),
+                test_std::set_stopped_t()
+            >
+        >);
+    }
+
+    auto test_receiver_of() -> void
+    {
+        static_assert(test_std::receiver_of<
+            value_receiver<int>,
+            test_std::completion_signatures<>
+        >);
+        static_assert(test_std::receiver_of<
+            value_receiver<int>,
+            test_std::completion_signatures<test_std::set_value_t(int)>
+        >);
+        static_assert(not test_std::receiver_of<
+            value_receiver<int>,
+            test_std::completion_signatures<test_std::set_value_t(int, int)>
+        >);
+
+        static_assert(test_std::receiver_of<
+            error_receiver<int>,
+            test_std::completion_signatures<test_std::set_error_t(int)>
+        >);
+        static_assert(not test_std::receiver_of<
+            error_receiver<int>,
+            test_std::completion_signatures<test_std::set_error_t(error)>
+        >);
+        static_assert(test_std::receiver_of<
+            error_receiver<error>,
+            test_std::completion_signatures<test_std::set_error_t(error)>
+        >);
+
+        static_assert(not test_std::receiver_of<
+            error_receiver<error>,
+            test_std::completion_signatures<test_std::set_stopped_t()>
+        >);
+        static_assert(test_std::receiver_of<
+            stopped_receiver,
+            test_std::completion_signatures<test_std::set_stopped_t()>
+        >);
+
+        static_assert(test_std::receiver_of<
+            multi_receiver<>,
+            test_std::completion_signatures<
+                test_std::set_value_t(int),
+                test_std::set_value_t(int, arg),
+                test_std::set_value_t(arg, arg),
+                test_std::set_error_t(error),
+                test_std::set_stopped_t()
+            >
+        >);
+        static_assert(not test_std::receiver_of<
+            multi_receiver<int>,
+            test_std::completion_signatures<
+                test_std::set_value_t(int),
+                test_std::set_value_t(int, arg),
+                test_std::set_value_t(arg, arg),
+                test_std::set_error_t(error),
+                test_std::set_stopped_t()
+            >
+        >);
+        static_assert(not test_std::receiver_of<
+            multi_receiver<>,
+            test_std::completion_signatures<
+                test_std::set_value_t(int),
+                test_std::set_value_t(arg, int),
+                test_std::set_value_t(arg, arg),
+                test_std::set_error_t(error),
+                test_std::set_stopped_t()
+            >
+        >);
+        static_assert(not test_std::receiver_of<
+            multi_receiver<>,
             test_std::completion_signatures<
                 test_std::set_value_t(int),
                 test_std::set_value_t(int, arg),
@@ -156,4 +237,5 @@ auto main() -> int
 {
     test_valid_completion_for();
     test_has_completions();
+    test_receiver_of();
 }
