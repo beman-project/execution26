@@ -16,6 +16,7 @@
 #include <beman/execution26/detail/set_value.hpp>
 
 #include <exception>
+#include <condition_variable>
 #include <mutex>
 #include <type_traits>
 #include <utility>
