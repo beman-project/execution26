@@ -151,10 +151,8 @@ namespace beman::execution26
         ~run_loop()
         {
             ::std::lock_guard guard(this->mutex);
-            {
-                if (this->front != nullptr || this->current_state == state::running)
-                    ::std::terminate();
-            }
+            if (this->front != nullptr || this->current_state == state::running)
+                ::std::terminate();
         }
 
         auto get_scheduler() -> scheduler { return {this}; }
