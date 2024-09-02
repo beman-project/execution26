@@ -25,3 +25,7 @@ likely observable.
 - [exec.run.loop.types] p9.1: "refers remains" -> "refers to remains"
 - [exec.run.loop.types] p9.2: "get_stop_token(REC(o))": REC is a receiver, any
      environment would be attached to get_env(REC(o)).
+- [exec.into.variant] p2: the sender argument to into_variant really needs to
+    have completion_signatures defined - should the constaint be sender_in
+    instead of sender? oh, actually, only the result of transform_sender needs
+    to be a sender_in!

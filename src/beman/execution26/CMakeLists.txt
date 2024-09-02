@@ -31,6 +31,7 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/call_result_t.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/callable.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/check_type_alias_exist.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/child_type.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/common.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/completion_domain.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/completion_signature.hpp
@@ -71,11 +72,13 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/indices_for.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/indirect_meta_apply.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/inplace_stop_source.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/into_variant.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/join_env.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/just.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/make_env.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/make_sender.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/matching_sig.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_combine.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_contains.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_filter.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_prepend.hpp

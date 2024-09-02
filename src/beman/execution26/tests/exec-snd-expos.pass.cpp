@@ -1,6 +1,7 @@
 // src/beman/execution26/tests/exe-snd-expos.pass.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/child_type.hpp>
 #include <beman/execution26/detail/write_env.hpp>
 #include <beman/execution26/detail/make_sender.hpp>
 #include <beman/execution26/detail/basic_sender.hpp>
@@ -1437,6 +1438,35 @@ namespace
         assert(has_both_properties);
         use(we_op);
     }
+
+    template <typename... T>
+    struct child_sender
+        : test_detail::product_type<T...>
+    {
+    };
+    auto test_child_type() -> void
+    {
+        static_assert(std::same_as<
+            int,
+            test_detail::child_type<child_sender<bool, char, int, double>>
+        >);
+        static_assert(std::same_as<
+            int&,
+            test_detail::child_type<child_sender<bool, char, int, double>>&
+        >);
+        static_assert(std::same_as<
+            int const&,
+            test_detail::child_type<child_sender<bool, char, int, double>> const&
+        >);
+        static_assert(std::same_as<
+            int,
+            test_detail::child_type<child_sender<bool, char, int, double>, 0>
+        >);
+        static_assert(std::same_as<
+            double,
+            test_detail::child_type<child_sender<bool, char, int, double>, 1>
+        >);
+    }
 }
 
 auto main() -> int
@@ -1467,4 +1497,5 @@ auto main() -> int
     test_basic_sender();
     test_make_sender<int>();
     test_write_env();
+    test_child_type();
 }
