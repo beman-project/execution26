@@ -38,7 +38,7 @@ namespace beman::execution26::detail
         static auto element_get(
             ::beman::execution26::detail::product_type_element<J, S>&& self)
             noexcept
-            -> S&&
+            -> S
         {
             return ::std::move(self.value);
         }
