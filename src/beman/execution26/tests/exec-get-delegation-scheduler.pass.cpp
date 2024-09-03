@@ -70,12 +70,13 @@ namespace
 
 auto main() -> int
 {
+    static_assert(test_std::sender<scheduler::sender>);
+    static_assert(test_std::scheduler<scheduler>);
     static_assert(std::same_as<
         test_std::get_delegation_scheduler_t const,
         decltype(test_std::get_delegation_scheduler)
     >);
-    static_assert(test_std::sender<scheduler::sender>);
-    static_assert(test_std::scheduler<scheduler>);
+    static_assert(test_std::forwarding_query((test_std::get_delegation_scheduler)));
 
     test_get_delegation_scheduler<false>(test_std::empty_env{});
     test_get_delegation_scheduler<false>(env<false, scheduler>{});

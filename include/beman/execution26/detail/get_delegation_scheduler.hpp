@@ -24,6 +24,11 @@ namespace beman::execution26
         {
             return ::std::as_const(env).query(*this);
         }
+        constexpr auto query(::beman::execution26::forwarding_query_t const&) const
+            noexcept -> bool
+        {
+            return true;
+        }
     };
 
     inline constexpr get_delegation_scheduler_t get_delegation_scheduler{};
