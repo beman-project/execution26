@@ -29,3 +29,17 @@ likely observable.
     have completion_signatures defined - should the constaint be sender_in
     instead of sender? oh, actually, only the result of transform_sender needs
     to be a sender_in!
+- [exec.sync.wait] p4.2: what is "e"? probably apply_sender(...)
+- [exec.sync.wait] p9 seems to be wrong: the sender needs to be scheduled
+    somehow. Consider using sync_wait(execution::just()). The operation
+    immediately completes, calling into sync_wait_receiver::set_value which
+    in turn calls loop.finish(). When the loop then is run() it immediately
+    std::terminate()s because the run_loop's state is finished not starting.
+    I can see two potential fixes:
+    1. connect(on(sender), sync-wait-receiver<Sndr>{&state})
+    2. have run_loop::run() only terminate when the state is running; if
+        the state is already finishing, leave it at that
+- [exec.sync_wait] are sync_wait(just_error(17)) and sync_wait(just_stopped())
+    supposed to work? I don't see a reason why a value completion is necessarily
+    required. As is, they are not because type_idenity_t ends up being used without
+    argument.
