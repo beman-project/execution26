@@ -25,11 +25,6 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail
-{}
-namespace bed = beman::execution26::detail;
-namespace be = beman::execution26;
-
-namespace beman::execution26::detail
 {
     struct sync_wait_env
     {
@@ -59,7 +54,7 @@ namespace beman::execution26::detail
     template <typename Sender>
     struct sync_wait_state
     {
-        be::run_loop loop{};
+        ::beman::execution26::run_loop loop{};
         ::std::exception_ptr error{};
 
         ::beman::execution26::detail::sync_wait_result_type<Sender> result{};
@@ -68,9 +63,9 @@ namespace beman::execution26::detail
     template <typename Sender>
     struct sync_wait_receiver
     {
-        using receiver_concept = be::receiver_t;
+        using receiver_concept = ::beman::execution26::receiver_t;
 
-        bed::sync_wait_state<Sender>* state{};
+        ::beman::execution26::detail::sync_wait_state<Sender>* state{};
 
         template <typename Error>
         auto set_error(Error&& error) && noexcept -> void
@@ -106,10 +101,10 @@ namespace beman::execution26::detail
         template <typename Sender>
         auto apply_sender(Sender&& sender)
         {
-            bed::sync_wait_state<Sender> state;
-            auto op{be::connect(::std::forward<Sender>(sender),
-                                bed::sync_wait_receiver<Sender>{&state})};
-            be::start(op);
+            ::beman::execution26::detail::sync_wait_state<Sender> state;
+            auto op{::beman::execution26::connect(::std::forward<Sender>(sender),
+                                ::beman::execution26::detail::sync_wait_receiver<Sender>{&state})};
+            ::beman::execution26::start(op);
 
             state.loop.run();
             if (state.error)

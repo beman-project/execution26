@@ -16,6 +16,8 @@ namespace test_detail = ::beman::execution26::detail;
 namespace test
 {
     template <typename> auto type_exists() {}
+
+    auto use(auto&&...) noexcept -> void {}
 }
 
 #endif // INCLUDED_TEST_EXECUTION
