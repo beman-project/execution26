@@ -23,6 +23,7 @@ target_sources(${TARGET_LIBRARY}
     BASE_DIRS ${PROJECT_SOURCE_DIR}/include
     FILES
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/almost_scheduler.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/apply_sender.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/as_except_ptr.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/basic_operation.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/basic_receiver.hpp
@@ -61,6 +62,7 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_allocator.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_completion_scheduler.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_completion_signatures.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_delegation_scheduler.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_domain.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_domain_early.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_domain_late.hpp
@@ -118,6 +120,7 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/stop_source.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/stoppable_source.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/stoppable_token.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/sync_wait.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/tag_of_t.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/transform_sender.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/type_list.hpp

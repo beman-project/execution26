@@ -29,3 +29,4 @@ likely observable.
     have completion_signatures defined - should the constaint be sender_in
     instead of sender? oh, actually, only the result of transform_sender needs
     to be a sender_in!
+- [exec.sync.wait] p4.2: what is "e"? probably apply_sender(...)
