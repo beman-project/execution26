@@ -20,6 +20,7 @@
 #include <mutex>
 #include <type_traits>
 #include <utility>
+#include <iostream> //-dk:TODO remove
 
 // ----------------------------------------------------------------------------
 
@@ -54,7 +55,7 @@ namespace beman::execution26
             using operation_state_concept = ::beman::execution26::operation_state_t;
 
             run_loop* loop;
-            Receiver   receiver;
+            Receiver  receiver;
 
             template <typename R>
             opstate(run_loop* loop, R&& receiver)
@@ -161,13 +162,11 @@ namespace beman::execution26
 
         auto run() -> void
         {
+            if (::std::lock_guard guard(this->mutex);
+                this->current_state != state::finishing
+                    && state::running == ::std::exchange(this->current_state, state::running))
             {
-                ::std::lock_guard guard(this->mutex);
-                auto current{::std::exchange(this->current_state, state::running)};
-                if (state::starting != current)
-                {
-                    ::std::terminate();
-                }
+                ::std::terminate();
             }
 
             while (auto* op{this->pop_front()})

@@ -1,16 +1,19 @@
 # Makefile
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-SANITIZERS = none msan asan usan tsan
+SANITIZERS = none debug msan asan usan tsan
 .PHONY: default update check ce todo distclean clean build test all $(SANITIZERS)
 
 CXX_FLAGS = -g
 SANITIZER = none
 BUILDROOT = build
-BUILD     = $(BUILDROOT)/none
+BUILD     = $(BUILDROOT)/$(SANITIZER)
 
 ifeq ($(SANITIZER),none)
     CXX_FLAGS = -O3 -pedantic -Wall -Wextra -Werror
+endif
+ifeq ($(SANITIZER),debug)
+    CXX_FLAGS = -g
 endif
 ifeq ($(SANITIZER),usan)
     SAN_FLAGS = -fsanitize=memory
@@ -39,6 +42,7 @@ default: test
 all: $(SANITIZERS)
 
 none: test
+
 $(SANITIZERS):
 	$(MAKE) SANITIZER=$@
 

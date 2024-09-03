@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_SYNC_WAIT
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_SYNC_WAIT
 
+#include <beman/execution26/detail/as_except_ptr.hpp>
 #include <beman/execution26/detail/sender_in.hpp>
 #include <beman/execution26/detail/get_domain_early.hpp>
 #include <beman/execution26/detail/get_scheduler.hpp>
@@ -13,9 +14,13 @@
 #include <beman/execution26/detail/start.hpp>
 #include <beman/execution26/detail/run_loop.hpp>
 #include <beman/execution26/detail/receiver.hpp>
+#include <beman/execution26/detail/sender_in.hpp>
+#include <beman/execution26/detail/value_types_of_t.hpp>
+#include <beman/execution26/detail/decayed_tuple.hpp>
 #include <exception>
 #include <optional>
 #include <utility>
+#include <type_traits>
 
 // ----------------------------------------------------------------------------
 
@@ -28,7 +33,7 @@ namespace beman::execution26::detail
 {
     struct sync_wait_env
     {
-        ::beman::execution26::run_loop* loop;
+        ::beman::execution26::run_loop* loop{};
 
         auto query(::beman::execution26::get_scheduler_t) const noexcept
         {
@@ -40,12 +45,24 @@ namespace beman::execution26::detail
         }
     };
 
+    template <::beman::execution26::sender_in Sender>
+    using sync_wait_result_type
+        = ::std::optional<
+            ::beman::execution26::value_types_of_t<
+                Sender,
+                ::beman::execution26::detail::sync_wait_env,
+                ::beman::execution26::detail::decayed_tuple,
+                ::std::type_identity_t
+            >
+        >;
+
     template <typename Sender>
     struct sync_wait_state
     {
         be::run_loop loop{};
         ::std::exception_ptr error{};
-        ::std::optional<int> result{};
+
+        ::beman::execution26::detail::sync_wait_result_type<Sender> result{};
     };
 
     template <typename Sender>
@@ -55,18 +72,30 @@ namespace beman::execution26::detail
 
         bed::sync_wait_state<Sender>* state{};
 
-        auto set_error(auto&&) && noexcept -> void
+        template <typename Error>
+        auto set_error(Error&& error) && noexcept -> void
         {
-            /*-dk:TODO set state->error */
+            this->state->error
+                = ::beman::execution26::detail::as_except_ptr(
+                    ::std::forward<Error>(error)
+                );
             this->state->loop.finish();
         }
         auto set_stopped() && noexcept -> void
         {
             this->state->loop.finish();
         }
-        auto set_value(auto&&...) && noexcept -> void
+        template <typename... Args>
+        auto set_value(Args&&... args) && noexcept -> void
         {
-            /*-dk:TODO set state->result */
+            try
+            {
+                this->state->result.emplace(::std::forward<Args>(args)...);
+            }
+            catch(...)
+            {
+                this->state->error = ::std::current_exception();
+            }
             this->state->loop.finish();
         }
 
@@ -92,6 +121,18 @@ namespace beman::execution26::detail
 
         template <::beman::execution26::sender_in<
             ::beman::execution26::detail::sync_wait_env> Sender>
+            requires requires(Sender&& sender, sync_wait_t const& self){
+                typename ::beman::execution26::detail::sync_wait_result_type<Sender>;
+                {
+                    ::beman::execution26::apply_sender(
+                        ::beman::execution26::detail::get_domain_early(sender),
+                        self,
+                        ::std::forward<Sender>(sender)
+                    )
+                } -> ::std::same_as<
+                        ::beman::execution26::detail::sync_wait_result_type<Sender>
+                    >;
+            }
         auto operator()(Sender&& sender) const
         {
             auto domain{::beman::execution26::detail::get_domain_early(sender)};

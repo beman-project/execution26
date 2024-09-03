@@ -20,7 +20,7 @@ namespace beman::execution26
                 { ::std::as_const(env).query(g) } noexcept
                     -> ::beman::execution26::scheduler;
             }
-        auto operator()(Env&& env) const
+        auto operator()(Env&& env) const noexcept
         {
             return ::std::as_const(env).query(*this);
         }
