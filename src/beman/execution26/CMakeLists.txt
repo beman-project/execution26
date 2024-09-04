@@ -84,6 +84,7 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_contains.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_filter.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_prepend.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_transform.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_unique.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/movable_value.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/never_stop_token.hpp
