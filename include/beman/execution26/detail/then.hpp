@@ -4,12 +4,16 @@
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_THEN
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_THEN
 
+#include <beman/execution26/detail/call_result_t.hpp>
 #include <beman/execution26/detail/completion_signatures.hpp>
 #include <beman/execution26/detail/completion_signatures_for.hpp>
+#include <beman/execution26/detail/completion_signatures_of_t.hpp>
 #include <beman/execution26/detail/default_impls.hpp>
 #include <beman/execution26/detail/get_domain_early.hpp>
 #include <beman/execution26/detail/impls_for.hpp>
 #include <beman/execution26/detail/make_sender.hpp>
+#include <beman/execution26/detail/meta_transform.hpp>
+#include <beman/execution26/detail/meta_unique.hpp>
 #include <beman/execution26/detail/movable_value.hpp>
 #include <beman/execution26/detail/sender.hpp>
 #include <beman/execution26/detail/sender_adaptor.hpp>
@@ -102,18 +106,55 @@ namespace beman::execution26::detail
             };
     };
 
+    template <typename T>
+    struct then_set_value
+    {
+        using type = ::beman::execution26::set_value_t(T);
+    };
+    template <>
+    struct then_set_value<void>
+    {
+        using type = ::beman::execution26::set_value_t();
+    };
 
-    template <typename Fun, typename Sender, typename Env>
+    template <typename, typename, typename Completion>
+    struct then_transform
+    {
+        using type = Completion;
+    };
+
+    template <typename Fun, typename Replace>
+    struct then_transform_t
+    {
+        template <typename Completion>
+        using transform = typename
+        ::beman::execution26::detail::then_transform<Fun, Replace, Completion>
+        ::type;
+    };
+
+    template <typename Fun, typename Completion, typename... T>
+    struct then_transform<Fun, Completion, Completion(T...)>
+    {
+        using type = typename ::beman::execution26::detail::then_set_value<
+            ::beman::execution26::detail::call_result_t<Fun, T...>
+            >::type;
+    };
+
+    template <typename Completion, typename Fun, typename Sender, typename Env>
     struct completion_signatures_for_impl<
         ::beman::execution26::detail::basic_sender<
-            ::beman::execution26::detail::then_t<::beman::execution26::set_stopped_t>,
+            ::beman::execution26::detail::then_t<Completion>,
             Fun,
             Sender
             >,
         Env
         >
     {
-        using type = ::beman::execution26::completion_signatures<
+        using type = ::beman::execution26::detail::meta::unique<
+            ::beman::execution26::detail::meta::transform<
+                ::beman::execution26::detail::then_transform_t<Fun, Completion>::template transform,
+                ::beman::execution26::completion_signatures_of_t<Sender, Env>
+            >
         >;
     };
 }
