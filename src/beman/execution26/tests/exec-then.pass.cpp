@@ -62,11 +62,11 @@ namespace
             test_std::completion_signatures<Completions...>,
             test_std::completion_signatures_of_t<decltype(sender), test_std::empty_env>
         >);
-    };
+    }
 
     auto test_then_type() -> void
     {
-        test_then_type< test_std::set_value_t()>(test_std::just() | test_std::then([]{}));
+        test_then_type< test_std::set_value_t()>(test_std::just(0) | test_std::then([](auto){}));
         test_then_type< test_std::set_value_t(int)>(test_std::just() | test_std::then([]{ return 0; }));
         test_then_type< test_std::set_error_t(int)>(test_std::just_error(0) | test_std::then([]{ return 0; }));
         test_then_type< test_std::set_stopped_t()>(test_std::just_stopped() | test_std::then([]{ return 0; }));
@@ -150,6 +150,7 @@ namespace
                 test_std::set_stopped_t()
             >() | test_std::upon_stopped([]{}));
     }
+
     auto test_then_value() -> void
     {
         assert(std::tuple{17} == *test_std::sync_wait(

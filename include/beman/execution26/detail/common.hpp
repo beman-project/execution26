@@ -8,6 +8,7 @@
 
 #if defined(__GNUC__)
 #    pragma GCC diagnostic ignored "-Wmissing-braces"
+#    pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #endif
 
 #if defined(__clang__)
