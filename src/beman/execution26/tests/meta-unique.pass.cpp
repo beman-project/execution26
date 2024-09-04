@@ -43,11 +43,11 @@ auto main() -> int
         test_detail::meta::unique<type_list<bool, bool, char, char, double, double>>
         >);
     static_assert(std::same_as<
-        type_list<double, char, bool>,
+        type_list<bool, char, double>,
         test_detail::meta::unique<type_list<bool, char, double, char, bool>>
         >);
     static_assert(std::same_as<
-        type_list<double, bool, char>,
+        type_list<bool, char, double>,
         test_detail::meta::unique<type_list<bool, char, double, bool, char>>
         >);
 }

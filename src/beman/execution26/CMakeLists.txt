@@ -84,6 +84,7 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_contains.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_filter.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_prepend.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_transform.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_unique.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/movable_value.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/never_stop_token.hpp
@@ -123,6 +124,7 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/stoppable_token.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/sync_wait.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/tag_of_t.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/then.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/transform_sender.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/type_list.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/unstoppable_token.hpp
