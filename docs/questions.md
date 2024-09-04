@@ -43,3 +43,4 @@ likely observable.
     supposed to work? I don't see a reason why a value completion is necessarily
     required. As is, they are not because type_idenity_t ends up being used without
     argument.
+- [exec.then] p5 seems to miss a space betweend sendr and out_sndr

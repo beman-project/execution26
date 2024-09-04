@@ -42,6 +42,8 @@ namespace beman::execution26::detail
             return apply(::std::forward<Sender>(sender), *this);
         }
     };
+    template <typename... T>
+    sender_adaptor(T&&...) -> sender_adaptor<T...>;
 }
 
 // ----------------------------------------------------------------------------
