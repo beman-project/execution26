@@ -13,6 +13,10 @@
 #include <beman/execution26/detail/get_stop_token.hpp>
 #include <beman/execution26/detail/get_env.hpp>
 #include <beman/execution26/detail/get_domain.hpp>
+#include <beman/execution26/detail/get_scheduler.hpp>
+#include <beman/execution26/detail/get_completion_scheduler.hpp>
+#include <beman/execution26/detail/get_delegation_scheduler.hpp>
+#include <beman/execution26/detail/get_completion_signatures.hpp>
 
 #include <beman/execution26/detail/completion_signature.hpp>
 #include <beman/execution26/detail/completion_signatures.hpp>
@@ -27,8 +31,15 @@
 #include <beman/execution26/detail/set_error.hpp>
 #include <beman/execution26/detail/set_stopped.hpp>
 #include <beman/execution26/detail/start.hpp>
+#include <beman/execution26/detail/connect.hpp>
 #include <beman/execution26/detail/scheduler.hpp>
 #include <beman/execution26/detail/schedule.hpp>
+
+#include <beman/execution26/detail/into_variant.hpp>
+#include <beman/execution26/detail/just.hpp>
+#include <beman/execution26/detail/sync_wait.hpp>
+#include <beman/execution26/detail/then.hpp>
+#include <beman/execution26/detail/write_env.hpp>
 
 // ----------------------------------------------------------------------------
 
