@@ -8,7 +8,9 @@ cmake_minimum_required(VERSION 3.23)
 
 project(beman_execution26 VERSION 0.0.0 LANGUAGES CXX)
 
-enable_testing()
+if(PROJECT_IS_TOP_LEVEL)
+  enable_testing()
+endif()
 
 set(CMAKE_CXX_STANDARD 23)
 set(TARGETS_EXPORT_NAME ${CMAKE_PROJECT_NAME}Targets)

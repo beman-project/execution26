@@ -77,8 +77,10 @@ list(APPEND execution_tests
     stopcallback-inplace-cons.pass
 )
 
-foreach(test ${execution_tests})
-    add_executable(${test} ${test}.cpp)
-    target_link_libraries(${test} PRIVATE ${TARGET_LIBRARY})
-    add_test(NAME ${test} COMMAND $<TARGET_FILE:${test}>)
-endforeach()
+if(PROJECT_IS_TOP_LEVEL)
+    foreach(test ${execution_tests})
+        add_executable(${test} ${test}.cpp)
+        target_link_libraries(${test} PRIVATE ${TARGET_LIBRARY})
+        add_test(NAME ${test} COMMAND $<TARGET_FILE:${test}>)
+    endforeach()
+endif()
