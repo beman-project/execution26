@@ -7,7 +7,6 @@ list(APPEND execution_tests
     exec-read-env.pass
     exec-get-delegation-scheduler.pass
     exec-snd-apply.pass
-    exec-sync-wait.pass
     meta-combine.pass
     exec-into-variant.pass
     exec-run-loop-types.pass
@@ -37,7 +36,6 @@ list(APPEND execution_tests
     exec-opstate.pass
     exec-opstate-start.pass
     allocator-requirements-general.pass
-    exec-general.pass
     exec-utils-cmplsigs.pass
     functional-syn.pass
     exec-recv.pass
@@ -75,6 +73,8 @@ list(APPEND execution_tests
     stopcallback-inplace.pass
     stopcallback-inplace-general.pass
     stopcallback-inplace-cons.pass
+    exec-sync-wait.pass
+    exec-general.pass
 )
 
 if(PROJECT_IS_TOP_LEVEL)

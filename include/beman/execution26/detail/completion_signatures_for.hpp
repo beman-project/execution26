@@ -19,6 +19,10 @@ namespace beman::execution26::detail
     template <typename Sender, typename Env>
     struct completion_signatures_for_impl
     {
+        using type = ::beman::execution26::detail::no_completion_signatures_defined_in_sender;
+    };
+    #if 0
+    {
         using type = decltype(::std::invoke([]{
             if constexpr (::beman::execution26::sender_in<Sender, Env>)
                 return decltype(::beman::execution26::get_completion_signatures(
@@ -28,6 +32,7 @@ namespace beman::execution26::detail
                 return ::beman::execution26::detail::no_completion_signatures_defined_in_sender{};
         }));
     };
+    #endif
 
     template <typename Sender, typename Env>
     using completion_signatures_for
