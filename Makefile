@@ -15,6 +15,7 @@ endif
 
 CXX_FLAGS = -g
 SANITIZER = none
+SOURCEDIR = $(shell pwd)
 BUILDROOT = build
 BUILD     = $(BUILDROOT)/$(COMPILER)/$(SANITIZER)
 EXAMPLE   = stop_token
@@ -63,7 +64,7 @@ $(SANITIZERS):
 
 build:
 	@mkdir -p $(BUILD)
-	cd $(BUILD); CC=$(CXX) cmake ../../.. $(TOOLCHAIN) $(SYSROOT) -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
+	cd $(BUILD); CC=$(CXX) cmake $(SOURCEDIR) $(TOOLCHAIN) $(SYSROOT) -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 	cmake --build $(BUILD)
 
 test: build
