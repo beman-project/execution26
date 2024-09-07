@@ -32,13 +32,14 @@ namespace beman::execution26::detail
         using inner_ops_t = ::beman::execution26::detail::connect_all_result<Sender, Receiver>;
         inner_ops_t inner_ops;
 
-        basic_operation(Sender&& sender, Receiver&& receiver) noexcept(true/*-dk:TODO*/)
+        template <typename S> //-dk:TODO is that deviating from the spec?
+        basic_operation(S&& sender, Receiver&& receiver) noexcept(true/*-dk:TODO*/)
             : ::beman::execution26::detail::basic_state<Sender, Receiver>(
-                ::std::forward<Sender>(sender), ::std::move(receiver)
+                ::std::forward<S>(sender), ::std::move(receiver)
             )
             , inner_ops(::beman::execution26::detail::connect_all(
                 this,
-                ::std::forward<Sender>(sender),
+                ::std::forward<S>(sender),
                 ::beman::execution26::detail::indices_for<Sender>()
             ))
         {
@@ -58,6 +59,8 @@ namespace beman::execution26::detail
             );
         }
     };
+    template <typename Sender, typename Receiver>
+    basic_operation(Sender&&, Receiver&&) -> basic_operation<Sender&&, Receiver>;
 }
 
 // ----------------------------------------------------------------------------

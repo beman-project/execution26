@@ -17,17 +17,20 @@ namespace beman::execution26::detail
     template <typename Sender, typename Receiver>
     struct basic_state
     {
-        basic_state(Sender&& sender, Receiver&& receiver) noexcept(true)
+        template <typename S> //-dk:TODO is that deviating from the spec?
+        basic_state(S&& sender, Receiver&& receiver) noexcept(true)
             : receiver(::std::move(receiver))
             , state(::beman::execution26::detail::impls_for<
                     ::beman::execution26::tag_of_t<Sender>
-                >::get_state(::std::forward<Sender>(sender), receiver))
+                >::get_state(::std::forward<S>(sender), receiver))
         {
         }
 
         Receiver receiver;
         ::beman::execution26::detail::state_type<Sender, Receiver> state;
     };
+    template <typename Sender, typename Receiver>
+    basic_state(Sender&&, Receiver&&) -> basic_state<Sender&&, Receiver>;
 }
 
 // ----------------------------------------------------------------------------

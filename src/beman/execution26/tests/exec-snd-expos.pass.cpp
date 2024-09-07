@@ -1066,28 +1066,28 @@ namespace
             test_detail::basic_state state{sender1{}, receiver{}};
             static_assert(std::same_as<
                 decltype(test_detail::connect_all(&state, sender1{}, std::index_sequence<0, 1, 2, 3>{})),
-                test_detail::connect_all_result<sender1, receiver>
+                test_detail::connect_all_result<sender1&&, receiver>
             >);
         }
         {
             test_detail::basic_state state{sender2{}, receiver{}};
             static_assert(std::same_as<
                 decltype(test_detail::connect_all(&state, sender2{}, std::index_sequence<0, 1, 2, 3>{})),
-                test_detail::connect_all_result<sender2, receiver>
+                test_detail::connect_all_result<sender2&&, receiver>
             >);
         }
         {
             test_detail::basic_state state{sender3{}, receiver{}};
             static_assert(std::same_as<
                 decltype(test_detail::connect_all(&state, sender3{}, std::index_sequence<0, 1, 2, 3>{})),
-                test_detail::connect_all_result<sender3, receiver>
+                test_detail::connect_all_result<sender3&&, receiver>
             >);
         }
         {
             test_detail::basic_state state{sender4{}, receiver{}};
             static_assert(std::same_as<
                 decltype(test_detail::connect_all(&state, sender4{}, std::index_sequence<0, 1, 2, 3>{})),
-                test_detail::connect_all_result<sender4, receiver>
+                test_detail::connect_all_result<sender4&&, receiver>
             >);
         }
     }
