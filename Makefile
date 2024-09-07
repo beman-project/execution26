@@ -2,12 +2,25 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 SANITIZERS = none debug msan asan usan tsan
-.PHONY: default update check ce todo distclean clean build test all $(SANITIZERS)
+.PHONY: default run update check ce todo distclean clean build test all $(SANITIZERS)
+
+COMPILER=system
+CXX_BASE=$(CXX:$(dir $(CXX))%=%)
+ifeq ($(CXX_BASE),g++)
+    COMPILER=gcc
+endif
+ifeq ($(CXX_BASE),clang++)
+    COMPILER=clang
+endif
 
 CXX_FLAGS = -g
 SANITIZER = none
+SOURCEDIR = $(shell pwd)
 BUILDROOT = build
-BUILD     = $(BUILDROOT)/$(SANITIZER)
+BUILD     = $(BUILDROOT)/$(COMPILER)/$(SANITIZER)
+EXAMPLE   = stop_token
+CMAKE_C_COMPILER=$(COMPILER)
+CMAKE_CXX_COMPILER=$(COMPILER)
 
 ifeq ($(SANITIZER),none)
     CXX_FLAGS = -O3 -pedantic -Wall -Wextra -Werror
@@ -41,17 +54,17 @@ default: test
 
 all: $(SANITIZERS)
 
+run: build
+	./$(BUILD)/examples/$(EXAMPLE)
+
 none: test
 
 $(SANITIZERS):
 	$(MAKE) SANITIZER=$@
 
-SYSROOT = -DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.sdk
-# TOOLCHAIN = -DCMAKE_TOOLCHAIN_FILE=$(CURDIR)/etc/gcc-toolchain.cmake
-
 build:
 	@mkdir -p $(BUILD)
-	cd $(BUILD); CC=$(CXX) cmake ../.. $(TOOLCHAIN) $(SYSROOT) -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
+	cd $(BUILD); CC=$(CXX) cmake $(SOURCEDIR) $(TOOLCHAIN) $(SYSROOT) -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 	cmake --build $(BUILD)
 
 test: build
@@ -61,7 +74,7 @@ ce:
 	@mkdir -p $(BUILD)
 	bin/mk-compiler-explorer.py $(BUILD)
 
-SOURCE_CMAKELISTS = src/beman/execution26/CMakeLists.txt
+SOURCE_CMAKELISTS = src/beman/net29/CMakeLists.txt
 update:
 	bin/update-cmake-headers.py $(SOURCE_CMAKELISTS)
 

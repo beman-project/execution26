@@ -21,12 +21,13 @@ namespace beman::execution26::detail
     struct connect_all_t
     {
         static auto use(auto&&...) {}
-        template <typename Sender, typename Receiver, ::std::size_t... I>
+        //-dk:TODO is the S parameter deviating from the spec?
+        template <typename Sender, typename S, typename Receiver, ::std::size_t... I>
         auto operator()(::beman::execution26::detail::basic_state<Sender, Receiver>* op,
-                        Sender&& sender,
+                        S&& sender,
                         ::std::index_sequence<I...>) const noexcept(true/*-dk:TODO*/)
         {
-            auto data{::beman::execution26::detail::get_sender_data(::std::forward<Sender>(sender))};
+            auto data{::beman::execution26::detail::get_sender_data(::std::forward<S>(sender))};
             return ::std::apply([&op](auto&&... c){
                 return [&op]<::std::size_t...J>(::std::index_sequence<J...>, auto&&... c){
                     use(op);
