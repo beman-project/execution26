@@ -181,4 +181,8 @@ auto main() -> int
 {
     test_just_constraints();
     test_just();
+    using type = test_detail::call_result_t<test_std::get_completion_signatures_t,
+        decltype(test_std::just()), test_std::empty_env>;
+
+    static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t()>, type>);
 }

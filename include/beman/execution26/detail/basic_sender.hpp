@@ -72,25 +72,25 @@ namespace beman::execution26::detail
 #if __cpp_explicit_this_parameter < 202110L
         template <typename Env>
         auto get_completion_signatures(Env&&) &&
-            -> ::beman::execution26::detail::completion_signatures_for<basic_sender&&, Env>
+            -> ::beman::execution26::detail::completion_signatures_for<basic_sender, Env>
         {
             return {};
         }
         template <typename Env>
         auto get_completion_signatures(Env&&) const&&
-            -> ::beman::execution26::detail::completion_signatures_for<basic_sender const&&, Env>
+            -> ::beman::execution26::detail::completion_signatures_for<basic_sender, Env>
         {
             return {};
         }
         template <typename Env>
         auto get_completion_signatures(Env&&) &
-            -> ::beman::execution26::detail::completion_signatures_for<basic_sender&, Env>
+            -> ::beman::execution26::detail::completion_signatures_for<basic_sender, Env>
         {
             return {};
         }
         template <typename Env>
         auto get_completion_signatures(Env&&) const& 
-            -> ::beman::execution26::detail::completion_signatures_for<basic_sender const&, Env>
+            -> ::beman::execution26::detail::completion_signatures_for<basic_sender, Env>
         {
             return {};
         }

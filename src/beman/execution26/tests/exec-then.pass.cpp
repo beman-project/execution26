@@ -64,11 +64,11 @@ namespace
             test_std::completion_signatures<Completions...>,
             test_std::completion_signatures_of_t<decltype(sender), test_std::empty_env>
         >);
-    };
+    }
 
     auto test_then_type() -> void
     {
-        test_then_type< test_std::set_value_t()>(test_std::just() | test_std::then([]{}));
+        test_then_type< test_std::set_value_t()>(test_std::just(0) | test_std::then([](auto){}));
         test_then_type< test_std::set_value_t(int)>(test_std::just() | test_std::then([]{ return 0; }));
         test_then_type< test_std::set_error_t(int)>(test_std::just_error(0) | test_std::then([]{ return 0; }));
         test_then_type< test_std::set_stopped_t()>(test_std::just_stopped() | test_std::then([]{ return 0; }));
@@ -152,6 +152,7 @@ namespace
                 test_std::set_stopped_t()
             >() | test_std::upon_stopped([]{}));
     }
+
     auto test_then_value() -> void
     {
         assert(std::tuple{17} == *test_std::sync_wait(
@@ -180,23 +181,4 @@ auto main() -> int
     test_then_type();
     test_then_multi_type();
     test_then_value();
-
-#if 0
-    using  msender = sender<
-            test_std::set_value_t(int, int),
-            test_std::set_error_t(int),
-            test_std::set_stopped_t()
-        >;
-    auto s{
-        msender{}
-        | test_std::then([](auto&&, auto&&){})
-        | test_std::upon_error([](){})
-        | test_std::upon_stopped([](){})
-    };
-    using comp = decltype(test_std::get_completion_signatures(s, test_std::empty_env{}));
-    static_assert(std::same_as<
-        test_std::completion_signatures<test_std::set_value_t()>,
-        comp
-    >);
-#endif
 }
