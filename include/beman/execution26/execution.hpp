@@ -39,6 +39,7 @@
 #include <beman/execution26/detail/just.hpp>
 #include <beman/execution26/detail/sync_wait.hpp>
 #include <beman/execution26/detail/then.hpp>
+#include <beman/execution26/detail/read_env.hpp>
 #include <beman/execution26/detail/write_env.hpp>
 
 // ----------------------------------------------------------------------------

@@ -26,7 +26,7 @@ namespace beman::execution26::detail
     {
         return ::beman::execution26::detail::basic_sender<
             Tag, ::std::decay_t<Data>, ::std::decay_t<Child>...
-            >{tag, ::std::forward<Data>(data), child...};
+            >{tag, ::std::forward<Data>(data), ::std::forward<Child>(child)...};
     }
 }
 
