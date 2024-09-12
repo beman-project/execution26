@@ -11,21 +11,27 @@
 
 namespace beman::execution26::detail::meta::detail
 {
-    template <typename, typename> struct combine;
+    template <typename...> struct combine;
 
-    template <template <typename...> class L0, typename... T0,
-              template <typename...> class L1, typename... T1>
-    struct combine<L0<T0...>, L1<T1...>>
+    template <template <typename...> class L0, typename... T0>
+    struct combine<L0<T0...>>
     {
-        using type = L0<T0..., T1...>;
+        using type = L0<T0...>;
+    };
+    template <template <typename...> class L0, typename... T0,
+              template <typename...> class L1, typename... T1,
+              typename... L>
+    struct combine<L0<T0...>, L1<T1...>, L...>
+    {
+        using type = typename combine<L0<T0..., T1...>, L...>::type;
     };
 }
 
 namespace beman::execution26::detail::meta
 {
-    template <typename L0, typename L1>
+    template <typename... L>
     using combine
-        = ::beman::execution26::detail::meta::detail::combine<L0, L1>::type;
+        = ::beman::execution26::detail::meta::detail::combine<L...>::type;
 }
 
 // ----------------------------------------------------------------------------

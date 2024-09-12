@@ -35,7 +35,7 @@ namespace beman::execution26::detail
 
     template <typename... T>
     using variant_or_empty
-        = ::beman::execution26::detail::variant_or_empty_helper<T...>::type;
+        = typename ::beman::execution26::detail::variant_or_empty_helper<T...>::type;
 }
 
 // ----------------------------------------------------------------------------
