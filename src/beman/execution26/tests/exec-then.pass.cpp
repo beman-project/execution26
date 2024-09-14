@@ -68,19 +68,19 @@ namespace
 
     auto test_then_type() -> void
     {
-        test_then_type< test_std::set_value_t()>(test_std::just(0) | test_std::then([](auto){}));
-        test_then_type< test_std::set_value_t(int)>(test_std::just() | test_std::then([]{ return 0; }));
-        test_then_type< test_std::set_error_t(int)>(test_std::just_error(0) | test_std::then([]{ return 0; }));
-        test_then_type< test_std::set_stopped_t()>(test_std::just_stopped() | test_std::then([]{ return 0; }));
+        test_then_type< test_std::set_value_t()>(test_std::just(0) | test_std::then([](auto)noexcept{}));
+        test_then_type< test_std::set_value_t(int)>(test_std::just() | test_std::then([]()noexcept{ return 0; }));
+        test_then_type< test_std::set_error_t(int)>(test_std::just_error(0) | test_std::then([]()noexcept{ return 0; }));
+        test_then_type< test_std::set_stopped_t()>(test_std::just_stopped() | test_std::then([]()noexcept{ return 0; }));
 
-        test_then_type< test_std::set_value_t()>(test_std::just() | test_std::upon_error([]{ return 0; }));
+        test_then_type< test_std::set_value_t()>(test_std::just() | test_std::upon_error([]()noexcept{ return 0; }));
         test_then_type< test_std::set_value_t(int)>(test_std::just_error(error{})
-            | test_std::upon_error([](error){ return 0; }));
-        test_then_type< test_std::set_stopped_t()>(test_std::just_stopped() | test_std::upon_error([]{}));
+            | test_std::upon_error([](error)noexcept{ return 0; }));
+        test_then_type< test_std::set_stopped_t()>(test_std::just_stopped() | test_std::upon_error([]()noexcept{}));
 
-        test_then_type< test_std::set_value_t(int)>(test_std::just(0) | test_std::upon_stopped([]{}));
-        test_then_type< test_std::set_error_t(int)>(test_std::just_error(0) | test_std::upon_stopped([]{}));
-        test_then_type< test_std::set_value_t()>(test_std::just_stopped() | test_std::upon_stopped([]{}));
+        test_then_type< test_std::set_value_t(int)>(test_std::just(0) | test_std::upon_stopped([]()noexcept{}));
+        test_then_type< test_std::set_error_t(int)>(test_std::just_error(0) | test_std::upon_stopped([]()noexcept{}));
+        test_then_type< test_std::set_value_t()>(test_std::just_stopped() | test_std::upon_stopped([]()noexcept{}));
     }
 
     auto test_then_multi_type() -> void
@@ -102,7 +102,8 @@ namespace
         test_then_type<
                 test_std::set_value_t(bool),
                 test_std::set_error_t(error),
-                test_std::set_stopped_t()
+                test_std::set_stopped_t(),
+                test_std::set_error_t(::std::exception_ptr)
             >(sender<
                 test_std::set_value_t(),
                 test_std::set_value_t(int, int),
@@ -113,7 +114,8 @@ namespace
                 test_std::set_value_t(),
                 test_std::set_value_t(int, int),
                 test_std::set_value_t(bool),
-                test_std::set_stopped_t()
+                test_std::set_stopped_t(),
+                test_std::set_error_t(::std::exception_ptr)
             >(sender<
                 test_std::set_value_t(),
                 test_std::set_value_t(int, int),
@@ -123,7 +125,8 @@ namespace
         test_then_type<
                 test_std::set_value_t(),
                 test_std::set_value_t(int, int),
-                test_std::set_stopped_t()
+                test_std::set_stopped_t(),
+                test_std::set_error_t(::std::exception_ptr)
             >(sender<
                 test_std::set_value_t(),
                 test_std::set_value_t(int, int),
@@ -140,11 +143,22 @@ namespace
                 test_std::set_value_t(int, int),
                 test_std::set_error_t(error),
                 test_std::set_stopped_t()
-            >() | test_std::upon_stopped([]{}));
+            >() | test_std::upon_stopped([]()noexcept{}));
         test_then_type<
                 test_std::set_value_t(),
                 test_std::set_value_t(int, int),
                 test_std::set_error_t(error)
+            >(sender<
+                test_std::set_value_t(),
+                test_std::set_value_t(int, int),
+                test_std::set_error_t(error),
+                test_std::set_stopped_t()
+            >() | test_std::upon_stopped([]()noexcept{}));
+        test_then_type<
+                test_std::set_value_t(),
+                test_std::set_value_t(int, int),
+                test_std::set_error_t(error),
+                test_std::set_error_t(::std::exception_ptr)
             >(sender<
                 test_std::set_value_t(),
                 test_std::set_value_t(int, int),

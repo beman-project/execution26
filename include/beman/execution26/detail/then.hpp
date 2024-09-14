@@ -13,6 +13,7 @@
 #include <beman/execution26/detail/impls_for.hpp>
 #include <beman/execution26/detail/make_sender.hpp>
 #include <beman/execution26/detail/meta_transform.hpp>
+#include <beman/execution26/detail/meta_combine.hpp>
 #include <beman/execution26/detail/meta_unique.hpp>
 #include <beman/execution26/detail/movable_value.hpp>
 #include <beman/execution26/detail/sender.hpp>
@@ -93,10 +94,17 @@ namespace beman::execution26::detail
                     }
                     catch (...)
                     {
-                        ::beman::execution26::set_error(
-                            ::std::move(receiver),
-                            ::std::current_exception()
-                        );
+                        if constexpr (not noexcept(
+                            ::std::invoke(::std::move(fun),
+                                                 ::std::forward<Args>(args)...)
+
+                        ))
+                        {
+                            ::beman::execution26::set_error(
+                                ::std::move(receiver),
+                                ::std::current_exception()
+                            );
+                        }
                     }
                 }
                 else
@@ -123,6 +131,16 @@ namespace beman::execution26::detail
         using type = Completion;
     };
 
+    template <typename Fun, typename Completion, typename... T>
+    struct then_transform<Fun, Completion, Completion(T...)>
+    {
+        using type = 
+            typename ::beman::execution26::detail::then_set_value<
+                ::beman::execution26::detail::call_result_t<Fun, T...>
+            >::type
+        ;
+    };
+
     template <typename Fun, typename Replace>
     struct then_transform_t
     {
@@ -132,12 +150,23 @@ namespace beman::execution26::detail
         ::type;
     };
 
-    template <typename Fun, typename Completion, typename... T>
-    struct then_transform<Fun, Completion, Completion(T...)>
+    template <typename, typename, typename>
+    struct then_exception_fun: ::std::false_type {};
+    template <typename Comp, typename Fun, typename... A> 
+    struct then_exception_fun<Comp, Fun, Comp(A...)>
+        : ::std::bool_constant<not noexcept(::std::declval<Fun>()(::std::declval<A>()...))>
     {
-        using type = typename ::beman::execution26::detail::then_set_value<
-            ::beman::execution26::detail::call_result_t<Fun, T...>
-            >::type;
+    };
+
+    template <typename, typename, typename> 
+    struct then_exception: ::std::false_type {};
+    template <typename Comp, typename Fun, typename Completion, typename... Completions> 
+    struct then_exception<Comp, Fun, ::beman::execution26::completion_signatures<Completion, Completions...>>
+    {
+        static constexpr bool value{
+            then_exception_fun<Comp, Fun, Completion>::value
+            || then_exception<Comp, Fun, ::beman::execution26::completion_signatures<Completions...>>::value
+            };
     };
 
     template <typename Completion, typename Fun, typename Sender, typename Env>
@@ -151,9 +180,20 @@ namespace beman::execution26::detail
         >
     {
         using type = ::beman::execution26::detail::meta::unique<
-            ::beman::execution26::detail::meta::transform<
-                ::beman::execution26::detail::then_transform_t<Fun, Completion>::template transform,
-                ::beman::execution26::completion_signatures_of_t<Sender, Env>
+            ::beman::execution26::detail::meta::combine<
+                ::beman::execution26::detail::meta::transform<
+                    ::beman::execution26::detail::then_transform_t<Fun, Completion>::template transform,
+                    ::beman::execution26::completion_signatures_of_t<Sender, Env>
+                >,
+                ::std::conditional_t<
+                    ::beman::execution26::detail::then_exception<
+                        Completion,
+                        Fun,
+                        ::beman::execution26::completion_signatures_of_t<Sender, Env>
+                    >::value,
+                    ::beman::execution26::completion_signatures<::beman::execution26::set_error_t(::std::exception_ptr)>,
+                    ::beman::execution26::completion_signatures<>
+                >
             >
         >;
     };
