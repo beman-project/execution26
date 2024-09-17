@@ -32,15 +32,33 @@ e.g.:
 
 **Implements:** [`std::execution` (P2300)](http://wg21.link/p2300).
 
+## Help Welcome!
+
+There are plenty of things which need to be done. Some of these
+are listed in the [issues section](https://github.com/beman-project/execution26/issues).
+Other contributions are, of course, also welcome. Aside from contributing
+code the project welcomes reports on usage experience, code reviews, defect
+reports, features requests, etc. There are plenty contribution opportunities.
+
+If you want to contribute, you won't be left alone! Please e-mail
+[Dietmar Kühl](mailto:dietmar.kuehl@me.com) if you want help or mentoring
+for contributing to the library.
+
 ## Build
 
 | Library | Linux | MacOS | Windows |
 | ------- | ----- | ----- | ------- |
 | build | ![Linux build status](https://github.com/beman-project/execution26/actions/workflows/linux.yml/badge.svg) | ![MacOS build status](https://github.com/beman-project/execution26/actions/workflows/macos.yml/badge.svg) | ![Window build status](https://github.com/beman-project/execution26/actions/workflows/windows.yml/badge.svg) |
 
-You can just use `make` in the current directory. It will invoke `cmake`,
-build the code, and run tests. To have more control over the build-process
-you can use `cmake` with the `CMakeLists.txt` in the root directory.
+should make the relevant paths to headers available.  The following
+instructions build the library and the examples (required libraries are
+obtained and build using these instructions):
+
+    cmake -B build
+    cmake --build build
+
+The implementation compiles and passes tests using [clang](https://clang.llvm.org/),
+[gcc](http://gcc.gnu.org), and [MSVC++](https://visualstudio.microsoft.com/vs/features/cplusplus/).
 
 ## Examples
 
