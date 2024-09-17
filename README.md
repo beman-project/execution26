@@ -50,9 +50,7 @@ for contributing to the library.
 | ------- | ----- | ----- | ------- |
 | build | ![Linux build status](https://github.com/beman-project/execution26/actions/workflows/linux.yml/badge.svg) | ![MacOS build status](https://github.com/beman-project/execution26/actions/workflows/macos.yml/badge.svg) | ![Window build status](https://github.com/beman-project/execution26/actions/workflows/windows.yml/badge.svg) |
 
-should make the relevant paths to headers available.  The following
-instructions build the library and the examples (required libraries are
-obtained and build using these instructions):
+The following instructions build the library and the examples:
 
     cmake -B build
     cmake --build build
