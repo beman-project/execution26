@@ -61,8 +61,3 @@ The implementation compiles and passes tests using [clang](https://clang.llvm.or
 ## Examples
 
 - `<stop_token>` example: [Compiler Explorer](https://godbolt.org/z/4r4x9q1r7)
-
-## To Do
-
-Help is very welcome: Please send pull requests!
-The [To Do Page](docs/TODO.md) lists what sections and their current status.
