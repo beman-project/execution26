@@ -1,4 +1,3 @@
-# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # cmake-format: off
 # /CMakeLists.txt -*-makefile-*-
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
@@ -7,15 +6,21 @@
 cmake_minimum_required(VERSION 3.23)
 
 project(beman_execution26 VERSION 0.0.0 LANGUAGES CXX)
+set(TARGET_NAME execution26)
+set(TARGET_PREFIX beman.${TARGET_NAME})
+set(TARGET_LIBRARY beman_${TARGET_NAME})
+set(TARGET_ALIAS beman::${TARGET_NAME})
+set(TARGETS_EXPORT_NAME ${CMAKE_PROJECT_NAME}Targets)
 
-if(PROJECT_IS_TOP_LEVEL)
+set(CMAKE_CXX_STANDARD 23)
+
+include(CTest)
+if(BUILD_TESTING)
+  add_subdirectory(src/beman/${TARGET_NAME}/tests)
   enable_testing()
 endif()
 
-set(CMAKE_CXX_STANDARD 23)
-set(TARGETS_EXPORT_NAME ${CMAKE_PROJECT_NAME}Targets)
-
-add_subdirectory(src)
+add_subdirectory(src/beman/execution26)
 add_subdirectory(examples)
 
 include(GNUInstallDirs)

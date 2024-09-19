@@ -12,7 +12,8 @@ set(EXAMPLES
 )
 
 foreach(EXAMPLE ${EXAMPLES})
-  add_executable(${EXAMPLE})
-  target_sources(${EXAMPLE} PRIVATE ${EXAMPLE}.cpp)
-  target_link_libraries(${EXAMPLE} PRIVATE ${BEMAN_EXECUTION26_LIBRARY})
+  set(EXAMPLE_TARGET ${TARGET_PREFIX}.examples.${EXAMPLE})
+  add_executable(${EXAMPLE_TARGET})
+  target_sources(${EXAMPLE_TARGET} PRIVATE ${EXAMPLE}.cpp)
+  target_link_libraries(${EXAMPLE_TARGET} PRIVATE ${BEMAN_EXECUTION26_LIBRARY})
 endforeach()
