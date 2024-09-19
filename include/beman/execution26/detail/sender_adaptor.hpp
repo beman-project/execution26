@@ -15,11 +15,11 @@
 
 namespace beman::execution26::detail
 {
-    template <typename Adaptor, typename T0, typename... T>
+    template <typename Adaptor, typename... T>
     struct sender_adaptor
         : ::beman::execution26::detail::product_type<
-            ::std::decay_t<Adaptor>, ::std::decay_t<T0>, ::std::decay_t<T>...>
-        , ::beman::execution26::sender_adaptor_closure<sender_adaptor<Adaptor, T0, T...>>
+            ::std::decay_t<Adaptor>, ::std::decay_t<T>...>
+        , ::beman::execution26::sender_adaptor_closure<sender_adaptor<Adaptor, T...>>
     {
         template <::beman::execution26::sender Sender>
         static auto apply(Sender&& sender, auto&& self)
