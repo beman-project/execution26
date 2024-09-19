@@ -79,8 +79,9 @@ list(APPEND execution_tests
 
 if(PROJECT_IS_TOP_LEVEL)
     foreach(test ${execution_tests})
-        add_executable(${test} ${test}.cpp)
-        target_link_libraries(${test} PRIVATE ${TARGET_LIBRARY})
-        add_test(NAME ${test} COMMAND $<TARGET_FILE:${test}>)
+        set(TEST_EXE ${TARGET_PREFIX}.${test})
+        add_executable(${TEST_EXE} ${test}.cpp)
+        target_link_libraries(${TEST_EXE} PRIVATE ${TARGET_LIBRARY})
+        add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
     endforeach()
 endif()

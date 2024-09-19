@@ -89,6 +89,7 @@ todo:
 	bin/mk-todo.py
 
 clean:
+	$(RM) -r $(BUILD)
 	$(RM) mkerr olderr *~
 
 distclean: clean
