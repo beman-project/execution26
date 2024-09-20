@@ -20,7 +20,7 @@ namespace beman::execution26
                 not requires(Object&& object) { ::std::as_const(object).get_env(); }
                 || ::beman::execution26::detail::queryable<std::remove_cvref_t<decltype(::std::declval<::std::remove_cvref_t<Object> const&>().get_env())>>
             )
-        auto operator()(Object&& object) const -> decltype(auto)
+        auto operator()(Object&& object) const noexcept -> decltype(auto)
         {
             if constexpr (requires{ ::std::as_const(object).get_env(); })
             {
