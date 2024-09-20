@@ -15,7 +15,6 @@
 #include <beman/execution26/detail/make_sender.hpp>
 #include <beman/execution26/detail/meta_combine.hpp>
 #include <beman/execution26/detail/sender.hpp>
-#include <beman/execution26/detail/sender_in.hpp>
 #include <beman/execution26/detail/sends_stopped.hpp>
 #include <beman/execution26/detail/set_error.hpp>
 #include <beman/execution26/detail/set_value.hpp>

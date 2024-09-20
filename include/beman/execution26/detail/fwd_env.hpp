@@ -28,12 +28,13 @@ namespace beman::execution26::detail
             = BEMAN_EXECUTION26_DELETE("the used query is not forwardable");
 
         template <typename Query, typename... Args>
-            requires (::beman::execution26::forwarding_query(::std::remove_cvref_t<Query>()))
+            requires(::beman::execution26::forwarding_query(::std::remove_cvref_t<Query>()))
             && requires(Env const& env, Query&& q, Args&&... args)
             {
                 env.query(q, ::std::forward<Args>(args)...);
             }
         constexpr auto query(Query&& q, Args&&... args) const
+            noexcept(noexcept(env.query(q, ::std::forward<Args>(args)...)))
         {
             return env.query(q, ::std::forward<Args>(args)...);
         }

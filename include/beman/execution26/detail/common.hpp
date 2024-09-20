@@ -25,4 +25,14 @@
 
 // ----------------------------------------------------------------------------
 
+namespace beman::execution26::detail
+{
+    template <typename...> struct fail_type;
+    template <typename...T>
+    auto fail(T&&...) { fail_type<T...>{}; }
+    auto use(auto&&...) noexcept -> void {}
+}
+
+// ----------------------------------------------------------------------------
+
 #endif
