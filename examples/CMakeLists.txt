@@ -3,9 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # cmake-format: on
 
-set(BEMAN_EXECUTION26_LIBRARY beman_execution26)
-
-include(GNUInstallDirs)
+set(BEMAN_EXECUTION26_LIBRARY beman_${TARGET_NAME})
 
 set(EXAMPLES
   stop_token

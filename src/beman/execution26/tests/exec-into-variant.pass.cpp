@@ -18,8 +18,6 @@
 
 namespace
 {
-    auto use(auto&&...) {}
-
     struct non_sender {};
     struct sender
     {
@@ -80,7 +78,6 @@ namespace
             assert(not called);
             op.start();
             assert(called);
-            use(op);
         }
     }
 
