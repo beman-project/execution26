@@ -39,8 +39,6 @@
 
 namespace
 {
-    auto use(auto&&...) {}
-
     struct domain
     {
         int value{};
@@ -972,14 +970,14 @@ namespace
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<>{})};
             assert(product.size() == 0);
-            use(product);
+            test_std::detail::use(product);
         }
         {
             sender0 const s{};
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<>{})};
             assert(product.size() == 0);
-            use(product);
+            test_std::detail::use(product);
         }
         {
             static_assert(requires{ sender1{}.connect(receiver{}); });
@@ -987,7 +985,7 @@ namespace
             test_detail::basic_state state{sender1{}, receiver{}};
             auto product{test_detail::connect_all(&state, sender1{}, std::index_sequence<0>{})};
             assert(product.size() == 1);
-            use(product);
+            test_std::detail::use(product);
         }
         {
             sender1 const s{};
@@ -996,7 +994,7 @@ namespace
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0>{})};
             assert(product.size() == 1);
-            use(product);
+            test_std::detail::use(product);
         }
         {
             static_assert(requires{ sender2{}.connect(receiver{}); });
@@ -1004,7 +1002,7 @@ namespace
             test_detail::basic_state state{sender2{}, receiver{}};
             auto product{test_detail::connect_all(&state, sender2{}, std::index_sequence<0, 1>{})};
             assert(product.size() == 2);
-            use(product);
+            test_std::detail::use(product);
         }
         {
             sender2 const s{};
@@ -1013,7 +1011,7 @@ namespace
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1>{})};
             assert(product.size() == 2);
-            use(product);
+            test_std::detail::use(product);
         }
         {
             static_assert(requires{ sender3{}.connect(receiver{}); });
@@ -1021,7 +1019,7 @@ namespace
             test_detail::basic_state state{sender3{}, receiver{}};
             auto product{test_detail::connect_all(&state, sender3{}, std::index_sequence<0, 1, 2>{})};
             assert(product.size() == 3);
-            use(product);
+            test_std::detail::use(product);
         }
         {
             sender3 const s{};
@@ -1030,7 +1028,7 @@ namespace
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1, 2>{})};
             assert(product.size() == 3);
-            use(product);
+            test_std::detail::use(product);
         }
         {
             static_assert(requires{ sender4{}.connect(receiver{}); });
@@ -1038,7 +1036,7 @@ namespace
             test_detail::basic_state state{sender4{}, receiver{}};
             auto product{test_detail::connect_all(&state, sender4{}, std::index_sequence<0, 1, 2, 3>{})};
             assert(product.size() == 4);
-            use(product);
+            test_std::detail::use(product);
         }
         {
             sender4 const s{};
@@ -1047,7 +1045,7 @@ namespace
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1, 2, 3>{})};
             assert(product.size() == 4);
-            use(product);
+            test_std::detail::use(product);
         }
 
         //-dk: TODO test connect_all
@@ -1197,9 +1195,9 @@ namespace
 
         {
             auto&&[a, b, c] = tagged_sender{basic_sender_tag{}, data{}, sender0{}};
-            use(a);
-            use(b);
-            use(c);
+            test_std::detail::use(a);
+            test_std::detail::use(b);
+            test_std::detail::use(c);
             static_assert(std::same_as<basic_sender_tag, std::remove_cvref_t<decltype(a)>>);
         }
 
@@ -1222,10 +1220,10 @@ namespace
 
         basic_sender bs{basic_sender_tag{}, data{}, sender0 {}};
         basic_sender const& cbs{bs};
-        use(cbs);
+        test_std::detail::use(cbs);
 
         auto&&[tag, data, children] = test_detail::get_sender_data(bs);
-        use(tag, data, children);
+        test_std::detail::use(tag, data, children);
         static_assert(std::same_as<basic_sender_tag, std::remove_cvref_t<decltype(tag)>>);
 
         static_assert(std::same_as<
@@ -1250,14 +1248,14 @@ namespace
 #endif
         
         auto ge{test_std::get_env(bs)};
-        use(ge);
+        test_std::detail::use(ge);
         static_assert(std::same_as<
             test_detail::fwd_env<sender0::env>,
             decltype(ge)
         >);
 
         auto op{test_std::connect(bs, receiver{})};
-        use(op);
+        test_std::detail::use(op);
 #if 0
         static_assert(std::same_as<
             basic_sender_tag::sender::completion_signatures,
@@ -1442,7 +1440,7 @@ namespace
         auto we_op{test_std::connect(we_sender, write_env_receiver{&has_both_properties})};
         we_op.start();
         assert(has_both_properties);
-        use(we_op);
+        test_std::detail::use(we_op);
     }
 
     template <typename... T>
