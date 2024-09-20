@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <beman/execution26/detail/read_env.hpp>
+#include <beman/execution26/detail/common.hpp>
 #include <beman/execution26/detail/get_domain.hpp>
 #include <beman/execution26/detail/sender.hpp>
 #include <beman/execution26/detail/sender_in.hpp>
 #include <beman/execution26/detail/receiver.hpp>
 #include <beman/execution26/detail/connect.hpp>
 #include <beman/execution26/detail/start.hpp>
+#include <beman/execution26/detail/get_stop_token.hpp>
 #include <test/execution.hpp>
 #include <concepts>
 
@@ -59,8 +61,8 @@ namespace
         static_assert(test_std::sender_in<decltype(sender), env>);
         static_assert(std::same_as<
             test_std::completion_signatures<
-                test_std::set_value_t(domain),
-                test_std::set_error_t(std::exception_ptr)
+                test_std::set_value_t(domain)
+                //-dk:TODO verify , test_std::set_error_t(std::exception_ptr)
             >,
             decltype(test_std::get_completion_signatures(sender, env{}))
             >);
@@ -75,10 +77,22 @@ namespace
         test_std::start(op);
         assert(called);
     }
+
+    auto test_read_env_completions() -> void
+    {
+        auto r{test_std::read_env(test_std::get_stop_token)};
+        test::check_type<
+            test_std::completion_signatures<
+                test_std::set_value_t(test_std::never_stop_token)
+            >
+        >(test_std::get_completion_signatures(r, test_std::empty_env{}));
+        test_std::detail::use(r);
+    }
 }
 
 auto main() -> int
 {
     static_assert(std::same_as<test_std::read_env_t const, decltype(test_std::read_env)>);
     test_read_env();
+    test_read_env_completions();
 }

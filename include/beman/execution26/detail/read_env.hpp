@@ -64,12 +64,22 @@ namespace beman::execution26::detail
         Env
         >
     {
-        using type = ::beman::execution26::completion_signatures<
-            ::beman::execution26::set_value_t(
+        using set_value_type = ::beman::execution26::set_value_t(
                 decltype(::std::declval<Query>()(::std::as_const(::std::declval<Env>())))
-            ),
-            ::beman::execution26::set_error_t(::std::exception_ptr)
-            >;
+            );
+        using set_error_type = ::beman::execution26::set_error_t(
+                ::std::exception_ptr
+            );
+        using type = ::std::conditional_t<
+            noexcept(::std::declval<Query>()(::std::declval<Env const&>())),
+            ::beman::execution26::completion_signatures<
+                set_value_type
+            >,
+            ::beman::execution26::completion_signatures<
+                set_value_type,
+                set_error_type
+            >
+        >;
     };
 }
 
