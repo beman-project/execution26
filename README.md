@@ -1,3 +1,6 @@
+<!--
+SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+-->
 # beman.execution26: Building Block For Asynchronous Programs
 
 `beman.execution26` provides the basic vocabulary for asynchronous
