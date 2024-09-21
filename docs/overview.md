@@ -30,22 +30,21 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 ### Customization Point Objects
 
-- `connect()`
-- `get_env()`
-- `set_error()`
-- `set_stopped()`
-- `set_value()`
-- `start()`
+- <code>connect(<i>sender, receiver</i>) -> <i>operation_state</i></code>
+- <code>set_error(<i>error</i>) noexcept -> void</code>
+- <code>set_stopped(<i>receiver</i>) noexcept -> void</code>
+- <code>set_value(<i>receiver, value...</i>) noexcept -> void</code>
+- <code>start(<i>state&amp;</i>) noexcept -> void</code>
 
 ## Senders
 
 ### Sender Factories
 
-- `just`
-- `just_error`
-- `just_stopped`
-- `read_env`
-- `schedule()`
+- <code>just(<i>value...</i>) -> <i>sender-of</i>&lt;set_value_t(<i>Value...</i>)&gt;</i></code>
+- <code>just_error(<i>error</i>) -> <i>sender-of</i>&lt;set_error_t(<i>Error</i>)&gt;</i></code>
+- <code>just_stopped() -> <i>sender-of</i>&lt;set_stopped_t()&gt;</code>
+- <code>read_env(<i>query</i>) -> <i>sender-of</i>&lt;set_value_t(<i>query-result</i>)&gt;</code>
+- <code>schedule(<i>scheduler</i>) -> <i>sender-of</i>&lt;set_value_t()&gt;</code>
 
 ### Sender Adaptors
 
