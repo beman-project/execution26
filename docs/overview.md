@@ -151,7 +151,7 @@ static_assert(not std::execution::receiver_of<example_receiver,
 Schedulers are used to specify the execution context where the asynchronous work is to be executed. A scheduler is a lightweight handle providing a <code><a href=‘#schedule’>schedule</a><code> operation yielding a <code><a href=‘sender’>sender<a/></code> with a value <a href=‘#completion-signal’>completion signal</a> without paramters. The completion is on the respective execution context.
 
 Requirements for <code>_Scheduler_</code>:
-- The type `scheduler_concept` is an alias for `scheduler_t` or a type derived thereof`.
+- The type <code>_Scheduler_::scheduler_concept</code> is an alias for `scheduler_t` or a type derived thereof`.
 - <code><a href=‘#schedule’>schedule</a>(_scheduler_) -> <a href=‘sender’>sender</a></code>
 - The <a href=‘#get-completion-scheduler’>value completion scheduler</a> of the <code><a href=‘sender’>sender</a></code>’s <a href=‘#environment’>environment</a> is the <code>_scheduler_</code>:
     _scheduler_ == std::execution::get_completion_scheduler&lt;std::execution::set_value_t&gt;(
@@ -161,9 +161,61 @@ Requirements for <code>_Scheduler_</code>:
 - <code>std::copy_constructible&lt;_Scheduler_&gt;</code>
 </details>
 
+<details>
+<summary><code>sender&lt;<i>Sender</i>&gt;</code></summary>
+
+Senders represent asynchronous work. They may get composed from multiple senders to model a workflow. Senders can’t be run directly. Instead, they are passed to a <a href=‘#sender-consumer’</a> which <code><a href=‘#connect’>connect</a></code>s the sender to a <code><a href=‘#receiver’>receiver</a></code> to produce an <code><a href=‘#operation-state’>operation_state</a></code> which may get started. When using senders to represent work the inner workings shouldn’t matter. They do become relevant when creating sender algorithms.
+
+Requirements for <code>_Sender_</code>:
+- The type <code>_Sender_::sender_concept</code> is an alias for `sender_t` or a type derived thereof or <code>_Sender_<code> is a suitable _awaitable_.
+- <code><a href=‘#get_env'>std::execution::get_env</a>(_sender_)</code> is valid. By default this operation returns <code><a href=‘empty-env’>std::execution::empty_env</a></code>.
+- Rvalues of type <code>_Sender_</code> can be moved.
+- Lvalues of type <code>_Sender_</code> can be copied.
+
+Typical members for <code>_Sender_</code>:
+- <code><a href=‘get_env’>get_env</a>() const noexcept</code>
+- <code><a href=‘get_completion_signatures’>get_completion_signatures</a>(_env_) const noexcept -&gt; <a href=‘completion-signatures’>std::execution::completion_signatures</a>&lt;...&gt;</code>
+- <code>_Sender_::completion_signatures_</code> is a type alias for <code><a href=‘completion-signatures’>std::execution::completion_signatures</a>&lt;...&gt;</code> (if there is no <code><a href=‘get_completion_signatures’>get_completion_signatures</a> member).
+- <code><a href=‘#connect’>connect</a>(_sender_, <a href=‘#receiver’>receiver</a>) -&gt; <a href=‘#operation-state’>operation_state</a></code>
+
+<detail>
+<summary>Example</summary>
+The example shows a sender implementing an operation similar to <code><a href=‘#just’>just</a>(_value)</code>.
+
+```c++
+struct example_sender
+{
+    template <std::execution::receiver Receiver>
+    struct state
+    {
+        using operation_state_concept = std::execution::operation_state_t;
+        std::remove_cvref_t<Receiver> receiver;
+        int                           value;
+        auto start() & noexcept {
+            std::execution::set_value(
+                std::move(this->receiver),
+                this->value
+            );
+        }
+    };
+    using sender_concept = std::execution::sender_t;
+    using completion_signatures = std::execution::completion_signatures<
+        std::execution::set_value_t(int)
+    >;
+    
+    int value{};
+    template <std::execution::receiver Receiver>
+    auto connect(Receiver&& receiver) const -> state<Receiver> {
+        return { std::forward<Receiver>(receiver), this->value };
+    }
+};
+
+static_assert(std::execution::sender<example_sender>);
+```
+</details>
+</details>
 ——-
 
-- <code>sender&lt;<i>Sender</i>&gt;</code>
 - <code>sender_in&lt;<i>Sender, Env</i> = std::execution::empty_env&gt;</code>
 - <code>sender_to&lt;<i>Sender, Receiver</i>&gt;</code>
 - <code>sends_stopped&lt;<i>Sender, Env</i> = std::execution::empty_env&gt;</code>
