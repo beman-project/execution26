@@ -252,6 +252,7 @@ Required members for <code>_Token_</code>:
 - <code>std::copyable&lt;_Token_&gt;</code>
 - <code>std::equality_comparable&lt;_Token_&gt;</code>
 - <code>std::swapable&lt;_Token_&gt;</code>
+<blockquote>
 <details>
 <summary>Example: polling</summary>
 This example shows a sketch of using a <code>stoppable_token&lt;_Token_&gt;</code> to cancel an active operation. The computation in this example is represented as `sleep_for`.
@@ -264,11 +265,12 @@ void compute(std::stoppable_token auto token)
          std::this_thread::sleep_for(1s);
     }
 }
-``` 
+```
 </details>
 <details>
 <summary>Example: inactive</summary>
 This example shows how an <code><a href=‘#operation-state’>operation_state</a></code> can use the <code>callback_type</code> together with a <code>_token_</code> to get notified when cancellation is requested.
+    
 ```c++
 template <std::execution::receiver Receiver>
 struct example_state
@@ -284,11 +286,9 @@ struct example_state
     using env = std::execution::env_of_t<Receiver>;
     using token = std::execution::stop_callback_of_t<env>;
     using callback = std::execution::stop_callback_of_t<token, on_cancel>;
-    
     std::remove_cvref_t<Receiver> receiver;
     std::optional<callback>       cancel{};
     std::atomic<std::size_t>      outstanding{};
-    
     auto start() & noexcept {
         this->outstanding += 2u;
         this->cancel.emplace(
@@ -314,9 +314,10 @@ struct example_state
             std::execution::set_value(std::move(this->receiver));
         }
     }
-    };    
-``` 
+};    
+```
 </details>
+</blockquote>
 </details>
 <details>
 <summary><code>unstoppable_token&lt;Token&gt;</code> TODO</summary>
