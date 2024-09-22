@@ -70,7 +70,7 @@ struct inject_cancel_sender
 
     template <typename Receiver>
     auto connect(Receiver&& recv) && {
-        return ex::connect(std::move(sender), receiver<Receiver>(std::forward<Receiver>(recv), this->token));
+        return ex::connect(std::move(sender), receiver<Receiver>{std::forward<Receiver>(recv), this->token});
     }
 };
 
