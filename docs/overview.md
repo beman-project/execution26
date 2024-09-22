@@ -2,14 +2,27 @@
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 -->
 # std::execution Overview
+This page provides an overview of the components in `std::execution`. The documentation on this page doesn’t represent all details of the specification. However, it should capture enough details to be a suitable resource to determine how the various components are used.
 
+For each of the components a summary view is provided. To get more details expand the respective section.
 ## Terms
+This section defines a few terms used throughout the description on this page. The terms aren’t taken from the specification and are, thus, somewhat informal.
 
-- completion signal
-- environment
+<details>
+<summary>completion signal</summary>
+When an asynchronous operation completes it _signals_ its completion by calling a completion function on a <code><a href=‘#receiver’>receiver</a></code>:
+
+- <code><a href=‘#set-value’>std::execution::set_value</a>(_receiver_, _args_...)</code> is called when an operation completes successfully. A call to this completion function is referred to as _value completion signal_.
+- <code><a href=‘#set-error’>std::execution::set_error</a>(_receiver_, _error_)</code> is called when an operation fails to deliver its success results. A call to this completion function is referred to as _error completion signal_.
+- <code><a href=‘#set-stopped’>std::execution::set_stopped</a>()</code> is called when an operation was cancelled. A call to this completion function is referred to as _cancellation completion signal_.
+- Collectively the value, error, and cancellation completion signals are referred to as _completion signal_. Note that any <code><a href=‘#start’>start</a></code>ed asynchronous operation triggers exactly one completion signal.
+</details>
+<details>
+<summary>environment</summary>
+The term _enviroment_ refers to the bag of properties associated with an <code>_object_</code> by the call <code><a href=‘#get-env’>std::execution::get_env</a>(_object_)</code>. By default the environment for objects is empty (<code><a href=‘#empty-env’>std::execution::empty_env</a></code>). In particular, enviroments associated with <code><a href=‘#receiver’>receiver</a></code>s are used to provide access  to properties like the <a href=‘#get-stop-token’>stop token</a>, <a href=‘#get-scheduler’>scheduler</a>, or <a href=‘#get-allocator’>allocator</a> associated with the <code><a href=‘#receiver’>receiver</a></code>. The various properties associated with an object are accessed via <a href=‘#queries’>queries</a>.
+</details> 
 
 ## Concepts
-
 This section lists the concepts from `std::execution`.
 
 <details>
@@ -234,6 +247,12 @@ To determine if <code>_Receiver_</code> can receive all <a href=‘#completion-s
 
 The concept <code>sends_stopped&lt;<i>Sender, Env</i>&gt;</code> determines if <code>_Sender_</code> may send a <code><a href=‘#set_stopped’>stopped</a></code> <a href=‘#completion-signals’>completion signal</a>. To do so, the concepts determines if <code><a href=‘#get_completion_signals’>std::execution::get_completion_signals</a>(_sender_, _env_)</code> contains the signatures <code><a href=‘#set_stopped’>std::execution::set_stopped_t</a>()</code>. 
 </details>
+<details>
+<summary><code>stoppable_token&lt;Token&gt;</code> TODO</summary>
+</details>
+<details>
+<summary><code>unstoppable_token&lt;Token&gt;</code> TODO</summary>
+</details>
 
 ## Queries
 
@@ -256,7 +275,7 @@ The concept <code>sends_stopped&lt;<i>Sender, Env</i>&gt;</code> determines if <
 - <code>set_value(<i>receiver, value...</i>) noexcept -> void</code>
 - <code>start(<i>state&amp;</i>) noexcept -> void</code>
 
-## Senders
+## Senders
 
 ### Sender Factories
 
@@ -318,4 +337,7 @@ The concept <code>sends_stopped&lt;<i>Sender, Env</i>&gt;</code> determines if <
 - `transform_completion_signatures_of`
 - `value_types_of_t`
 
-## Stop Tokens
+## Stop Token
+- `never_stop_token`
+- `stop_token`
+- `inplace_stop_token`
