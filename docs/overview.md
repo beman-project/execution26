@@ -8,17 +8,14 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 - completion signal
 - environment
 
-## Concepts
+## Concepts
+
+This section lists the concepts from `std::execution`.
 
 <details>
 <summary><code>operation_state&lt;<i>State</i>&gt;</code></summary>
 
-Operation states represent asynchronous operations ready to be
-<code><a href=‘#start’>start</a></code>ed or executing. Operation
-state objects
-are normally neither movable nor copyable. Once <code><a href=‘#start’>start</a></code>ed
-the object needs to be kept alive until a <a href=‘#completion-signal’>completion signal</a> is received.
-Users don’t interact with operation states explicitly except when implementing new sender algorithms.
+Operation states represent asynchronous operations ready to be <code><a href=‘#start’>start</a></code>ed or executing. Operation state objects are normally neither movable nor copyable. Once <code><a href=‘#start’>start</a></code>ed the object needs to be kept alive until a <a href=‘#completion-signal’>completion signal</a> is received. Users don’t interact with operation states explicitly except when implementing new sender algorithms.
 
 Required members for <code>_State_</code>:
 
@@ -28,10 +25,7 @@ Required members for <code>_State_</code>:
 <details>
 <summary>Example</summary>
 
-This example shows a simple operation state object which immediately completes
-successfully without any values (as <code><a href=‘#just’></a>()</code> would do).
-Normally <code><a href=‘#start’>start</a>()</code> initiates an asynchronous
-operation completing at some point later.
+This example shows a simple operation state object which immediately completes successfully without any values (as <code><a href=‘#just’></a>()</code> would do). Normally <code><a href=‘#start’>start</a>()</code> initiates an asynchronous operation completing at some point later.
 
 ```c++
 template <std::execution::receiver Receiver>
@@ -47,7 +41,6 @@ struct example_state
 
 static_assert(std::execution::operation_state<example_state<SomeReceiver>>);
 ```
-
 </details> 
 </details>
 
@@ -65,7 +58,7 @@ Required members for <code>_Receiver_</code>:
 - The type `receiver_concept` is an alias for `receiver_t` or a type derived thereof`.
 - Rvalues of type <code>_Receiver_</code> are movable.
 - Lvalues of type <code>_Receiver_</code> are copyable.
-- <code><a href=‘#get-env’>get_env</a>(_receiver_)</code> returns an object. By default this operation returns <code><a href=‘empty-env’>std::execution::empty_env</a></code>.
+- <code><a href=‘#get-env’>std::execution::get_env</a>(_receiver_)</code> returns an object. By default this operation returns <code><a href=‘empty-env’>std::execution::empty_env</a></code>.
 
 Typical members for <code>_Receiver_</code>:
 
@@ -77,12 +70,7 @@ Typical members for <code>_Receiver_</code>:
 <details>
 <summary>Example</summary>
 
-The example receiver just prints the name of each the received
-<a href=‘#completion-signal’>completion signal</a> before forwarding it
-to a receiver. It also forwards the request for an environment
-(<code><a href=‘#get_env’>get_env</a><code>) to the
-nested receiver. This example is resembling a receiver as it would be used
-by a sender injecting logging of received signals.
+The example receiver prints the name of each the received <a href=‘#completion-signal’>completion signal</a> before forwarding it to a receiver. It forwards the request for an environment (<code><a href=‘#get_env’>get_env</a><code>) to the nested receiver. This example is resembling a receiver as it would be used by a sender injecting logging of received signals.
 
 ```c++
 template <std::execution::receiver NestedReceiver>
@@ -112,25 +100,18 @@ struct example_receiver
 
 static_assert(std::execution::receiver<example_receiver<SomeReceiver>>);
 ```
-
 </details> 
-
 </details>
 
 <details>
 <summary><code>receiver_of&lt;<i>Receiver, Completions</i>&gt;</code></summary>
 
-The concept <code>receiver_of&lt;<i>Receiver, Completions</i>&gt;</code> tests
-Whether <code><a href=‘#receiver’>std::execution::receiver</a>&lt;_Receiver_&gt;</code> is true and if
-an object of type <code>_Receiver_</code> can be invoked with each of the
-<a href=‘#completion-signal’>completion signals</a> in <code>_Completions_</code>.
+The concept <code>receiver_of&lt;<i>Receiver, Completions</i>&gt;</code> tests whether <code><a href=‘#receiver’>std::execution::receiver</a>&lt;_Receiver_&gt;</code> is true and if an object of type <code>_Receiver_</code> can be invoked with each of the <a href=‘#completion-signal’>completion signals</a> in <code>_Completions_</code>.
 
 <details>
 <summary>Example</summary>
 
-The example defines a simple <code><a href=‘#receiver’>receiver</a><code> and
-tests whether it models `receiver_of` with different
-<a href=‘#completion-signal’>completion signals</a> in <code>_Completions_</code>
+The example defines a simple <code><a href=‘#receiver’>receiver</a><code> and tests whether it models `receiver_of` with different <a href=‘#completion-signal’>completion signals</a> in <code>_Completions_</code>
 (note that not all cases are true).
 
 ```c++
@@ -163,17 +144,29 @@ static_assert(not std::execution::receiver_of<example_receiver,
 
 ```
 </details>
+</details>
 
+<details>
+<summary><code>scheduler&lt;<i>Scheduler</i>&gt;</code></summary>
+Schedulers are used to specify the execution context where the asynchronous work is to be executed. A scheduler is a lightweight handle providing a <code><a href=‘#schedule’>schedule</a><code> operation yielding a <code><a href=‘sender’>sender<a/></code> with a value <a href=‘#completion-signal’>completion signal</a> without paramters. The completion is on the respective execution context.
+
+Requirements for <code>_Scheduler_</code>:
+- The type `scheduler_concept` is an alias for `scheduler_t` or a type derived thereof`.
+- <code><a href=‘#schedule’>schedule</a>(_scheduler_) -> <a href=‘sender’>sender</a></code>
+- The <a href=‘#get-completion-scheduler’>value completion scheduler</a> of the <code><a href=‘sender’>sender</a></code>’s <a href=‘#environment’>environment</a> is the <code>_scheduler_</code>:
+    _scheduler_ == std::execution::get_completion_scheduler&lt;std::execution::set_value_t&gt;(
+       std::execution::get_env(std::execution::schedule(_scheduler_))
+    )
+- <code>std::equality_comparable&lt;_Scheduler_&gt;</code>
+- <code>std::copy_constructible&lt;_Scheduler_&gt;</code>
 </details>
 
 ——-
 
-- <code>scheduler&lt;<i>Scheduler</i>&gt;</code>
 - <code>sender&lt;<i>Sender</i>&gt;</code>
 - <code>sender_in&lt;<i>Sender, Env</i> = std::execution::empty_env&gt;</code>
 - <code>sender_to&lt;<i>Sender, Receiver</i>&gt;</code>
 - <code>sends_stopped&lt;<i>Sender, Env</i> = std::execution::empty_env&gt;</code>
-- <code>sender&lt;<i>Sender</i>&gt;</code>
 
 ## Queries
 
