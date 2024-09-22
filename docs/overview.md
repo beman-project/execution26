@@ -70,7 +70,7 @@ Typical members for <code>_Receiver_</code>:
 <details>
 <summary>Example</summary>
 
-The example receiver prints the name of each the received <a href=‘#completion-signal’>completion signal</a> before forwarding it to a receiver. It forwards the request for an environment (<code><a href=‘#get_env’>get_env</a><code>) to the nested receiver. This example is resembling a receiver as it would be used by a sender injecting logging of received signals.
+The example receiver prints the name of each the received <a href=‘#completion-signal’>completion signal</a> before forwarding it to a receiver. It forwards the request for an environment (<code><a href=‘#get_env’>get_env</a></code>) to the nested receiver. This example is resembling a receiver as it would be used by a sender injecting logging of received signals.
 
 ```c++
 template <std::execution::receiver NestedReceiver>
@@ -111,7 +111,7 @@ The concept <code>receiver_of&lt;<i>Receiver, Completions</i>&gt;</code> tests w
 <details>
 <summary>Example</summary>
 
-The example defines a simple <code><a href=‘#receiver’>receiver</a><code> and tests whether it models `receiver_of` with different <a href=‘#completion-signal’>completion signals</a> in <code>_Completions_</code>
+The example defines a simple <code><a href=‘#receiver’>receiver</a></code> and tests whether it models `receiver_of` with different <a href=‘#completion-signal’>completion signals</a> in <code>_Completions_</code>
 (note that not all cases are true).
 
 ```c++
@@ -148,7 +148,7 @@ static_assert(not std::execution::receiver_of<example_receiver,
 
 <details>
 <summary><code>scheduler&lt;<i>Scheduler</i>&gt;</code></summary>
-Schedulers are used to specify the execution context where the asynchronous work is to be executed. A scheduler is a lightweight handle providing a <code><a href=‘#schedule’>schedule</a><code> operation yielding a <code><a href=‘sender’>sender<a/></code> with a value <a href=‘#completion-signal’>completion signal</a> without paramters. The completion is on the respective execution context.
+Schedulers are used to specify the execution context where the asynchronous work is to be executed. A scheduler is a lightweight handle providing a <code><a href=‘#schedule’>schedule</a></code> operation yielding a <code><a href=‘sender’>sender<a/></code> with a value <a href=‘#completion-signal’>completion signal</a> without parameters. The completion is on the respective execution context.
 
 Requirements for <code>_Scheduler_</code>:
 - The type <code>_Scheduler_::scheduler_concept</code> is an alias for `scheduler_t` or a type derived thereof`.
@@ -167,7 +167,7 @@ Requirements for <code>_Scheduler_</code>:
 Senders represent asynchronous work. They may get composed from multiple senders to model a workflow. Senders can’t be run directly. Instead, they are passed to a <a href=‘#sender-consumer’</a> which <code><a href=‘#connect’>connect</a></code>s the sender to a <code><a href=‘#receiver’>receiver</a></code> to produce an <code><a href=‘#operation-state’>operation_state</a></code> which may get started. When using senders to represent work the inner workings shouldn’t matter. They do become relevant when creating sender algorithms.
 
 Requirements for <code>_Sender_</code>:
-- The type <code>_Sender_::sender_concept</code> is an alias for `sender_t` or a type derived thereof or <code>_Sender_<code> is a suitable _awaitable_.
+- The type <code>_Sender_::sender_concept</code> is an alias for `sender_t` or a type derived thereof or <code>_Sender_</code> is a suitable _awaitable_.
 - <code><a href=‘#get_env'>std::execution::get_env</a>(_sender_)</code> is valid. By default this operation returns <code><a href=‘empty-env’>std::execution::empty_env</a></code>.
 - Rvalues of type <code>_Sender_</code> can be moved.
 - Lvalues of type <code>_Sender_</code> can be copied.
@@ -175,7 +175,7 @@ Requirements for <code>_Sender_</code>:
 Typical members for <code>_Sender_</code>:
 - <code><a href=‘get_env’>get_env</a>() const noexcept</code>
 - <code><a href=‘get_completion_signatures’>get_completion_signatures</a>(_env_) const noexcept -&gt; <a href=‘completion-signatures’>std::execution::completion_signatures</a>&lt;...&gt;</code>
-- <code>_Sender_::completion_signatures_</code> is a type alias for <code><a href=‘completion-signatures’>std::execution::completion_signatures</a>&lt;...&gt;</code> (if there is no <code><a href=‘get_completion_signatures’>get_completion_signatures</a> member).
+- <code>_Sender_::completion_signatures_</code> is a type alias for <code><a href=‘completion-signatures’>std::execution::completion_signatures</a>&lt;...&gt;</code> (if there is no <code><a href=‘get_completion_signatures’>get_completion_signatures</a></code> member).
 - <code><a href=‘#connect’>connect</a>(_sender_, <a href=‘#receiver’>receiver</a>) -&gt; <a href=‘#operation-state’>operation_state</a></code>
 
 <detail>
@@ -224,15 +224,15 @@ The concept <code>sender_in&lt;<i>Sender, Env</i>&gt;</code> tests whether <code
 <details>
 <summary><code>sender_to&lt;<i>Sender, Receiver</i>&gt;</code></summary>
 
-The concept <code>sender_to&lt;<i>Sender, Receiver</i>&gt;</code> tests if <code><a href=‘#sender_in’>std::execution::sender_in</a>&lt;_Sender_, <a href='#env_of_t'>std::execution::env_of_t</a>&lt;_Receiver_&gt;&gt; is true, and if <code>_Receiver_</code> can receive all <a href=‘#completion-signals’>completion signals</a> which can be sent by <code>_Sender_</code>, and if <code>_Sender_</code> can be <code><a href=‘#connect’>connect</a></code>ed to <code>_Receiver_</code>.
+The concept <code>sender_to&lt;<i>Sender, Receiver</i>&gt;</code> tests if <code><a href=‘#sender_in’>std::execution::sender_in</a>&lt;_Sender_, <a href='#env_of_t'>std::execution::env_of_t</a>&lt;_Receiver_&gt;&gt;</code> is true, and if <code>_Receiver_</code> can receive all <a href=‘#completion-signals’>completion signals</a> which can be sent by <code>_Sender_</code>, and if <code>_Sender_</code> can be <code><a href=‘#connect’>connect</a></code>ed to <code>_Receiver_</code>.
 
-To determine if <code>_Receiver_</code> can receive all <a href=‘#completion-signals’>completion signals</a> from <code>_Sender_</code> it checks that for each <code>_Signature_</code> in <code><a href=‘#get_completion_signals’>std::execution::get_completion_signals</a>(_sender_, std::declval&lt;<a href='#env_of_t'>std::execution::env_of_t</a>&lt;_Receiver_&gt;&gt;())</code> the test <code><a href=‘#receiver_of’>std::execution::receiver_of</a>&lt;_Receiver_, _Signature_&gt;<code> yields true. To determine if <code>_Sender_</code> can be <code><a href=‘#connect’>connect</a></code>ed to <code>_Receiver_</code> the concept checks if <code><a href=‘#connect’>connect</a>(std::declval&lt;_Sender_&gt;(), std::declval&lt;_Receiver_&gt;)</code> is a valid expression.
+To determine if <code>_Receiver_</code> can receive all <a href=‘#completion-signals’>completion signals</a> from <code>_Sender_</code> it checks that for each <code>_Signature_</code> in <code><a href=‘#get_completion_signals’>std::execution::get_completion_signals</a>(_sender_, std::declval&lt;<a href='#env_of_t'>std::execution::env_of_t</a>&lt;_Receiver_&gt;&gt;())</code> the test <code><a href=‘#receiver_of’>std::execution::receiver_of</a>&lt;_Receiver_, _Signature_&gt;</code> yields true. To determine if <code>_Sender_</code> can be <code><a href=‘#connect’>connect</a></code>ed to <code>_Receiver_</code> the concept checks if <code><a href=‘#connect’>connect</a>(std::declval&lt;_Sender_&gt;(), std::declval&lt;_Receiver_&gt;)</code> is a valid expression.
 </details>
 
 <details>
 <summary><code>sends_stopped&lt;<i>Sender, Env</i> = std::execution::empty_env&gt;</code></summary>
 
-The concept <code>sends_stopped&lt;<i>Sender, Env</i>&gt;<code> determines if <code>_Sender_</code> may send a <code><a href=‘#set_stopped’>stopped</a> <a href=‘#completion-signals’>completion signal</a>. To do so, the concepts determines if <code><a href=‘#get_completion_signals’>std::execution::get_completion_signals</a>(_sender_, _env_)</code> contains the signatures <code><a href=‘#set_stopped’>std::execution::set_stopped_t</a>()</code>. 
+The concept <code>sends_stopped&lt;<i>Sender, Env</i>&gt;</code> determines if <code>_Sender_</code> may send a <code><a href=‘#set_stopped’>stopped</a></code> <a href=‘#completion-signals’>completion signal</a>. To do so, the concepts determines if <code><a href=‘#get_completion_signals’>std::execution::get_completion_signals</a>(_sender_, _env_)</code> contains the signatures <code><a href=‘#set_stopped’>std::execution::set_stopped_t</a>()</code>. 
 </details>
 
 ## Queries
