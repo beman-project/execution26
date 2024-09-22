@@ -56,7 +56,6 @@ static_assert(std::execution::operation_state<example_state<SomeReceiver>>);
 ```
 </details> 
 </details>
-
 <details>
 <summary><code>receiver&lt;<i>Receiver</i>&gt;</code></summary>
 
@@ -115,7 +114,6 @@ static_assert(std::execution::receiver<example_receiver<SomeReceiver>>);
 ```
 </details> 
 </details>
-
 <details>
 <summary><code>receiver_of&lt;<i>Receiver, Completions</i>&gt;</code></summary>
 
@@ -158,7 +156,6 @@ static_assert(not std::execution::receiver_of<example_receiver,
 ```
 </details>
 </details>
-
 <details>
 <summary><code>scheduler&lt;<i>Scheduler</i>&gt;</code></summary>
 Schedulers are used to specify the execution context where the asynchronous work is to be executed. A scheduler is a lightweight handle providing a <code><a href=‘#schedule’>schedule</a></code> operation yielding a <code><a href=‘sender’>sender<a/></code> with a value <a href=‘#completion-signal’>completion signal</a> without parameters. The completion is on the respective execution context.
@@ -173,7 +170,6 @@ Requirements for <code>_Scheduler_</code>:
 - <code>std::equality_comparable&lt;_Scheduler_&gt;</code>
 - <code>std::copy_constructible&lt;_Scheduler_&gt;</code>
 </details>
-
 <details>
 <summary><code>sender&lt;<i>Sender</i>&gt;</code></summary>
 
@@ -227,13 +223,11 @@ static_assert(std::execution::sender<example_sender>);
 ```
 </details>
 </details>
-
 <details>
 <summary><code>sender_in&lt;<i>Sender, Env</i> = std::execution::empty_env&gt;</code></summary>
 
 The concept <code>sender_in&lt;<i>Sender, Env</i>&gt;</code> tests whether <code>_Sender_</code> is a <code><a href=‘#sender’>sender</a></code>, <code>_Env_</code> is a destructible type, and <code><a href=‘#get_completion_signatures’>std::execution::get_completion_signatures</a>(_sender_, _env_)</code> yields a specialization of <code><a href=‘#completion_signatures’>std::execution::completion_signatures</a></code>.
 </details>
-
 <details>
 <summary><code>sender_to&lt;<i>Sender, Receiver</i>&gt;</code></summary>
 
@@ -241,14 +235,88 @@ The concept <code>sender_to&lt;<i>Sender, Receiver</i>&gt;</code> tests if <code
 
 To determine if <code>_Receiver_</code> can receive all <a href=‘#completion-signals’>completion signals</a> from <code>_Sender_</code> it checks that for each <code>_Signature_</code> in <code><a href=‘#get_completion_signals’>std::execution::get_completion_signals</a>(_sender_, std::declval&lt;<a href='#env_of_t'>std::execution::env_of_t</a>&lt;_Receiver_&gt;&gt;())</code> the test <code><a href=‘#receiver_of’>std::execution::receiver_of</a>&lt;_Receiver_, _Signature_&gt;</code> yields true. To determine if <code>_Sender_</code> can be <code><a href=‘#connect’>connect</a></code>ed to <code>_Receiver_</code> the concept checks if <code><a href=‘#connect’>connect</a>(std::declval&lt;_Sender_&gt;(), std::declval&lt;_Receiver_&gt;)</code> is a valid expression.
 </details>
-
 <details>
 <summary><code>sends_stopped&lt;<i>Sender, Env</i> = std::execution::empty_env&gt;</code></summary>
 
 The concept <code>sends_stopped&lt;<i>Sender, Env</i>&gt;</code> determines if <code>_Sender_</code> may send a <code><a href=‘#set_stopped’>stopped</a></code> <a href=‘#completion-signals’>completion signal</a>. To do so, the concepts determines if <code><a href=‘#get_completion_signals’>std::execution::get_completion_signals</a>(_sender_, _env_)</code> contains the signatures <code><a href=‘#set_stopped’>std::execution::set_stopped_t</a>()</code>. 
 </details>
 <details>
-<summary><code>stoppable_token&lt;Token&gt;</code> TODO</summary>
+<summary><code>stoppable_token&lt;_Token_&gt;</code></summary>
+A <code>stoppable_token&lt;_Token_&gt;</code>, e.g., obtained via <code><a href=‘#get-stop-token’>std::execution::get_stop_token</a>(_env_)</code> is used to support cancellation of asynchronous operations. Using <code>_token_.stop_requested()</code> an active operation can poll whether it was requested to cancel. An inactive operation waiting for a notification can use an object of a specialization of the template <code>_Token_::callback_type</code> to get notified when cancellation is requested.
+
+Required members for <code>_Token_</code>:
+
+- <code>_Token_::callback_type&lt;_Callback_&gt;</code> can be specialized with a <code>std::callable&lt;_Callback_&gt;</code> type.
+- <code>_token_.stop_requested() const noexcept -&gt; bool</code>
+- <code>_token_.stop_possible() const noexcept -&gt; bool</code>
+- <code>std::copyable&lt;_Token_&gt;</code>
+- <code>std::equality_comparable&lt;_Token_&gt;</code>
+- <code>std::swapable&lt;_Token_&gt;</code>
+<details>
+<summary>Example: polling</summary>
+This example shows a sketch of using a <code>stoppable_token&lt;_Token_&gt;</code> to cancel an active operation. The computation in this example is represented as `sleep_for`.
+
+```c++
+void compute(std::stoppable_token auto token)
+{
+    using namespace std::chrono::literals;
+    while (not token.stop_requested()) {
+         std::this_thread::sleep_for(1s);
+    }
+}
+``` 
+</details>
+<details>
+<summary>Example: inactive</summary>
+This example shows how an <code><a href=‘#operation-state’>operation_state</a></code> can use the <code>callback_type</code> together with a <code>_token_</code> to get notified when cancellation is requested.
+```c++
+template <std::execution::receiver Receiver>
+struct example_state
+{
+    struct on_cancel
+    {
+        example_state& state;
+        auto operator()() const noexcept {
+            this->state.stop();
+        }
+    };
+    using operation_state_concept = std::execution::operation_state_t;
+    using env = std::execution::env_of_t<Receiver>;
+    using token = std::execution::stop_callback_of_t<env>;
+    using callback = std::execution::stop_callback_of_t<token, on_cancel>;
+    
+    std::remove_cvref_t<Receiver> receiver;
+    std::optional<callback>       cancel{};
+    std::atomic<std::size_t>      outstanding{};
+    
+    auto start() & noexcept {
+        this->outstanding += 2u;
+        this->cancel.emplace(
+            std::execution::get_stop_token(this->receiver),
+            on_cancel{*this}
+        );
+        if (this->outstanding != 2u)
+           std::execution::set_stopped(std::move(this->receiver));
+        else {
+           register_work(this);
+           if (this->outstanding == 0u)
+               std::execution::set_value(std::move(this->receiver));
+        }
+    }
+    auto stop() {
+        unregister_work(this);
+        if (--this->outstanding == 0u)
+            std::execution::set_stopped(std::move(this->receiver));
+    }
+    auto complete() {
+        if (this->outstanding == 2u) {
+            this->cancel.reset();
+            std::execution::set_value(std::move(this->receiver));
+        }
+    }
+    };    
+``` 
+</details>
 </details>
 <details>
 <summary><code>unstoppable_token&lt;Token&gt;</code> TODO</summary>
