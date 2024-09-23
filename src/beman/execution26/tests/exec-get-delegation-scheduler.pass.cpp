@@ -28,10 +28,7 @@ namespace
         }
 
         template <typename Tag>
-        auto query(test_std::get_completion_scheduler_t<Tag> const&) const noexcept
-        {
-            return scheduler{this->value};
-        }
+        auto query(test_std::get_completion_scheduler_t<Tag> const&) const noexcept;
     };
 
     struct scheduler
@@ -53,6 +50,13 @@ namespace
         auto schedule() noexcept -> sender { return {this->value}; }
         auto operator== (scheduler const&) const -> bool = default;
     }; 
+        
+    template <bool Noexcept, typename Scheduler>
+        template <typename Tag>
+    auto env<Noexcept, Scheduler>::query(test_std::get_completion_scheduler_t<Tag> const&) const noexcept
+    {
+        return scheduler{this->value};
+    }
 
     template <bool Expect, typename Scheduler = void>
     auto test_get_delegation_scheduler(auto&& env) -> void
