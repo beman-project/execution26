@@ -252,7 +252,7 @@ Required members for <code>_Token_</code>:
 - <code>std::copyable&lt;_Token_&gt;</code>
 - <code>std::equality_comparable&lt;_Token_&gt;</code>
 - <code>std::swapable&lt;_Token_&gt;</code>
-<div>
+<blockquote>
 <details>
 <summary>Example: concept use</summary>
 <div>
@@ -266,7 +266,7 @@ static_assert(std::execution::unstoppable_token<std::execution::inline_stop_toke
 </details>
 <details>
 <summary>Example: polling</summary>
-<div>
+<blockquote>
 This example shows a sketch of using a <code>stoppable_token&lt;_Token_&gt;</code> to cancel an active operation. The computation in this example is represented as `sleep_for`.
 
 ```c++
@@ -278,11 +278,11 @@ void compute(std::stoppable_token auto token)
     }
 }
 ```
-</div>
+</blockquote>
 </details>
 <details>
 <summary>Example: inactive</summary>
-<div>
+<blockquote>
 This example shows how an <code><a href=‘#operation-state’>operation_state</a></code> can use the <code>callback_type</code> together with a <code>_token_</code> to get notified when cancellation is requested.
     
 ```c++
@@ -319,7 +319,7 @@ struct example_state
     }
     auto stop() {
         unregister_work(this);
-        if (—this->outstanding == 0u)
+        if (--this->outstanding == 0u)
             std::execution::set_stopped(std::move(this->receiver));
     }
     auto complete() {
@@ -330,14 +330,14 @@ struct example_state
     }
 };    
 ```
-</div>
+</blockquote>
 </details>
-</div>
+</blockquote>
 </details>
 <details>
 <summary><code>unstoppable_token&lt;_Token_&gt;</code></summary>
 The concept <code>unstoppable_token&lt;Token&gt;</code> is modeled by a <code>_Token_</code> if <code>stoppable_token&lt;_Token_&gt;</code> is true and it can statically be determined that both <code>_token_.stop_requested()</code> and <code>_token_.stop_possible()</code> are `constexpr` epxressions yielding `false`. This concept is primarily used to avoid extra work when using stop tokens which will never indicate that cancellations are requested.
-<div>
+<blockquote>
 <details>
 <summary>Example</summary>
 The concept yields `true` for the <code><a href=‘#never-stop-token’>std::execution::never_stop_token</a></code>:
@@ -348,21 +348,43 @@ static_assert(not std::execution::unstoppable_token<std::execution::stop_token>)
 static_assert(not std::execution::unstoppable_token<std::execution::inline_stop_token>);
 ```
 </details>
-</div>
+</blockquote>
 </details>
 
 ## Queries
+The queries are used to obtain properties associated with and object. Except <code><a href=‘#forwarding-query’>forwarding_query</a></code> and <code><a href=‘#get-env’>get_env</a></code> the queries work on <a href=‘#environment’>environments</a>.
 
-- <code>forwarding_query(<i>query</i>) -> bool</code>
-- <code>get_env(<i>queryable</i>)</code>
-- <code>get_allocator(<i>env</i>)</code>
-- <code>get_completion_scheduler(<i>env</i>)</code>
-- <code>get_completion_signatures(<i>sender</i>, <i>env</i>)</code>
-- <code>get_delegation_scheduler(<i>env</i>)</code>
-- <code>get_domain(<i>env</i>)</code>
-- <code>get_forward_progress_guarantee(<i>env</i>)</code>
-- <code>get_scheduler(<i>env</i>)</code>
-- <code>get_stop_token(<i>env</i>)</code>
+<details>
+<summary><code>forwarding_query(<i>query</i>) -> bool</code></summary>
+</details>
+<details>
+<summary><code>get_env(<i>queryable</i>)</code></summary>
+</details>
+<details>
+<summary><code>get_allocator(<i>env</i>)</code></summary>
+</details>
+<details>
+<summary><code>get_completion_scheduler(<i>env</i>)</code></summary>
+</details>
+<details>
+<summary><code>get_completion_signatures(<i>sender</i>, <i>env</i>)</code></summary>
+</details>
+<details>
+<summary><code>get_delegation_scheduler(<i>env</i>)</code></summary>
+</details>
+<details>
+<summary><code>get_domain(<i>env</i>)</code>
+</summary>
+</details>
+<details>
+<summary><code>get_forward_progress_guarantee(<i>env</i>)</code></summary>
+</details>
+<details>
+<summary><code>get_scheduler(<i>env</i>)</code></summary>
+</details>
+<details>
+<summary><code>get_stop_token(<i>env</i>)</code></summary>
+</details>
 
 ### Customization Point Objects
 
