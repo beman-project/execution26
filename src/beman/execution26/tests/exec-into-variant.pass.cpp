@@ -66,7 +66,7 @@ namespace
                 test_std::get_completion_signatures(sender, test_std::empty_env{});
                 typename test_std::value_types_of_t<std::decay_t<decltype(sender)>, test_std::empty_env>;
                 test_std::into_variant(sender);
-                test_std::into_variant(sender).connect(receiver{});
+                test_std::connect(test_std::into_variant(sender), receiver{});
                 { test_std::connect(test_std::into_variant(sender), receiver{}) } -> test_std::operation_state;
             });
             static_assert(std::same_as<
@@ -76,7 +76,7 @@ namespace
             bool called{false};
             auto op{test_std::connect(test_std::into_variant(sender), receiver{&called})};
             assert(not called);
-            op.start();
+            test_std::start(op);
             assert(called);
         }
     }
