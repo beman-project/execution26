@@ -871,32 +871,32 @@ namespace
         {
             test_detail::basic_state<sender, receiver> op(sender{}, receiver{});
             basic_receiver br{&op};
-            static_assert(not requires{ std::move(br).set_value(); });
-            static_assert(not requires{ std::move(br).set_value(42, 1); });
-            static_assert(requires{ std::move(br).set_value(42); });
-            static_assert(noexcept(std::move(br).set_value(42)));
+            static_assert(not requires{ test_std::set_value(std::move(br)); });
+            static_assert(not requires{ test_std::set_value(std::move(br), 42, 1); });
+            static_assert(requires{ test_std::set_value(std::move(br), 42); });
+            static_assert(noexcept(test_std::set_value(std::move(br), 42)));
             assert(op.receiver.value == 0);
-            std::move(br).set_value(42);
+            test_std::set_value(std::move(br), 42);
             assert(op.receiver.value == 42);
         }
         {
             test_detail::basic_state<sender, receiver> op(sender{}, receiver{});
             basic_receiver br{&op};
-            static_assert(not requires{ std::move(br).set_error(); });
-            static_assert(not requires{ std::move(br).set_error(0); });
-            static_assert(requires{ std::move(br).set_error(err{42}); });
-            static_assert(noexcept(std::move(br).set_error(err{42})));
+            static_assert(not requires{ test_std::set_error(std::move(br)); });
+            static_assert(not requires{ test_std::set_error(std::move(br), 0); });
+            static_assert(requires{ test_std::set_error(std::move(br), err{42}); });
+            static_assert(noexcept(test_std::set_error(std::move(br), err{42})));
             assert(op.receiver.error == err{});
-            std::move(br).set_error(err{42});
+            test_std::set_error(std::move(br), err{42});
             assert(op.receiver.error == err{42});
         }
         {
             test_detail::basic_state<sender, receiver> op(sender{}, receiver{});
             basic_receiver br{&op};
-            static_assert(requires{ std::move(br).set_stopped(); });
-            static_assert(noexcept(std::move(br).set_stopped()));
+            static_assert(requires{ test_std::set_stopped(std::move(br)); });
+            static_assert(noexcept(test_std::set_stopped(std::move(br))));
             assert(op.receiver.stopped == false);
-            std::move(br).set_stopped();
+            test_std::set_stopped(std::move(br));
             assert(op.receiver.stopped == true);
         }
         {
@@ -1100,7 +1100,7 @@ namespace
             sender0{tag{}, &data}}, receiver{}};
         static_assert(test_std::operation_state<decltype(op)>);
         static_assert(requires{ typename decltype(op)::tag_t; });
-        op.start();
+        test_std::start(op);
         assert(data == 4);
     }
 
@@ -1438,7 +1438,7 @@ namespace
         bool has_both_properties{false};
         assert(not has_both_properties);
         auto we_op{test_std::connect(we_sender, write_env_receiver{&has_both_properties})};
-        we_op.start();
+        test_std::start(we_op);
         assert(has_both_properties);
         test_std::detail::use(we_op);
     }

@@ -11,6 +11,8 @@
 #include <beman/execution26/detail/product_type.hpp>
 #include <beman/execution26/detail/sender.hpp>
 #include <beman/execution26/detail/sender_decompose.hpp>
+#include <beman/execution26/detail/connect.hpp>
+#include <beman/execution26/detail/get_completion_signatures.hpp>
 #include <utility>
 
 // ----------------------------------------------------------------------------
@@ -21,6 +23,8 @@ namespace beman::execution26::detail
     struct basic_sender
         : ::beman::execution26::detail::product_type<Tag, Data, Child...>
     {
+        friend struct ::beman::execution26::connect_t;
+        friend struct ::beman::execution26::get_completion_signatures_t;
         using sender_concept = ::beman::execution26::sender_t;
         using indices_for = ::std::index_sequence_for<Child...>;
 
@@ -33,6 +37,7 @@ namespace beman::execution26::detail
             }, data.children);
         }
 
+    private:
         template <typename Receiver>
             requires (not ::beman::execution26::receiver<Receiver>)
         auto connect(Receiver receiver)

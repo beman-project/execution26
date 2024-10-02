@@ -12,6 +12,7 @@
 #include <beman/execution26/detail/impls_for.hpp>
 #include <beman/execution26/detail/connect_all_result.hpp>
 #include <beman/execution26/detail/valid_specialization.hpp>
+#include <beman/execution26/detail/start.hpp>
 #include <functional>
 #include <utility>
 
@@ -26,6 +27,7 @@ namespace beman::execution26::detail
     struct basic_operation
         : ::beman::execution26::detail::basic_state<Sender, Receiver>
     {
+        friend struct ::beman::execution26::start_t;
         using operation_state_concept = ::beman::execution26::operation_state_t;
         using tag_t = ::beman::execution26::tag_of_t<Sender>;
 
@@ -45,6 +47,7 @@ namespace beman::execution26::detail
         {
         }
 
+    private:
         auto start() & noexcept -> void
         {
             ::std::invoke([this]<::std::size_t... I>(::std::index_sequence<I...>)

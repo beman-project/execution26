@@ -13,6 +13,10 @@
 #include <beman/execution26/detail/tag_of_t.hpp>
 #include <beman/execution26/detail/state_type.hpp>
 #include <beman/execution26/detail/valid_specialization.hpp>
+#include <beman/execution26/detail/get_env.hpp>
+#include <beman/execution26/detail/set_error.hpp>
+#include <beman/execution26/detail/set_stopped.hpp>
+#include <beman/execution26/detail/set_value.hpp>
 #include <utility>
 
 // ----------------------------------------------------------------------------
@@ -25,11 +29,18 @@ namespace beman::execution26::detail
         >
     struct basic_receiver
     {
+        friend struct ::beman::execution26::get_env_t;
+        friend struct ::beman::execution26::set_error_t;
+        friend struct ::beman::execution26::set_stopped_t;
+        friend struct ::beman::execution26::set_value_t;
+
         using receiver_concept = ::beman::execution26::receiver_t;
         using tag_t = ::beman::execution26::tag_of_t<Sender>;
         using state_t = ::beman::execution26::detail::state_type<Sender, Receiver>;
         static constexpr const auto& complete = ::beman::execution26::detail::impls_for<tag_t>::complete;
+        ::beman::execution26::detail::basic_state<Sender, Receiver>* op{};
 
+    private:
         template <typename... Args>
         auto set_value(Args&&... args) && noexcept -> void
             requires ::beman::execution26::detail::callable<
@@ -76,8 +87,6 @@ namespace beman::execution26::detail
             return ::beman::execution26::detail::impls_for<tag_t>
                 ::get_env(Index(), this->op->state, this->op->receiver);
         }
-
-        ::beman::execution26::detail::basic_state<Sender, Receiver>* op{};
     };  
 }
 
