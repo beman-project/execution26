@@ -68,32 +68,14 @@ namespace beman::execution26::detail
             return this->element_get<J>(::std::move(*this));
         }
 
-        template <::std::size_t J, typename Allocator>
-        auto to_state_element(Allocator&& alloc) && -> decltype(auto)
+        template <::std::size_t J, typename Allocator, typename Self>
+        static auto make_element(Allocator&& alloc, Self&& self) -> decltype(auto)
         {
-            using type = ::std::remove_cvref_t<decltype(this->element_get<J>(::std::move(*this)))>;
+            using type = ::std::remove_cvref_t<decltype(std::forward<Self>(self).template element_get<J>(std::forward<Self>(self)))>;
             if constexpr (::std::uses_allocator_v<type, Allocator>)
-                return ::std::make_obj_using_allocator<type>(alloc, this->element_get<J>(::std::move(*this)));
+                return ::std::make_obj_using_allocator<type>(alloc, std::forward<Self>(self).template element_get<J>(std::forward<Self>(self)));
             else
-                return this->element_get<J>(::std::move(*this));
-        }
-        template <::std::size_t J, typename Allocator>
-        auto to_state_element(Allocator&& alloc) const& -> decltype(auto)
-        {
-            using type = ::std::remove_cvref_t<decltype(this->element_get<J>(::std::move(*this)))>;
-            if constexpr (::std::uses_allocator_v<type, Allocator>)
-                return ::std::make_obj_using_allocator<type>(alloc, this->element_get<J>(*this));
-            else
-                return this->element_get<J>(*this);
-        }
-        template <::std::size_t J, typename Allocator>
-        auto to_state_element(Allocator&& alloc) & -> decltype(auto)
-        {
-            using type = ::std::remove_cvref_t<decltype(this->element_get<J>(::std::move(*this)))>;
-            if constexpr (::std::uses_allocator_v<type, Allocator>)
-                return ::std::make_obj_using_allocator<type>(alloc, this->element_get<J>(*this));
-            else
-                return this->element_get<J>(*this);
+                return std::forward<Self>(self).template element_get<J>(std::forward<Self>(self));
         }
 
         auto operator== (product_type_base const&) const -> bool = default;
@@ -103,35 +85,21 @@ namespace beman::execution26::detail
     struct product_type
         : ::beman::execution26::detail::product_type_base<::std::index_sequence_for<T...>, T...>
     {
-        template <typename Allocator, std::size_t... I>
-        auto to_state(Allocator&& allocator, std::index_sequence<I...>) && -> product_type
+        template <typename Allocator, typename Product, std::size_t... I>
+        static auto make_from(Allocator&& allocator, Product&& product, std::index_sequence<I...>)
+            -> product_type
         {
-            return { ::std::move(*this).template to_state<I>(allocator)... };
+            return { ::std::forward<Product>(product).template make_element<I>(allocator, ::std::forward<Product>(product))... };
         }
-        template <typename Allocator, std::size_t... I>
-        auto to_state(Allocator&& allocator) && -> product_type
+
+        template <typename Allocator, typename Product>
+        static auto make_from(Allocator&& allocator, Product&& product) -> product_type
         {
-            return this->to_state(allocator, ::std::index_sequence_for<T...>());
-        }
-        template <typename Allocator, std::size_t... I>
-        auto to_state(Allocator&& allocator, std::index_sequence<I...>) const & -> product_type
-        {
-            return { ((*this).template to_state_element<I>(std::forward<Allocator>(allocator)))... };
-        }
-        template <typename Allocator, std::size_t... I>
-        auto to_state(Allocator&& allocator) const & -> product_type
-        {
-            return this->to_state(allocator, std::index_sequence_for<T...>());
-        }
-        template <typename Allocator, std::size_t... I>
-        auto to_state(Allocator&& allocator, std::index_sequence<I...>) & -> product_type
-        {
-            return { (*this).template to_state_element<I>(allocator)... };
-        }
-        template <typename Allocator>
-        auto to_state(Allocator&& allocator) & -> product_type
-        {
-            return this->to_state(allocator, ::std::index_sequence_for<T...>());
+            return std::forward<Product>(product).make_from(
+                ::std::forward<Allocator>(allocator),
+                ::std::forward<Product>(product),
+                ::std::index_sequence_for<T...>()
+            );
         }
     };
     template <typename... T>

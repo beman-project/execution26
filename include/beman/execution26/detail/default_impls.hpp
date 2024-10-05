@@ -57,7 +57,10 @@ namespace beman::execution26::detail
                     auto alloc = ::beman::execution26::get_allocator(::beman::execution26::get_env(receiver));
                     if constexpr (decltype(::beman::execution26::detail::is_product_type(decompose.data))())
                     {
-                        return ::beman::execution26::detail::forward_like<Sender>(decompose.data).to_state(alloc);
+                        return decompose.data.make_from(
+                            alloc,
+                            ::beman::execution26::detail::forward_like<Sender>(decompose.data)
+                        );
                     }
                     else
                     {
