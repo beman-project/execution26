@@ -8,10 +8,13 @@
 #include <beman/execution26/detail/empty_env.hpp>
 #include <beman/execution26/detail/forward_like.hpp>
 #include <beman/execution26/detail/fwd_env.hpp>
+#include <beman/execution26/detail/get_allocator.hpp>
 #include <beman/execution26/detail/get_env.hpp>
+#include <beman/execution26/detail/product_type.hpp>
 #include <beman/execution26/detail/sender_decompose.hpp>
 #include <beman/execution26/detail/start.hpp>
 
+#include <memory>
 #include <utility>
 
 // ----------------------------------------------------------------------------
@@ -38,10 +41,36 @@ namespace beman::execution26::detail
                 );
             };
         static constexpr auto get_state
-            = []<typename Sender, typename Receiver>(Sender&& sender, Receiver&) noexcept -> decltype(auto)
+            = []<typename Sender, typename Receiver>(Sender&& sender, Receiver& receiver) noexcept -> decltype(auto)
             {
                 auto&& decompose = ::beman::execution26::detail::get_sender_data(::std::forward<Sender>(sender));
-                return ::beman::execution26::detail::forward_like<Sender>(decompose.data);
+                using type = std::remove_cvref_t<decltype(decompose.data)>;
+
+                if constexpr (requires{
+                                ::beman::execution26::get_allocator(::beman::execution26::get_env(receiver));
+                              }
+                              //-dk:TODO only take this branch if uses_allocator is also true
+                              //&& ::std::uses_allocator_v<type,
+                              //  decltype(::beman::execution26::get_allocator(::beman::execution26::get_env(receiver)))>
+                              )
+                {
+                    auto alloc = ::beman::execution26::get_allocator(::beman::execution26::get_env(receiver));
+                    if constexpr (decltype(::beman::execution26::detail::is_product_type(decompose.data))())
+                    {
+                        return ::beman::execution26::detail::forward_like<Sender>(decompose.data).to_state(alloc);
+                    }
+                    else
+                    {
+                        return ::std::make_obj_using_allocator<type>(
+                            alloc,
+                            ::beman::execution26::detail::forward_like<Sender>(decompose.data)
+                        );
+                    }
+                }
+                else
+                {
+                    return ::beman::execution26::detail::forward_like<Sender>(decompose.data);
+                }
             };
         static constexpr auto start
             = [](auto&, auto&, auto&... ops) noexcept -> void

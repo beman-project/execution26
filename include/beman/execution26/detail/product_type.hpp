@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_PRODUCT_TYPE
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_PRODUCT_TYPE
 
+#include <memory>
 #include <cstddef>
 
 // ----------------------------------------------------------------------------
@@ -67,6 +68,34 @@ namespace beman::execution26::detail
             return this->element_get<J>(::std::move(*this));
         }
 
+        template <::std::size_t J, typename Allocator>
+        auto to_state_element(Allocator&& alloc) && -> decltype(auto)
+        {
+            using type = ::std::remove_cvref_t<decltype(this->element_get<J>(::std::move(*this)))>;
+            if constexpr (::std::uses_allocator_v<type, Allocator>)
+                return ::std::make_obj_using_allocator<type>(alloc, this->element_get<J>(::std::move(*this)));
+            else
+                return this->element_get<J>(::std::move(*this));
+        }
+        template <::std::size_t J, typename Allocator>
+        auto to_state_element(Allocator&& alloc) const& -> decltype(auto)
+        {
+            using type = ::std::remove_cvref_t<decltype(this->element_get<J>(::std::move(*this)))>;
+            if constexpr (::std::uses_allocator_v<type, Allocator>)
+                return ::std::make_obj_using_allocator<type>(alloc, this->element_get<J>(*this));
+            else
+                return this->element_get<J>(*this);
+        }
+        template <::std::size_t J, typename Allocator>
+        auto to_state_element(Allocator&& alloc) & -> decltype(auto)
+        {
+            using type = ::std::remove_cvref_t<decltype(this->element_get<J>(::std::move(*this)))>;
+            if constexpr (::std::uses_allocator_v<type, Allocator>)
+                return ::std::make_obj_using_allocator<type>(alloc, this->element_get<J>(*this));
+            else
+                return this->element_get<J>(*this);
+        }
+
         auto operator== (product_type_base const&) const -> bool = default;
     };
 
@@ -74,9 +103,44 @@ namespace beman::execution26::detail
     struct product_type
         : ::beman::execution26::detail::product_type_base<::std::index_sequence_for<T...>, T...>
     {
+        template <typename Allocator, std::size_t... I>
+        auto to_state(Allocator&& allocator, std::index_sequence<I...>) && -> product_type
+        {
+            return { ::std::move(*this).template to_state<I>(allocator)... };
+        }
+        template <typename Allocator, std::size_t... I>
+        auto to_state(Allocator&& allocator) && -> product_type
+        {
+            return this->to_state(allocator, ::std::index_sequence_for<T...>());
+        }
+        template <typename Allocator, std::size_t... I>
+        auto to_state(Allocator&& allocator, std::index_sequence<I...>) const & -> product_type
+        {
+            return { ((*this).template to_state_element<I>(std::forward<Allocator>(allocator)))... };
+        }
+        template <typename Allocator, std::size_t... I>
+        auto to_state(Allocator&& allocator) const & -> product_type
+        {
+            return this->to_state(allocator, std::index_sequence_for<T...>());
+        }
+        template <typename Allocator, std::size_t... I>
+        auto to_state(Allocator&& allocator, std::index_sequence<I...>) & -> product_type
+        {
+            return { (*this).template to_state_element<I>(allocator)... };
+        }
+        template <typename Allocator>
+        auto to_state(Allocator&& allocator) & -> product_type
+        {
+            return this->to_state(allocator, ::std::index_sequence_for<T...>());
+        }
     };
     template <typename... T>
     product_type(T&&...) -> product_type<::std::decay_t<T>...>;
+
+    template <typename T>
+    constexpr auto is_product_type(T const&) -> ::std::false_type { return {}; }
+    template <typename... T>
+    constexpr auto is_product_type(::beman::execution26::detail::product_type<T...> const&) -> ::std::true_type { return {}; }
 }
 
 namespace std

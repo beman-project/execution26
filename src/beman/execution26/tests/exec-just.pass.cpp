@@ -5,7 +5,10 @@
 #include <beman/execution26/detail/empty_env.hpp>
 #include <beman/execution26/detail/sender.hpp>
 #include <beman/execution26/detail/sender_in.hpp>
+#include <beman/execution26/detail/sync_wait.hpp>
 #include <test/execution.hpp>
+#include <string>
+#include <memory_resource>
 
 // ----------------------------------------------------------------------------
 
@@ -71,9 +74,9 @@ namespace
         auto set_value(A&&... a) && noexcept -> void
         {
             *this->called = true;
-	    [this, &a...]<std::size_t... I>(std::index_sequence<I...>){
-                assert(((this->expect.template get<I>() == a) && ...));
-	    }(std::index_sequence_for<T...>{});
+	        [this, &a...]<std::size_t... I>(std::index_sequence<I...>){
+                    assert(((this->expect.template get<I>() == a) && ...));
+	        }(std::index_sequence_for<T...>{});
         }
     };
     template <typename... T>
@@ -175,12 +178,63 @@ namespace
 
         test_just_stopped();
     }
+
+    struct memory_env
+    {
+        std::pmr::polymorphic_allocator<> allocator;
+        auto query(test_std::get_allocator_t const&) const noexcept {
+            return allocator;
+        }
+    };
+    struct memory_receiver
+    {
+        using receiver_concept = test_std::receiver_t;
+        std::pmr::polymorphic_allocator<> allocator;
+        auto get_env() const noexcept {
+            return memory_env{this->allocator};
+        }
+
+        auto set_error(auto&&) && noexcept -> void {}
+        auto set_stopped() && noexcept -> void {}
+        auto set_value(auto&&...) && noexcept -> void {}
+    };
+    struct counting_resource
+        : std::pmr::memory_resource
+    {
+        std::size_t count{};
+        auto do_allocate(std::size_t size, std::size_t) -> void* override { ++this->count; return operator new(size); }
+        auto do_deallocate(void* p, std::size_t, std::size_t) -> void override { operator delete(p); }
+        auto do_is_equal(std::pmr::memory_resource const& other) const noexcept -> bool override { return this == &other; }
+    };
+    auto test_just_allocator() -> void
+    {
+        std::pmr::string str("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+        auto sender{test_std::just(str)};
+        static_assert(test_std::sender<decltype(sender)>);
+        counting_resource resource;
+        memory_receiver receiver{&resource};
+
+        assert(resource.count == 0u);
+        auto copy(std::make_obj_using_allocator<std::pmr::string>(std::pmr::polymorphic_allocator<>(&resource), str));
+        assert(resource.count == 1u);
+
+        auto env{test_std::get_env(receiver)};
+        auto alloc{test_std::get_allocator(env)};
+        test::use(alloc);
+
+        assert(resource.count == 1u);
+        auto state{test_std::connect(std::move(sender), memory_receiver{&resource})};
+        test::use(state);
+        assert(resource.count == 2u);
+        test::use(copy);
+    }
 }
 
 auto main() -> int
 {
     test_just_constraints();
     test_just();
+    test_just_allocator();
     using type = test_detail::call_result_t<test_std::get_completion_signatures_t,
         decltype(test_std::just()), test_std::empty_env>;
 
