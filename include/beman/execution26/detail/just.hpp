@@ -14,6 +14,7 @@
 #include <beman/execution26/detail/decayed_typeof.hpp>
 #include <beman/execution26/detail/default_impls.hpp>
 #include <concepts>
+#include <memory>
 #include <utility>
 
 // ----------------------------------------------------------------------------

@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_PRODUCT_TYPE
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_PRODUCT_TYPE
 
+#include <memory>
 #include <cstddef>
 
 // ----------------------------------------------------------------------------
@@ -67,6 +68,16 @@ namespace beman::execution26::detail
             return this->element_get<J>(::std::move(*this));
         }
 
+        template <::std::size_t J, typename Allocator, typename Self>
+        static auto make_element(Allocator&& alloc, Self&& self) -> decltype(auto)
+        {
+            using type = ::std::remove_cvref_t<decltype(std::forward<Self>(self).template element_get<J>(std::forward<Self>(self)))>;
+            if constexpr (::std::uses_allocator_v<type, Allocator>)
+                return ::std::make_obj_using_allocator<type>(alloc, std::forward<Self>(self).template element_get<J>(std::forward<Self>(self)));
+            else
+                return std::forward<Self>(self).template element_get<J>(std::forward<Self>(self));
+        }
+
         auto operator== (product_type_base const&) const -> bool = default;
     };
 
@@ -74,9 +85,30 @@ namespace beman::execution26::detail
     struct product_type
         : ::beman::execution26::detail::product_type_base<::std::index_sequence_for<T...>, T...>
     {
+        template <typename Allocator, typename Product, std::size_t... I>
+        static auto make_from(Allocator&& allocator, Product&& product, std::index_sequence<I...>)
+            -> product_type
+        {
+            return { ::std::forward<Product>(product).template make_element<I>(allocator, ::std::forward<Product>(product))... };
+        }
+
+        template <typename Allocator, typename Product>
+        static auto make_from(Allocator&& allocator, Product&& product) -> product_type
+        {
+            return std::forward<Product>(product).make_from(
+                ::std::forward<Allocator>(allocator),
+                ::std::forward<Product>(product),
+                ::std::index_sequence_for<T...>()
+            );
+        }
     };
     template <typename... T>
     product_type(T&&...) -> product_type<::std::decay_t<T>...>;
+
+    template <typename T>
+    constexpr auto is_product_type(T const&) -> ::std::false_type { return {}; }
+    template <typename... T>
+    constexpr auto is_product_type(::beman::execution26::detail::product_type<T...> const&) -> ::std::true_type { return {}; }
 }
 
 namespace std

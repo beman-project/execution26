@@ -408,26 +408,26 @@ The queries are used to obtain properties associated with and object. Except <co
 
 - `bulk`
 - `continues_on`
-- `into_variant`
-- `let_error`
-- `let_stopped`
-- `let_value`
+- <code>into_variant(<i>sender</i>) -> <i>sender-of</i>&lt;set_value_t(std::variant&lt;T...&gt;)&gt;</code>`
+- <code>let_error(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code>
+- <code>let_stopped(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code>
+- <code>let_value(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code>
 - `on`
 - `scheduler_from`
 - `split`
 - `starts_on`
 - `stopped_as_error`
 - `stopped_as_optional`
-- `then`
-- `upon_error()`
-- `upon_stopped()`
-- `when_all()`
+- <code>then(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code>
+- <code>upon_error(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code>
+- <code>upon_stopped(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code>
+- <code>when_all(<i>sender</i>...) -> <i>sender</i></code>
 - `when_all_with_variant()`
 - `write_env()`
 
 ### Sender Consumers
 
-- `sync_wait()`
+- <code>sync_wait(<i>sender</i>) -> std::optional&lt;std::tuple&lt;T...&gt;&gt;</code>
 
 ## Helpers
 
