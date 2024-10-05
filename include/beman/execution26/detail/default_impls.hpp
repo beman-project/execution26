@@ -48,11 +48,7 @@ namespace beman::execution26::detail
 
                 if constexpr (requires{
                                 ::beman::execution26::get_allocator(::beman::execution26::get_env(receiver));
-                              }
-                              //-dk:TODO only take this branch if uses_allocator is also true
-                              //&& ::std::uses_allocator_v<type,
-                              //  decltype(::beman::execution26::get_allocator(::beman::execution26::get_env(receiver)))>
-                              )
+                              })
                 {
                     auto alloc = ::beman::execution26::get_allocator(::beman::execution26::get_env(receiver));
                     if constexpr (decltype(::beman::execution26::detail::is_product_type(decompose.data))())

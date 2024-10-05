@@ -8,6 +8,7 @@
 #include <beman/execution26/detail/sender_adaptor_closure.hpp>
 #include <beman/execution26/detail/sender_decompose.hpp>
 #include <beman/execution26/detail/product_type.hpp>
+#include <beman/execution26/detail/forward_like.hpp>
 #include <type_traits>
 #include <utility>
 
@@ -21,20 +22,21 @@ namespace beman::execution26::detail
             ::std::decay_t<Adaptor>, ::std::decay_t<T>...>
         , ::beman::execution26::sender_adaptor_closure<sender_adaptor<Adaptor, T...>>
     {
-        template <::beman::execution26::sender Sender>
-        static auto apply(Sender&& sender, auto&& self)
+        template <::beman::execution26::sender Sender, typename Self>
+        static auto apply(Sender&& sender, Self&& self)
         {
             return [&self, &sender]<::std::size_t... I>(::std::index_sequence<I...>){
-                return (self.template get<0>())(
+                auto&& fun(self.template get<0>());
+                return fun(
                     ::std::forward<Sender>(sender),
-                    self.template get<I + 1>()...
+                    ::beman::execution26::detail::forward_like<Self>(self.template get<I + 1>())...
                 );
             }(::std::make_index_sequence<sender_adaptor::size() - 1u>{});
         }
         template <::beman::execution26::sender Sender>
         auto operator()(Sender&& sender)
         {
-            return apply(::std::forward<Sender>(sender), *this);
+            return apply(::std::forward<Sender>(sender), ::std::move(*this));
         }
         template <::beman::execution26::sender Sender>
         auto operator()(Sender&& sender) const

@@ -11,6 +11,7 @@
 #include <beman/execution26/detail/start.hpp>
 #include <beman/execution26/detail/sync_wait.hpp>
 #include <concepts>
+#include <memory_resource>
 #include <test/execution.hpp>
 
 // ----------------------------------------------------------------------------
@@ -179,6 +180,81 @@ namespace
             test_std::just_stopped() | test_std::upon_stopped([](){ return 17; })
         ));
     }
+
+    struct memory_env
+    {
+        std::pmr::polymorphic_allocator<> allocator;
+        auto query(test_std::get_allocator_t const&) const noexcept {
+            return allocator;
+        }
+    };
+    struct memory_receiver
+    {
+        using receiver_concept = test_std::receiver_t;
+        std::pmr::polymorphic_allocator<> allocator;
+        auto get_env() const noexcept {
+            return memory_env{this->allocator};
+        }
+
+        auto set_error(auto&&) && noexcept -> void {}
+        auto set_stopped() && noexcept -> void {}
+        auto set_value(auto&&...) && noexcept -> void {}
+    };
+    struct counting_resource
+        : std::pmr::memory_resource
+    {
+        std::size_t count{};
+        auto do_allocate(std::size_t size, std::size_t) -> void* override { ++this->count; return operator new(size); }
+        auto do_deallocate(void* p, std::size_t, std::size_t) -> void override { operator delete(p); }
+        auto do_is_equal(std::pmr::memory_resource const& other) const noexcept -> bool override { return this == &other; }
+    };
+
+    struct allocator_fun
+    {
+        using allocator_type = std::pmr::polymorphic_allocator<>;
+
+        std::pmr::polymorphic_allocator<> alloc;
+        std::byte*                        data{nullptr};
+
+        allocator_fun(std::pmr::polymorphic_allocator<> alloc)
+            : alloc(alloc)
+            , data(alloc.allocate(1))
+        {
+        }
+        allocator_fun(allocator_fun const&, std::pmr::polymorphic_allocator<> = {})
+        {
+        }
+        allocator_fun(allocator_fun&& other)
+            : alloc(other.alloc)
+            , data(std::exchange(other.data, nullptr))
+        {
+        }
+        allocator_fun(allocator_fun&& other, std::pmr::polymorphic_allocator<> alloc)
+            : alloc(alloc)
+            , data(alloc == other.alloc? std::exchange(other.data, nullptr): alloc.allocate(1))
+        {
+        }
+        ~allocator_fun()
+        {
+            if (this->data)
+                this->alloc.deallocate(this->data, 1u);
+        }
+        auto operator()(auto&&...) const {}
+    };
+
+    auto test_then_allocator() -> void
+    {
+        static_assert(std::uses_allocator_v<allocator_fun, std::pmr::polymorphic_allocator<>>);
+        counting_resource resource1{};
+        assert(resource1.count == 0u);
+        auto sender{test_std::just() | test_std::then(allocator_fun(&resource1))};
+        assert(resource1.count == 1u);
+
+        counting_resource resource2{};
+        assert(resource2.count == 0u);
+        auto state{test_std::connect(std::move(sender), memory_receiver{&resource2})};
+        assert(resource2.count == 1u);
+    }
 }
 
 auto main() -> int
@@ -195,4 +271,5 @@ auto main() -> int
     test_then_type();
     test_then_multi_type();
     test_then_value();
+    test_then_allocator();
 }
