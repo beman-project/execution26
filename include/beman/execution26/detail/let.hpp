@@ -189,10 +189,10 @@ namespace beman::execution26::detail
 
             struct state_t
             {
-                ::std::decay_t<decltype(fun)> fun;
-                env_t                         env;
-                args_t                        args;
-                ops_t                         ops2;
+                fun_t  fun;
+                env_t  env;
+                args_t args;
+                ops_t  ops2;
             };
             return state_t{
                 ::beman::execution26::detail::forward_like<Sender>(fun),
