@@ -3,9 +3,11 @@
 
 #include <beman/execution26/detail/let.hpp>
 #include <beman/execution26/detail/just.hpp>
+#include <beman/execution26/detail/then.hpp>
 #include <test/execution.hpp>
 #include <cstdlib>
 #include <concepts>
+#include <iostream>
 
 // ----------------------------------------------------------------------------
 
@@ -32,8 +34,9 @@ namespace
 
     auto test_let_value()
     {
-        auto s0{test_std::let_value(test_std::just(), []{})};
-        auto s1{test_std::just() | test_std::let_value([]{})};
+        auto s0{test_std::let_value(test_std::just(),
+            []{ return test_std::just() | test_std::then([]{ std::cout << ">>executing let_value sender<<\n"; }); })};
+        auto s1{test_std::just() | test_std::let_value([]{ return test_std::just(); })};
         static_assert(test_std::sender<decltype(s0)>);
         static_assert(test_std::sender<decltype(s1)>);
 
@@ -47,12 +50,20 @@ namespace
                 test_std::set_error_t(int),
                 test_std::set_stopped_t()
             >()
-            | test_std::let_value([](auto&&...){})
+            | test_std::let_value([](auto&&...){ return test_std::just(); })
         };
         static_assert(test_std::sender<decltype(s2)>);
 
-        auto state{test_std::connect(s2, receiver{})};
-        test_std::start(state);
+        auto state2{test_std::connect(s2, receiver{})};
+        test::use(state2);
+        test_std::start(state2);
+
+        auto state0{test_std::connect(s0, receiver{})};
+        test::use(state0);
+        test_std::start(state0);
+        auto state1{test_std::connect(s1, receiver{})};
+        test::use(state1);
+        test_std::start(state1);
     }
 }
 

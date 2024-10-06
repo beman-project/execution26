@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_LET
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_LET
 
+#include <beman/execution26/detail/connect.hpp>
 #include <beman/execution26/detail/set_error.hpp>
 #include <beman/execution26/detail/set_stopped.hpp>
 #include <beman/execution26/detail/set_value.hpp>
@@ -23,13 +24,32 @@
 #include <beman/execution26/detail/env_of_t.hpp>
 #include <beman/execution26/detail/meta_filter.hpp>
 #include <beman/execution26/detail/meta_transform.hpp>
+#include <beman/execution26/detail/meta_prepend.hpp>
+#include <beman/execution26/detail/meta_unique.hpp>
 #include <beman/execution26/detail/decayed_tuple.hpp>
+#include <beman/execution26/detail/type_list.hpp>
+#include <beman/execution26/detail/join_env.hpp>
+#include <beman/execution26/detail/fwd_env.hpp>
+#include <beman/execution26/detail/emplace_from.hpp>
 #include <concepts>
 #include <exception>
 #include <utility>
-#include <iostream> //-dk:TODO remove
+#include <variant>
+#include <type_traits>
 
 // ----------------------------------------------------------------------------
+
+namespace beman::execution26::detail::meta
+{
+    template <template <typename...> class, typename>
+    struct to;
+    template <template <typename...> class To, template <typename...> class From, typename... T>
+    struct to<To, From<T...>> {
+        using type = To<T...>;
+    };
+    template <template <typename...> class To, typename T>
+    using to_t = typename to<To, T>::type;
+}
 
 namespace beman::execution26::detail
 {
@@ -94,6 +114,35 @@ namespace beman::execution26::detail
             else
                 return ::beman::execution26::empty_env{};
         }
+
+        template <typename Receiver, typename Env>
+        struct let_receiver
+        {
+            using receiver_concept = ::beman::execution26::receiver_t;
+
+            Receiver& receiver;
+            Env       env;
+
+            auto get_env() const noexcept -> decltype(auto) {
+                return ::beman::execution26::detail::join_env(
+                    this->env, ::beman::execution26::detail::fwd_env(
+                        ::beman::execution26::get_env(this->receiver)
+                    )
+                );
+            }
+            template <typename Error>
+            auto set_error(Error&& error) && noexcept -> void {
+                ::beman::execution26::set_error(::std::move(this->receiver), ::std::forward<Error>(error));
+            }
+            auto set_stopped() && noexcept -> void {
+                ::beman::execution26::set_stopped(::std::move(this->receiver));
+            }
+            template <typename... Args>
+            auto set_value(Args&&... args) && noexcept -> void {
+                ::beman::execution26::set_value(::std::move(this->receiver), ::std::forward<Args>(args)...);
+            }
+        };
+
         template <typename>
         struct filter_pred: ::std::false_type {};
         template <typename... A>
@@ -103,40 +152,74 @@ namespace beman::execution26::detail
         struct to_tuple<C(A...)> {
             using type = ::beman::execution26::detail::decayed_tuple<A...>;
         };
+        template <typename T>
+        using to_tuple_t = typename to_tuple<T>::type;
+        template <typename Fun, typename Receiver, typename Env>
+        struct to_state {
+            template <typename Tuple>
+            using trans = decltype(
+                ::beman::execution26::connect(
+                    ::std::apply(::std::declval<Fun>(), ::std::declval<Tuple>()),
+                    ::std::declval<let_receiver<Receiver, Env>>()
+                )
+            );
+        };
 
         static constexpr auto get_state{[]<typename Sender, typename Receiver>(Sender&& sender, Receiver&&){
-            std::cout << "get_state x\n";
             auto& fun{sender.template get<1>()};
             auto& child{sender.template get<2>()};
 
+            using fun_t = decltype(fun);
             using child_t = ::std::remove_cvref_t<decltype(child)>;
+            using env_t = decltype(let_env(child));
             using sigs_t = ::beman::execution26::completion_signatures_of_t<child_t, ::beman::execution26::env_of_t<Receiver>>;
             using comp_sigs_t = ::beman::execution26::detail::meta::filter<filter_pred, sigs_t>;
-            using tuples_t = ::beman::execution26::detail::meta::transform<to_tuple, comp_sigs_t>;
-            static_assert(std::same_as<void, tuples_t>);
+            using type_list_t = ::beman::execution26::detail::meta::to_t<::std::variant, comp_sigs_t>;
+            using tuples_t = ::beman::execution26::detail::meta::transform<to_tuple_t, type_list_t>;
+            using unique_t = ::beman::execution26::detail::meta::unique<tuples_t>;
+            using args_t = ::beman::execution26::detail::meta::prepend<std::monostate, unique_t>;
+            using ops_t = ::beman::execution26::detail::meta::prepend<
+                ::std::monostate,
+                ::beman::execution26::detail::meta::unique<
+                    ::beman::execution26::detail::meta::transform<
+                        to_state<fun_t, ::std::remove_cvref_t<Receiver>, env_t>::template trans, tuples_t
+                    >
+                >
+            >;
 
             struct state_t
             {
-                ::std::decay_t<decltype(fun)>  fun;
-                decltype(let_env(child)) env;
-                //-dk:TODO args
-                //-dk:TODO ops2
+                ::std::decay_t<decltype(fun)> fun;
+                env_t                         env;
+                args_t                        args;
+                ops_t                         ops2;
             };
             return state_t{
                 ::beman::execution26::detail::forward_like<Sender>(fun),
                 let_env(child)
             };
         }};
-        template <typename... Args>
-        static auto let_bind(auto& state, auto& receiver, Args&&... args)
+        template <typename Receiver, typename... Args>
+        static auto let_bind(auto& state, Receiver& receiver, Args&&... args)
         {
-            (void)state;
+            using args_t = ::beman::execution26::detail::decayed_tuple<Args...>;
+            auto mkop{[&]{
+                return ::beman::execution26::connect(
+                    ::std::apply(
+                        ::std::move(state.fun),
+                        state.args.template emplace<args_t>(::std::forward<Args>(args)...)
+                    ),
+                    let_receiver<Receiver, decltype(state.env)>{receiver, state.env}
+                );
+            }};
+            ::beman::execution26::start(
+                state.ops2.template emplace<decltype(mkop())>(beman::execution26::detail::emplace_from{mkop})
+            );
             Completion()(::std::move(receiver), ::std::forward<Args>(args)...);
         }
         static constexpr auto complete{[]<class Tag, class... Args>(auto, auto& state, auto& receiver, Tag, Args&&... args){
             if constexpr (::std::same_as<Tag, Completion>)
             {
-                std::cout << "let-complete specific\n";
                 try
                 {
                     let_bind(state, receiver, ::std::forward<Args>(args)...);
@@ -148,7 +231,6 @@ namespace beman::execution26::detail
             }
             else
             {
-                std::cout << "let-complete other\n";
                 Tag()(::std::move(receiver), ::std::forward<Args>(args)...);
             }
         }};

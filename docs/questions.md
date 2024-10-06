@@ -44,3 +44,4 @@ likely observable.
     required. As is, they are not because type_idenity_t ends up being used without
     argument.
 - [exec.then] p5 seems to miss a space betweend sendr and out_sndr
+- [exec.let] p9: Env is not defined; it is probably meant to be env_t
