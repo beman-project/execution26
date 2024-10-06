@@ -5,6 +5,7 @@
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_LET
 
 #include <beman/execution26/detail/connect.hpp>
+#include <beman/execution26/detail/completion_signatures_for.hpp>
 #include <beman/execution26/detail/set_error.hpp>
 #include <beman/execution26/detail/set_stopped.hpp>
 #include <beman/execution26/detail/set_value.hpp>
@@ -26,6 +27,7 @@
 #include <beman/execution26/detail/meta_transform.hpp>
 #include <beman/execution26/detail/meta_prepend.hpp>
 #include <beman/execution26/detail/meta_unique.hpp>
+#include <beman/execution26/detail/meta_combine.hpp>
 #include <beman/execution26/detail/decayed_tuple.hpp>
 #include <beman/execution26/detail/type_list.hpp>
 #include <beman/execution26/detail/join_env.hpp>
@@ -54,7 +56,7 @@ namespace beman::execution26::detail::meta
 namespace beman::execution26::detail
 {
     template <typename Completion>
-    struct let
+    struct let_t
     {
         template <::beman::execution26::detail::movable_value Fun>
         auto operator()(Fun&& fun) const
@@ -72,14 +74,9 @@ namespace beman::execution26::detail
                 ::beman::execution26::detail::make_sender(*this, ::std::forward<Fun>(fun), std::forward<Sender>(sender))
             );
         }
-    };
 
-    template <typename Completion>
-    struct impls_for<::beman::execution26::detail::let<Completion>>
-        : ::beman::execution26::detail::default_impls
-    {
         template <typename Sender>
-        static auto let_env(Sender&& sender)
+        static auto env(Sender&& sender)
         {
             if constexpr (requires{
                     ::beman::execution26::detail::sched_env(
@@ -114,6 +111,17 @@ namespace beman::execution26::detail
             else
                 return ::beman::execution26::empty_env{};
         }
+        template <typename Sender, typename Env>
+        static auto join_env(Sender&& sender, Env&& e) -> decltype(auto) {
+            return ::beman::execution26::detail::join_env(
+                env(sender), ::beman::execution26::detail::fwd_env(e));
+            }
+    };
+
+    template <typename Completion>
+    struct impls_for<::beman::execution26::detail::let_t<Completion>>
+        : ::beman::execution26::detail::default_impls
+    {
 
         template <typename Receiver, typename Env>
         struct let_receiver
@@ -171,7 +179,7 @@ namespace beman::execution26::detail
 
             using fun_t = ::std::remove_cvref_t<decltype(fun)>;
             using child_t = ::std::remove_cvref_t<decltype(child)>;
-            using env_t = decltype(let_env(child));
+            using env_t = decltype(::beman::execution26::detail::let_t<Completion>::env(child));
             using sigs_t = ::beman::execution26::completion_signatures_of_t<child_t, ::beman::execution26::env_of_t<Receiver>>;
             using comp_sigs_t = ::beman::execution26::detail::meta::filter<filter_pred, sigs_t>;
             using type_list_t = ::beman::execution26::detail::meta::to_t<::std::variant, comp_sigs_t>;
@@ -196,7 +204,7 @@ namespace beman::execution26::detail
             };
             return state_t{
                 ::beman::execution26::detail::forward_like<Sender>(fun),
-                let_env(child),
+                ::beman::execution26::detail::let_t<Completion>::env(child),
 		{},
 		{}
             };
@@ -217,7 +225,6 @@ namespace beman::execution26::detail
             ::beman::execution26::start(
                 state.ops2.template emplace<decltype(mkop())>(beman::execution26::detail::emplace_from{mkop})
             );
-            Completion()(::std::move(receiver), ::std::forward<Args>(args)...);
         }
         static constexpr auto complete{[]<class Tag, class... Args>(auto, auto& state, auto& receiver, Tag, Args&&... args){
             if constexpr (::std::same_as<Tag, Completion>)
@@ -237,13 +244,66 @@ namespace beman::execution26::detail
             }
         }};
     };
+
+    template <typename Completion, typename Fun, typename Sender, typename Env>
+    struct completion_signatures_for_impl<
+        ::beman::execution26::detail::basic_sender<
+            ::beman::execution26::detail::let_t<Completion>,
+            Fun,
+            Sender
+            >,
+        Env
+        >
+    {
+        template <typename> struct other_completion: ::std::true_type {};
+        template <typename...A> struct other_completion<Completion(A...)>: ::std::false_type {};
+        template <typename> struct matching_completion: ::std::false_type {};
+        template <typename...A> struct matching_completion<Completion(A...)>: ::std::true_type {};
+
+        template <typename> struct apply_decayed;
+        template <typename C, typename... A>
+        struct apply_decayed<C(A...)> {
+            using sender_type = ::beman::execution26::detail::call_result_t<Fun, ::std::decay_t<A>...>;
+        };
+        template <typename> struct get_completions;
+        template <template <typename...> class L, typename... C>
+        struct get_completions<L<C...>>
+        {
+            using type = ::beman::execution26::detail::meta::unique<
+                ::beman::execution26::detail::meta::combine<
+                    decltype(::beman::execution26::get_completion_signatures(
+                        std::declval<typename apply_decayed<C>::sender_type>(),
+                        std::declval<Env>()))...
+                    >
+                >;
+        };
+
+        using upstream_env = decltype(::beman::execution26::detail::let_t<Completion>::join_env(
+            ::std::declval<Sender>(), ::std::declval<Env>()
+        ));
+        using upstream_completions = decltype(::beman::execution26::get_completion_signatures(
+            ::std::declval<Sender>(), ::std::declval<upstream_env>()
+        ));
+        using other_completions = ::beman::execution26::detail::meta::filter<
+            other_completion,
+            upstream_completions
+        >;
+        using matching_completions = ::beman::execution26::detail::meta::filter<
+            matching_completion,
+            upstream_completions
+        >;
+        using type = ::beman::execution26::detail::meta::combine<
+            typename get_completions<matching_completions>::type,
+            other_completions
+        >;
+    };
 }
 
 namespace beman::execution26
 {
-    using let_error_t   = ::beman::execution26::detail::let<::beman::execution26::set_error_t>;
-    using let_stopped_t = ::beman::execution26::detail::let<::beman::execution26::set_stopped_t>;
-    using let_value_t   = ::beman::execution26::detail::let<::beman::execution26::set_value_t>;
+    using let_error_t   = ::beman::execution26::detail::let_t<::beman::execution26::set_error_t>;
+    using let_stopped_t = ::beman::execution26::detail::let_t<::beman::execution26::set_stopped_t>;
+    using let_value_t   = ::beman::execution26::detail::let_t<::beman::execution26::set_value_t>;
 
     inline constexpr ::beman::execution26::let_error_t   let_error{};
     inline constexpr ::beman::execution26::let_stopped_t let_stopped{};
