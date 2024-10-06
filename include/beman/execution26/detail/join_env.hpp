@@ -36,7 +36,7 @@ namespace beman::execution26::detail
                     env2.query(query, ::std::forward<Args>(args)...);
                 }
                 )
-        auto query(Query const& query, Args&&... args) -> decltype(auto)
+        auto query(Query const& query, Args&&... args) noexcept -> decltype(auto)
         {
             if constexpr (requires{ env1.query(query, ::std::forward<Args>(args)...); })
             {
@@ -57,7 +57,7 @@ namespace beman::execution26::detail
                     env2.query(query, ::std::forward<Args>(args)...);
                 }
                 )
-        auto query(Query const& query, Args&&... args) const -> decltype(auto)
+        auto query(Query const& query, Args&&... args) const noexcept -> decltype(auto)
         {
             if constexpr (requires{ env1.query(query, ::std::forward<Args>(args)...); })
             {
