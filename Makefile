@@ -74,7 +74,7 @@ ce:
 	@mkdir -p $(BUILD)
 	bin/mk-compiler-explorer.py $(BUILD)
 
-SOURCE_CMAKELISTS = src/beman/net29/CMakeLists.txt
+SOURCE_CMAKELISTS = src/beman/execution26/CMakeLists.txt
 update:
 	bin/update-cmake-headers.py $(SOURCE_CMAKELISTS)
 
