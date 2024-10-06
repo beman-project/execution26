@@ -6,6 +6,7 @@
 
 #include <beman/execution26/detail/call_result_t.hpp>
 #include <beman/execution26/detail/nothrow_callable.hpp>
+#include <type_traits>
 #include <utility>
 
 // ----------------------------------------------------------------------------
@@ -23,6 +24,8 @@ namespace beman::execution26::detail
             return ::std::move(fun)();
         }
     };
+    template <typename Fun>
+    emplace_from(Fun&&) -> emplace_from<::std::remove_cvref_t<Fun>>;
 }
 
 // ----------------------------------------------------------------------------
