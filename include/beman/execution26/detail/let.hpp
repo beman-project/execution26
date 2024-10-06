@@ -169,7 +169,7 @@ namespace beman::execution26::detail
             auto& fun{sender.template get<1>()};
             auto& child{sender.template get<2>()};
 
-            using fun_t = decltype(fun);
+            using fun_t = ::std::remove_cvref_t<decltype(fun)>;
             using child_t = ::std::remove_cvref_t<decltype(child)>;
             using env_t = decltype(let_env(child));
             using sigs_t = ::beman::execution26::completion_signatures_of_t<child_t, ::beman::execution26::env_of_t<Receiver>>;
@@ -196,7 +196,9 @@ namespace beman::execution26::detail
             };
             return state_t{
                 ::beman::execution26::detail::forward_like<Sender>(fun),
-                let_env(child)
+                let_env(child),
+		{},
+		{}
             };
         }};
         template <typename Receiver, typename... Args>
