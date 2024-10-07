@@ -44,6 +44,7 @@ namespace
         allocator_type           allocator{};
 
         template <typename F>
+            requires std::same_as<std::remove_cvref_t<F>, std::remove_cvref_t<Fun>>
         allocator_aware_fun(F&& fun): fun(std::forward<F>(fun)) {}
         allocator_aware_fun(allocator_aware_fun const& other, allocator_type allocator = {})
             : fun(other.fun)
