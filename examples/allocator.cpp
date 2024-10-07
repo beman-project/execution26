@@ -7,8 +7,6 @@
 
 namespace ex = beman::execution26;
 
-auto use(auto&&...) {}
-
 namespace
 {
     template <std::size_t Size>
