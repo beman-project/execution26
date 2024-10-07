@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <memory_resource>
 #include <span>
 #include <vector>
 
