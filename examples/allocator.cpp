@@ -43,7 +43,8 @@ namespace
         std::remove_cvref_t<Fun> fun;
         allocator_type           allocator{};
 
-        allocator_aware_fun(auto&& fun): fun(fun) {}
+        template <typename F>
+        allocator_aware_fun(F&& fun): fun(std::forward<F>(fun)) {}
         allocator_aware_fun(allocator_aware_fun const& other, allocator_type allocator = {})
             : fun(other.fun)
             , allocator(allocator)
