@@ -16,8 +16,8 @@ set(CMAKE_CXX_STANDARD 26)
 
 include(CTest)
 if(BUILD_TESTING)
-  #add_subdirectory(src/beman/${TARGET_NAME}/tests)
-  #enable_testing()
+  add_subdirectory(src/beman/${TARGET_NAME}/tests)
+  enable_testing()
 endif()
 
 add_subdirectory(src/beman/execution26)
