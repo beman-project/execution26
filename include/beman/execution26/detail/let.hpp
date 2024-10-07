@@ -5,6 +5,7 @@
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_LET
 
 #include <beman/execution26/detail/connect.hpp>
+#include <beman/execution26/detail/allocator_aware_move.hpp>
 #include <beman/execution26/detail/completion_signatures_for.hpp>
 #include <beman/execution26/detail/set_error.hpp>
 #include <beman/execution26/detail/set_stopped.hpp>
@@ -173,7 +174,7 @@ namespace beman::execution26::detail
             );
         };
 
-        static constexpr auto get_state{[]<typename Sender, typename Receiver>(Sender&& sender, Receiver&&){
+        static constexpr auto get_state{[]<typename Sender, typename Receiver>(Sender&& sender, Receiver&& receiver){
             auto& fun{sender.template get<1>()};
             auto& child{sender.template get<2>()};
 
@@ -203,10 +204,10 @@ namespace beman::execution26::detail
                 ops_t  ops2;
             };
             return state_t{
-                ::beman::execution26::detail::forward_like<Sender>(fun),
+                beman::execution26::detail::allocator_aware_move(::beman::execution26::detail::forward_like<Sender>(fun), receiver),
                 ::beman::execution26::detail::let_t<Completion>::env(child),
-		{},
-		{}
+                {},
+                {}
             };
         }};
         template <typename Receiver, typename... Args>
