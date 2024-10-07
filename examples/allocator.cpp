@@ -1,5 +1,5 @@
 #include <beman/execution26/execution.hpp>
-#include <print>
+#include <iostream>
 #include <string>
 #include <memory>
 #include <span>
@@ -19,7 +19,7 @@ namespace
         std::byte* next{+this->buffer};
 
         void* do_allocate(std::size_t size, std::size_t) override {
-            std::print("allocating resource={}, size={}\n", this->name, size);
+            std::cout << "allocating from=" << this->name << ", size=" << size << "\n";
             if (size <= std::size_t(std::distance(next, std::end(buffer)))) {
                 std::byte* rc{this->next};
                 this->next += size;
@@ -33,7 +33,6 @@ namespace
             return this == &other;
         }
     };
-    inline_resource<1024> default_resource{"default"};
 
     template <typename Fun>
     struct allocator_aware_fun
@@ -67,7 +66,7 @@ namespace
 
     struct allocator_env
     {
-        std::pmr::polymorphic_allocator<> allocator{&default_resource};
+        std::pmr::polymorphic_allocator<> allocator{};
         auto query(ex::get_allocator_t) const noexcept -> std::pmr::polymorphic_allocator<> {
             return this->allocator;
         }
@@ -83,7 +82,8 @@ auto main() -> int
                 return ex::just(std::pmr::vector<int>(v.begin(), v.end(), alloc));
             }))
         | ex::then([](auto&& v) noexcept {
-            std::print("v={}\n", v);
+            for (auto x: v){ std::cout << x << ", "; }
+            std::cout << "\n";
         })
     };
 
