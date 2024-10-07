@@ -8,6 +8,7 @@ set(BEMAN_EXECUTION26_LIBRARY beman_${TARGET_NAME})
 set(EXAMPLES
   stop_token
   stopping
+  allocator
 )
 
 foreach(EXAMPLE ${EXAMPLES})
