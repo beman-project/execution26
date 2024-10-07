@@ -49,7 +49,11 @@ namespace
             , allocator(allocator)
         {
         }
-        allocator_aware_fun(allocator_aware_fun&&) = default;
+        allocator_aware_fun(allocator_aware_fun&& other)
+            : fun(std::move(other.fun))
+            , allocator(other.allocator)
+        {
+        }
         allocator_aware_fun(allocator_aware_fun&& other, allocator_type allocator)
             : fun(std::move(other.fun))
             , allocator(allocator)
