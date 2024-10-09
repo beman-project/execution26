@@ -27,7 +27,6 @@ namespace
                 using operation_state_concept = test_std::operation_state_t;
                 std::remove_cvref_t<Receiver> receiver;
                 auto start() & noexcept -> void {
-                    std::cout << "scheduler sender started\n";
                     test_std::set_value(::std::move(this->receiver));
                 }
             };
@@ -54,7 +53,6 @@ namespace
             using operation_state_concept = test_std::operation_state_t;
             std::remove_cvref_t<Receiver> receiver;
             auto start() & noexcept -> void {
-                std::cout << "sender started\n";
                 test_std::set_value(::std::move(this->receiver));
             }
         };
