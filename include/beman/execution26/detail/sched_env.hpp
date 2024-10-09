@@ -21,7 +21,7 @@ namespace beman::execution26::detail
     
     public:
         template <typename S>
-        sched_env(S&& sched): sched(::std::forward<S>(sched)) {}
+        explicit sched_env(S&& sch): sched(::std::forward<S>(sch)) {}
 
         auto query(::beman::execution26::get_scheduler_t const&) const noexcept
         {
@@ -29,7 +29,10 @@ namespace beman::execution26::detail
         }
         auto query(::beman::execution26::get_domain_t const& q) const noexcept
         {
-            return this->sched.query(q);
+            if constexpr (requires{ this-> sched.query(q); })
+                return this->sched.query(q);
+            else
+                return ::beman::execution26::default_domain{};
         }
     };
 
