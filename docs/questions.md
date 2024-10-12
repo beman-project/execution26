@@ -45,3 +45,4 @@ likely observable.
     argument.
 - [exec.then] p5 seems to miss a space betweend sendr and out_sndr
 - [exec.let] p9: Env is not defined; it is probably meant to be env_t
+- [exec.schedule.from] p6: the Rcvr in state-type shouldn't be a reference

@@ -17,6 +17,7 @@
 
 namespace beman::execution26::detail
 {
+
     template <typename Scheduler>
     class sched_attrs
     {
@@ -32,7 +33,10 @@ namespace beman::execution26::detail
         {
             return this->sched;
         }
-        auto query(::beman::execution26::get_domain_t const& q) const noexcept
+
+        template <typename T = bool>
+            requires requires(Scheduler&& s){ s.query(::beman::execution26::get_domain); }
+        auto query(::beman::execution26::get_domain_t const& q, T = true) const noexcept
         {
             return this->sched.query(q);
         }

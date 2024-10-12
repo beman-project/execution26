@@ -29,6 +29,7 @@
 #include <beman/execution26/detail/meta_prepend.hpp>
 #include <beman/execution26/detail/meta_unique.hpp>
 #include <beman/execution26/detail/meta_combine.hpp>
+#include <beman/execution26/detail/meta_to.hpp>
 #include <beman/execution26/detail/decayed_tuple.hpp>
 #include <beman/execution26/detail/type_list.hpp>
 #include <beman/execution26/detail/join_env.hpp>
@@ -41,18 +42,6 @@
 #include <type_traits>
 
 // ----------------------------------------------------------------------------
-
-namespace beman::execution26::detail::meta
-{
-    template <template <typename...> class, typename>
-    struct to;
-    template <template <typename...> class To, template <typename...> class From, typename... T>
-    struct to<To, From<T...>> {
-        using type = To<T...>;
-    };
-    template <template <typename...> class To, typename T>
-    using to_t = typename to<To, T>::type;
-}
 
 namespace beman::execution26::detail
 {

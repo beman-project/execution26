@@ -73,21 +73,6 @@ namespace beman::execution26::detail
             );
         }
     };
-
-    template <typename Scheduler, typename Sender, typename Env>
-    struct completion_signatures_for_impl<
-        ::beman::execution26::detail::basic_sender<
-            ::beman::execution26::detail::starts_on_t,
-            Scheduler,
-            Sender
-            >,
-        Env
-        >
-    {
-        using type = decltype(::beman::execution26::get_completion_signatures(
-            ::std::declval<Sender>(), ::std::declval<Env>()
-        ));
-    };
 }
 
 namespace beman::execution26
