@@ -33,6 +33,7 @@
 #include <beman/execution26/detail/transform_sender.hpp>
 
 #include <exception>
+#include <type_traits>
 #include <utility>
 #include <variant>
 
@@ -131,7 +132,7 @@ namespace beman::execution26::detail
             auto sch{sender.template get<1>()};
             //auto& child{sender.template get<2>()};
 
-            using sched_t = decltype(auto(sch));
+            using sched_t = ::std::remove_cvref_t<decltype(sch)>;
             using variant_t = ::beman::execution26::detail::meta::prepend<
                     ::std::monostate,
                     ::beman::execution26::detail::meta::transform<
