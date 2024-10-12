@@ -28,26 +28,20 @@ endif
 ifeq ($(SANITIZER),debug)
     CXX_FLAGS = -g
 endif
-ifeq ($(SANITIZER),usan)
+ifeq ($(SANITIZER),msan)
     SAN_FLAGS = -fsanitize=memory
-    BUILD     = $(BUILDROOT)/msan
 endif
 ifeq ($(SANITIZER),asan)
     SAN_FLAGS = -fsanitize=address -fsanitize=pointer-compare -fsanitize=pointer-subtract -fsanitize-address-use-after-scope
-
-    BUILD     = $(BUILDROOT)/asan
 endif
 ifeq ($(SANITIZER),usan)
     SAN_FLAGS = -fsanitize=undefined
-    BUILD     = $(BUILDROOT)/usan
 endif
 ifeq ($(SANITIZER),tsan)
     SAN_FLAGS = -fsanitize=thread
-    BUILD     = $(BUILDROOT)/tsan
 endif
 ifeq ($(SANITIZER),lsan)
     SAN_FLAGS = -fsanitize=leak
-    BUILD     = $(BUILDROOT)/lsan
 endif
 
 default: test
