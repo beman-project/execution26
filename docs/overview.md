@@ -407,15 +407,15 @@ The queries are used to obtain properties associated with and object. Except <co
 ### Sender Adaptors
 
 - `bulk`
-- `continues_on`
+- <code>continues_on(<i>sender</i>, <i>scheduler</i>) -> <i>sender</i></code>
 - <code>into_variant(<i>sender</i>) -> <i>sender-of</i>&lt;set_value_t(std::variant&lt;T...&gt;)&gt;</code>`
 - <code>let_error(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code>
 - <code>let_stopped(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code>
 - <code>let_value(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code>
 - `on`
-- `scheduler_from`
+- <code>schedule_from(<i>scheduler</i>, <i>sender</i>) -> <i>sender</i></code>
 - `split`
-- `starts_on`
+- <code>starts_on(<i>scheduler</i>, <i>sender</i>) -> <i>sender</i></code>
 - `stopped_as_error`
 - `stopped_as_optional`
 - <code>then(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code>

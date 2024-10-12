@@ -38,6 +38,7 @@
 #include <beman/execution26/detail/connect.hpp>
 #include <beman/execution26/detail/schedule.hpp>
 
+#include <beman/execution26/detail/continues_on.hpp>
 #include <beman/execution26/detail/into_variant.hpp>
 #include <beman/execution26/detail/just.hpp>
 #include <beman/execution26/detail/let.hpp>
