@@ -110,6 +110,36 @@ namespace beman::execution26::detail
                 return ::beman::execution26::detail::fwd_env(::beman::execution26::get_env(state->receiver));
             }
         };
+        template <typename Receiver, typename Variant>
+        struct state_base
+        {
+            Receiver receiver;
+            Variant  async_result{};
+        };
+        template <typename Receiver, typename Scheduler, typename Variant>
+        struct state_type
+            : state_base<Receiver, Variant>
+        {
+            using receiver_t = upstream_receiver<state_base<Receiver, Variant>>;
+            using operation_t = ::beman::execution26::connect_result_t<
+                ::beman::execution26::schedule_result_t<Scheduler>, receiver_t
+            >;
+            operation_t op_state;
+
+            static constexpr bool nothrow()
+	        {
+                return noexcept(::beman::execution26::connect(
+                    ::beman::execution26::schedule(::std::declval<Scheduler>()), receiver_t{nullptr}
+                ));
+            };
+            explicit state_type(Scheduler& sch, Receiver& receiver) noexcept(nothrow())
+                : state_base<Receiver, Variant>{receiver}
+                , op_state(::beman::execution26::connect(
+                    ::beman::execution26::schedule(sch), receiver_t{this}
+                ))
+            {
+            }
+        };
 
         static constexpr auto get_attrs{[](auto const& data, auto const& child)
             noexcept -> decltype(auto)
@@ -128,9 +158,7 @@ namespace beman::execution26::detail
                 ::beman::execution26::env_of_t<Receiver>
             > {
 
-            //auto& [_, sch, child] = sndr;
             auto sch{sender.template get<1>()};
-            //auto& child{sender.template get<2>()};
 
             using sched_t = ::std::remove_cvref_t<decltype(sch)>;
             using variant_t = ::beman::execution26::detail::meta::prepend<
@@ -146,34 +174,8 @@ namespace beman::execution26::detail
                     >
                 >
             >;
-            struct state_base
-            {
-                Receiver    receiver;
-                variant_t   async_result{};
-            };
-            using receiver_t = upstream_receiver<state_base>;
-            using operation_t = ::beman::execution26::connect_result_t<
-                ::beman::execution26::schedule_result_t<sched_t>, receiver_t
-            >;
-            constexpr bool nothrow{noexcept(::beman::execution26::connect(
-                ::beman::execution26::schedule(sch), receiver_t{nullptr}
-            ))};
 
-            struct state_type
-                : state_base
-            {
-                operation_t op_state;
-
-                explicit state_type(sched_t sch, Receiver& receiver) noexcept(nothrow)
-                    : state_base{receiver}
-                    , op_state(::beman::execution26::connect(
-                        ::beman::execution26::schedule(sch), receiver_t{this}
-                    ))
-                {
-                }
-            };
-
-            return state_type(sch, receiver);
+            return state_type<Receiver, sched_t, variant_t>(sch, receiver);
         }};
         static constexpr auto complete{
             []<typename Tag, typename... Args>(auto, auto& state, auto& receiver, Tag, Args&&... args) noexcept
