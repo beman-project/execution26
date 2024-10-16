@@ -59,6 +59,7 @@ namespace
         >>(
             test_std::get_completion_signatures(s, test_std::empty_env{})
         );
+        test_std::sync_wait(std::move(s));
     }
 }
 
