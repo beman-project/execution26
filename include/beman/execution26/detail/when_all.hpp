@@ -172,7 +172,7 @@ namespace beman::execution26::detail
                 switch (this->disp)
                 {
                 case disposition::started: {
-                    auto tie = []<typename... T>(::std::tuple<T...>& t) noexcept { return ::std::tuple<T&...>(t); };
+                    auto tie = []<typename... T>(::std::tuple<T...>& t) noexcept { return ::std::apply([](auto&...a){ return ::std::tie(a...);}, t); };
                     auto set = [&](auto&... t) noexcept { ::beman::execution26::set_value(::std::move(receiver), ::std::move(t)...); };
 
                     this->on_stop.reset();
