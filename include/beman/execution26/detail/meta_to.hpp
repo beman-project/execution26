@@ -15,7 +15,7 @@ namespace beman::execution26::detail::meta
         using type = To<T...>;
     };
     template <template <typename...> class To, typename T>
-    using to_t = typename ::beman::execution26::detail::meta::to_type_list<To, T>::type;
+    using to = typename ::beman::execution26::detail::meta::to_type_list<To, T>::type;
 }
 
 // ----------------------------------------------------------------------------

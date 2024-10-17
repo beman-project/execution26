@@ -20,8 +20,8 @@ namespace beman::execution26::detail
     public:
         template <typename V>
         make_env(Query const&, V&& value): value(::std::forward<V>(value)) {}
-        constexpr auto query(Query const&) const -> Value const& { return this->value; }
-        constexpr auto query(Query const&) -> Value & { return this->value; }
+        constexpr auto query(Query const&) const noexcept -> Value const& { return this->value; }
+        constexpr auto query(Query const&) noexcept -> Value & { return this->value; }
     };
     template <typename Query, typename Value>
     make_env(Query&&, Value&& value)

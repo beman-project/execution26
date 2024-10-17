@@ -165,7 +165,7 @@ namespace beman::execution26::detail
                     ::std::monostate,
                     ::beman::execution26::detail::meta::transform<
                     ::beman::execution26::detail::as_tuple_t,
-                    ::beman::execution26::detail::meta::to_t<
+                    ::beman::execution26::detail::meta::to<
                         ::std::variant,
                         ::beman::execution26::completion_signatures_of_t<
                             ::beman::execution26::detail::child_type<Sender>,

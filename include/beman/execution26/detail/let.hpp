@@ -172,7 +172,7 @@ namespace beman::execution26::detail
             using env_t = decltype(::beman::execution26::detail::let_t<Completion>::env(child));
             using sigs_t = ::beman::execution26::completion_signatures_of_t<child_t, ::beman::execution26::env_of_t<Receiver>>;
             using comp_sigs_t = ::beman::execution26::detail::meta::filter<filter_pred, sigs_t>;
-            using type_list_t = ::beman::execution26::detail::meta::to_t<::std::variant, comp_sigs_t>;
+            using type_list_t = ::beman::execution26::detail::meta::to<::std::variant, comp_sigs_t>;
             using tuples_t = ::beman::execution26::detail::meta::transform<to_tuple_t, type_list_t>;
             using unique_t = ::beman::execution26::detail::meta::unique<tuples_t>;
             using args_t = ::beman::execution26::detail::meta::prepend<std::monostate, unique_t>;

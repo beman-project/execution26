@@ -422,8 +422,7 @@ The queries are used to obtain properties associated with and object. Except <co
 - <code>upon_error(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code>
 - <code>upon_stopped(<i>upstream</i>, <i>fun</i>) -> <i>sender</i></code>
 - <code>when_all(<i>sender</i>...) -> <i>sender</i></code>
-- `when_all_with_variant()`
-- `write_env()`
+- <code>when_all_with_variant(<i>sender</i>...) -> <i>sender</i></code>
 
 ### Sender Consumers
 

@@ -98,8 +98,29 @@ namespace beman::execution26::detail
             return std::forward<Product>(product).make_from(
                 ::std::forward<Allocator>(allocator),
                 ::std::forward<Product>(product),
-                ::std::index_sequence_for<T...>()
+                ::std::index_sequence_for<T...>{}
             );
+        }
+
+        template <typename Fun, ::std::size_t... I>
+        constexpr auto apply_elements(::std::index_sequence<I...>, Fun&& fun) const -> decltype(auto)
+        {
+            return ::std::forward<Fun>(fun)(this->template get<I>()...);
+        }
+        template <typename Fun>
+        constexpr auto apply(Fun&& fun) const -> decltype(auto)
+        {
+            return apply_elements(::std::index_sequence_for<T...>{}, ::std::forward<Fun>(fun));
+        }
+        template <typename Fun, ::std::size_t... I>
+        constexpr auto apply_elements(::std::index_sequence<I...>, Fun&& fun) -> decltype(auto)
+        {
+            return ::std::forward<Fun>(fun)(this->template get<I>()...);
+        }
+        template <typename Fun>
+        constexpr auto apply(Fun&& fun) -> decltype(auto)
+        {
+            return apply_elements(::std::index_sequence_for<T...>{}, ::std::forward<Fun>(fun));
         }
     };
     template <typename... T>
