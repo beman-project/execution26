@@ -69,10 +69,11 @@ namespace
             using operation_state_concept = test_std::operation_state_t;
             struct callback
             {
-                Receiver& receiver;
+                Receiver* receiver;
+                callback(Receiver* receiver): receiver(receiver) {}
                 auto operator()() const noexcept -> void
                 {
-                    test_std::set_stopped(std::move(this->receiver));
+                    test_std::set_stopped(std::move(*this->receiver));
                 }
             };
             
@@ -84,7 +85,7 @@ namespace
             std::optional<stop_callback> cb;
             auto start() & noexcept
             {
-                cb.emplace(test_std::get_stop_token(test_std::get_env(this->receiver)), this->receiver);
+                cb.emplace(test_std::get_stop_token(test_std::get_env(this->receiver)), &this->receiver);
             }
         };
 
@@ -171,7 +172,7 @@ namespace
             return state<std::tuple<T...>, Receiver>(
                 ::std::move(this->sender), this->expect, std::forward<Receiver>(receiver)
             );
-        };
+        }
     };
     template <typename Sender, typename Tag, typename... T>
     test_sender(Sender, std::tuple<Tag, T...>) -> test_sender<std::remove_cvref_t<Sender>, Tag, T...>;
