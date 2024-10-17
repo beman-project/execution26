@@ -48,6 +48,7 @@
 #include <beman/execution26/detail/sync_wait.hpp>
 #include <beman/execution26/detail/then.hpp>
 #include <beman/execution26/detail/write_env.hpp>
+#include <beman/execution26/detail/when_all.hpp>
 
 // ----------------------------------------------------------------------------
 
