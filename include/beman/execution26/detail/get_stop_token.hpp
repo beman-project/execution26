@@ -7,10 +7,18 @@
 #include <beman/execution26/detail/forwarding_query.hpp>
 #include <beman/execution26/detail/never_stop_token.hpp>
 #include <beman/execution26/detail/stoppable_token.hpp>
+#include <type_traits>
 #include <utility>
 
 // ----------------------------------------------------------------------------
 
+namespace beman::execution26::detail
+{
+    template <typename Token>
+    concept decayed_stoppable_token
+        = ::beman::execution26::stoppable_token<::std::decay_t<Token>>
+        ;
+}
 namespace beman::execution26
 {
     struct get_stop_token_t
@@ -18,7 +26,7 @@ namespace beman::execution26
         template <typename Object>
             requires requires(Object&& object, get_stop_token_t const& tag)
             {
-                { ::std::as_const(object).query(tag) } noexcept -> ::beman::execution26::stoppable_token;
+                { ::std::as_const(object).query(tag) } noexcept -> ::beman::execution26::detail::decayed_stoppable_token;
             }
         auto operator()(Object&& object) const noexcept
         {

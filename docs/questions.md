@@ -48,3 +48,5 @@ likely observable.
 - [exec.schedule.from] p6: the Rcvr in state-type shouldn't be a reference
 - [exec.when.all] uses on-stop-request without saying what it actually does.
     most likely on-stop-request is supposed to call stop_src.request_stop
+- [exec.when.all] p11.1 uses a non-existing conversion for tuple to implement its "tie"
+    actually, that one may be new in C++23!

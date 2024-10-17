@@ -119,14 +119,6 @@ namespace beman::execution26::detail
         template <typename Receiver, typename... Sender>
         struct state_type
         {
-            template <typename> struct error_arg;
-            template <typename E> struct error_arg<::beman::execution26::set_error_t(E)>
-            {
-                using type = ::std::decay_t<E>;
-            };
-            template <typename E>
-            using error_arg_t = typename error_arg<E>::type;
-
             struct nonesuch {};
             using env_t = ::beman::execution26::env_of_t<Receiver>;
             using values_tuple = ::std::tuple<
@@ -143,13 +135,10 @@ namespace beman::execution26::detail
                         ::beman::execution26::detail::meta::prepend<
                             ::std::exception_ptr,
                             ::beman::execution26::detail::meta::combine<
-                                ::beman::execution26::detail::meta::transform<
-                                    error_arg_t,
-                                    ::beman::execution26::detail::meta::to<
-                                        ::beman::execution26::detail::type_list,
-                                        ::beman::execution26::detail::meta::combine<
-                                            ::beman::execution26::error_types_of_t<Sender, env_t, ::beman::execution26::detail::type_list>...
-                                        >
+                                ::beman::execution26::detail::meta::to<
+                                    ::beman::execution26::detail::type_list,
+                                    ::beman::execution26::detail::meta::combine<
+                                        ::beman::execution26::error_types_of_t<Sender, env_t, ::beman::execution26::detail::type_list>...
                                     >
                                 >
                             >
