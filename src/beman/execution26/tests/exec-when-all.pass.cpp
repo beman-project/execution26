@@ -245,6 +245,24 @@ namespace
         test_when_all_results(std::tuple{test_std::set_stopped},
                               await_cancel(), add_value{test_std::just_stopped()}, test_std::just(true, 3.5));
     }
+
+    auto test_when_all_with_variant() -> void
+    {
+        auto s{test_std::when_all_with_variant(test_std::just(17), test_std::just('a', true))};
+        auto res{test_std::sync_wait(std::move(s))};
+        assert(res);
+        auto&&[v0, v1]{*res};
+        test::use(v0, v1);
+        std::visit([](auto t){
+            auto[i]{t};
+            assert(i == 17);
+        }, v0);
+        std::visit([](auto t){
+            auto[c, b]{t};
+            assert(c == 'a');
+            assert(b == true);
+        }, v1);
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -255,4 +273,5 @@ auto main() -> int
     static_assert(std::same_as<test_std::when_all_with_variant_t const, decltype(test_std::when_all_with_variant)>);
 
     test_when_all();
+    test_when_all_with_variant();
 }
