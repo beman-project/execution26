@@ -49,6 +49,7 @@
 #include <beman/execution26/detail/then.hpp>
 #include <beman/execution26/detail/write_env.hpp>
 #include <beman/execution26/detail/when_all.hpp>
+#include <beman/execution26/detail/when_all_with_variant.hpp>
 
 // ----------------------------------------------------------------------------
 

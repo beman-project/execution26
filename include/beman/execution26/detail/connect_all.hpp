@@ -16,6 +16,8 @@
 
 // ----------------------------------------------------------------------------
 
+#include <beman/execution26/detail/suppress_push.hpp>
+
 namespace beman::execution26::detail
 {
     struct connect_all_t
@@ -45,6 +47,8 @@ namespace beman::execution26::detail
     };
     inline constexpr connect_all_t connect_all{};
 }
+
+#include <beman/execution26/detail/suppress_pop.hpp>
 
 // ----------------------------------------------------------------------------
 

@@ -6,17 +6,6 @@
 
 // ----------------------------------------------------------------------------
 
-#if defined(__GNUC__)
-#    pragma GCC diagnostic ignored "-Wmissing-braces"
-#    pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-#endif
-
-#if defined(__clang__)
-#    pragma clang diagnostic ignored "-Wmissing-braces"
-#endif
-
-// ----------------------------------------------------------------------------
-
 #if defined(__cpp_deleted_function)
 #    define BEMAN_EXECUTION26_DELETE(msg) delete(msg)
 #else

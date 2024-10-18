@@ -10,6 +10,8 @@
 #include <concepts>
 #include <type_traits>
 
+#include <beman/execution26/detail/suppress_push.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail
@@ -31,5 +33,7 @@ namespace beman::execution26::detail
 }
 
 // ----------------------------------------------------------------------------
+
+#include <beman/execution26/detail/suppress_pop.hpp>
 
 #endif
