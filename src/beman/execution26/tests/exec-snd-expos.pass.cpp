@@ -35,6 +35,8 @@
 #include <test/execution.hpp>
 #include <concepts>
 
+#include <beman/execution26/detail/suppress_push.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace

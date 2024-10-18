@@ -2,84 +2,84 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 list(APPEND execution_tests
-    exec-when-all.pass
+    allocator-requirements-general.pass
+    exec-connect.pass
     exec-continues-on.pass
-    exec-schedule-from.pass
-    exec-starts-on.pass
-    exec-let.pass
-    exec-then.pass
-    exec-just.pass
-    meta-transform.pass
-    exec-read-env.pass
+    exec-domain-default.pass
+    exec-fwd-env.pass
+    exec-general.pass
+    exec-get-allocator.pass
+    exec-get-compl-sched.pass
     exec-get-delegation-scheduler.pass
-    exec-snd-apply.pass
-    meta-combine.pass
+    exec-get-domain.pass
+    exec-get-env.pass
+    exec-get-scheduler.pass
+    exec-get-stop-token.pass
+    exec-getcomplsigs.pass
     exec-into-variant.pass
-    exec-run-loop-types.pass
-    exec-run-loop-general.pass
-    exec-snd-expos.pass
+    exec-just.pass
+    exec-let.pass
+    exec-opstate-start.pass
+    exec-opstate.pass
+    exec-read-env.pass
     exec-recv-concepts.pass
+    exec-recv.pass
+    exec-run-loop-general.pass
+    exec-run-loop-types.pass
+    exec-sched.pass
+    exec-schedule-from.pass
+    exec-schedule.pass
+    exec-set-error.pass
+    exec-set-stopped.pass
+    exec-set-value.pass
+    exec-snd-apply.pass
+    exec-snd-concepts.pass
+    exec-snd-expos.pass
+    exec-snd-transform.pass
+    exec-starts-on.pass
+    exec-sync-wait.pass
+    exec-then.pass
+    exec-utils-cmplsigs.pass
+    exec-when-all.pass
+    execution-queryable-concept.pass
+    execution-syn.pass
     forward-like.pass
+    function-objects.pass
+    functional-syn.pass
+    meta-combine.pass
+    meta-contains.pass
     meta-filter.pass
     meta-prepend.pass
-    meta-contains.pass
+    meta-transform.pass
     meta-unique.pass
-    exec-getcomplsigs.pass
-    exec-connect.pass
-    execution-syn.pass
-    exec-snd-transform.pass
-    exec-sched.pass
-    exec-schedule.pass
-    exec-domain-default.pass
-    exec-get-scheduler.pass
-    exec-get-compl-sched.pass
-    exec-snd-concepts.pass
-    exec-get-domain.pass
-    exec-get-stop-token.pass
-    exec-get-allocator.pass
-    exec-fwd-env.pass
-    exec-opstate.pass
-    exec-opstate-start.pass
-    allocator-requirements-general.pass
-    exec-utils-cmplsigs.pass
-    functional-syn.pass
-    exec-recv.pass
-    execution-queryable-concept.pass
-    exec-get-env.pass
-    exec-set-stopped.pass
-    exec-set-error.pass
-    exec-set-value.pass
-    utilities.pass
-    function-objects.pass
-    thread.pass
-    thread-stoptoken.pass
-    thread-stoptoken-intro.pass
-    thread-stoptoken-syn.compile.pass
-    stoptoken-concepts.pass
-    stoptoken.pass
-    stoptoken-general.pass
-    stoptoken-mem.pass
-    stopsource.pass
-    stopsource-general.pass
-    stopsource-cons.pass
-    stopsource-mem.pass
-    stopcallback.pass
-    stopcallback-general.pass
     stopcallback-cons.pass
-    stoptoken-never.pass
-    stoptoken-never-general.pass
-    stoptoken-inplace.pass
+    stopcallback-general.pass
+    stopcallback-inplace-cons.pass
+    stopcallback-inplace-general.pass
+    stopcallback-inplace.pass
+    stopcallback.pass
+    stopsource-cons.pass
+    stopsource-general.pass
+    stopsource-inplace-cons.pass
+    stopsource-inplace-general.pass
+    stopsource-inplace-mem.pass
+    stopsource-inplace.pass
+    stopsource-mem.pass
+    stopsource.pass
+    stoptoken-concepts.pass
+    stoptoken-general.pass
     stoptoken-inplace-general.pass
     stoptoken-inplace-members.pass
-    stopsource-inplace.pass
-    stopsource-inplace-general.pass
-    stopsource-inplace-cons.pass
-    stopsource-inplace-mem.pass
-    stopcallback-inplace.pass
-    stopcallback-inplace-general.pass
-    stopcallback-inplace-cons.pass
-    exec-sync-wait.pass
-    exec-general.pass
+    stoptoken-inplace.pass
+    stoptoken-mem.pass
+    stoptoken-never-general.pass
+    stoptoken-never.pass
+    stoptoken.pass
+    thread-stoptoken-intro.pass
+    thread-stoptoken-syn.compile.pass
+    thread-stoptoken.pass
+    thread.pass
+    utilities.pass
 )
 
 if(PROJECT_IS_TOP_LEVEL)

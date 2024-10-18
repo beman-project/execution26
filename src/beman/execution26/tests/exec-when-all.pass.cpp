@@ -10,6 +10,8 @@
 #include <optional>
 #include <utility>
 
+#include <beman/execution26/detail/suppress_push.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace

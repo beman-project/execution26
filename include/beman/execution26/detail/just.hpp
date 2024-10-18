@@ -19,6 +19,8 @@
 
 // ----------------------------------------------------------------------------
 
+#include <beman/execution26/detail/suppress_push.hpp>
+
 namespace beman::execution26::detail
 {
     template <typename Completion, typename... T>
@@ -70,6 +72,8 @@ namespace beman::execution26::detail
             };
     };
 }
+
+#include <beman/execution26/detail/suppress_pop.hpp>
 
 namespace beman::execution26
 {

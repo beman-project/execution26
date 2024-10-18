@@ -10,6 +10,8 @@
 #include <string>
 #include <memory_resource>
 
+#include <beman/execution26/detail/suppress_push.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace

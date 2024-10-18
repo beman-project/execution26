@@ -26,6 +26,8 @@
 
 // ----------------------------------------------------------------------------
 
+#include <beman/execution26/detail/suppress_push.hpp>
+
 namespace beman::execution26::detail
 {
     // specialize default_domain appropriately
@@ -84,6 +86,8 @@ namespace beman::execution26::detail
         );
     }
 }
+
+#include <beman/execution26/detail/suppress_pop.hpp>
 
 namespace beman::execution26
 {
