@@ -15,7 +15,6 @@
 
 #include <type_traits>
 #include <utility>
-#include <iostream> //-dk:TODO remove
 
 // ----------------------------------------------------------------------------
 
@@ -27,7 +26,6 @@ namespace beman::execution26::detail
         template <::beman::execution26::sender Sender>
         auto transform_sender(Sender&& sender, auto&& ...) const noexcept
         {
-            std::cout << "transform_sender\n";
             return ::std::forward<Sender>(sender).apply(
                 [](auto&&, auto&&, auto&&... child){
                     return ::beman::execution26::when_all(
@@ -42,7 +40,6 @@ namespace beman::execution26::detail
         template <::beman::execution26::sender... Sender>
         auto operator()(Sender&&... sender) const
         {
-            std::cout << "when_all_with_variant\n";
             using domain_t = typename ::std::common_type_t<
                  decltype(::beman::execution26::detail::get_domain_early(sender))...
             >;
