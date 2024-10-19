@@ -20,10 +20,14 @@ namespace beman::execution26::detail
                 return ::std::forward<Expr>(expr);
         }};
         if constexpr (requires{ operator co_await(transform()); })
-            if constexpr (requires{ transform().operator co_await(); })
-                static_assert(false, "only one operator co_await is allowed");
-            else
-                return operator co_await(transform());
+        {
+
+            static_assert(
+                not requires{ transform().operator co_await(); },
+                "only one operator co_await is allowed"
+            );
+            return operator co_await(transform());
+        }
         else if constexpr (requires{ transform().operator co_await(); })
             return transform().operator co_await();
         else

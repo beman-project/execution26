@@ -55,6 +55,7 @@ namespace
         int value{};
         auto operator co_await() -> awaiter<bool, bool> { return { 5 + this->value }; }
     };
+    //auto operator co_await(mem_co_awaiter obj) -> awaiter<bool, bool> { return { 3 + obj.value }; }
 
     template <typename T>
     struct with_as_awaitable
