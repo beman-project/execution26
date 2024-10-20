@@ -7,6 +7,8 @@
 #include <beman/execution26/detail/get_awaiter.hpp>
 #include <beman/execution26/detail/await_result_type.hpp>
 #include <beman/execution26/detail/has_as_awaitable.hpp>
+#include <beman/execution26/detail/with_await_transform.hpp>
+#include <beman/execution26/detail/env_promise.hpp>
 #include <test/execution.hpp>
 
 #include <iostream> //-dk:TODO remove
@@ -57,10 +59,10 @@ namespace
     };
     //auto operator co_await(mem_co_awaiter obj) -> awaiter<bool, bool> { return { 3 + obj.value }; }
 
-    template <typename T>
+    template <typename T, bool Noexcept = true>
     struct with_as_awaitable
     {
-        auto as_awaitable(auto&&) -> T { return {}; }
+        auto as_awaitable(auto&&) noexcept(Noexcept) -> T { return {}; }
     };
 
     struct promise_type
@@ -159,6 +161,45 @@ namespace
         static_assert(test_detail::has_as_awaitable<with_as_awaitable<awaiter<bool, bool>>, promise_type>);
         static_assert(test_detail::has_as_awaitable<with_as_awaitable<co_awaiter>, promise_type>);
     }
+
+    struct promise_with_await_transform
+        : test_detail::with_await_transform<promise_with_await_transform>
+    {
+    };
+
+    auto test_with_await_transform() -> void
+    {
+        promise_with_await_transform promise{};
+
+        static_assert(noexcept(promise.await_transform(awaiter<bool, void>{})));
+        auto a1{promise.await_transform(awaiter<bool, void>{})};
+        static_assert(std::same_as<awaiter<bool, void>, decltype(a1)>);
+
+        static_assert(noexcept(promise.await_transform(with_as_awaitable<awaiter<bool, void>, true>{})));
+        static_assert(not noexcept(promise.await_transform(with_as_awaitable<awaiter<bool, void>, false>{})));
+        auto a2{promise.await_transform(with_as_awaitable<awaiter<bool, void>>{})};
+        static_assert(std::same_as<awaiter<bool, void>, decltype(a2)>);
+    }
+
+    auto test_env_promise() -> void
+    {
+        struct local_env {};
+
+        test_detail::env_promise<local_env> promise;
+
+        static_assert(noexcept(promise.get_return_object()));
+        static_assert(noexcept(promise.initial_suspend()));
+        static_assert(noexcept(promise.final_suspend()));
+        static_assert(noexcept(promise.unhandled_exception()));
+        static_assert(std::same_as<void, decltype(promise.unhandled_exception())>);
+        static_assert(noexcept(promise.return_void()));
+        static_assert(std::same_as<void, decltype(promise.return_void())>);
+        static_assert(noexcept(promise.unhandled_stopped()));
+        static_assert(std::same_as<std::coroutine_handle<>, decltype(promise.unhandled_stopped())>);
+        static_assert(noexcept(std::as_const(promise).get_env()));
+        static_assert(std::same_as<local_env const&, decltype(promise.get_env())>);
+
+    }
 }
 
 auto main() -> int
@@ -169,4 +210,6 @@ auto main() -> int
     test_is_awaitable();
     test_await_result_type();
     test_has_as_awaitable();
+    test_with_await_transform();
+    test_env_promise();
 }
