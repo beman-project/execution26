@@ -253,7 +253,7 @@ namespace
             int                       iv{};
             bool                      bv{};
 
-            auto op1{test_detail::connect_awaitable(awaiter(handle, result), receiver(iv, bv))};
+            auto op1{test_detail::connect_awaitable(awaiter{handle, result}, receiver{iv, bv})};
             assert(handle == std::coroutine_handle<>());
             op1.start();
             assert(handle != std::coroutine_handle<>());
@@ -268,7 +268,7 @@ namespace
             int                       iv{};
             bool                      bv{};
 
-            auto op1{test_detail::connect_awaitable(awaiter(handle, result), receiver(iv, bv))};
+            auto op1{test_detail::connect_awaitable(awaiter{handle, result}, receiver{iv, bv})};
             assert(handle == std::coroutine_handle<>());
             op1.start();
             assert(handle != std::coroutine_handle<>());
@@ -283,7 +283,7 @@ namespace
             int                       iv{};
             bool                      bv{};
 
-            auto op1{test_detail::connect_awaitable(void_awaiter(handle), receiver(iv, bv))};
+            auto op1{test_detail::connect_awaitable(void_awaiter{handle}, receiver{iv, bv})};
             assert(handle == std::coroutine_handle<>());
             op1.start();
             assert(handle != std::coroutine_handle<>());
