@@ -7,6 +7,8 @@
 #include <beman/execution26/detail/empty_env.hpp>
 #include <beman/execution26/detail/get_env.hpp>
 #include <beman/execution26/detail/queryable.hpp>
+#include <beman/execution26/detail/is_awaitable.hpp>
+#include <beman/execution26/detail/env_promise.hpp>
 #include <concepts>
 #include <type_traits>
 
@@ -26,8 +28,8 @@ namespace beman::execution26::detail
     template <typename Sender>
     concept enable_sender
         =  ::beman::execution26::detail::is_sender<Sender>
-        //-dk:TODO || ::beman::execution26::detail::is_awaitable<Sender,
-        //    ::beman::Execution::detail::env_promise<::beman::Execution::empty_env>>
+        || ::beman::execution26::detail::is_awaitable<Sender,
+            ::beman::execution26::detail::env_promise<::beman::execution26::empty_env>>
         ;
 }
 namespace beman::execution26

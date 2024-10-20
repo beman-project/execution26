@@ -14,6 +14,7 @@
 #include <beman/execution26/detail/decayed_tuple.hpp>
 #include <beman/execution26/detail/variant_or_empty.hpp>
 #include <beman/execution26/detail/completion_signatures_of_t.hpp>
+#include <beman/execution26/detail/as_awaitable.hpp>
 #include <beman/execution26/execution.hpp>
 #include <test/execution.hpp>
 #include <concepts>
@@ -448,6 +449,11 @@ namespace
         auto via_op{sender{} | closure };
         static_assert(std::same_as<adapted_sender<sender>, decltype(via_op)>);
     }
+
+    auto test_as_awaitable() -> void
+    {
+        static_assert(std::same_as<test_std::as_awaitable_t const, decltype(test_std::as_awaitable)>);
+    }
 }
 
 auto main() -> int
@@ -464,4 +470,5 @@ auto main() -> int
     test_decays_to();
     test_sender_adaptor_closure();
     test_sender_adaptor();
+    test_as_awaitable();
 }

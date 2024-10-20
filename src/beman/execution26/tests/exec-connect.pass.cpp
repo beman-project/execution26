@@ -3,8 +3,13 @@
 
 #include <beman/execution26/detail/connect.hpp>
 #include <beman/execution26/detail/receiver.hpp>
+#include <beman/execution26/detail/operation_state_task.hpp>
+#include <beman/execution26/detail/suspend_complete.hpp>
+#include <beman/execution26/detail/connect_awaitable.hpp>
 #include <test/execution.hpp>
+
 #include <concepts>
+#include <stdexcept>
 
 // ----------------------------------------------------------------------------
 
@@ -55,14 +60,26 @@ namespace
         }
     };
 
+    struct env
+    {
+        int value{};
+    };
+
     struct receiver
     {
         using receiver_concept = test_std::receiver_t;
         int value{};
+        bool* set_stopped_called{};
 
-        receiver(int value): value(value) {}
+        receiver(int value, bool* set_stopped_called = {}): value(value), set_stopped_called(set_stopped_called) {}
         receiver(receiver&&) = default;
         auto operator== (receiver const&) const -> bool = default;
+
+        auto get_env() const noexcept -> env { return { this->value + 2 }; }
+        auto set_stopped() && noexcept -> void
+        {
+            this->set_stopped_called && (*this->set_stopped_called = true);
+        }
     };
 
     struct domain_sender
@@ -101,6 +118,209 @@ namespace
 
         auto get_env() const noexcept -> domain_env { return {}; }
     };
+
+    struct awaiter
+    {
+        auto await_ready() -> bool { return {}; }
+        auto await_suspend(auto) -> bool { return {}; }
+        auto await_resume() -> int { return {}; }
+    };
+
+    struct transformed
+    {
+        auto as_awaitable(auto&&) -> awaiter { return {}; }
+    };
+
+    auto test_connect_awaitable_promise() -> void
+    {
+        using connect_awaitable_promise = test_detail::operation_state_task<receiver>::promise_type;
+
+        bool set_stopped_called{false};
+        receiver r{17, &set_stopped_called};
+        static_assert(noexcept(connect_awaitable_promise(0, r)));
+        test_detail::connect_awaitable_promise<receiver> promise(0, r);
+        static_assert(std::same_as<awaiter, ::std::remove_cvref_t<decltype(promise.await_transform(awaiter{}))>>);
+        static_assert(std::same_as<awaiter, ::std::remove_cvref_t<decltype(promise.await_transform(transformed{}))>>);
+
+        static_assert(noexcept(promise.initial_suspend()));
+        static_assert(std::same_as<std::suspend_always, decltype(promise.initial_suspend())>);
+        static_assert(noexcept(promise.final_suspend()));
+        static_assert(std::same_as<std::suspend_always, decltype(promise.final_suspend())>);
+        static_assert(noexcept(promise.unhandled_exception()));
+        static_assert(std::same_as<void, decltype(promise.unhandled_exception())>);
+        static_assert(noexcept(promise.return_void()));
+        static_assert(std::same_as<void, decltype(promise.return_void())>);
+
+        static_assert(noexcept(std::as_const(promise).get_env()));
+        static_assert(std::same_as<env, decltype(promise.get_env())>);
+        assert(19 == promise.get_env().value);
+
+        static_assert(noexcept(promise.unhandled_stopped()));
+        static_assert(std::same_as<std::coroutine_handle<>, decltype(promise.unhandled_stopped())>);
+        assert(set_stopped_called == false);
+        auto handle{promise.unhandled_stopped()};
+        assert(set_stopped_called == true && handle == std::noop_coroutine());
+
+        static_assert(noexcept(promise.get_return_object()));
+        static_assert(std::same_as<test_detail::operation_state_task<receiver>, decltype(promise.get_return_object())>);
+
+        test::use(promise);
+
+    }
+
+    auto test_operation_state_task() -> void
+    {
+        using state_t = ::beman::execution26::detail::operation_state_task<receiver>;
+        static_assert(std::same_as<::beman::execution26::operation_state_t, state_t::operation_state_concept>);
+        static_assert(std::same_as<::beman::execution26::detail::connect_awaitable_promise<receiver>, state_t::promise_type>);
+        static_assert(noexcept(state_t(std::coroutine_handle<>{})));
+        static_assert(noexcept(state_t(state_t(std::coroutine_handle<>{}))));
+        state_t state(::std::coroutine_handle<>{});
+        static_assert(noexcept(state.start()));
+    }
+
+    auto test_suspend_complete() -> void
+    {
+        static_assert(noexcept(::beman::execution26::detail::suspend_complete([](int){}, 17)));
+        int  iv{};
+        bool bv{};
+        int  ip{17};
+        bool bp{true};
+        auto awaiter{::beman::execution26::detail::suspend_complete([&](int i, bool b){ iv = i; bv = b; }, ip, bp)};
+
+        static_assert(noexcept(awaiter.await_ready()));
+        static_assert(false == awaiter.await_ready());
+        static_assert(noexcept(awaiter.await_suspend(std::noop_coroutine())));
+        static_assert(std::same_as<void, decltype(awaiter.await_suspend(std::noop_coroutine()))>);
+        assert(iv == 0);
+        assert(bv == false);
+        awaiter.await_suspend(std::noop_coroutine());
+        assert(iv == 17);
+        assert(bv == true);
+
+        static_assert(noexcept(awaiter.await_resume()));
+        static_assert(std::same_as<void, decltype(awaiter.await_resume())>);
+    }
+
+    auto test_connect_awaitable() -> void
+    {
+        struct awaiter
+        {
+            ::std::coroutine_handle<>& handle;
+            int&                       result;
+
+            auto await_ready() -> bool { return {}; }
+            auto await_suspend(::std::coroutine_handle<> h) -> void { this->handle = h; }
+            auto await_resume()
+            {
+                switch (result)
+                {
+                default: return result;
+                case 0:  throw ::std::runtime_error("exception");
+                }
+            }
+        };
+
+        struct void_awaiter
+        {
+            ::std::coroutine_handle<>& handle;
+
+            auto await_ready() -> bool { return {}; }
+            auto await_suspend(::std::coroutine_handle<> h) -> void { this->handle = h; }
+            auto await_resume() -> void {}
+        };
+
+        struct receiver
+        {
+            using receiver_concept = test_std::receiver_t;
+
+            int&  iv;
+            bool& bv;
+            auto set_value() && noexcept -> void { this->bv = true; }
+            auto set_value(int value) && noexcept -> void { this->iv = value; this->bv = true; }
+            auto set_error(::std::exception_ptr error) && noexcept -> void
+            {
+                try { std::rethrow_exception(error); }
+                catch (std::runtime_error const&) { this->bv = true; }
+                catch (...) {}
+            }
+            auto set_stopped() && noexcept -> void {}
+        };
+
+        {
+            ::std::coroutine_handle<> handle{};
+            int                       result{};
+            int                       iv{};
+            bool                      bv{};
+
+            auto op1{test_detail::connect_awaitable(awaiter{handle, result}, receiver{iv, bv})};
+            assert(handle == std::coroutine_handle<>());
+            op1.start();
+            assert(handle != std::coroutine_handle<>());
+            assert(iv == 0 && bv == false);
+            result = 42;
+            handle.resume();
+            assert(iv == 42 && bv == true);
+        }
+        {
+            ::std::coroutine_handle<> handle{};
+            int                       result{};
+            int                       iv{};
+            bool                      bv{};
+
+            auto op1{test_detail::connect_awaitable(awaiter{handle, result}, receiver{iv, bv})};
+            assert(handle == std::coroutine_handle<>());
+            op1.start();
+            assert(handle != std::coroutine_handle<>());
+            assert(iv == 0 && bv == false);
+            result = 0;
+            handle.resume();
+            assert(iv == 0 && bv == true);
+        }
+
+        {
+            ::std::coroutine_handle<> handle{};
+            int                       iv{};
+            bool                      bv{};
+
+            auto op1{test_detail::connect_awaitable(void_awaiter{handle}, receiver{iv, bv})};
+            assert(handle == std::coroutine_handle<>());
+            op1.start();
+            assert(handle != std::coroutine_handle<>());
+            assert(iv == 0 && bv == false);
+            handle.resume();
+            assert(iv == 0 && bv == true);
+        }
+    }
+
+    auto test_connect_with_awaiter() -> void
+    {
+        struct awaiter
+        {
+            ::std::coroutine_handle<>& handle;
+            auto await_ready() -> bool { return {}; }
+            auto await_suspend(std::coroutine_handle<> h) -> void { this->handle = h; }
+            auto await_resume() -> int { return 17; }
+        };
+        struct receiver
+        {
+            using receiver_concept = test_std::receiver_t;
+            bool& result;
+            auto set_value(int i) && noexcept -> void { this-> result = i == 17; }
+            auto set_error(std::exception_ptr) && noexcept -> void {}
+            auto set_stopped() && noexcept -> void {}
+        };
+
+        std::coroutine_handle<> handle{};
+        bool                    result{};
+        auto op{test_std::connect(awaiter{handle}, receiver{result})};
+        assert(handle == std::coroutine_handle{});
+        test_std::start(op);
+        assert(handle != std::coroutine_handle{});
+        assert(result == false);
+        handle.resume();
+        assert(result == true);
+    }
 }
 
 auto main() -> int
@@ -142,4 +362,10 @@ auto main() -> int
         assert(op.value == 42);
         assert(op.receiver == domain_receiver(17));
     }
+
+    test_connect_awaitable_promise();
+    test_operation_state_task();
+    test_suspend_complete();
+    test_connect_awaitable();
+    test_connect_with_awaiter();
 }
