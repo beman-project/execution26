@@ -8,7 +8,6 @@
 #include <test/execution.hpp>
 #include <cstdlib>
 #include <concepts>
-#include <iostream>
 #include <memory_resource>
 #include <span>
 #include <vector>
@@ -39,7 +38,7 @@ namespace
     auto test_let_value()
     {
         auto s0{test_std::let_value(test_std::just(),
-            []{ return test_std::just() | test_std::then([]{ std::cout << ">>executing let_value sender<<\n"; }); })};
+            []{ return test_std::just() | test_std::then([]{}); })};
         auto s1{test_std::just() | test_std::let_value([]{ return test_std::just(); })};
         static_assert(test_std::sender<decltype(s0)>);
         static_assert(test_std::sender<decltype(s1)>);
@@ -118,15 +117,11 @@ namespace
 
     auto test_let_value_allocator() -> void
     {
-        std::cout << "test_let_value_allocator()\n";
         std::vector<int> values{1, 2, 3};
         auto s{
             ex::just(std::span(values))
             | ex::let_value(fun())
-            | ex::then([](auto&& v) noexcept {
-                for (auto&& x: v) { std::cout << x << " "; }
-                std::cout << "done\n";
-            })
+            | ex::then([](auto&& ) noexcept {})
         };
         static_assert(test_std::sender<decltype(s)>);
         static_assert(test_std::sender_in<decltype(s)>);

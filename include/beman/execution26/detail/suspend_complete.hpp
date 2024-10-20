@@ -21,7 +21,11 @@ namespace beman::execution26::detail
 
             static constexpr auto await_ready() noexcept -> bool { return false; }
             auto await_suspend(::std::coroutine_handle<>) noexcept { this->fun(); }
+#if __cpp_lib_unreachable < 202202L
+            [[noreturn]] auto await_resume() noexcept -> void { ::std::terminate(); }
+#else
             [[noreturn]] auto await_resume() noexcept -> void { ::std::unreachable(); }
+#endif
         };
         return awaiter{f};
     }

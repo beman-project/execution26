@@ -7,6 +7,7 @@
 #include <beman/execution26/detail/suspend_complete.hpp>
 #include <beman/execution26/detail/connect_awaitable.hpp>
 #include <test/execution.hpp>
+
 #include <concepts>
 #include <stdexcept>
 
@@ -183,7 +184,9 @@ namespace
         static_assert(noexcept(::beman::execution26::detail::suspend_complete([](int){}, 17)));
         int  iv{};
         bool bv{};
-        auto awaiter{::beman::execution26::detail::suspend_complete([&](int i, bool b){ iv = i; bv = b; }, 17, true)};
+        int  ip{17};
+        bool bp{true};
+        auto awaiter{::beman::execution26::detail::suspend_complete([&](int i, bool b){ iv = i; bv = b; }, ip, bp)};
 
         static_assert(noexcept(awaiter.await_ready()));
         static_assert(false == awaiter.await_ready());

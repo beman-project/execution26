@@ -26,7 +26,7 @@ namespace beman::execution26::detail
 // ----------------------------------------------------------------------------
 
 template <typename Receiver>
-struct ::beman::execution26::detail::connect_awaitable_promise
+struct beman::execution26::detail::connect_awaitable_promise
     : ::beman::execution26::detail::with_await_transform<connect_awaitable_promise<Receiver>>
 {
     connect_awaitable_promise(auto&&, Receiver& receiver) noexcept: receiver(receiver) {}
@@ -55,7 +55,7 @@ private:
 // ----------------------------------------------------------------------------
 
 template <typename Receiver>
-struct ::beman::execution26::detail::operation_state_task
+struct beman::execution26::detail::operation_state_task
 {
     using operation_state_concept = ::beman::execution26::operation_state_t;
     using promise_type = ::beman::execution26::detail::connect_awaitable_promise<Receiver>;
@@ -75,7 +75,7 @@ struct ::beman::execution26::detail::operation_state_task
 // ----------------------------------------------------------------------------
 
 template <typename Receiver>
-auto ::beman::execution26::detail::connect_awaitable_promise<Receiver>::get_return_object()
+auto beman::execution26::detail::connect_awaitable_promise<Receiver>::get_return_object()
     noexcept
     -> ::beman::execution26::detail::operation_state_task<Receiver>
 {

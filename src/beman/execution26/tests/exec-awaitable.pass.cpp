@@ -11,7 +11,6 @@
 #include <beman/execution26/detail/env_promise.hpp>
 #include <test/execution.hpp>
 
-#include <iostream> //-dk:TODO remove
 #include <coroutine>
 #include <concepts>
 
