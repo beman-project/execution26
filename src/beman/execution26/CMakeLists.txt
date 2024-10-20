@@ -20,9 +20,13 @@ target_sources(${TARGET_LIBRARY}
     FILE_SET ${TARGET_LIBRARY}_detail_headers TYPE HEADERS
     BASE_DIRS ${PROJECT_SOURCE_DIR}/include
     FILES
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/allocator_aware_move.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/almost_scheduler.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/apply_sender.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/as_awaitable.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/as_except_ptr.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/await_result_type.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/await_suspend_result.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/basic_operation.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/basic_receiver.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/basic_sender.hpp
@@ -41,6 +45,7 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/connect.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/connect_all.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/connect_all_result.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/connect_awaitable.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/connect_result_t.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/continues_on.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/decayed_same_as.hpp
@@ -49,8 +54,10 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/decays_to.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/default_domain.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/default_impls.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/emplace_from.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/empty_env.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/env_of_t.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/env_promise.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/env_type.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/error_types_of_t.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/forward_like.hpp
@@ -58,6 +65,7 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/fwd_env.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/gather_signatures.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_allocator.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_awaiter.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_completion_scheduler.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_completion_signatures.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_delegation_scheduler.hpp
@@ -67,12 +75,15 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_env.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_scheduler.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_stop_token.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/has_as_awaitable.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/has_completions.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/impls_for.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/indices_for.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/indirect_meta_apply.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/inplace_stop_source.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/into_variant.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/is_awaitable.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/is_awaiter.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/join_env.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/just.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/let.hpp
@@ -83,6 +94,8 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_contains.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_filter.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_prepend.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_size.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_to.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_transform.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/meta_unique.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/movable_value.hpp
@@ -90,6 +103,7 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/nostopstate.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/nothrow_callable.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/operation_state.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/operation_state_task.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/product_type.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/query_with_default.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/queryable.hpp
@@ -100,6 +114,7 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/sched_attrs.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/sched_env.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/schedule.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/schedule_from.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/schedule_result_t.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/scheduler.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/sender.hpp
@@ -116,11 +131,16 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/single_sender.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/single_sender_value_type.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/start.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/starts_on.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/state_type.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/stop_callback_for_t.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/stop_source.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/stop_token_of_t.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/stoppable_source.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/stoppable_token.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/suppress_pop.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/suppress_push.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/suspend_complete.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/sync_wait.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/tag_of_t.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/then.hpp
@@ -132,6 +152,9 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/valid_specialization.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/value_types_of_t.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/variant_or_empty.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/when_all.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/when_all_with_variant.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/with_await_transform.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/write_env.hpp
 )
 get_property(DETAIL_HEADER_FILES TARGET ${TARGET_LIBRARY} PROPERTY HEADER_SET_${TARGET_LIBRARY}_detail_headers)
