@@ -8,6 +8,7 @@
 #include <beman/execution26/detail/get_domain_late.hpp>
 #include <beman/execution26/detail/get_env.hpp>
 #include <beman/execution26/detail/operation_state.hpp>
+#include <beman/execution26/detail/connect_awaitable.hpp>
 #include <type_traits>
 #include <concepts>
 
@@ -37,6 +38,10 @@ namespace beman::execution26
                 using state_type = decltype(new_sender().connect(::std::forward<Receiver>(receiver)));
                 static_assert(::beman::execution26::operation_state<state_type>);
                 return new_sender().connect(::std::forward<Receiver>(receiver));
+            }
+            else if constexpr (requires{ ::beman::execution26::detail::connect_awaitable(new_sender(), ::std::forward<Receiver>(receiver)); })
+            {
+                return ::beman::execution26::detail::connect_awaitable(new_sender(), ::std::forward<Receiver>(receiver));
             }
             else
             {
