@@ -9,9 +9,14 @@
 #include <mutex>
 #include <thread>
 #include <utility>
+#include <iostream>
 
 // ----------------------------------------------------------------------------
 
+namespace beman::execution26::detail
+{
+    using on_exit = std::unique_ptr<char const, decltype([](auto msg){ std::cout << msg << "\n"; })>;
+}
 namespace beman::execution26
 {
     class inplace_stop_token;
@@ -58,6 +63,7 @@ class beman::execution26::inplace_stop_source
     };
 
 public:
+    ~inplace_stop_source(){ std::cout << "destroying inplace_stop_source\n"; }
     auto stop_requested() const noexcept -> bool;
     static constexpr auto stop_possible() noexcept -> bool;
     auto get_token() const -> ::beman::execution26::inplace_stop_token;
@@ -139,6 +145,8 @@ inline auto beman::execution26::inplace_stop_source::get_token() const -> ::bema
 inline auto beman::execution26::inplace_stop_source::request_stop() -> bool
 {
     using relock = ::std::unique_ptr<::std::unique_lock<::std::mutex>, decltype([](auto p){ p->lock(); })>;
+    beman::execution26::detail::on_exit done("request_stop_done\n");
+    std::cout << "request_stop start\n";
     if (false == this->stopped.exchange(true))
     {
         ::std::unique_lock guard(this->lock);

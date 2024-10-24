@@ -1,6 +1,7 @@
 // examples/when_all-cancel.cpp                                       -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+//#define FIX
 #include <beman/execution26/execution.hpp>
 #include <beman/execution26/stop_token.hpp>
 #include <iostream>
@@ -56,7 +57,9 @@ namespace
                 {
                     auto local_st{this->st};
                     local_st->callback.reset();
+                    std::cout << "await_stop stopping\n";
                     ex::set_stopped(std::move(local_st->receiver));
+                    std::cout << "await_stop stopping done\n";
                 }
             };
             using operation_state_concept = ex::operation_state_t;
@@ -80,14 +83,83 @@ namespace
     };
     static_assert(ex::sender_in<await_stop>);
     static_assert(ex::operation_state<await_stop::state<receiver>>);
+
+    template <ex::sender Sender>
+    struct eager
+    {
+        using sender_concept = ex::sender_t;
+        using completion_signatures = ex::completion_signatures<
+            ex::set_value_t(),
+            ex::set_stopped_t()
+        >;
+
+        Sender sender;
+
+        template <ex::receiver Receiver>
+        struct state
+        {
+            using operation_state_concept = ex::operation_state_t;
+            struct receiver
+            {
+                using receiver_concept = ex::receiver_t;
+                state* st;
+                auto set_value() && noexcept -> void { ex::set_value(std::move(st->outer_receiver)); }
+                template <typename E>
+                auto set_error(E&& e) && noexcept -> void { ex::set_error(std::move(st->outer_receiver), std::forward<E>(e)); }
+                auto set_stopped() && noexcept -> void
+                {
+                    st->inner_state.reset();
+                    ex::set_stopped(std::move(st->outer_receiver));
+                }
+
+                auto get_env() const noexcept -> env
+                {
+                    return ex::get_env(st->outer_receiver);
+                }
+            };
+            using inner_state_t = decltype(ex::connect(std::declval<Sender>(), std::declval<receiver>()));
+
+            struct helper
+            {
+                inner_state_t st;
+                template <typename S, typename R>
+                helper(S&& s, R&& r): st(ex::connect(std::forward<S>(s), std::forward<R>(r))) {}
+            };
+
+            Receiver outer_receiver;
+            std::optional<helper> inner_state;
+
+            template <typename R, typename S>
+            state(R&& r, S&& s)
+                : outer_receiver(std::forward<R>(r))
+                , inner_state()
+            {
+                inner_state.emplace(std::forward<S>(s), receiver{this});
+            }
+            auto start() & noexcept -> void
+            {
+                ex::start((*this->inner_state).st);
+            }
+        };
+        template <ex::receiver Receiver>
+        auto connect(Receiver&& receiver)
+        {
+            return state<std::remove_cvref_t<Receiver>>(std::forward<Receiver>(receiver), std::move(this->sender));
+        }
+    };
+    template <ex::sender Sender>
+    eager(Sender&&) -> eager<std::remove_cvref_t<Sender>>;
+    //static_assert(ex::sender_in<eager>);
+    //static_assert(ex::operation_state<eager::state<receiver>>);
 }
 
 auto main() -> int
 {
-    auto s{ex::when_all(await_stop{})};
+    auto s{eager{ex::when_all(await_stop{})}};
 
     ex::inplace_stop_source source{};
     auto op{ex::connect(s, receiver{&source})};
+    (void)op;
     std::cout << "start\n";
     ex::start(op);
     std::cout << "started\n";
