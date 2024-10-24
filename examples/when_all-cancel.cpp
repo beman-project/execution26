@@ -71,7 +71,7 @@ namespace
 
             auto start() & noexcept -> void
             {
-                callback.emplace(ex::get_stop_token(ex::get_env(this->receiver)), stop_t(this));
+                callback.emplace(ex::get_stop_token(ex::get_env(this->receiver)), stop_t{this});
             }
         };
 
