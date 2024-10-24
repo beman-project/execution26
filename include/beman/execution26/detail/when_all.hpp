@@ -111,10 +111,26 @@ namespace beman::execution26::detail
 
         enum class disposition { started, error, stopped };
 
+#ifdef FIX
+        template <typename St>
+#endif
         struct on_stop_request
         {
+#ifdef FIX
+            St& st;
+#else
             ::beman::execution26::inplace_stop_source& stop_src;
-            auto operator()() { this->stop_src.request_stop(); }
+#endif
+            auto operator()()
+            {
+#ifdef FIX
+                ++this->st.count;
+                this->st.stop_src.request_stop();
+                this->st.arrive();
+#else
+                this->stop_src.request_stop();
+#endif
+            }
         };
         template <typename Receiver, typename... Sender>
         struct state_type
@@ -148,7 +164,11 @@ namespace beman::execution26::detail
             >;
             using stop_callback = ::beman::execution26::stop_callback_for_t<
                 ::beman::execution26::stop_token_of_t<
+#ifdef FIX
+                   ::beman::execution26::env_of_t<Receiver>>, on_stop_request<state_type>
+#else
                    ::beman::execution26::env_of_t<Receiver>>, on_stop_request
+#endif
             >;
 
             void arrive(Receiver& receiver) noexcept {
@@ -217,7 +237,11 @@ namespace beman::execution26::detail
                 State& state, Receiver& receiver, Ops&... ops) noexcept -> void {
                 state.on_stop.emplace(
                     ::beman::execution26::get_stop_token(::beman::execution26::get_env(receiver)),
+#ifdef FIX
+                    on_stop_request{state}
+#else
                     on_stop_request{state.stop_src}
+#endif
                 );
                 if (state.stop_src.stop_requested()) {
                     state.on_stop.reset();
