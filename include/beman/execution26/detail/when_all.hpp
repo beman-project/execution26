@@ -112,21 +112,26 @@ namespace beman::execution26::detail
         enum class disposition { started, error, stopped };
 
 #ifdef FIX
-        template <typename St>
+        template <typename St, typename Receiver>
 #endif
         struct on_stop_request
         {
 #ifdef FIX
-            St& st;
+            St&       st;
+            Receiver& receiver;
 #else
             ::beman::execution26::inplace_stop_source& stop_src;
 #endif
             auto operator()()
             {
 #ifdef FIX
-                ++this->st.count;
-                this->st.stop_src.request_stop();
-                this->st.arrive();
+                if(0u == this->st.count++)
+                    --this->st.count;
+                else
+                {
+                    this->st.stop_src.request_stop();
+                    this->st.arrive(this->receiver);
+                }
 #else
                 this->stop_src.request_stop();
 #endif
@@ -165,7 +170,7 @@ namespace beman::execution26::detail
             using stop_callback = ::beman::execution26::stop_callback_for_t<
                 ::beman::execution26::stop_token_of_t<
 #ifdef FIX
-                   ::beman::execution26::env_of_t<Receiver>>, on_stop_request<state_type>
+                   ::beman::execution26::env_of_t<Receiver>>, on_stop_request<state_type, Receiver>
 #else
                    ::beman::execution26::env_of_t<Receiver>>, on_stop_request
 #endif
@@ -238,7 +243,7 @@ namespace beman::execution26::detail
                 state.on_stop.emplace(
                     ::beman::execution26::get_stop_token(::beman::execution26::get_env(receiver)),
 #ifdef FIX
-                    on_stop_request{state}
+                    on_stop_request{state, receiver}
 #else
                     on_stop_request{state.stop_src}
 #endif
@@ -253,7 +258,8 @@ namespace beman::execution26::detail
         };
         static constexpr auto complete{
             []<typename Index, typename State, typename Receiver, typename Set, typename... Args>(
-                Index, State& state, Receiver& receiver, Set, Args&&... args) noexcept -> void {
+                Index, State& state, Receiver& receiver, Set, Args&&... args) noexcept -> void
+            {
                 if constexpr (::std::same_as<Set, ::beman::execution26::set_error_t>) {
                     if (disposition::error != state.disp.exchange(disposition::error)) {
                         state.stop_src.request_stop();

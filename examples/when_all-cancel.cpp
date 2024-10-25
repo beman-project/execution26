@@ -1,7 +1,7 @@
 // examples/when_all-cancel.cpp                                       -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-//#define FIX
+#define FIX
 #include <beman/execution26/execution.hpp>
 #include <beman/execution26/stop_token.hpp>
 #include <iostream>
