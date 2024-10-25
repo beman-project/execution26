@@ -243,7 +243,7 @@ namespace beman::execution26::detail
                 state.on_stop.emplace(
                     ::beman::execution26::get_stop_token(::beman::execution26::get_env(receiver)),
 #ifdef FIX
-                    on_stop_request{state, receiver}
+                    on_stop_request<State, Receiver>{state, receiver}
 #else
                     on_stop_request{state.stop_src}
 #endif
