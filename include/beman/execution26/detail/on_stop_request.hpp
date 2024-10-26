@@ -14,6 +14,8 @@ namespace beman::execution26::detail
         St&       st;
         auto operator()() const -> void { this->st.request_stop(); }
     };
+    template <typename T>
+    on_stop_request(T&) -> on_stop_request<T>;
 }
 
 // ----------------------------------------------------------------------------
