@@ -25,6 +25,7 @@
 #include <beman/execution26/detail/meta_transform.hpp>
 #include <beman/execution26/detail/meta_prepend.hpp>
 #include <beman/execution26/detail/meta_unique.hpp>
+#include <beman/execution26/detail/on_stop_request.hpp>
 #include <beman/execution26/detail/sender.hpp>
 #include <beman/execution26/detail/sender_in.hpp>
 #include <beman/execution26/detail/set_value.hpp>
@@ -111,11 +112,6 @@ namespace beman::execution26::detail
 
         enum class disposition { started, error, stopped };
 
-        struct on_stop_request
-        {
-            ::beman::execution26::inplace_stop_source& stop_src;
-            auto operator()() { this->stop_src.request_stop(); }
-        };
         template <typename Receiver, typename... Sender>
         struct state_type
         {
@@ -148,7 +144,9 @@ namespace beman::execution26::detail
             >;
             using stop_callback = ::beman::execution26::stop_callback_for_t<
                 ::beman::execution26::stop_token_of_t<
-                   ::beman::execution26::env_of_t<Receiver>>, on_stop_request
+                   ::beman::execution26::env_of_t<Receiver>
+                >,
+                ::beman::execution26::detail::on_stop_request<state_type>
             >;
 
             void arrive(Receiver& receiver) noexcept {
@@ -187,6 +185,18 @@ namespace beman::execution26::detail
                 }
             }
 
+            auto request_stop() -> void
+            {
+                if (1u == ++this->count)
+                    --this->count;
+                else
+                {
+                    this->stop_src.request_stop();
+                    this->arrive(*this->receiver);
+                }
+            }
+
+            Receiver* receiver{};
             ::std::atomic<size_t> count{sizeof...(Sender)};
             ::beman::execution26::inplace_stop_source stop_src{};
             ::std::atomic<disposition> disp{disposition::started};
@@ -207,17 +217,18 @@ namespace beman::execution26::detail
         };
         static constexpr auto get_state{
             []<typename Sender, typename Receiver>(Sender&& sender, Receiver&)
-                noexcept(noexcept(std::forward<Sender>(sender).apply(make_state<Receiver>())))
+                noexcept(noexcept(std::forward<Sender>(sender).apply(make_state<Receiver>{})))
             {
-                return std::forward<Sender>(sender).apply(make_state<Receiver>());
+                return std::forward<Sender>(sender).apply(make_state<Receiver>{});
             }
         };
         static constexpr auto start{
             []<typename State, typename Receiver, typename... Ops>(
                 State& state, Receiver& receiver, Ops&... ops) noexcept -> void {
+                state.receiver = &receiver;
                 state.on_stop.emplace(
                     ::beman::execution26::get_stop_token(::beman::execution26::get_env(receiver)),
-                    on_stop_request{state.stop_src}
+                    ::beman::execution26::detail::on_stop_request{state}
                 );
                 if (state.stop_src.stop_requested()) {
                     state.on_stop.reset();
@@ -229,7 +240,8 @@ namespace beman::execution26::detail
         };
         static constexpr auto complete{
             []<typename Index, typename State, typename Receiver, typename Set, typename... Args>(
-                Index, State& state, Receiver& receiver, Set, Args&&... args) noexcept -> void {
+                Index, State& state, Receiver& receiver, Set, Args&&... args) noexcept -> void
+            {
                 if constexpr (::std::same_as<Set, ::beman::execution26::set_error_t>) {
                     if (disposition::error != state.disp.exchange(disposition::error)) {
                         state.stop_src.request_stop();

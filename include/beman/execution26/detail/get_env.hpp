@@ -17,18 +17,19 @@ namespace beman::execution26
     {
         template <typename Object>
             requires(
-                not requires(Object&& object) { ::std::as_const(object).get_env(); }
+                not requires(::std::add_const_t<::std::remove_cvref_t<Object>>& object) { object.get_env(); }
                 || ::beman::execution26::detail::queryable<std::remove_cvref_t<decltype(::std::declval<::std::remove_cvref_t<Object> const&>().get_env())>>
             )
         auto operator()(Object&& object) const noexcept -> decltype(auto)
         {
-            if constexpr (requires{ ::std::as_const(object).get_env(); })
+            ::std::add_const_t<::std::remove_cvref_t<Object>>& obj{object};
+            if constexpr (requires{ obj.get_env(); })
             {
-                static_assert(noexcept(::std::as_const(object).get_env()),
-                              "get_env requires the xpression to be noexcept");
-                static_assert(::beman::execution26::detail::queryable<std::remove_cvref_t<decltype(::std::as_const(object).get_env())>>,
+                static_assert(noexcept(obj.get_env()),
+                              "get_env requires the expression to be noexcept");
+                static_assert(::beman::execution26::detail::queryable<std::remove_cvref_t<decltype(obj.get_env())>>,
                               "get_env requires the result type to be destructible");
-                return ::std::as_const(object).get_env();
+                return obj.get_env();
             }
             else
             {

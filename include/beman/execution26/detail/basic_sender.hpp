@@ -69,7 +69,7 @@ namespace beman::execution26::detail
                   ::beman::execution26::receiver Receiver>
         auto connect(this Self&& self, Receiver receiver)
             noexcept(true/*-dk:TODO*/)
-            -> ::beman::execution26::detail::basic_operation<basic_sender, Receiver>
+            -> ::beman::execution26::detail::basic_operation<Self, Receiver>
         {
             return { ::std::forward<Self>(self), ::std::move(receiver) };
         }
