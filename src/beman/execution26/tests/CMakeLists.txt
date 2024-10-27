@@ -3,9 +3,6 @@
 
 list(APPEND execution_tests
     exec-scounting.pass
-)
-
-list(APPEND xexecution_tests
     exec-awaitable.pass
     allocator-requirements-general.pass
     exec-connect.pass
