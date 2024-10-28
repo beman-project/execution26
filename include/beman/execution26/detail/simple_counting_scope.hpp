@@ -4,8 +4,8 @@
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_SIMPLE_COUNTING_SCOPE
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_SIMPLE_COUNTING_SCOPE
 
-#include <beman/execution26/detail/just.hpp> //-dk:TODO remove
 #include <beman/execution26/detail/sender.hpp>
+#include <beman/execution26/detail/notify.hpp>
 #include <atomic>
 #include <mutex>
 #include <utility>
@@ -48,7 +48,23 @@ public:
             break;
         }
     }
-    auto join() noexcept { return ::beman::execution26::just(); }
+    auto join() noexcept
+    {
+        bool complete{false};
+        {
+            ::std::lock_guard kerberos(this->mutex);
+            if (0u == this->count)
+            {
+                this->state = state_t::joined;
+                complete = true;
+            }
+        }
+        if (complete)
+        {
+            n.complete();
+        }
+        return ::beman::execution26::detail::notify(this->n);
+    }
 
 private:
     enum class state_t
@@ -85,13 +101,12 @@ private:
                 return;
             this->state = state_t::joined;
         }
-        //-dk:TODO join!
+        n.complete();
     }
-    ::std::mutex                  mutex;
-    ::std::size_t                 count{};
-    state_t                       state{state_t::unused};
-    struct join_op_state {};
-    ::std::atomic<join_op_state>* joins{};
+    ::std::mutex                           mutex;
+    ::std::size_t                          count{};
+    state_t                                state{state_t::unused};
+    ::beman::execution26::detail::notifier n;
 };
 
 // ----------------------------------------------------------------------------

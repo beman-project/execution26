@@ -6,6 +6,7 @@
 #include <test/execution.hpp>
 #include <concepts>
 #include <optional>
+#include <iostream> //-dk:TODO remove
 
 // ----------------------------------------------------------------------------
 
@@ -30,21 +31,25 @@ namespace
         // a scope is created unused and can be destroyed:
         test_std::simple_counting_scope{};
         // a scope can be used and closed and can be destroyed:
+        std::cout << "ctor 1\n";
         {
             test_std::simple_counting_scope scope{};
             scope.close();
         }
         // a scope can be joined and destroyed:
+        std::cout << "ctor 2\n";
         {
             test_std::simple_counting_scope scope{};
             test_std::sync_wait(scope.join());
         }
         // a scope can be closed, joined, and destroyed:
+        std::cout << "ctor 3\n";
         {
             test_std::simple_counting_scope scope{};
             scope.close();
             test_std::sync_wait(scope.join());
         }
+        std::cout << "ctor 4\n";
         // a scope with an outstanding token can be destroyed:
         {
             std::optional<test_std::simple_counting_scope> scope_opt;
@@ -53,6 +58,7 @@ namespace
             scope_opt.reset();
             test::use(token);
         }
+        std::cout << "ctor 5\n";
     }
 
     auto test_scounting_assoc_ctor() -> void

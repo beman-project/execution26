@@ -102,6 +102,7 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/never_stop_token.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/nostopstate.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/nothrow_callable.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/notify.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/on_stop_request.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/operation_state.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/operation_state_task.hpp
@@ -129,6 +130,7 @@ target_sources(${TARGET_LIBRARY}
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/set_stopped.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/set_value.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/simple_allocator.hpp
+    ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/simple_counting_scope.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/single_sender.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/single_sender_value_type.hpp
     ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/start.hpp
