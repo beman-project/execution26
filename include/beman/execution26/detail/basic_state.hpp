@@ -21,7 +21,7 @@ namespace beman::execution26::detail
             : receiver(::std::move(receiver))
             , state(::beman::execution26::detail::impls_for<
                     ::beman::execution26::tag_of_t<Sender>
-                >::get_state(::std::forward<Sender>(sender), receiver))
+                >::get_state(::std::forward<Sender>(sender), this->receiver))
         {
         }
 
