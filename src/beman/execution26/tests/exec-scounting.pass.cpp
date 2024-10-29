@@ -6,12 +6,18 @@
 #include <test/execution.hpp>
 #include <concepts>
 #include <optional>
-#include <iostream> //-dk:TODO remove
 
 // ----------------------------------------------------------------------------
 
 namespace
 {
+    struct receiver
+    {
+        using receiver_concept = test_std::receiver_t;
+        bool& flag;
+        auto set_value() && noexcept -> void { this->flag = true; }
+    };
+
     auto test_scounting_ctor() -> void
     {
         static_assert(std::default_initializable<test_std::simple_counting_scope>);
@@ -31,25 +37,21 @@ namespace
         // a scope is created unused and can be destroyed:
         test_std::simple_counting_scope{};
         // a scope can be used and closed and can be destroyed:
-        std::cout << "ctor 1\n";
         {
             test_std::simple_counting_scope scope{};
             scope.close();
         }
         // a scope can be joined and destroyed:
-        std::cout << "ctor 2\n";
         {
             test_std::simple_counting_scope scope{};
             test_std::sync_wait(scope.join());
         }
         // a scope can be closed, joined, and destroyed:
-        std::cout << "ctor 3\n";
         {
             test_std::simple_counting_scope scope{};
             scope.close();
             test_std::sync_wait(scope.join());
         }
-        std::cout << "ctor 4\n";
         // a scope with an outstanding token can be destroyed:
         {
             std::optional<test_std::simple_counting_scope> scope_opt;
@@ -58,13 +60,41 @@ namespace
             scope_opt.reset();
             test::use(token);
         }
-        std::cout << "ctor 5\n";
     }
 
     auto test_scounting_assoc_ctor() -> void
     {
         static_assert(noexcept(test_std::simple_counting_scope::assoc{}));
         assert(test_std::simple_counting_scope::assoc{}? false: true);
+    }
+
+    auto test_scounting_associate() -> void
+    {
+        test_std::simple_counting_scope scope;
+        std::optional assoc(scope.get_token().try_associate());
+        assert(*assoc? true: false);
+        assert(scope.get_token().try_associate()? true: false);
+        std::optional assoc2(scope.get_token().try_associate());
+        scope.close();
+        assert(scope.get_token().try_associate()? false: true);
+
+        bool flag{};
+        auto op{test_std::connect(scope.join(), receiver{flag})};
+        assert(flag == false);
+        test_std::start(op);
+
+        assert(flag == false);
+        assoc.reset();
+
+        std::optional assoc3{test_std::simple_counting_scope::assoc()};
+        *assoc3 = ::std::move(*assoc2);
+
+        assert(flag == false);
+        assoc2.reset();
+
+        assert(flag == false);
+        assoc3.reset();
+        assert(flag == true);
     }
 }
 
@@ -74,4 +104,5 @@ auto main() -> int
 {
     test_scounting_ctor();
     test_scounting_assoc_ctor();
+    test_scounting_associate();
 }

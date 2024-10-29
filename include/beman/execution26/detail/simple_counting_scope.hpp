@@ -115,9 +115,17 @@ class beman::execution26::simple_counting_scope::assoc
 {
 public:
     assoc() = default;
-    assoc(assoc const& other) noexcept: assoc(other.scope) {}
-    assoc(assoc&& other) noexcept: assoc(::std::exchange(other.scope, nullptr)) {}
-    ~assoc() { if (this->scope) this->scope->disassociate(); }
+    assoc(assoc const& other) noexcept: assoc(other.scope)
+    {
+    }
+    assoc(assoc&& other) noexcept: scope(::std::exchange(other.scope, nullptr))
+    {
+    }
+    ~assoc()
+    {
+         if (this->scope)
+            this->scope->disassociate();
+    }
 
     auto operator= (assoc other) noexcept -> assoc
     {

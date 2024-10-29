@@ -8,6 +8,7 @@
 #include <mutex>
 #include <utility>
 #include <iostream> //-dk:TODO remove
+#include <cassert> //-dk:TODO remove
 
 // ----------------------------------------------------------------------------
 
@@ -71,27 +72,28 @@ namespace beman::execution26::detail
             : ::beman::execution26::detail::notifier::base
         {
             ::beman::execution26::detail::notifier* n;
-            ::std::remove_cvref_t<Receiver>*        receiver{};
-            state(::beman::execution26::detail::notifier* n)
+            ::std::remove_cvref_t<Receiver>&        receiver{};
+            state(::beman::execution26::detail::notifier* n,
+                  ::std::remove_cvref_t<Receiver>& receiver)
                 : n(n)
+                , receiver(receiver)
             {
             }
             auto complete() -> void override
             {
-                ::beman::execution26::set_value(::std::move(*this->receiver));
+                ::beman::execution26::set_value(::std::move(this->receiver));
             }
         };
         static constexpr auto get_state{
-            []<typename Sender, typename Receiver>(Sender&& sender, Receiver&&)
+            []<typename Sender, typename Receiver>(Sender&& sender, Receiver&& receiver)
             {
                 ::beman::execution26::detail::notifier* n{sender.template get<1>()};
-                return state<Receiver>(n);
+                return state<Receiver>(n, receiver);
             }
         };
         static constexpr auto start{
-            [](auto& state, auto& receiver) noexcept -> void
+            [](auto& state, auto&) noexcept -> void
             {
-                state.receiver = &receiver;
                 if (not state.n->add(&state))
                 {
                     state.complete();
