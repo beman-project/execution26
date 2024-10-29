@@ -173,7 +173,6 @@ install(
   FILE_SET ${TARGET_LIBRARY}_public_headers
   FILE_SET ${TARGET_LIBRARY}_detail_headers
 )
-target_include_directories(${TARGET_LIBRARY} PUBLIC $<INSTALL_INTERFACE:include>)
 
 install(EXPORT ${TARGETS_EXPORT_NAME}1
   FILE ${TARGET_LIBRARY}-config.cmake

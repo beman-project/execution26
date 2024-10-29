@@ -1,5 +1,8 @@
 # src/beman/execution26/tests/CMakeLists.txt
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+cmake_minimum_required(VERSION 3.23...3.31)
+
+project(beman_execution26_tests LANGUAGES CXX)
 
 list(APPEND execution_tests
     exec-awaitable.pass
@@ -84,10 +87,18 @@ list(APPEND execution_tests
 )
 
 if(PROJECT_IS_TOP_LEVEL)
-    foreach(test ${execution_tests})
-        set(TEST_EXE ${TARGET_PREFIX}.${test})
-        add_executable(${TEST_EXE} ${test}.cpp)
-        target_link_libraries(${TEST_EXE} PRIVATE ${TARGET_LIBRARY})
-        add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
-    endforeach()
+  enable_testing()
+  find_package(beman_execution26 REQUIRED)
+  if(beman_execution26_FOUND)
+    set(CMAKE_CXX_STANDARD 26)
+    include_directories(../../../../include)
+    set(TARGET_LIBRARY beman_execution26::beman_execution26)
+  endif()
 endif()
+
+foreach(test ${execution_tests})
+  set(TEST_EXE ${TARGET_PREFIX}.${test})
+  add_executable(${TEST_EXE} ${test}.cpp)
+  target_link_libraries(${TEST_EXE} PRIVATE ${TARGET_LIBRARY})
+  add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
+endforeach()
