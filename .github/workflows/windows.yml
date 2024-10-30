@@ -5,7 +5,7 @@ name: Windows Build
 
 on:
   push:
-    branches: [ "main" ]
+    # branches: [ "main" ]
     paths:
       - "include/**"
       - "src/**"
@@ -25,12 +25,12 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: environment
-      run: cmake -E make_directory ${{github.workspace}}/build
-    - name: configure
-      working-directory: ${{github.workspace}}/build
-      run: cmake ${{github.workspace}}
-    - name: make
-      working-directory: ${{github.workspace}}/build
-      run: cmake --build .
+      - uses: actions/checkout@v4
+      - name: environment
+        run: cmake -E make_directory ${{github.workspace}}/build
+      - name: configure
+        working-directory: ${{github.workspace}}/build
+        run: cmake ${{github.workspace}}
+      - name: make
+        working-directory: ${{github.workspace}}/build
+        run: cmake --build . --target all_verify_interface_header_sets install test
