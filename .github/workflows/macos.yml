@@ -30,7 +30,7 @@ jobs:
       matrix:
         sanitizer: [debug, release]
         # TODO: compiler: [g++-14, clang++-19]
-        compiler: [g++-14]
+        compiler: [clang++-18]
 
     steps:
       - uses: actions/checkout@v4
@@ -41,8 +41,9 @@ jobs:
         with:
           # compiler: llvm-19
           # clangtidy: true
-          cmake: true
+          # cmake: true
           ninja: true
 
       - name: macos ${{ matrix.compiler }} ${{ matrix.sanitizer }}
-        run: CXX=${{ matrix.compiler }} make ${{ matrix.sanitizer }}
+        if: startsWith(matrix.compiler, 'clang')
+        run: CXX=$(brew --prefix llvm@18)/bin/clang++ make ${{ matrix.sanitizer }}
