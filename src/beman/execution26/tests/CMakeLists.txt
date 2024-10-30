@@ -107,18 +107,26 @@ endforeach()
 if(NOT PROJECT_IS_TOP_LEVEL)
     # test if the targets are findable from the build directory
     # cmake-format: off
+    if(NOT DEFINED CMAKE_BUILD_TYPE)
+        set(CMAKE_BUILD_TYPE Release)
+    endif()
     add_test(find-package-test
         ${CMAKE_CTEST_COMMAND}
+        --verbose
+        # TODO: --output-on-failure
         -C ${CMAKE_BUILD_TYPE}
         --build-and-test
             "${CMAKE_CURRENT_SOURCE_DIR}"
             "${CMAKE_CURRENT_BINARY_DIR}/find-package-test"
         --build-generator ${CMAKE_GENERATOR}
         --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+        # XXX --build-noclean
         --build-options
+            # XXX --clean-first
             "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
             "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
             "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
+            # FIXME: "-C ${CMAKE_BUILD_TYPE}"
     )
     # cmake-format: on
 endif()
