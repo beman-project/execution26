@@ -18,7 +18,7 @@ namespace beman::execution26::detail
     {
     private:
         Scheduler sched;
-    
+
     public:
         template <typename S>
         explicit sched_env(S&& sch): sched(::std::forward<S>(sch)) {}
@@ -32,7 +32,7 @@ namespace beman::execution26::detail
             if constexpr (requires{ this-> sched.query(q); })
                 return this->sched.query(q);
             else
-                return ::beman::execution26::default_domain{};
+                return ::beman::execution26::get_domain;
         }
     };
 
