@@ -40,4 +40,4 @@ jobs:
 
       - name: ctest
         working-directory: ${{github.workspace}}/build
-        run: ctest --build-config Release
+        run: ctest --build-config Release --output-on-failure
