@@ -5,6 +5,7 @@
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_SCHED_ENV
 
 #include <beman/execution26/detail/get_domain.hpp>
+#include <beman/execution26/detail/default_domain.hpp>
 #include <beman/execution26/detail/get_scheduler.hpp>
 #include <type_traits>
 #include <utility>
@@ -32,7 +33,7 @@ namespace beman::execution26::detail
             if constexpr (requires{ this-> sched.query(q); })
                 return this->sched.query(q);
             else
-                return ::beman::execution26::get_domain;
+                return ::beman::execution26::default_domain{};
         }
     };
 

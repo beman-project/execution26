@@ -1,10 +1,8 @@
 ---
-BasedOnStyle:                       LLVM
-ConstructorInitializerIndentWidth:  2
-ContinuationIndentWidth:            2
-IndentWidth:                        2
-TabWidth:                           2
-UseTab:                             Never
+BasedOnStyle:    LLVM
+Language:        Json
+IndentWidth:     2
+UseTab:          Never
 ---
 Language:        Cpp
 AccessModifierOffset: -2
