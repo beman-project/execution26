@@ -94,6 +94,7 @@ if(PROJECT_IS_TOP_LEVEL)
   if(beman_execution26_FOUND)
     set(CMAKE_CXX_STANDARD 26)
     set(TARGET_LIBRARY beman_execution26::beman_execution26)
+    set(execution_tests exec-awaitable.pass) # only one sample to save time! CK
   endif()
 endif()
 
@@ -107,26 +108,21 @@ endforeach()
 if(NOT PROJECT_IS_TOP_LEVEL)
     # test if the targets are findable from the build directory
     # cmake-format: off
-    if(NOT DEFINED CMAKE_BUILD_TYPE)
-        set(CMAKE_BUILD_TYPE Release)
-    endif()
-    add_test(find-package-test
-        ${CMAKE_CTEST_COMMAND}
-        --verbose
-        # TODO: --output-on-failure
-        -C ${CMAKE_BUILD_TYPE}
+    add_test(NAME find-package-test
+      COMMAND ${CMAKE_CTEST_COMMAND}
+        # --verbose
+        --output-on-failure
+        -C $<CONFIG>
         --build-and-test
             "${CMAKE_CURRENT_SOURCE_DIR}"
             "${CMAKE_CURRENT_BINARY_DIR}/find-package-test"
         --build-generator ${CMAKE_GENERATOR}
         --build-makeprogram ${CMAKE_MAKE_PROGRAM}
-        # XXX --build-noclean
         --build-options
-            # XXX --clean-first
             "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
-            "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
+            "-DCMAKE_BUILD_TYPE=$<CONFIG>"
             "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
-            # FIXME: "-C ${CMAKE_BUILD_TYPE}"
+            # TODO(CK): Needed too? "--config $<CONFIG>"
     )
     # cmake-format: on
 endif()
