@@ -1,0 +1,10 @@
+format:
+  tab_size: 2
+  line_width: 119
+  dangle_parens: true
+  separate_ctrl_name_with_space: false
+  always_wrap: install
+  keyword_case: upper
+
+markup:
+  enable_markup: false
