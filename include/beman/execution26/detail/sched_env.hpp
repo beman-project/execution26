@@ -5,6 +5,7 @@
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_SCHED_ENV
 
 #include <beman/execution26/detail/get_domain.hpp>
+#include <beman/execution26/detail/default_domain.hpp>
 #include <beman/execution26/detail/get_scheduler.hpp>
 #include <type_traits>
 #include <utility>
@@ -18,7 +19,7 @@ namespace beman::execution26::detail
     {
     private:
         Scheduler sched;
-    
+
     public:
         template <typename S>
         explicit sched_env(S&& sch): sched(::std::forward<S>(sch)) {}

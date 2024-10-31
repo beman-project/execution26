@@ -5,6 +5,7 @@
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_OPERATION_STATE_TASK
 
 #include <beman/execution26/detail/with_await_transform.hpp>
+#include <beman/execution26/detail/operation_state.hpp>
 #include <beman/execution26/detail/set_stopped.hpp>
 #include <beman/execution26/detail/env_of_t.hpp>
 #include <beman/execution26/detail/get_env.hpp>
@@ -47,7 +48,7 @@ struct beman::execution26::detail::connect_awaitable_promise
     }
 
     auto get_return_object() noexcept -> ::beman::execution26::detail::operation_state_task<Receiver>;
-    
+
 private:
     Receiver& receiver;
 };

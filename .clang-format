@@ -1,4 +1,9 @@
 ---
+BasedOnStyle:    LLVM
+Language:        Json
+IndentWidth:     2
+UseTab:          Never
+---
 Language:        Cpp
 AccessModifierOffset: -2
 AlignAfterOpenBracket: Align

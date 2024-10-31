@@ -5,7 +5,7 @@ name: Macos Build
 
 on:
   push:
-    branches: [ "main" ]
+    # branches: [ "main" ]
     paths:
       - "include/**"
       - "src/**"
@@ -23,8 +23,27 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-15
+    strategy:
+      fail-fast: false
+
+      matrix:
+        sanitizer: [debug, release]
+        # TODO: compiler: [g++-14, clang++-19]
+        compiler: [clang++-18]
+
     steps:
-    - uses: actions/checkout@v4
-    - name: make
-      run: make
+      - uses: actions/checkout@v4
+
+      - name: Setup Cpp
+        # if: startsWith(matrix.compiler, 'clang')
+        uses: aminya/setup-cpp@v1
+        with:
+          # compiler: llvm-19
+          # clangtidy: true
+          # cmake: true
+          ninja: true
+
+      - name: macos ${{ matrix.compiler }} ${{ matrix.sanitizer }}
+        if: startsWith(matrix.compiler, 'clang')
+        run: CXX=$(brew --prefix llvm@18)/bin/clang++ make ${{ matrix.sanitizer }}

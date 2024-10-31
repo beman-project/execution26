@@ -1,5 +1,8 @@
 # src/beman/execution26/tests/CMakeLists.txt
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+cmake_minimum_required(VERSION 3.25...3.31)
+
+project(beman_execution26_tests LANGUAGES CXX)
 
 list(APPEND execution_tests
     notify.pass
@@ -85,11 +88,43 @@ list(APPEND execution_tests
     utilities.pass
 )
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 if(PROJECT_IS_TOP_LEVEL)
-    foreach(test ${execution_tests})
-        set(TEST_EXE ${TARGET_PREFIX}.${test})
-        add_executable(${TEST_EXE} ${test}.cpp)
-        target_link_libraries(${TEST_EXE} PRIVATE ${TARGET_LIBRARY})
-        add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
-    endforeach()
+  enable_testing()
+  find_package(beman_execution26 REQUIRED)
+  if(beman_execution26_FOUND)
+    set(CMAKE_CXX_STANDARD 26)
+    set(TARGET_LIBRARY beman_execution26::beman_execution26)
+    set(execution_tests exec-awaitable.pass) # only one sample to save time! CK
+  endif()
+endif()
+
+foreach(test ${execution_tests})
+  set(TEST_EXE ${TARGET_PREFIX}.${test})
+  add_executable(${TEST_EXE} ${test}.cpp)
+  target_link_libraries(${TEST_EXE} PRIVATE ${TARGET_LIBRARY})
+  add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
+endforeach()
+
+if(NOT PROJECT_IS_TOP_LEVEL)
+    # test if the targets are findable from the build directory
+    # cmake-format: off
+    add_test(NAME find-package-test
+      COMMAND ${CMAKE_CTEST_COMMAND}
+        # --verbose
+        --output-on-failure
+        -C $<CONFIG>
+        --build-and-test
+            "${CMAKE_CURRENT_SOURCE_DIR}"
+            "${CMAKE_CURRENT_BINARY_DIR}/find-package-test"
+        --build-generator ${CMAKE_GENERATOR}
+        --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+        --build-options
+            "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
+            "-DCMAKE_BUILD_TYPE=$<CONFIG>"
+            "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
+            # TODO(CK): Needed too? "--config $<CONFIG>"
+    )
+    # cmake-format: on
 endif()

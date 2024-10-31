@@ -1,0 +1,132 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "_root-config",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "installDir": "${sourceDir}/stagedir",
+      "cacheVariables": {
+        "CMAKE_PREFIX_PATH": {
+          "type": "path",
+          "value": "${sourceDir}/stagedir"
+        },
+        "CMAKE_CXX_EXTENSIONS": false,
+        "CMAKE_CXX_STANDARD": "26",
+        "CMAKE_CXX_STANDARD_REQUIRED": true,
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true
+      }
+    },
+    {
+      "name": "_debug-base",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_FLAGS": "-fsanitize=address -fsanitize=pointer-compare -fsanitize=pointer-subtract -fsanitize=leak -fsanitize=undefined"
+      }
+    },
+    {
+      "name": "_release-base",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_CXX_FLAGS": "-Wall -Wextra -Wpedantic -Wno-shadow -Wconversion -Wsign-conversion -Wcast-align -Wcast-qual -Woverloaded-virtual -Wformat=2 -Wno-error"
+      }
+    },
+    {
+      "name": "debug",
+      "displayName": "Debug Build",
+      "inherits": [
+        "_root-config",
+        "_debug-base"
+      ]
+    },
+    {
+      "name": "release",
+      "displayName": "Release Build",
+      "inherits": [
+        "_root-config",
+        "_release-base"
+      ]
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "debug",
+      "configurePreset": "debug",
+      "targets": [
+        "all",
+        "install"
+      ]
+    },
+    {
+      "name": "release",
+      "configurePreset": "release",
+      "targets": [
+        "all",
+        "all_verify_interface_header_sets",
+        "install"
+      ]
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "_test_base",
+      "hidden": true,
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "debug",
+      "inherits": "_test_base",
+      "configurePreset": "debug"
+    },
+    {
+      "name": "release",
+      "inherits": "_test_base",
+      "configurePreset": "release"
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "debug",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "debug"
+        },
+        {
+          "type": "build",
+          "name": "debug"
+        },
+        {
+          "type": "test",
+          "name": "debug"
+        }
+      ]
+    },
+    {
+      "name": "release",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "release"
+        },
+        {
+          "type": "build",
+          "name": "release"
+        },
+        {
+          "type": "test",
+          "name": "release"
+        }
+      ]
+    }
+  ]
+}

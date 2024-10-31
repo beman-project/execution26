@@ -5,7 +5,7 @@ name: Linux Build
 
 on:
   push:
-    branches: [ "main" ]
+    # branches: [ "main" ]
     paths:
       - "include/**"
       - "src/**"
@@ -23,12 +23,26 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
+      fail-fast: false
+
       matrix:
-        sanitizer: [none, asan, usan, tsan]
-        compiler: [g++]
+        # TODO: sanitizer: [debug, release, asan, usan, tsan]
+        sanitizer: [debug, release]
+        # TODO: compiler: [g++-14, clang++-18]
+        compiler: [g++-14]
+
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install static analyzers
+        run: >-
+          sudo apt-get install clang-tidy-18 ninja-build -y -q
+
+          sudo update-alternatives --install
+          /usr/bin/clang-tidy clang-tidy
+          /usr/bin/clang-tidy-18 140
+
       - name: Linux ${{ matrix.compiler }} ${{ matrix.sanitizer }}
-        run: make ${{ matrix.sanitizer }} CXX=${{ matrix.compiler }}
+        run: CXX=${{ matrix.compiler }} make ${{ matrix.sanitizer }}
