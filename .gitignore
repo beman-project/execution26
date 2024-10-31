@@ -35,5 +35,6 @@ build
 mkerr
 olderr
 .DS_store
+.vs
 .vscode
 stagedir
