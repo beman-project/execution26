@@ -96,7 +96,6 @@ if(PROJECT_IS_TOP_LEVEL)
   enable_testing()
   find_package(beman_execution26 0.0.1 EXACT REQUIRED)
   if(beman_execution26_FOUND)
-    set(CMAKE_CXX_STANDARD 26)
     set(TARGET_LIBRARY beman_execution26::beman_execution26)
     set(execution_tests exec-awaitable.pass) # only one sample to save time! CK
   endif()
@@ -124,6 +123,7 @@ if(NOT PROJECT_IS_TOP_LEVEL)
       --build-makeprogram ${CMAKE_MAKE_PROGRAM}
       --build-options
           "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
+          "-DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}"
           "-DCMAKE_BUILD_TYPE=$<CONFIG>"
           "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
           # TODO(CK): Needed too? "--config $<CONFIG>"
