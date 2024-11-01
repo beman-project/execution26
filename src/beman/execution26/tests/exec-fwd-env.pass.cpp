@@ -51,7 +51,7 @@ namespace
     };
 }
 
-auto main(int ac, char*[]) -> int
+TEST(exec_fwd_env)
 {
     static_assert(std::same_as<test_std::forwarding_query_t const,
                                decltype(test_std::forwarding_query)>);
@@ -74,6 +74,6 @@ auto main(int ac, char*[]) -> int
     static_assert(test_std::forwarding_query(dynamic_query()));
     static_assert(test_std::forwarding_query(dynamic_query{true}));
     static_assert(not test_std::forwarding_query(dynamic_query{false}));
-    assert(test_std::forwarding_query(dynamic_query{ac == 1}));
-    assert(not test_std::forwarding_query(dynamic_query{ac != 1}));
+    ASSERT(test_std::forwarding_query(dynamic_query{true}));
+    ASSERT(not test_std::forwarding_query(dynamic_query{false}));
 }

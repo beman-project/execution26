@@ -3,7 +3,7 @@
 
 #include "test/execution.hpp"
 
-auto main() -> int
+TEST(stoptoken)
 {
     // section [stoptoken] is empty
 }

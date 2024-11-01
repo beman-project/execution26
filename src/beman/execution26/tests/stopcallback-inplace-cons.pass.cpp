@@ -21,18 +21,18 @@ auto test_inplace_stopcallback_ctor() -> void
     ::test_std::inplace_stop_source source;
     ::test_std::inplace_stop_callback cb1(source.get_token(), [&flag1]{ flag1 = true; });
 
-    assert(flag1 == false);
-    assert(flag2 == false);
+    ASSERT(flag1 == false);
+    ASSERT(flag2 == false);
 
     source.request_stop();
 
-    assert(flag1 == true);
-    assert(flag2 == false);
+    ASSERT(flag1 == true);
+    ASSERT(flag2 == false);
 
     ::test_std::inplace_stop_callback cb2(source.get_token(), [&flag2]{ flag2 = true; });
 
-    assert(flag1 == true);
-    assert(flag2 == true);
+    ASSERT(flag1 == true);
+    ASSERT(flag2 == true);
 }
 
 auto test_inplace_stopcallback_dtor() -> void
@@ -54,16 +54,16 @@ auto test_inplace_stopcallback_dtor() -> void
 
     }
 
-    assert(flag1 == false);
-    assert(flag2 == false);
+    ASSERT(flag1 == false);
+    ASSERT(flag2 == false);
 
     source.request_stop();
 
-    assert(flag1 == true);
-    assert(flag2 == false);
+    ASSERT(flag1 == true);
+    ASSERT(flag2 == false);
 }
 
-auto main() -> int
+TEST(stopcallback_inplace_cons)
 {
     test_inplace_stopcallback_ctor();
     test_inplace_stopcallback_dtor();

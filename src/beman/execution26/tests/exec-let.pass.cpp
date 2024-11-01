@@ -132,7 +132,7 @@ namespace
 
 // ----------------------------------------------------------------------------
 
-auto main() -> int
+TEST(exec_let)
 {
     static_assert(std::same_as<test_std::let_error_t const, decltype(test_std::let_error)>);
     static_assert(std::same_as<test_std::let_stopped_t const, decltype(test_std::let_stopped)>);

@@ -233,7 +233,7 @@ namespace
     }
 }
 
-auto main() -> int
+TEST(exec_recv_concepts)
 {
     test_valid_completion_for();
     test_has_completions();

@@ -5,7 +5,7 @@
 #include "test/execution.hpp"
 #include <cassert>
 
-auto main() -> int
+TEST(stopsource_inplace_cons)
 {
     // Plan:
     // - Given a default constructed inplace_stop_source.
@@ -13,5 +13,5 @@ auto main() -> int
     // Reference: [stopsource.inplace.general] p2
 
     ::test_std::inplace_stop_source source;
-    assert(source.stop_requested() == false);
+    ASSERT(source.stop_requested() == false);
 }

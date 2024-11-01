@@ -456,7 +456,7 @@ namespace
     }
 }
 
-auto main() -> int
+TEST(execution_syn)
 {
     test_schedule_result_t();
     test_env_of_t();

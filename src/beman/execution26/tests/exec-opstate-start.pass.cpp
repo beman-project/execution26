@@ -72,17 +72,17 @@ namespace
         receiver crcvr{};
         State const cstate{&crcvr};
 
-        assert(rcvr.value == 0);
+        ASSERT(rcvr.value == 0);
         test_std::start(state);
-        assert(rcvr.value == 42);
+        ASSERT(rcvr.value == 42);
 
-        assert(crcvr.value == 0);
+        ASSERT(crcvr.value == 0);
         test_std::start(cstate);
-        assert(crcvr.value == 42);
+        ASSERT(crcvr.value == 42);
     }
 }
 
-auto main() -> int
+TEST(exec_opstate_start)
 {
     static_assert(std::same_as<test_std::start_t const, decltype(test_std::start)>);
 

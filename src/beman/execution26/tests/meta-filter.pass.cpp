@@ -16,7 +16,7 @@ namespace
     struct is_char { static constexpr bool value = std::same_as<char, T>; };
 }
 
-auto main() -> int
+TEST(meta_filter)
 {
     static_assert(std::same_as<
         type_list<>,

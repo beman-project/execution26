@@ -48,7 +48,7 @@ default: test
 
 all: $(SANITIZERS)
 
-run: test # XXX build
+run: test
 	./$(BUILD)/examples/$(EXAMPLE)
 
 release: test
@@ -61,9 +61,8 @@ build:
 	cd $(BUILD); CC=$(CXX) cmake $(SOURCEDIR) $(TOOLCHAIN) $(SYSROOT) -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 	cmake --build $(BUILD)
 
-test: # XXX build
+test:
 	cmake --workflow --preset $(SANITIZER)
-	# XXX cd $(BUILD); $(MAKE) test
 
 ce:
 	@mkdir -p $(BUILD)

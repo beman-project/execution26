@@ -53,8 +53,8 @@ namespace
             test_std::get_completion_signatures(s, test_std::empty_env{})
         );
         auto res{test_std::sync_wait(std::move(s))};
-        assert(res.has_value());
-        assert((*res == std::tuple{3, true, 1.5}));
+        ASSERT(res.has_value());
+        ASSERT((*res == std::tuple{3, true, 1.5}));
     }
 
     struct await_cancel
@@ -215,7 +215,7 @@ namespace
         auto[result]{test_std::sync_wait(
             test_sender(test_std::when_all(std::forward<Sender>(sender)...), res)
         ).value_or(false)};
-        assert(result);
+        ASSERT(result);
     }
 
     auto test_when_all() -> void
@@ -252,24 +252,24 @@ namespace
     {
         auto s{test_std::when_all_with_variant(test_std::just(17), test_std::just('a', true))};
         auto res{test_std::sync_wait(std::move(s))};
-        assert(res);
+        ASSERT(res);
         auto&&[v0, v1]{*res};
         test::use(v0, v1);
         std::visit([](auto t){
             auto[i]{t};
-            assert(i == 17);
+            ASSERT(i == 17);
         }, v0);
         std::visit([](auto t){
             auto[c, b]{t};
-            assert(c == 'a');
-            assert(b == true);
+            ASSERT(c == 'a');
+            ASSERT(b == true);
         }, v1);
     }
 }
 
 // ----------------------------------------------------------------------------
 
-auto main() -> int
+TEST(exec_when_all)
 {
     static_assert(std::same_as<test_std::when_all_t const, decltype(test_std::when_all)>);
     static_assert(std::same_as<test_std::when_all_with_variant_t const, decltype(test_std::when_all_with_variant)>);

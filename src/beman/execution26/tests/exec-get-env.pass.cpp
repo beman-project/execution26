@@ -37,7 +37,7 @@ namespace
     };
 }
 
-auto main() -> int
+TEST(exec_get_env)
 {
     static_assert(std::semiregular<test_std::empty_env>);
 

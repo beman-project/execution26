@@ -1,7 +1,5 @@
 // src/beman/execution26/tests/functional-syn.pass.cpp                -*-C++-*-
-// ----------------------------------------------------------------------------
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-// ----------------------------------------------------------------------------
 
 #include <beman/execution26/functional.hpp>
 #include "test/execution.hpp"
@@ -129,7 +127,7 @@ namespace
 
 // ----------------------------------------------------------------------------
 
-auto main() -> int
+TEST(functional_syn)
 {
     test_callable();
     test_nothrow_callable();

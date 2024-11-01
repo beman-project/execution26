@@ -60,10 +60,10 @@ namespace
         static_assert(std::same_as<std::exception_ptr&&, decltype(test_detail::as_except_ptr(std::move(ep)))>);
         static_assert(std::same_as<std::exception_ptr const&, decltype(test_detail::as_except_ptr(cep))>);
 
-        assert(ep == test_detail::as_except_ptr(ep));
-        assert(ep == mep);
-        assert(ep == test_detail::as_except_ptr(std::move(mep)));
-        assert(cep == test_detail::as_except_ptr(cep));
+        ASSERT(ep == test_detail::as_except_ptr(ep));
+        ASSERT(ep == mep);
+        ASSERT(ep == test_detail::as_except_ptr(std::move(mep)));
+        ASSERT(cep == test_detail::as_except_ptr(cep));
         //-dk:TODO set up death test: test_detail::as_except_ptr(::std::exception_ptr());
 
         static_assert(std::same_as<std::exception_ptr, decltype(test_detail::as_except_ptr(error{17}))>);
@@ -73,11 +73,11 @@ namespace
         }
         catch(error& e)
         {
-            assert(e.value == 17);
+            ASSERT(e.value == 17);
         }
         catch(...)
         {
-            assert(nullptr == "wrong exception type produced by as_except_ptr for random error");
+            ASSERT(nullptr == "wrong exception type produced by as_except_ptr for random error");
         }
         
         std::error_code errc(17, ::std::system_category());
@@ -88,18 +88,18 @@ namespace
         }
         catch(std::system_error& e)
         {
-            assert(e.code() == errc);
+            ASSERT(e.code() == errc);
         }
         catch (...)
         {
-            assert(nullptr == "wrong exception type produced by as_except_ptr for error code");
+            ASSERT(nullptr == "wrong exception type produced by as_except_ptr for error code");
         }
     }
 }
 
 // ----------------------------------------------------------------------------
 
-auto main() -> int
+TEST(exec_general)
 {
     // Tests for [exec.general]
     // p1 doesn't contain anything testable

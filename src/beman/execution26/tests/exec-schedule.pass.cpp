@@ -42,12 +42,12 @@ namespace
         {
             static_assert(noexcept(test_std::schedule(std::forward<Scheduler>(sched))) == noexcept(std::forward<Scheduler>(sched).schedule()));
             auto s = test_std::schedule(std::forward<Scheduler>(sched));
-            assert(s.value == sched.value);
+            ASSERT(s.value == sched.value);
         }
     }
 }
 
-auto main() -> int
+TEST(exec_schedule)
 {
     static_assert(std::same_as<test_std::schedule_t const, decltype(test_std::schedule)>);
     static_assert(test_std::sender<sender>);

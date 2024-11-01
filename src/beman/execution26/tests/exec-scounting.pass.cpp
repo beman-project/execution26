@@ -65,42 +65,42 @@ namespace
     auto test_scounting_assoc_ctor() -> void
     {
         static_assert(noexcept(test_std::simple_counting_scope::assoc{}));
-        assert(test_std::simple_counting_scope::assoc{}? false: true);
+        ASSERT(test_std::simple_counting_scope::assoc{}? false: true);
     }
 
     auto test_scounting_associate() -> void
     {
         test_std::simple_counting_scope scope;
         std::optional assoc(scope.get_token().try_associate());
-        assert(*assoc? true: false);
-        assert(scope.get_token().try_associate()? true: false);
+        ASSERT(*assoc? true: false);
+        ASSERT(scope.get_token().try_associate()? true: false);
         std::optional assoc2(scope.get_token().try_associate());
         scope.close();
-        assert(scope.get_token().try_associate()? false: true);
+        ASSERT(scope.get_token().try_associate()? false: true);
 
         bool flag{};
         auto op{test_std::connect(scope.join(), receiver{flag})};
-        assert(flag == false);
+        ASSERT(flag == false);
         test_std::start(op);
 
-        assert(flag == false);
+        ASSERT(flag == false);
         assoc.reset();
 
         std::optional assoc3{test_std::simple_counting_scope::assoc()};
         *assoc3 = ::std::move(*assoc2);
 
-        assert(flag == false);
+        ASSERT(flag == false);
         assoc2.reset();
 
-        assert(flag == false);
+        ASSERT(flag == false);
         assoc3.reset();
-        assert(flag == true);
+        ASSERT(flag == true);
     }
 }
 
 // ----------------------------------------------------------------------------
 
-auto main() -> int
+TEST(exec_scounting_ctor)
 {
     test_scounting_ctor();
     test_scounting_assoc_ctor();

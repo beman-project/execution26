@@ -65,13 +65,13 @@ namespace
         test_std::run_loop rl1;
         test_std::run_loop rl2;
 
-        assert(rl1.get_scheduler() == rl1.get_scheduler());
-        assert(rl2.get_scheduler() == rl2.get_scheduler());
-        assert(rl1.get_scheduler() != rl2.get_scheduler());
+        ASSERT(rl1.get_scheduler() == rl1.get_scheduler());
+        ASSERT(rl2.get_scheduler() == rl2.get_scheduler());
+        ASSERT(rl1.get_scheduler() != rl2.get_scheduler());
     }
 }
 
-auto main() -> int
+TEST(exec_run_loop_types)
 {
     test_std::run_loop rl;
     // p1:
@@ -113,9 +113,9 @@ auto main() -> int
         { test_std::get_completion_scheduler<test_std::set_value_t>(e) }
         noexcept -> std::same_as<decltype(scheduler)>;
     });
-    assert(scheduler == test_std::get_completion_scheduler<test_std::set_error_t>(e));
-    assert(scheduler == test_std::get_completion_scheduler<test_std::set_stopped_t>(e));
-    assert(scheduler == test_std::get_completion_scheduler<test_std::set_value_t>(e));
+    ASSERT(scheduler == test_std::get_completion_scheduler<test_std::set_error_t>(e));
+    ASSERT(scheduler == test_std::get_completion_scheduler<test_std::set_stopped_t>(e));
+    ASSERT(scheduler == test_std::get_completion_scheduler<test_std::set_value_t>(e));
 
     // p8, p9* can't be tested directly.
     signal_type unstopped_result{signal_type::none};
@@ -136,8 +136,8 @@ auto main() -> int
 
     rl.run();
 
-    assert(unstopped_result == signal_type::value);
-    assert(stopped_result == signal_type::stopped);
+    ASSERT(unstopped_result == signal_type::value);
+    ASSERT(stopped_result == signal_type::stopped);
 
     //-dk:TODO more thorough run_loop tests
 }

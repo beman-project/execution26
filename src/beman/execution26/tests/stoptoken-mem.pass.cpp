@@ -19,17 +19,17 @@ auto test_stop_token_swap() -> void
     ::test_std::stop_token pair0[] = { s0.get_token(), s0.get_token() };
     ::test_std::stop_token pair1[] = { s1.get_token(), s1.get_token() };
 
-    assert(pair0[0] == pair0[1]);
-    assert(pair1[0] == pair1[1]);
-    assert(pair0[0] != pair1[1]);
-    assert(pair0[1] != pair1[0]);
+    ASSERT(pair0[0] == pair0[1]);
+    ASSERT(pair1[0] == pair1[1]);
+    ASSERT(pair0[0] != pair1[1]);
+    ASSERT(pair0[1] != pair1[0]);
 
     pair0[1].swap(pair1[1]);
 
-    assert(pair0[0] != pair0[1]);
-    assert(pair1[0] != pair1[1]);
-    assert(pair0[0] == pair1[1]);
-    assert(pair0[1] == pair1[0]);
+    ASSERT(pair0[0] != pair0[1]);
+    ASSERT(pair1[0] != pair1[1]);
+    ASSERT(pair0[0] == pair1[1]);
+    ASSERT(pair0[1] == pair1[0]);
 }
 
 auto test_stop_token_stop_requested() -> void
@@ -45,13 +45,13 @@ auto test_stop_token_stop_requested() -> void
     ::test_std::stop_source source;
     ::test_std::stop_token  engaged{source.get_token()};
     ::test_std::stop_token  disengaged;
-    assert(engaged.stop_requested() == false);
-    assert(disengaged.stop_requested() == false);
+    ASSERT(engaged.stop_requested() == false);
+    ASSERT(disengaged.stop_requested() == false);
 
     source.request_stop();
 
-    assert(engaged.stop_requested() == true);
-    assert(disengaged.stop_requested() == false);
+    ASSERT(engaged.stop_requested() == true);
+    ASSERT(disengaged.stop_requested() == false);
 }
 
 auto test_stop_token_stop_possible() -> void
@@ -83,13 +83,13 @@ auto test_stop_token_stop_possible() -> void
     stopped_source->request_stop();
     stopped_source.reset();
 
-    assert(disengaged_token.stop_possible() == false);
-    assert(remain_token.stop_possible() == true);
-    assert(unstopped_token.stop_possible() == false);
-    assert(stopped_token.stop_possible() == true);
+    ASSERT(disengaged_token.stop_possible() == false);
+    ASSERT(remain_token.stop_possible() == true);
+    ASSERT(unstopped_token.stop_possible() == false);
+    ASSERT(stopped_token.stop_possible() == true);
 }
 
-auto main() -> int
+TEST(stoptoken_mem)
 {
     static_assert(::test_std::stoppable_token<::test_std::stop_token>);
 

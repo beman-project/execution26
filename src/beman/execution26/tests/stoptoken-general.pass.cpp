@@ -5,7 +5,7 @@
 #include "test/execution.hpp"
 #include "test/stop_token.hpp"
 
-auto main() -> int
+TEST(stoptoken_general)
 {
     // [stoptoken.general] p1:
     static_assert(::test_std::stoppable_token<::test_std::stop_token>);

@@ -14,7 +14,7 @@ namespace
     auto use(auto&&...) {}
 }
 
-auto main() -> int
+TEST(exec_run_loop_general)
 {
     static_assert(noexcept(test_std::run_loop()));
     static_assert(not std::move_constructible<test_std::run_loop>);

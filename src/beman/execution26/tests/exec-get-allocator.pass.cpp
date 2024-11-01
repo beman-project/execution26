@@ -61,7 +61,7 @@ namespace
     }
 }
 
-auto main() -> int
+TEST(exec_get_allocator)
 {
     static_assert(std::same_as<test_std::get_allocator_t const,
                   decltype(test_std::get_allocator)>);
@@ -83,5 +83,5 @@ auto main() -> int
     test_get_allocator<false>(calloc);
 
     static_assert(std::same_as<allocator, decltype(test_std::get_allocator(allocator_object<allocator>()))>);
-    assert(43 == test_std::get_allocator(allocator_object<allocator>{43}).tag);
+    ASSERT(43 == test_std::get_allocator(allocator_object<allocator>{43}).tag);
 }

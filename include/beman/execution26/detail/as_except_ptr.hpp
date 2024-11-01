@@ -20,7 +20,6 @@ namespace beman::execution26::detail
     {
         if constexpr (::std::same_as<::std::exception_ptr, ::std::decay_t<Error>>)
         {
-            assert(error != ::std::exception_ptr());
             return ::std::forward<Error>(error);
         }
         else if constexpr (::std::same_as<::std::error_code, ::std::decay_t<Error>>)

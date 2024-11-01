@@ -8,7 +8,7 @@
 
 // ----------------------------------------------------------------------------
 
-auto main() -> int
+TEST(notify)
 {
     static_assert(std::same_as<test_detail::notify_t const, decltype(test_detail::notify)>);
 
@@ -34,11 +34,11 @@ auto main() -> int
         test_std::start(op1);
         auto op2{test_std::connect(test_detail::notify(n), receiver{finish2})};
         test_std::start(op2);
-        assert(finish1 == false);
-        assert(finish2 == false);
+        ASSERT(finish1 == false);
+        ASSERT(finish2 == false);
         n.complete();
-        assert(finish1 == true);
-        assert(finish2 == true);
+        ASSERT(finish1 == true);
+        ASSERT(finish2 == true);
     }
 
 }

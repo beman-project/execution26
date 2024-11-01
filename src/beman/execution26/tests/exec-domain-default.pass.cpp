@@ -100,9 +100,9 @@ namespace
         using simple_env_clvalue_type = decltype(Domain::transform_sender(csender, env{}));
         static_assert(std::same_as<simple_sender const&, simple_env_clvalue_type>);
 
-        assert(simple_sender{17} == Domain::transform_sender(simple_sender{17}, env{}));
-        assert(&sender == &Domain::transform_sender(sender, env{}));
-        assert(&csender == &Domain::transform_sender(csender, env{}));
+        ASSERT(simple_sender{17} == Domain::transform_sender(simple_sender{17}, env{}));
+        ASSERT(&sender == &Domain::transform_sender(sender, env{}));
+        ASSERT(&csender == &Domain::transform_sender(csender, env{}));
 
         static_assert(test_std::sender<tagged_sender<true>>);
         static_assert(test_std::sender<tagged_sender<false>>);
@@ -125,22 +125,22 @@ namespace
         {
             using type = decltype(Domain::transform_sender(tagged_sender<true>()));
             static_assert(std::same_as<simple_sender, type>);
-            assert(simple_sender{17} == Domain::transform_sender(tagged_sender<true>()));
+            ASSERT(simple_sender{17} == Domain::transform_sender(tagged_sender<true>()));
         }
         {
             using type = decltype(Domain::transform_sender(tagged_sender<true>(), env{}));
             static_assert(std::same_as<simple_sender, type>);
-            assert(simple_sender{17} == Domain::transform_sender(tagged_sender<true>(), env{}));
+            ASSERT(simple_sender{17} == Domain::transform_sender(tagged_sender<true>(), env{}));
         }
         {
             using type = decltype(Domain::transform_sender(tagged_sender<false>()));
             static_assert(std::same_as<simple_sender, type>);
-            assert(simple_sender{17} == Domain::transform_sender(tagged_sender<false>()));
+            ASSERT(simple_sender{17} == Domain::transform_sender(tagged_sender<false>()));
         }
         {
             using type = decltype(Domain::transform_sender(tagged_sender<false>(), env{}));
             static_assert(std::same_as<simple_sender, type>);
-            assert(simple_sender{17} == Domain::transform_sender(tagged_sender<false>(), env{}));
+            ASSERT(simple_sender{17} == Domain::transform_sender(tagged_sender<false>(), env{}));
         }
         //-dk:TODO test returning a non-sender doesn't work
     }
@@ -155,19 +155,19 @@ namespace
         {
             using type = decltype(Domain::transform_env(simple_sender{}, env{}));
             static_assert(std::same_as<env, type>);
-            assert(env{17} == Domain::transform_env(simple_sender{}, env{17}));
+            ASSERT(env{17} == Domain::transform_env(simple_sender{}, env{17}));
         }
         {
             env e{17};
             using type = decltype(Domain::transform_env(simple_sender{}, e));
             static_assert(std::same_as<env&, type>);
-            assert(&e == &Domain::transform_env(simple_sender{}, e));
+            ASSERT(&e == &Domain::transform_env(simple_sender{}, e));
         }
         {
             env const ce{17};
             using type = decltype(Domain::transform_env(simple_sender{}, ce));
             static_assert(std::same_as<env const&, type>);
-            assert(&ce == &Domain::transform_env(simple_sender{}, ce));
+            ASSERT(&ce == &Domain::transform_env(simple_sender{}, ce));
         }
 
         static_assert(test_std::sender<tagged_sender<true>>);
@@ -178,7 +178,7 @@ namespace
         {
             using type = decltype(Domain::transform_env(tagged_sender<true>{}, env{}));
             static_assert(std::same_as<env, type>);
-            assert(env{17} == Domain::transform_env(simple_sender{}, env{17}));
+            ASSERT(env{17} == Domain::transform_env(simple_sender{}, env{17}));
         }
     }
 
@@ -198,17 +198,17 @@ namespace
         static_assert(not noexcept(Domain().apply_sender(tag<false>{}, simple_sender{}, 0)));
         static_assert(not noexcept(Domain().apply_sender(tag<false>{}, simple_sender{}, 0, 0, 0)));
 
-        assert(17 == Domain().apply_sender(tag<true>{}, simple_sender{}, 17));
-        assert(15 == Domain().apply_sender(tag<true>{}, simple_sender{}, 4, 5, 6));
+        ASSERT(17 == Domain().apply_sender(tag<true>{}, simple_sender{}, 17));
+        ASSERT(15 == Domain().apply_sender(tag<true>{}, simple_sender{}, 4, 5, 6));
 
         bool flag{};
-        assert(&flag == &Domain().apply_sender(tag<true>{}, simple_sender{}, flag));
+        ASSERT(&flag == &Domain().apply_sender(tag<true>{}, simple_sender{}, flag));
     }
 }
 
 // ----------------------------------------------------------------------------
 
-auto main() -> int
+TEST(exec_domain_default)
 {
     test_std::default_domain domain{};
     test_transform_sender(domain);

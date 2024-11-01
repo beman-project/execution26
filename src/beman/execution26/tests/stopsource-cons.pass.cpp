@@ -24,22 +24,22 @@ auto operator delete(void* ptr, ::std::size_t) noexcept -> void
     ::std::free(ptr);
 }
 
-auto main() -> int
+TEST(stopsource_cons)
 {
     // Reference: [stopsource.cons] p1
     ::test_std::stop_source source;
-    assert(source.stop_possible());
-    assert((not source.stop_requested()));
+    ASSERT(source.stop_possible());
+    ASSERT((not source.stop_requested()));
 
     // Reference: [stopsource.cons] p3
     fail = true;
     try
     {
          ::test_std::stop_source();
-         assert(nullptr == "can't be reached");
+         ASSERT(nullptr == "can't be reached");
     }
     catch (::std::bad_alloc const&)
     {
-        assert("bad_alloc was thrown");
+        ASSERT(nullptr != "bad_alloc was thrown");
     }
 }

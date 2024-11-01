@@ -247,7 +247,7 @@ auto test_detail_stoppable_source() -> void
         ::stoppable_source::source<true, bool, true, bool, true, int>>);
 }
 
-auto main() -> int
+TEST(stoptoken_concepts)
 {
     test_detail_stopppable_callback_for();
     test_stoppable_token();

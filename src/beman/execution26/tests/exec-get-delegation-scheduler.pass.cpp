@@ -66,13 +66,13 @@ namespace
         });
         if constexpr (Expect)
         {
-            assert(17 == test_std::get_delegation_scheduler(env).value);
-            //assert(Scheduler{env.value} == test_std::get_delegation_scheduler(env));
+            ASSERT(17 == test_std::get_delegation_scheduler(env).value);
+            //ASSERT(Scheduler{env.value} == test_std::get_delegation_scheduler(env));
         }
     }
 }
 
-auto main() -> int
+TEST(exec_get_delegation_scheduler)
 {
     static_assert(test_std::sender<scheduler::sender>);
     static_assert(test_std::scheduler<scheduler>);

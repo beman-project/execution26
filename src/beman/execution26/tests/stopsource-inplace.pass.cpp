@@ -3,7 +3,7 @@
 
 #include "test/execution.hpp"
 
-auto main() -> int
+TEST(stopsource_inplace)
 {
     // section [stopsource.inplace] is empty
 }

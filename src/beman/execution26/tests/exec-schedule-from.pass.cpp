@@ -81,7 +81,7 @@ namespace
     }
 }
 
-auto main() -> int
+TEST(exec_schedule_from)
 {
     static_assert(std::same_as<test_std::schedule_from_t const, decltype(test_std::schedule_from)>);
     static_assert(not test_std::scheduler<non_scheduler>);

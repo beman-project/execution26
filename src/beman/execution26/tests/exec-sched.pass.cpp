@@ -93,7 +93,7 @@ namespace
                 std::remove_cvref_t<decltype(test_std::get_completion_scheduler<Signal>(env))>
                 >
             );
-            assert(result == test_std::get_completion_scheduler<Signal>(env));
+            ASSERT(result == test_std::get_completion_scheduler<Signal>(env));
         }
     }
 
@@ -104,7 +104,7 @@ namespace
     }
 }
 
-auto main() -> int
+TEST(exec_sched)
 {
     static_assert(test_std::sender<sender<env<scheduler>>>);
     static_assert(std::same_as<env<scheduler>, decltype(test_std::get_env(sender<env<scheduler>>{}))>);

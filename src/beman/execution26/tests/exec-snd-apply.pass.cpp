@@ -52,12 +52,12 @@ namespace
             static_assert(Noexcept == noexcept(
                 test_std::apply_sender(domain, tag, std::forward<Sender>(sender), std::forward<Args>(args)...)
             ));
-            assert(domain.value + 11 == test_std::apply_sender(domain, tag, std::forward<Sender>(sender), std::forward<Args>(args)...));
+            ASSERT(domain.value + 11 == test_std::apply_sender(domain, tag, std::forward<Sender>(sender), std::forward<Args>(args)...));
         }
     }
 }
 
-auto main() -> int
+TEST(exec_snd_apply)
 {
     static_assert(test_std::sender<sender>);
     has_apply_sender<false, false>(empty_domain{}, empty_tag{}, non_sender{});

@@ -180,7 +180,7 @@ namespace
     };
 }
 
-auto main() -> int
+TEST(exec_snd_concepts)
 {
     test_valid_completion_signatures();
     test_is_sender();

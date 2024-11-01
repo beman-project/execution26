@@ -22,7 +22,7 @@ namespace
     using baz_t = typename baz<T>::type;;
 }
 
-auto main() -> int
+TEST(meta_transform)
 {
     static_assert(std::same_as<
         test_detail::type_list<>,

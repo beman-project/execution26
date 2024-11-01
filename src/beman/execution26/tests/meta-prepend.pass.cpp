@@ -12,7 +12,7 @@ namespace
     template <typename...> struct type_list {};
 }
 
-auto main() -> int
+TEST(meta_prepend)
 {
     static_assert(std::same_as<
         type_list<bool>,

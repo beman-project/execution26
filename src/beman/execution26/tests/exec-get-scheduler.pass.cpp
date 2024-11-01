@@ -26,7 +26,7 @@ namespace
     };
 }
 
-auto main() -> int
+TEST(exec_get_scheduler)
 {
     static_assert(std::same_as<test_std::get_scheduler_t const,
                                decltype(test_std::get_scheduler)>);
@@ -34,5 +34,5 @@ auto main() -> int
     env e{17};
     auto sched{test_std::get_scheduler(e)};
     static_assert(::std::same_as<scheduler, decltype(sched)>);
-    assert(sched == scheduler{17});
+    ASSERT(sched == scheduler{17});
 }

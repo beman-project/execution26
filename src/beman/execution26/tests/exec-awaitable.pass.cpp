@@ -115,27 +115,27 @@ namespace
 
         auto a1{test_detail::get_awaiter(awaiter<bool, void>{17}, promise)};
         static_assert(std::same_as<awaiter<bool, void>, decltype(a1)>);
-        assert(a1.value == 17);
+        ASSERT(a1.value == 17);
 
         auto a2{test_detail::get_awaiter(awaiter<bool, bool>{17}, promise)};
         static_assert(std::same_as<awaiter<bool, std::coroutine_handle<>>, decltype(a2)>);
-        assert(a2.value == 19);
+        ASSERT(a2.value == 19);
 
         auto a3{test_detail::get_awaiter(co_awaiter{17}, promise)};
         static_assert(std::same_as<awaiter<bool, bool>, decltype(a3)>);
-        assert(a3.value == 20);
+        ASSERT(a3.value == 20);
 
         auto a4{test_detail::get_awaiter(awaiter<bool, int>{17}, promise)};
         static_assert(std::same_as<awaiter<bool, bool>, decltype(a4)>);
-        assert(a4.value == 24);
+        ASSERT(a4.value == 24);
 
         auto a5{test_detail::get_awaiter(awaiter<bool, long>{17}, promise)};
         static_assert(std::same_as<awaiter<bool, bool>, decltype(a5)>);
-        assert(a5.value == 27);
+        ASSERT(a5.value == 27);
 
         auto a6{test_detail::get_awaiter(mem_co_awaiter{17}, promise)};
         static_assert(std::same_as<awaiter<bool, bool>, decltype(a6)>);
-        assert(a6.value == 22);
+        ASSERT(a6.value == 22);
     }
 
     auto test_is_awaitable() -> void
@@ -201,7 +201,7 @@ namespace
     }
 }
 
-auto main() -> int
+TEST(exec_awaitable)
 {
     test_await_suspend_result();
     test_is_awaiter();

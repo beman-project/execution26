@@ -1,4 +1,4 @@
-// src/beman/execution26/tests/meta_contains.pass.cpp                 -*-C++-*-
+// src/beman/execution26/tests/meta-contains.pass.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <beman/execution26/detail/meta_contains.hpp>
@@ -6,7 +6,7 @@
 
 // ----------------------------------------------------------------------------
 
-auto main() -> int
+TEST(meta_contains)
 {
     static_assert(not test_detail::meta::contains<bool>);
     static_assert(not test_detail::meta::contains<bool, char>);

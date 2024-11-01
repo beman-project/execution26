@@ -19,9 +19,9 @@ auto test_inplace_stop_source_get_token() -> void
     auto token1{source1.get_token()};
     auto token2{source2.get_token()};
 
-    assert(token1 != token2);
-    assert(token1 == source1.get_token());
-    assert(token2 == source2.get_token());
+    ASSERT(token1 != token2);
+    ASSERT(token1 == source1.get_token());
+    ASSERT(token2 == source2.get_token());
 }
 
 auto test_inplace_stop_source_stop_requested() -> void
@@ -35,9 +35,9 @@ auto test_inplace_stop_source_stop_requested() -> void
 
     ::test_std::inplace_stop_source source;
 
-    assert(source.stop_requested() == false);
+    ASSERT(source.stop_requested() == false);
     source.request_stop();
-    assert(source.stop_requested() == true);
+    ASSERT(source.stop_requested() == true);
 }
 
 auto test_inplace_stop_source_request_stop() -> void
@@ -59,19 +59,19 @@ auto test_inplace_stop_source_request_stop() -> void
     ::test_std::stop_callback_for_t<::test_std::inplace_stop_token, decltype(callback1)> cb1(source.get_token(), callback1);
     ::test_std::stop_callback_for_t<::test_std::inplace_stop_token, decltype(callback2)> cb2(source.get_token(), callback2);
 
-    assert(source.stop_requested() == false);
-    assert(flag1 == false);
-    assert(flag2 == false);
+    ASSERT(source.stop_requested() == false);
+    ASSERT(flag1 == false);
+    ASSERT(flag2 == false);
 
     source.request_stop();
 
-    assert(source.stop_requested() == true);
-    assert(flag1 == true);
-    assert(flag2 == true);
+    ASSERT(source.stop_requested() == true);
+    ASSERT(flag1 == true);
+    ASSERT(flag2 == true);
 }
 
 
-auto main() -> int
+TEST(stopsource_inplace_mem)
 {
     test_inplace_stop_source_get_token();
     test_inplace_stop_source_stop_requested();

@@ -41,12 +41,12 @@ namespace
 
         auto set_value(domain d) && noexcept -> void
         {
-            assert(d == domain{this->value});
+            ASSERT(d == domain{this->value});
             *this->called = true;
         }
         auto set_error(auto&&) && noexcept -> void
         {
-            assert(nullptr == "error function was incorrectly called");
+            ASSERT(nullptr == "error function was incorrectly called");
         }
         auto get_env() const noexcept -> env { return {this->value}; }
     };
@@ -54,8 +54,8 @@ namespace
     auto test_read_env() -> void
     {
         static_assert(test_std::receiver<receiver>);
-        assert(domain{17} == test_std::get_domain(env{17}));
-        assert(domain{17} == test_std::get_domain(test_std::get_env(receiver{17})));
+        ASSERT(domain{17} == test_std::get_domain(env{17}));
+        ASSERT(domain{17} == test_std::get_domain(test_std::get_env(receiver{17})));
         auto sender{test_std::read_env(test_std::get_domain)};
         static_assert(test_std::sender<decltype(sender)>);
         static_assert(test_std::sender_in<decltype(sender), env>);
@@ -73,9 +73,9 @@ namespace
             receiver{17, &called}
             )};
         test::use(op);
-        assert(not called);
+        ASSERT(not called);
         test_std::start(op);
-        assert(called);
+        ASSERT(called);
     }
 
     auto test_read_env_completions() -> void
@@ -90,7 +90,7 @@ namespace
     }
 }
 
-auto main() -> int
+TEST(exec_read_env)
 {
     static_assert(std::same_as<test_std::read_env_t const, decltype(test_std::read_env)>);
     test_read_env();

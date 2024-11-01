@@ -75,9 +75,9 @@ namespace
             >);
             bool called{false};
             auto op{test_std::connect(test_std::into_variant(sender), receiver{&called})};
-            assert(not called);
+            ASSERT(not called);
             test_std::start(op);
-            assert(called);
+            ASSERT(called);
         }
     }
 
@@ -101,9 +101,9 @@ namespace
         bool called{};
         auto op{test_std::connect(test_std::into_variant(test_std::just_error(17)),
                                   error_receiver{&called})};
-        assert(not called);
+        ASSERT(not called);
         test_std::start(op);
-        assert(called);
+        ASSERT(called);
     }
 
     struct stopped_receiver
@@ -122,13 +122,13 @@ namespace
         bool called{};
         auto op{test_std::connect(test_std::into_variant(test_std::just_stopped()),
                                   stopped_receiver{&called})};
-        assert(not called);
+        ASSERT(not called);
         test_std::start(op);
-        assert(called);
+        ASSERT(called);
     }
 }
 
-auto main() -> int
+TEST(exec_into_variant)
 {
     struct arg {};
     struct error {};
