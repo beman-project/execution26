@@ -15,7 +15,7 @@ namespace
     };
 }
 
-auto main() -> int
+TEST(thread_stoptoken_syn)
 {
     // Plan:
     // - Given a header with the declarations relating to <stop_token>

@@ -36,11 +36,11 @@ namespace
     struct bar { int foo; };
 }
 
-auto main() -> int
+TEST(queryable)
 {
     static_assert(test_std::detail::queryable<int>);
     static_assert(not test_std::detail::queryable<non_destructible>);
 
-    assert(f(0) == 0);
-    assert(f(bar{}) == 1);
+    ASSERT(f(0) == 0);
+    ASSERT(f(bar{}) == 1);
 }

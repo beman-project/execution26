@@ -102,7 +102,7 @@ namespace
     };
 }
 
-auto main() -> int
+TEST(allocator_requirements_general)
 {
     static_assert(not test_detail::simple_allocator<non_allocator>);
     static_assert(not test_detail::simple_allocator<no_allocate>);

@@ -16,14 +16,14 @@ auto test_inplace_stop_token_swap() -> void
     auto token1(source1.get_token());
     auto token2(source2.get_token());
 
-    assert(token1 == source1.get_token());
-    assert(token2 == source2.get_token());
-    assert(token1 != token2);
+    ASSERT(token1 == source1.get_token());
+    ASSERT(token2 == source2.get_token());
+    ASSERT(token1 != token2);
 
     token1.swap(token2);
 
-    assert(token1 == source2.get_token());
-    assert(token2 == source1.get_token());
+    ASSERT(token1 == source2.get_token());
+    ASSERT(token2 == source1.get_token());
 }
 
 auto test_inplace_stop_token_stop_requested() -> void
@@ -40,13 +40,13 @@ auto test_inplace_stop_token_stop_requested() -> void
     ::test_std::inplace_stop_token  connected{source.get_token()};
     ::test_std::inplace_stop_token  disconnected;
 
-    assert(connected.stop_requested() == false);
-    assert(disconnected.stop_requested() == false);
+    ASSERT(connected.stop_requested() == false);
+    ASSERT(disconnected.stop_requested() == false);
 
     source.request_stop();
 
-    assert(connected.stop_requested() == true);
-    assert(disconnected.stop_requested() == false);
+    ASSERT(connected.stop_requested() == true);
+    ASSERT(disconnected.stop_requested() == false);
 }
 
 auto test_inplace_stop_token_stop_possible() -> void
@@ -64,16 +64,16 @@ auto test_inplace_stop_token_stop_possible() -> void
     ::test_std::inplace_stop_token  connected{source.get_token()};
     ::test_std::inplace_stop_token  disconnected;
 
-    assert(connected.stop_possible() == true);
-    assert(disconnected.stop_possible() == false);
+    ASSERT(connected.stop_possible() == true);
+    ASSERT(disconnected.stop_possible() == false);
 
     source.request_stop();
 
-    assert(connected.stop_possible() == true);
-    assert(disconnected.stop_requested() == false);
+    ASSERT(connected.stop_possible() == true);
+    ASSERT(disconnected.stop_requested() == false);
 }
 
-auto main() -> int
+TEST(stoptoken_inplace_members)
 {
     test_inplace_stop_token_swap();
     test_inplace_stop_token_stop_requested();

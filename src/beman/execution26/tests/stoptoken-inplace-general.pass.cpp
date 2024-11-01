@@ -6,17 +6,17 @@
 #include <type_traits>
 #include <cassert>
 
-auto main() -> int
+TEST(stoptoken_inplace_general)
 {
     // Reference [stoptoken.inplace.general]
     static_assert(::test_std::stoppable_token<::test_std::inplace_stop_token>);
     static_assert(::std::is_swappable_v<::test_std::inplace_stop_token>);
 
     ::test_std::inplace_stop_token token, token2;
-    assert(false == token.stop_requested());
-    assert(false == token.stop_possible());
+    ASSERT(false == token.stop_requested());
+    ASSERT(false == token.stop_possible());
     token.swap(token2);
-    assert(token == token2);
+    ASSERT(token == token2);
 
     struct Callback
     {

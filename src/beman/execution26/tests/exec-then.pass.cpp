@@ -170,13 +170,13 @@ namespace
 
     auto test_then_value() -> void
     {
-        assert(std::tuple{17} == *test_std::sync_wait(
+        ASSERT(std::tuple{17} == *test_std::sync_wait(
             test_std::just(5, 12) | test_std::then([](int a, int b){ return a + b; })
         ));
-        assert(std::tuple{17} == test_std::sync_wait(
+        ASSERT(std::tuple{17} == test_std::sync_wait(
             test_std::just_error(17) | test_std::upon_error([](int a){ return a; })
         ));
-        assert(std::tuple{17} == test_std::sync_wait(
+        ASSERT(std::tuple{17} == test_std::sync_wait(
             test_std::just_stopped() | test_std::upon_stopped([](){ return 17; })
         ));
     }
@@ -246,18 +246,18 @@ namespace
     {
         static_assert(std::uses_allocator_v<allocator_fun, std::pmr::polymorphic_allocator<>>);
         counting_resource resource1{};
-        assert(resource1.count == 0u);
+        ASSERT(resource1.count == 0u);
         auto sender{test_std::just() | test_std::then(allocator_fun(&resource1))};
-        assert(resource1.count == 1u);
+        ASSERT(resource1.count == 1u);
 
         counting_resource resource2{};
-        assert(resource2.count == 0u);
+        ASSERT(resource2.count == 0u);
         auto state{test_std::connect(std::move(sender), memory_receiver{&resource2})};
-        assert(resource2.count == 1u);
+        ASSERT(resource2.count == 1u);
     }
 }
 
-auto main() -> int
+TEST(exec_then)
 {
     static_assert(std::same_as<test_std::then_t const, decltype(test_std::then)>);
     static_assert(std::same_as<test_std::upon_error_t const, decltype(test_std::upon_error)>);

@@ -4,7 +4,7 @@
 #include <beman/execution26/stop_token.hpp>
 #include "test/execution.hpp"
 
-auto main() -> int
+TEST(stoptoken_never_general)
 {
     // Reference: [stoptoken.never.general]
     static_assert(::test_std::unstoppable_token<::test_std::never_stop_token>);

@@ -137,7 +137,7 @@ namespace
     {
         test_std::run_loop rl{};
         test_detail::sync_wait_env env{&rl};
-        assert(env.loop == &rl);
+        ASSERT(env.loop == &rl);
 
         static_assert(requires{
             { test_std::get_scheduler(env) } noexcept -> test_std::scheduler;
@@ -146,8 +146,8 @@ namespace
             { test_std::get_delegation_scheduler(env) } noexcept
                 -> test_std::scheduler;
         });
-        assert(test_std::get_scheduler(env) == rl.get_scheduler());
-        assert(test_std::get_delegation_scheduler(env) == rl.get_scheduler());
+        ASSERT(test_std::get_scheduler(env) == rl.get_scheduler());
+        ASSERT(test_std::get_delegation_scheduler(env) == rl.get_scheduler());
     }
 
     auto test_sync_wait_result_type() -> void
@@ -179,66 +179,66 @@ namespace
             using sender = decltype(test_std::just(arg<0>{}, arg<1>{}, arg<2>{}));
             test_detail::sync_wait_state<sender>    state{};
             test_detail::sync_wait_receiver<sender> receiver{&state};
-            assert(not state.result);
-            assert(not state.error);
+            ASSERT(not state.result);
+            ASSERT(not state.error);
             test_std::set_value(std::move(receiver), arg<0>{2}, arg<1>{3}, arg<2>{5});
-            assert(state.result);
-            assert(not state.error);
-            assert(*state.result == (std::tuple{arg<0>{2}, arg<1>{3}, arg<2>{5}}));
+            ASSERT(state.result);
+            ASSERT(not state.error);
+            ASSERT(*state.result == (std::tuple{arg<0>{2}, arg<1>{3}, arg<2>{5}}));
         }
         {
             using sender = decltype(test_std::just(arg<0>{}, arg<1>{}, arg<2>{}));
             test_detail::sync_wait_state<sender>    state{};
             test_detail::sync_wait_receiver<sender> receiver{&state};
-            assert(not state.result);
-            assert(not state.error);
+            ASSERT(not state.result);
+            ASSERT(not state.error);
             test_std::set_error(std::move(receiver), error{17});
-            assert(not state.result);
-            assert(state.error);
+            ASSERT(not state.result);
+            ASSERT(state.error);
             try
             {
                 std::rethrow_exception(state.error);
             }
             catch(error const& e)
             {
-                assert(e.value == 17);
+                ASSERT(e.value == 17);
             }
             catch (...)
             {
-                assert(nullptr == "unexpected exception type");
+                ASSERT(nullptr == "unexpected exception type");
             }
         }
         {
             using sender = decltype(test_std::just(arg<0>{}, arg<1>{}, arg<2>{}));
             test_detail::sync_wait_state<sender>    state{};
             test_detail::sync_wait_receiver<sender> receiver{&state};
-            assert(not state.result);
-            assert(not state.error);
+            ASSERT(not state.result);
+            ASSERT(not state.error);
             test_std::set_error(std::move(receiver), std::make_exception_ptr(error{17}));
-            assert(not state.result);
-            assert(state.error);
+            ASSERT(not state.result);
+            ASSERT(state.error);
             try
             {
                 std::rethrow_exception(state.error);
             }
             catch(error const& e)
             {
-                assert(e.value == 17);
+                ASSERT(e.value == 17);
             }
             catch (...)
             {
-                assert(nullptr == "unexpected exception type");
+                ASSERT(nullptr == "unexpected exception type");
             }
         }
         {
             using sender = decltype(test_std::just(arg<0>{}, arg<1>{}, arg<2>{}));
             test_detail::sync_wait_state<sender>    state{};
             test_detail::sync_wait_receiver<sender> receiver{&state};
-            assert(not state.result);
-            assert(not state.error);
+            ASSERT(not state.result);
+            ASSERT(not state.error);
             test_std::set_stopped(std::move(receiver));
-            assert(not state.result);
-            assert(not state.error);
+            ASSERT(not state.result);
+            ASSERT(not state.error);
         }
     }
 
@@ -247,42 +247,42 @@ namespace
         try
         {
             auto value{test_std::sync_wait(test_std::just(arg<0>{7}, arg<1>{11}))};
-            assert(value);
-            assert(*value == (std::tuple{arg<0>{7}, arg<1>{11}}));
+            ASSERT(value);
+            ASSERT(*value == (std::tuple{arg<0>{7}, arg<1>{11}}));
         }
         catch(...)
         {
-            assert(nullptr == "no exception expected from sync_wait(just(...)");
+            ASSERT(nullptr == "no exception expected from sync_wait(just(...)");
         }
 
         try
         {
             auto value{test_std::sync_wait(send_error{17})};
             use(value);
-            assert(nullptr == "this line should never be reached");
+            ASSERT(nullptr == "this line should never be reached");
         }
         catch(error const& e)
         {
-            assert(e.value == 17);
+            ASSERT(e.value == 17);
         }
         catch(...)
         {
-            assert(nullptr == "no exception expected from sync_wait(just(...)");
+            ASSERT(nullptr == "no exception expected from sync_wait(just(...)");
         }
 
         try
         {
             auto value{test_std::sync_wait(send_stopped())};
-            assert(not value);
+            ASSERT(not value);
         }
         catch(...)
         {
-            assert(nullptr == "no exception expected from sync_wait(just(...)");
+            ASSERT(nullptr == "no exception expected from sync_wait(just(...)");
         }
     }
 }
 
-auto main() -> int
+TEST(exec_sync_wait)
 {
     static_assert(std::same_as<
         test_std::sync_wait_t const,

@@ -28,7 +28,7 @@ namespace
     }
 }
 
-auto main() -> int
+TEST(forward_like)
 {
     object       o{};
     object const co{};

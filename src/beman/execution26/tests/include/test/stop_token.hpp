@@ -55,11 +55,11 @@ inline auto test::stop_visible(Token token, Stop stop) -> void
     Token tokens[] = { token, token, token, token };
 
     auto predicate = [](auto&& t){ return t.stop_requested(); };
-    assert((::std::ranges::none_of(tokens, predicate)));
+    ASSERT((::std::ranges::none_of(tokens, predicate)));
     stop();
     if (token.stop_possible())
     {
-        assert((::std::ranges::all_of(tokens, predicate)));
+        ASSERT((::std::ranges::all_of(tokens, predicate)));
     }
 }
 
@@ -99,21 +99,21 @@ inline auto test::stop_callback(Token token, Stop stop) -> void
     Data data{token};
 
     ::test_std::stop_callback_for_t<Token, Callback> cb0(token, &data);
-    assert(data.count == 0);
-    assert(data.stop_requested == false);
+    ASSERT(data.count == 0);
+    ASSERT(data.stop_requested == false);
     stop();
 
     if (token.stop_possible())
     {
-        assert(data.count == 1);
-        assert(data.stop_requested == true);
+        ASSERT(data.count == 1);
+        ASSERT(data.stop_requested == true);
         stop();
-        assert(data.count == 1);
+        ASSERT(data.count == 1);
 
         ::test_std::stop_callback_for_t<Token, Callback> cb1(token, &data);
-        assert(data.count == 2);
+        ASSERT(data.count == 2);
         stop();
-        assert(data.count == 2);
+        ASSERT(data.count == 2);
     }
 }
 
@@ -139,11 +139,11 @@ auto test::stop_callback_dtor_deregisters(Token token, Stop stop) -> void
     bool flag{};
     ::std::invoke([token, &flag]{
         ::test_std::stop_callback_for_t<Token, Callback> cb(token, &flag);
-        assert(flag == false);
+        ASSERT(flag == false);
     });
 
     stop();
-    assert(flag == false);
+    ASSERT(flag == false);
 }
 
 // ----------------------------------------------------------------------------
@@ -162,8 +162,8 @@ inline auto test::stop_callback_dtor_other_thread(Token token, Stop stop) -> voi
     // by the callback function. Once notified the thread destroys the object containing
     // the callback and sets a flag (thread_complete). The callback function sleeps for a bit (yes, I
     // realize that sleeping doesn't constitute a happens-before relationship:
-    // suggestions/PRs welcome) before asserting that thread_complete is still false
-    // and sets its own flag which is asserted to be true in the other thread. 
+    // suggestions/PRs welcome) before ASSERTing that thread_complete is still false
+    // and sets its own flag which is ASSERTed to be true in the other thread. 
     // Reference: [stoptoken.concepts] p4
 
     struct Data
@@ -188,7 +188,7 @@ inline auto test::stop_callback_dtor_other_thread(Token token, Stop stop) -> voi
             this->data->cond.notify_one();
             ::std::this_thread::sleep_for(1ms);
             this->data->dtor_done = true;
-            assert(this->data->thread_complete == false);
+            ASSERT(this->data->thread_complete == false);
         }
     };
 
@@ -204,7 +204,7 @@ inline auto test::stop_callback_dtor_other_thread(Token token, Stop stop) -> voi
         }
 
         ptr.reset();
-        assert(data.dtor_done);
+        ASSERT(data.dtor_done);
         data.thread_complete = true;
     });
 
@@ -247,7 +247,7 @@ inline auto test::stop_callback_dtor_same_thread(Token token, Stop stop) -> void
     ::std::thread thread([&done]{
         using namespace ::std::chrono_literals;
         ::std::this_thread::sleep_for(10ms);
-        assert(done);
+        ASSERT(done);
     });
 
     stop();

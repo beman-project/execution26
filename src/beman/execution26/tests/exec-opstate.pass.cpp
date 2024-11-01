@@ -37,7 +37,7 @@ namespace
     }
 }
 
-auto main() -> int
+TEST(exec_opstate)
 {
     test_std::operation_state_t state_tag{};
     (void)state_tag;

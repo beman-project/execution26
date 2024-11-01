@@ -337,7 +337,7 @@ namespace
     }
 }
 
-auto main() -> int
+TEST(exec_utils_cmplsigs)
 {
     test_completion_signature();
     test_completion_signatures();

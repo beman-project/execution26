@@ -1,4 +1,4 @@
-// src/beman/execution26/tests/exec.set.value.pass.cpp                -*-C++-*-
+// src/beman/execution26/tests/exec-set-value.pass.cpp                -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <beman/execution26/execution.hpp>
@@ -22,9 +22,9 @@ namespace
         auto set_value(throws) noexcept -> void {}
         auto set_value(int i, bool b, double d) noexcept
         {
-            assert(i == 42);
-            assert(b == true);
-            assert(d == 123.75);
+            ASSERT(i == 42);
+            ASSERT(b == true);
+            ASSERT(d == 123.75);
         }
     };
 
@@ -53,7 +53,7 @@ namespace
     }
 }
 
-auto main() -> int
+TEST(exec_set_value)
 {
     static_assert(std::semiregular<test_std::set_value_t>);
     static_assert(std::same_as<test_std::set_value_t const, decltype(test_std::set_value)>);

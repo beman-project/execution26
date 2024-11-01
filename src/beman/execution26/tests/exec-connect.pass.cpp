@@ -153,13 +153,13 @@ namespace
 
         static_assert(noexcept(std::as_const(promise).get_env()));
         static_assert(std::same_as<env, decltype(promise.get_env())>);
-        assert(19 == promise.get_env().value);
+        ASSERT(19 == promise.get_env().value);
 
         static_assert(noexcept(promise.unhandled_stopped()));
         static_assert(std::same_as<std::coroutine_handle<>, decltype(promise.unhandled_stopped())>);
-        assert(set_stopped_called == false);
+        ASSERT(set_stopped_called == false);
         auto handle{promise.unhandled_stopped()};
-        assert(set_stopped_called == true && handle == std::noop_coroutine());
+        ASSERT(set_stopped_called == true && handle == std::noop_coroutine());
 
         static_assert(noexcept(promise.get_return_object()));
         static_assert(std::same_as<test_detail::operation_state_task<receiver>, decltype(promise.get_return_object())>);
@@ -192,11 +192,11 @@ namespace
         static_assert(false == awaiter.await_ready());
         static_assert(noexcept(awaiter.await_suspend(std::noop_coroutine())));
         static_assert(std::same_as<void, decltype(awaiter.await_suspend(std::noop_coroutine()))>);
-        assert(iv == 0);
-        assert(bv == false);
+        ASSERT(iv == 0);
+        ASSERT(bv == false);
         awaiter.await_suspend(std::noop_coroutine());
-        assert(iv == 17);
-        assert(bv == true);
+        ASSERT(iv == 17);
+        ASSERT(bv == true);
 
         static_assert(noexcept(awaiter.await_resume()));
         static_assert(std::same_as<void, decltype(awaiter.await_resume())>);
@@ -254,13 +254,13 @@ namespace
             bool                      bv{};
 
             auto op1{test_detail::connect_awaitable(awaiter{handle, result}, receiver{iv, bv})};
-            assert(handle == std::coroutine_handle<>());
+            ASSERT(handle == std::coroutine_handle<>());
             op1.start();
-            assert(handle != std::coroutine_handle<>());
-            assert(iv == 0 && bv == false);
+            ASSERT(handle != std::coroutine_handle<>());
+            ASSERT(iv == 0 && bv == false);
             result = 42;
             handle.resume();
-            assert(iv == 42 && bv == true);
+            ASSERT(iv == 42 && bv == true);
         }
         {
             ::std::coroutine_handle<> handle{};
@@ -269,13 +269,13 @@ namespace
             bool                      bv{};
 
             auto op1{test_detail::connect_awaitable(awaiter{handle, result}, receiver{iv, bv})};
-            assert(handle == std::coroutine_handle<>());
+            ASSERT(handle == std::coroutine_handle<>());
             op1.start();
-            assert(handle != std::coroutine_handle<>());
-            assert(iv == 0 && bv == false);
+            ASSERT(handle != std::coroutine_handle<>());
+            ASSERT(iv == 0 && bv == false);
             result = 0;
             handle.resume();
-            assert(iv == 0 && bv == true);
+            ASSERT(iv == 0 && bv == true);
         }
 
         {
@@ -284,12 +284,12 @@ namespace
             bool                      bv{};
 
             auto op1{test_detail::connect_awaitable(void_awaiter{handle}, receiver{iv, bv})};
-            assert(handle == std::coroutine_handle<>());
+            ASSERT(handle == std::coroutine_handle<>());
             op1.start();
-            assert(handle != std::coroutine_handle<>());
-            assert(iv == 0 && bv == false);
+            ASSERT(handle != std::coroutine_handle<>());
+            ASSERT(iv == 0 && bv == false);
             handle.resume();
-            assert(iv == 0 && bv == true);
+            ASSERT(iv == 0 && bv == true);
         }
     }
 
@@ -314,16 +314,16 @@ namespace
         std::coroutine_handle<> handle{};
         bool                    result{};
         auto op{test_std::connect(awaiter{handle}, receiver{result})};
-        assert(handle == std::coroutine_handle{});
+        ASSERT(handle == std::coroutine_handle{});
         test_std::start(op);
-        assert(handle != std::coroutine_handle{});
-        assert(result == false);
+        ASSERT(handle != std::coroutine_handle{});
+        ASSERT(result == false);
         handle.resume();
-        assert(result == true);
+        ASSERT(result == true);
     }
 }
 
-auto main() -> int
+TEST(exec_connect)
 {
     static_assert(std::same_as<test_std::connect_t const, decltype(test_std::connect)>);
 
@@ -336,16 +336,16 @@ auto main() -> int
         static_assert(std::same_as<state<kind::plain, receiver>,
             decltype(test_std::connect(sender{43}, receiver(17)))>);
         auto op{test_std::connect(sender{43}, receiver(17))};
-        assert(op.value == 43);
-        assert(op.receiver == receiver(17));
+        ASSERT(op.value == 43);
+        ASSERT(op.receiver == receiver(17));
     }
 
     {
         static_assert(std::same_as<state<kind::plain, receiver>,
             decltype(test_std::connect(rvalue_sender(42), receiver(17)))>);
         auto op{test_std::connect(rvalue_sender(42), receiver(17))};
-        assert(op.value == 42);
-        assert(op.receiver == receiver(17));
+        ASSERT(op.value == 42);
+        ASSERT(op.receiver == receiver(17));
     }
 
     {
@@ -359,8 +359,8 @@ auto main() -> int
         static_assert(std::same_as<state<kind::domain, domain_receiver>,
             decltype(test_std::connect(sender{42}, domain_receiver(17)))>);
         auto op{test_std::connect(sender{42}, domain_receiver(17))};
-        assert(op.value == 42);
-        assert(op.receiver == domain_receiver(17));
+        ASSERT(op.value == 42);
+        ASSERT(op.receiver == domain_receiver(17));
     }
 
     test_connect_awaitable_promise();

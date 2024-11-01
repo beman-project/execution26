@@ -6,7 +6,7 @@
 #include <memory>
 #include <type_traits>
 
-auto main() -> int
+TEST(stopcallback_cons)
 {
     // Reference: [stopcallback.cons] p1
     // Plan:

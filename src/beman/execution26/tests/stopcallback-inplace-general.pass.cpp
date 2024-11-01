@@ -6,7 +6,7 @@
 #include <concepts>
 #include <type_traits>
 
-auto main() -> int
+TEST(stopcallback_inplace_general)
 {
     // Reference: [stopcallback.inplace.general]
 

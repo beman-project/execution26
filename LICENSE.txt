@@ -174,7 +174,7 @@ The Beman Project is under the Apache License v2.0 with LLVM Exceptions:
       on Your own behalf and on Your sole responsibility, not on behalf
       of any other Contributor, and only if You agree to indemnify,
       defend, and hold each Contributor harmless for any liability
-      incurred by, or claims asserted against, such Contributor by reason
+      incurred by, or claims ASSERTed against, such Contributor by reason
       of your accepting any such warranty or additional liability.
 
     END OF TERMS AND CONDITIONS

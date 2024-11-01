@@ -3,7 +3,7 @@
 
 #include "test/execution.hpp"
 
-auto main() -> int
+TEST(stopcallback)
 {
     // section [stopcallback] is empty
 }

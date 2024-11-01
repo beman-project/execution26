@@ -25,7 +25,7 @@ sections = {
 }
 
 file_set_re = re.compile(" *FILE_SET.*")
-section_re  = re.compile(" *FILE_SET \${TARGET_LIBRARY}_(?P<section>.*)_headers TYPE HEADERS")
+section_re  = re.compile(" *\${TARGET_LIBRARY}_(?P<section>.*)_headers$")
 header_re   = re.compile(" *\${PROJECT_SOURCE_DIR}/include/beman/.*/.*\.hpp")
 
 if len(sys.argv) != 2:
@@ -54,7 +54,7 @@ with open(f'{cmake}', 'w') as output:
                 section_done = True
                 project = "${PROJECT_SOURCE_DIR}"
                 for header in sections[section]:
-                    output.write(f'    {project}/include/{header}.hpp\n')
+                    output.write(f'         {project}/include/{header}.hpp\n')
         else:
             output.write(line)
             pass

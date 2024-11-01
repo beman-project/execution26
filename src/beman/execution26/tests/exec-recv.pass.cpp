@@ -105,7 +105,7 @@ auto test_valid_completions_for_concept() -> void
     static_assert(test_std::detail::valid_completion_for<auto() -> test_std::set_stopped_t, receiver1>);
 }
 
-auto main() -> int
+TEST(exec_recv)
 {
     test_receiver_concept();
     test_valid_completions_for_concept();

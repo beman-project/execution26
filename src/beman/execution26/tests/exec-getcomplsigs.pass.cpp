@@ -96,7 +96,7 @@ namespace
     }
 }
 
-auto main() -> int
+TEST(exec_getcomplsigs)
 {
     static_assert(std::same_as<test_std::get_completion_signatures_t const,
                                decltype(test_std::get_completion_signatures)>);

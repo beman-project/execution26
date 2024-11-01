@@ -47,7 +47,7 @@ namespace
     }
 }
 
-auto main() -> int
+TEST(exec_get_stop_token)
 {
     static_assert(std::same_as<test_std::get_stop_token_t const,
                                decltype(test_std::get_stop_token)>);

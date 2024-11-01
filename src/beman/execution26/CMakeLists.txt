@@ -176,10 +176,13 @@ source_group("Header Files\\detail" FILES ${DETAIL_HEADER_FILES})
 
 set_target_properties(${TARGET_LIBRARY} PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON)
 
-target_compile_features(${TARGET_LIBRARY} PUBLIC
-  "$<$<COMPILE_FEATURES:cxx_std_26>:cxx_std_26>"
-  "$<$<NOT:$<COMPILE_FEATURES:cxx_std_26>>:cxx_std_23>"
-)
+#target_compile_features(${TARGET_LIBRARY} PUBLIC
+#  "$<$<COMPILE_FEATURES:cxx_std_26>:cxx_std_26>"
+#  "$<$<NOT:$<COMPILE_FEATURES:cxx_std_26>>:cxx_std_23>"
+#)
+#target_compile_features(${TARGET_LIBRARY} PUBLIC
+#  "$<$<NOT:$<COMPILE_FEATURES:cxx_std_26>>:cxx_std_23>"
+#)
 
 install(
   TARGETS ${TARGET_LIBRARY}

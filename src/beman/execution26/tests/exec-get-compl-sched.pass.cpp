@@ -67,7 +67,7 @@ namespace
     }
 }
 
-auto main() -> int
+TEST(exec_get_compl_sched)
 {
     static_assert(test_std::sender<sender<test_std::set_error_t>>);
     static_assert(test_std::sender<sender<test_std::set_stopped_t>>);
@@ -101,10 +101,10 @@ auto main() -> int
     static_assert(::std::same_as<
                     decltype(test_std::get_completion_scheduler<test_std::set_value_t>(e)),
                     scheduler<test_std::set_value_t>>);
-    assert(test_std::get_completion_scheduler<test_std::set_error_t>(e)
+    ASSERT(test_std::get_completion_scheduler<test_std::set_error_t>(e)
            == scheduler<test_std::set_error_t>{19});
-    assert(test_std::get_completion_scheduler<test_std::set_stopped_t>(e)
+    ASSERT(test_std::get_completion_scheduler<test_std::set_stopped_t>(e)
            == scheduler<test_std::set_stopped_t>{20});
-    assert(test_std::get_completion_scheduler<test_std::set_value_t>(e)
+    ASSERT(test_std::get_completion_scheduler<test_std::set_value_t>(e)
            == scheduler<test_std::set_value_t>{18});
 }

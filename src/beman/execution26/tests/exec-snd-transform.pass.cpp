@@ -85,7 +85,7 @@ namespace
             static_assert(std::same_as<Expect,
                 decltype(test_std::transform_sender(dom, std::forward<Sender>(sndr)))>);
             static_assert(Noexcept == noexcept(test_std::transform_sender(dom, std::forward<Sender>(sndr))));
-            assert(sndr.value == test_std::transform_sender(dom, std::forward<Sender>(sndr)).value);
+            ASSERT(sndr.value == test_std::transform_sender(dom, std::forward<Sender>(sndr)).value);
         }
 
         static_assert(requires{ test_std::transform_sender(dom, std::forward<Sender>(sndr), env{}); });
@@ -94,14 +94,14 @@ namespace
             static_assert(std::same_as<Expect,
                 decltype(test_std::transform_sender(dom, std::forward<Sender>(sndr), env{}))>);
             static_assert(Noexcept == noexcept(test_std::transform_sender(dom, std::forward<Sender>(sndr), env{})));
-            assert(sndr.value == test_std::transform_sender(dom, std::forward<Sender>(sndr), env{}).value);
+            ASSERT(sndr.value == test_std::transform_sender(dom, std::forward<Sender>(sndr), env{}).value);
         }
 
         static_assert(not requires{ test_std::transform_sender(dom, std::forward<Sender>(sndr), env{}, env{}); });
     }
 }
 
-auto main() -> int
+TEST(exec_snd_transform)
 {
     test_transform_sender<true, final_sender<kind::tag>&&>(empty_domain{}, final_sender<kind::tag>{42});
     final_sender<kind::tag> fs{42};

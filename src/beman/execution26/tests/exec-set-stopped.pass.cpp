@@ -48,7 +48,7 @@ namespace
 
 // ----------------------------------------------------------------------------
 
-auto main() -> int
+TEST(exec_set_stopped)
 {
     static_assert(std::semiregular<test_std::set_stopped_t>);
     static_assert(std::same_as<test_std::set_stopped_t const, decltype(test_std::set_stopped)>);
@@ -57,8 +57,8 @@ auto main() -> int
     test_noexcept<receiver_throwing>();
 
     bool called{false};
-    assert(not called);
+    ASSERT(not called);
     test_std::set_stopped(receiver{&called});
-    assert(called);
+    ASSERT(called);
 
 }

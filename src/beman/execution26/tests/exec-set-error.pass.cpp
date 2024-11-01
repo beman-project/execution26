@@ -26,7 +26,7 @@ namespace
         auto set_error(throws) noexcept -> void {}
         auto set_error(arg a) noexcept -> void
         {
-            assert(a.value == 43);
+            ASSERT(a.value == 43);
         }
         auto set_error(arg_throwing) -> void {}
     };
@@ -54,7 +54,7 @@ namespace
     }
 }
 
-auto main() -> int
+TEST(exec_set_error)
 {
     static_assert(std::semiregular<test_std::set_error_t>);
     static_assert(std::same_as<test_std::set_error_t const, decltype(test_std::set_error)>);

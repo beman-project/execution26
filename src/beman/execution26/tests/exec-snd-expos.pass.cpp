@@ -1,4 +1,4 @@
-// src/beman/execution26/tests/exe-snd-expos.pass.cpp                 -*-C++-*-
+// src/beman/execution26/tests/exec-snd-expos.pass.cpp                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <beman/execution26/detail/child_type.hpp>
@@ -202,7 +202,7 @@ namespace
         static_assert(test_std::detail::queryable<decltype(test_detail::fwd_env(e))>);
         test_fwd_env_helper<true, test_std::get_domain_t>();
         test_fwd_env_helper<false, non_forwardable_t>();
-        assert(129 == test_detail::fwd_env(e).query(forwardable, 1, 3));
+        ASSERT(129 == test_detail::fwd_env(e).query(forwardable, 1, 3));
     }
 
     auto test_make_env() -> void
@@ -210,8 +210,8 @@ namespace
         auto env{test_detail::make_env(custom_query<0>, custom_result{43})};
         auto const cenv{env};
         static_assert(test_std::detail::queryable<decltype(env)>);
-        assert(env.query(custom_query<0>) == custom_result{43});
-        assert(cenv.query(custom_query<0>) == custom_result{43});
+        ASSERT(env.query(custom_query<0>) == custom_result{43});
+        ASSERT(cenv.query(custom_query<0>) == custom_result{43});
     }
 
     template <bool Expect, typename Query, typename Env>
@@ -256,54 +256,54 @@ namespace
         test_join_env<false, custom_query_t<3>>(env);
         test_join_env<false, custom_query_t<3>>(cenv);
 
-        assert(env.query(custom_query<0>, 13) == 55);
-        assert(cenv.query(custom_query<0>, 13) == 55);
-        assert(env.query(custom_query<1>, 13) == 55);
-        assert(cenv.query(custom_query<1>, 13) == 55);
-        assert(env.query(custom_query<2>, 13) == 30);
-        assert(cenv.query(custom_query<2>, 13) == 30);
+        ASSERT(env.query(custom_query<0>, 13) == 55);
+        ASSERT(cenv.query(custom_query<0>, 13) == 55);
+        ASSERT(env.query(custom_query<1>, 13) == 55);
+        ASSERT(cenv.query(custom_query<1>, 13) == 55);
+        ASSERT(env.query(custom_query<2>, 13) == 30);
+        ASSERT(cenv.query(custom_query<2>, 13) == 30);
     }
 
     auto test_sched_attrs() -> void
     {
         scheduler sched{17};
-        assert(sched.query(test_std::get_domain) == domain{17});
+        ASSERT(sched.query(test_std::get_domain) == domain{17});
 
         auto attrs{test_detail::sched_attrs(sched)};
         static_assert(test_detail::queryable<decltype(attrs)>);
 
         auto sched_error{attrs.query(test_std::get_completion_scheduler<test_std::set_error_t>)};
         static_assert(::std::same_as<scheduler, decltype(sched_error)>);
-        assert(sched_error == sched);
+        ASSERT(sched_error == sched);
 
         auto sched_stopped{attrs.query(test_std::get_completion_scheduler<test_std::set_stopped_t>)};
         static_assert(::std::same_as<scheduler, decltype(sched_stopped)>);
-        assert(sched_stopped == sched);
+        ASSERT(sched_stopped == sched);
 
         auto sched_value{attrs.query(test_std::get_completion_scheduler<test_std::set_value_t>)};
         static_assert(::std::same_as<scheduler, decltype(sched_value)>);
-        assert(sched_value == sched);
+        ASSERT(sched_value == sched);
 
         auto dom{attrs.query(test_std::get_domain)};
         static_assert(::std::same_as<domain, decltype(dom)>);
-        assert(dom == domain{17});
+        ASSERT(dom == domain{17});
     }
 
     auto test_sched_env() -> void
     {
         scheduler sched{17};
-        assert(sched.query(test_std::get_domain) == domain{17});
+        ASSERT(sched.query(test_std::get_domain) == domain{17});
 
         auto env{test_detail::sched_env(sched)};
         static_assert(test_detail::queryable<decltype(env)>);
 
         auto qsched{env.query(test_std::get_scheduler)};
         static_assert(::std::same_as<scheduler, decltype(qsched)>);
-        assert(qsched == sched);
+        ASSERT(qsched == sched);
 
         auto dom{env.query(test_std::get_domain)};
         static_assert(::std::same_as<domain, decltype(dom)>);
-        assert(dom == domain{17});
+        ASSERT(dom == domain{17});
     }
 
     namespace completion_domain {
@@ -416,13 +416,13 @@ namespace
                                                      env{43},
                                                      default_domain{74})};
         static_assert(std::same_as<domain, decltype(result1)>);
-        assert(result1.value == 43);
+        ASSERT(result1.value == 43);
 
         auto result2{test_detail::query_with_default(test_std::get_domain,
                                                      test_std::empty_env(),
                                                      default_domain{74})};
         static_assert(std::same_as<default_domain, decltype(result2)>);
-        assert(result2.default_value == 74);
+        ASSERT(result2.default_value == 74);
     }
 
     auto test_get_domain_early() -> void
@@ -643,19 +643,19 @@ namespace
         static_assert(noexcept(test_detail::default_impls::get_state(sender0{}, r)));
         static_assert(std::same_as<data&&,
             decltype(test_detail::default_impls::get_state(sender0{}, r))>);
-        assert((data{1, 2}) == test_detail::default_impls::get_state(sender0{}, r));
+        ASSERT((data{1, 2}) == test_detail::default_impls::get_state(sender0{}, r));
         static_assert(std::same_as<data&&,
             decltype(test_detail::default_impls::get_state(sender1{}, r))>);
-        assert((data{1, 2}) == test_detail::default_impls::get_state(sender1{}, r));
+        ASSERT((data{1, 2}) == test_detail::default_impls::get_state(sender1{}, r));
         static_assert(std::same_as<data&&,
             decltype(test_detail::default_impls::get_state(sender2{}, r))>);
-        assert((data{1, 2}) == test_detail::default_impls::get_state(sender2{}, r));
+        ASSERT((data{1, 2}) == test_detail::default_impls::get_state(sender2{}, r));
         static_assert(std::same_as<data&&,
             decltype(test_detail::default_impls::get_state(sender3{}, r))>);
-        assert((data{1, 2}) == test_detail::default_impls::get_state(sender3{}, r));
+        ASSERT((data{1, 2}) == test_detail::default_impls::get_state(sender3{}, r));
         static_assert(std::same_as<data&&,
             decltype(test_detail::default_impls::get_state(sender4{}, r))>);
-        assert((data{1, 2}) == test_detail::default_impls::get_state(sender4{}, r));
+        ASSERT((data{1, 2}) == test_detail::default_impls::get_state(sender4{}, r));
         static_assert(std::same_as<data&,
             decltype(test_detail::default_impls::get_state(s, r))>);
         static_assert(std::same_as<data const&,
@@ -676,17 +676,17 @@ namespace
         state s4;
         state s5;
         static_assert(noexcept(test_detail::default_impls::start(a0, a1, s1, s2, s3, s4, s5)));
-        assert(s1.called == false);
-        assert(s2.called == false);
-        assert(s3.called == false);
-        assert(s4.called == false);
-        assert(s5.called == false);
+        ASSERT(s1.called == false);
+        ASSERT(s2.called == false);
+        ASSERT(s3.called == false);
+        ASSERT(s4.called == false);
+        ASSERT(s5.called == false);
         test_detail::default_impls::start(a0, a1, s1, s2, s3, s4, s5);
-        assert(s1.called == true);
-        assert(s2.called == true);
-        assert(s3.called == true);
-        assert(s4.called == true);
-        assert(s5.called == true);
+        ASSERT(s1.called == true);
+        ASSERT(s2.called == true);
+        ASSERT(s3.called == true);
+        ASSERT(s4.called == true);
+        ASSERT(s5.called == true);
     }
     template <typename Impls>
     auto test_default_impls_complete(Impls) -> void
@@ -711,9 +711,9 @@ namespace
             Impls::complete(::std::integral_constant<int, 0>{}, s, r, tag, 0, arg{})
         ));
 
-        assert(r.called == false);
+        ASSERT(r.called == false);
         Impls::complete(::std::integral_constant<int, 0>{}, s, r, tag, 0, arg{});
-        assert(r.called == true);
+        ASSERT(r.called == true);
     }
 
     auto test_default_impls() -> void
@@ -868,7 +868,7 @@ namespace
         static_assert(std::same_as<tag, typename basic_receiver::tag_t>);
         static_assert(std::same_as<test_detail::state_type<sender, receiver>,
                                    typename basic_receiver::state_t>);
-        assert(&basic_receiver::complete == &test_detail::default_impls::complete);
+        ASSERT(&basic_receiver::complete == &test_detail::default_impls::complete);
 
         {
             test_detail::basic_state<sender, receiver> op(sender{}, receiver{});
@@ -877,9 +877,9 @@ namespace
             static_assert(not requires{ test_std::set_value(std::move(br), 42, 1); });
             static_assert(requires{ test_std::set_value(std::move(br), 42); });
             static_assert(noexcept(test_std::set_value(std::move(br), 42)));
-            assert(op.receiver.value == 0);
+            ASSERT(op.receiver.value == 0);
             test_std::set_value(std::move(br), 42);
-            assert(op.receiver.value == 42);
+            ASSERT(op.receiver.value == 42);
         }
         {
             test_detail::basic_state<sender, receiver> op(sender{}, receiver{});
@@ -888,18 +888,18 @@ namespace
             static_assert(not requires{ test_std::set_error(std::move(br), 0); });
             static_assert(requires{ test_std::set_error(std::move(br), err{42}); });
             static_assert(noexcept(test_std::set_error(std::move(br), err{42})));
-            assert(op.receiver.error == err{});
+            ASSERT(op.receiver.error == err{});
             test_std::set_error(std::move(br), err{42});
-            assert(op.receiver.error == err{42});
+            ASSERT(op.receiver.error == err{42});
         }
         {
             test_detail::basic_state<sender, receiver> op(sender{}, receiver{});
             basic_receiver br{&op};
             static_assert(requires{ test_std::set_stopped(std::move(br)); });
             static_assert(noexcept(test_std::set_stopped(std::move(br))));
-            assert(op.receiver.stopped == false);
+            ASSERT(op.receiver.stopped == false);
             test_std::set_stopped(std::move(br));
-            assert(op.receiver.stopped == true);
+            ASSERT(op.receiver.stopped == true);
         }
         {
             test_detail::basic_state<sender, unstoppable_receiver> op(sender{}, unstoppable_receiver{});
@@ -932,37 +932,37 @@ namespace
         };
         auto p0{test_detail::product_type{}};
         static_assert(p0.size() == 0u);
-        assert(p0 == p0);
+        ASSERT(p0 == p0);
 
         auto p1{test_detail::product_type{nm(1)}};
         static_assert(p1.size() == 1u);
-        assert(p1.get<0>() == 1);
+        ASSERT(p1.get<0>() == 1);
 
         auto p2{test_detail::product_type{nm(1), nm(2)}};
         static_assert(p2.size() == 2u);
-        assert(p2.get<0>() == 1);
-        assert(p2.get<1>() == 2);
+        ASSERT(p2.get<0>() == 1);
+        ASSERT(p2.get<1>() == 2);
 
         auto p3{test_detail::product_type{nm(1), nm(2), nm(3)}};
         static_assert(p3.size() == 3u);
-        assert(p3.get<0>() == 1);
-        assert(p3.get<1>() == 2);
-        assert(p3.get<2>() == 3);
+        ASSERT(p3.get<0>() == 1);
+        ASSERT(p3.get<1>() == 2);
+        ASSERT(p3.get<2>() == 3);
 
         auto p4{test_detail::product_type{nm(1), nm(2), nm(3), nm(4)}};
         static_assert(p4.size() == 4u);
-        assert(p4.get<0>() == 1);
-        assert(p4.get<1>() == 2);
-        assert(p4.get<2>() == 3);
-        assert(p4.get<3>() == 4);
+        ASSERT(p4.get<0>() == 1);
+        ASSERT(p4.get<1>() == 2);
+        ASSERT(p4.get<2>() == 3);
+        ASSERT(p4.get<3>() == 4);
 
         auto p5{test_detail::product_type{nm(1), nm(2), nm(3), nm(4), nm(5)}};
         static_assert(p5.size() == 5u);
-        assert(p5.get<0>() == 1);
-        assert(p5.get<1>() == 2);
-        assert(p5.get<2>() == 3);
-        assert(p5.get<3>() == 4);
-        assert(p5.get<4>() == 5);
+        ASSERT(p5.get<0>() == 1);
+        ASSERT(p5.get<1>() == 2);
+        ASSERT(p5.get<2>() == 3);
+        ASSERT(p5.get<3>() == 4);
+        ASSERT(p5.get<4>() == 5);
     }
     auto test_connect_all() -> void
     {
@@ -971,14 +971,14 @@ namespace
             sender0 s{};
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<>{})};
-            assert(product.size() == 0);
+            ASSERT(product.size() == 0);
             test_std::detail::use(product);
         }
         {
             sender0 const s{};
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<>{})};
-            assert(product.size() == 0);
+            ASSERT(product.size() == 0);
             test_std::detail::use(product);
         }
         {
@@ -986,7 +986,7 @@ namespace
             static_assert(requires{ test_std::connect(sender1{}, receiver{}); });
             test_detail::basic_state state{sender1{}, receiver{}};
             auto product{test_detail::connect_all(&state, sender1{}, std::index_sequence<0>{})};
-            assert(product.size() == 1);
+            ASSERT(product.size() == 1);
             test_std::detail::use(product);
         }
         {
@@ -995,7 +995,7 @@ namespace
             static_assert(requires{ test_std::connect(s, receiver{}); });
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0>{})};
-            assert(product.size() == 1);
+            ASSERT(product.size() == 1);
             test_std::detail::use(product);
         }
         {
@@ -1003,7 +1003,7 @@ namespace
             static_assert(requires{ test_std::connect(sender2{}, receiver{}); });
             test_detail::basic_state state{sender2{}, receiver{}};
             auto product{test_detail::connect_all(&state, sender2{}, std::index_sequence<0, 1>{})};
-            assert(product.size() == 2);
+            ASSERT(product.size() == 2);
             test_std::detail::use(product);
         }
         {
@@ -1012,7 +1012,7 @@ namespace
             static_assert(requires{ test_std::connect(s, receiver{}); });
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1>{})};
-            assert(product.size() == 2);
+            ASSERT(product.size() == 2);
             test_std::detail::use(product);
         }
         {
@@ -1020,7 +1020,7 @@ namespace
             static_assert(requires{ test_std::connect(sender3{}, receiver{}); });
             test_detail::basic_state state{sender3{}, receiver{}};
             auto product{test_detail::connect_all(&state, sender3{}, std::index_sequence<0, 1, 2>{})};
-            assert(product.size() == 3);
+            ASSERT(product.size() == 3);
             test_std::detail::use(product);
         }
         {
@@ -1029,7 +1029,7 @@ namespace
             static_assert(requires{ test_std::connect(s, receiver{}); });
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1, 2>{})};
-            assert(product.size() == 3);
+            ASSERT(product.size() == 3);
             test_std::detail::use(product);
         }
         {
@@ -1037,7 +1037,7 @@ namespace
             static_assert(requires{ test_std::connect(sender4{}, receiver{}); });
             test_detail::basic_state state{sender4{}, receiver{}};
             auto product{test_detail::connect_all(&state, sender4{}, std::index_sequence<0, 1, 2, 3>{})};
-            assert(product.size() == 4);
+            ASSERT(product.size() == 4);
             test_std::detail::use(product);
         }
         {
@@ -1046,7 +1046,7 @@ namespace
             static_assert(requires{ test_std::connect(s, receiver{}); });
             test_detail::basic_state state{std::move(s), receiver{}};
             auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1, 2, 3>{})};
-            assert(product.size() == 4);
+            ASSERT(product.size() == 4);
             test_std::detail::use(product);
         }
 
@@ -1103,7 +1103,7 @@ namespace
         static_assert(test_std::operation_state<decltype(op)>);
         static_assert(requires{ typename decltype(op)::tag_t; });
         test_std::start(op);
-        assert(data == 4);
+        ASSERT(data == 4);
     }
 
     auto test_completion_signatures_for() -> void
@@ -1401,7 +1401,7 @@ namespace
             decltype(test_std::get_env(plain_op.receiver))
         >);
         using base_property = property<write_env_env::base>;
-        assert(base_property::data{42}
+        ASSERT(base_property::data{42}
                == test_std::get_env(plain_op.receiver).query(base_property{}));
 
         auto we_sender{test_detail::write_env(write_env_sender{},
@@ -1438,10 +1438,10 @@ namespace
         >);
 
         bool has_both_properties{false};
-        assert(not has_both_properties);
+        ASSERT(not has_both_properties);
         auto we_op{test_std::connect(we_sender, write_env_receiver{&has_both_properties})};
         test_std::start(we_op);
-        assert(has_both_properties);
+        ASSERT(has_both_properties);
         test_std::detail::use(we_op);
     }
 
@@ -1475,7 +1475,7 @@ namespace
     }
 }
 
-auto main() -> int
+TEST(exec_snd_expos)
 {
     test_fwd_env();
     test_make_env();

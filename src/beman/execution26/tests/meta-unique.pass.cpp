@@ -1,4 +1,4 @@
-// src/beman/execution26/tests/meta_unique.cpp                        -*-C++-*-
+// src/beman/execution26/tests/meta-unique.cpp                        -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <beman/execution26/detail/meta_unique.hpp>
@@ -12,7 +12,7 @@ namespace
     template <typename...> struct type_list {};
 }
 
-auto main() -> int
+TEST(meta_unique)
 {
     static_assert(std::same_as<
         type_list<>,

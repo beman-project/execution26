@@ -77,7 +77,7 @@ namespace
         {
             *this->called = true;
 	        [this, &a...]<std::size_t... I>(std::index_sequence<I...>){
-                    assert(((this->expect.template get<I>() == a) && ...));
+                    ASSERT(((this->expect.template get<I>() == a) && ...));
 	        }(std::index_sequence_for<T...>{});
         }
     };
@@ -96,7 +96,7 @@ namespace
         auto set_error(E&& e) && noexcept -> void
         {
             *this->called = true;
-            assert(error == e);
+            ASSERT(error == e);
         }
     };
     template <typename E>
@@ -125,9 +125,9 @@ namespace
             )};
         static_assert(test_std::operation_state<decltype(op)>);
 
-        assert(not called);
+        ASSERT(not called);
         test_std::start(op);
-        assert(called);
+        ASSERT(called);
     }
 
     template <typename E>
@@ -141,9 +141,9 @@ namespace
             )};
         static_assert(test_std::operation_state<decltype(op)>);
 
-        assert(not called);
+        ASSERT(not called);
         test_std::start(op);
-        assert(called);
+        ASSERT(called);
     }
 
     auto test_just_stopped() -> void
@@ -156,9 +156,9 @@ namespace
             )};
         static_assert(test_std::operation_state<decltype(op)>);
 
-        assert(not called);
+        ASSERT(not called);
         test_std::start(op);
-        assert(called);
+        ASSERT(called);
     }
 
 
@@ -216,23 +216,23 @@ namespace
         counting_resource resource;
         memory_receiver receiver{&resource};
 
-        assert(resource.count == 0u);
+        ASSERT(resource.count == 0u);
         auto copy(std::make_obj_using_allocator<std::pmr::string>(std::pmr::polymorphic_allocator<>(&resource), str));
-        assert(resource.count == 1u);
+        ASSERT(resource.count == 1u);
 
         auto env{test_std::get_env(receiver)};
         auto alloc{test_std::get_allocator(env)};
         test::use(alloc);
 
-        assert(resource.count == 1u);
+        ASSERT(resource.count == 1u);
         auto state{test_std::connect(std::move(sender), memory_receiver{&resource})};
         test::use(state);
-        assert(resource.count == 2u);
+        ASSERT(resource.count == 2u);
         test::use(copy);
     }
 }
 
-auto main() -> int
+TEST(exec_just)
 {
     test_just_constraints();
     test_just();

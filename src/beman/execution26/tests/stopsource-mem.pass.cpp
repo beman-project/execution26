@@ -18,17 +18,17 @@ auto test_stopsource_swap() -> void
 
     auto token1{source1.get_token()};
     auto token2{source2.get_token()};
-    assert(token1 == source1.get_token());
-    assert(token1 != source2.get_token());
-    assert(token2 != source1.get_token());
-    assert(token2 == source2.get_token());
+    ASSERT(token1 == source1.get_token());
+    ASSERT(token1 != source2.get_token());
+    ASSERT(token2 != source1.get_token());
+    ASSERT(token2 == source2.get_token());
 
     source1.swap(source2);
 
-    assert(token1 != source1.get_token());
-    assert(token1 == source2.get_token());
-    assert(token2 == source1.get_token());
-    assert(token2 != source2.get_token());
+    ASSERT(token1 != source1.get_token());
+    ASSERT(token1 == source2.get_token());
+    ASSERT(token2 == source1.get_token());
+    ASSERT(token2 != source2.get_token());
 }
 
 auto test_stopsource_get_token() -> void
@@ -45,10 +45,10 @@ auto test_stopsource_get_token() -> void
     ::test_std::stop_source engaged;
     ::test_std::stop_source disengaged(::test_std::nostopstate);
 
-    assert(engaged.get_token() == engaged.get_token());
-    assert(engaged.get_token() != ::test_std::stop_token());
-    assert(engaged.get_token() != disengaged.get_token());
-    assert(disengaged.get_token() == ::test_std::stop_token());
+    ASSERT(engaged.get_token() == engaged.get_token());
+    ASSERT(engaged.get_token() != ::test_std::stop_token());
+    ASSERT(engaged.get_token() != disengaged.get_token());
+    ASSERT(disengaged.get_token() == ::test_std::stop_token());
 }
 
 auto test_stopsource_stop_possible() -> void
@@ -64,13 +64,13 @@ auto test_stopsource_stop_possible() -> void
     ::test_std::stop_source engaged;
     ::test_std::stop_source disengaged(::test_std::nostopstate);
 
-    assert(engaged.stop_possible());
+    ASSERT(engaged.stop_possible());
     engaged.request_stop();
-    assert(engaged.stop_possible());
+    ASSERT(engaged.stop_possible());
 
-    assert(not disengaged.stop_possible());
+    ASSERT(not disengaged.stop_possible());
     disengaged.request_stop();
-    assert(not disengaged.stop_possible());
+    ASSERT(not disengaged.stop_possible());
 }
 
 auto test_stopsource_stop_requested() -> void
@@ -86,13 +86,13 @@ auto test_stopsource_stop_requested() -> void
     ::test_std::stop_source engaged;
     ::test_std::stop_source disengaged(::test_std::nostopstate);
 
-    assert(not engaged.stop_requested());
+    ASSERT(not engaged.stop_requested());
     engaged.request_stop();
-    assert(engaged.stop_requested());
+    ASSERT(engaged.stop_requested());
 
-    assert(not disengaged.stop_requested());
+    ASSERT(not disengaged.stop_requested());
     disengaged.request_stop();
-    assert(not disengaged.stop_requested());
+    ASSERT(not disengaged.stop_requested());
 }
 
 auto test_stopsource_request_stop() -> void
@@ -108,24 +108,24 @@ auto test_stopsource_request_stop() -> void
     ::test_std::stop_source engaged;
     ::test_std::stop_source disengaged(::test_std::nostopstate);
 
-    assert(not engaged.stop_requested());
+    ASSERT(not engaged.stop_requested());
     auto res1{engaged.request_stop()};
-    assert(res1);
-    assert(engaged.stop_requested());
+    ASSERT(res1);
+    ASSERT(engaged.stop_requested());
     auto res2{engaged.request_stop()};
-    assert(res2 == false);
-    assert(engaged.stop_requested());
+    ASSERT(res2 == false);
+    ASSERT(engaged.stop_requested());
 
-    assert(not disengaged.stop_requested());
+    ASSERT(not disengaged.stop_requested());
     auto res3{disengaged.request_stop()};
-    assert(res3 == false);
-    assert(not disengaged.stop_requested());
+    ASSERT(res3 == false);
+    ASSERT(not disengaged.stop_requested());
     auto res4{disengaged.request_stop()};
-    assert(res4 == false);
-    assert(not disengaged.stop_requested());
+    ASSERT(res4 == false);
+    ASSERT(not disengaged.stop_requested());
 }
 
-auto main() -> int
+TEST(stopsource_mem)
 {
     test_stopsource_swap();
     test_stopsource_get_token();

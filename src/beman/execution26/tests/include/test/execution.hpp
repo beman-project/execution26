@@ -6,8 +6,13 @@
 
 #include <beman/execution26/stop_token.hpp>
 #include <concepts>
-#include <cassert>
 #include <cstddef>
+
+#undef NDEBUG
+#include <cassert>
+
+#define ASSERT(condition) assert(condition)
+#define TEST(name) auto main() -> int
 
 namespace beman::execution26 {}
 
