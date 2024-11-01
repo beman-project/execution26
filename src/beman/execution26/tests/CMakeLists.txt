@@ -93,18 +93,24 @@ list(
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 if(PROJECT_IS_TOP_LEVEL)
+  set(TARGET_ALIAS beman_execution26::beman_execution26)
   enable_testing()
-  find_package(beman_execution26 0.0.1 EXACT REQUIRED)
+  find_package(beman_execution26 0.0.1 EXACT QUIET)
   if(beman_execution26_FOUND)
-    set(TARGET_LIBRARY beman_execution26::beman_execution26)
     set(execution_tests exec-awaitable.pass) # only one sample to save time! CK
+  else()
+    add_subdirectory(../../../.. beman_execution26)
+    include_directories(${PROJECT_SOURCE_DIR}/include)
+
+    include(CMakePrintHelpers)
+    cmake_print_variables(TARGET_ALIAS TARGET_LIBRARY TARGET_PREFIX PROJECT_SOURCE_DIR)
   endif()
 endif()
 
 foreach(test ${execution_tests})
   set(TEST_EXE ${TARGET_PREFIX}.${test})
   add_executable(${TEST_EXE} ${test}.cpp)
-  target_link_libraries(${TEST_EXE} PRIVATE ${TARGET_LIBRARY})
+  target_link_libraries(${TEST_EXE} PRIVATE ${TARGET_ALIAS})
   add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
 endforeach()
 

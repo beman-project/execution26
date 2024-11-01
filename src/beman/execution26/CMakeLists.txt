@@ -6,6 +6,9 @@
 add_library(${TARGET_LIBRARY} STATIC)
 add_library(${TARGET_ALIAS} ALIAS ${TARGET_LIBRARY})
 
+include(CMakePrintHelpers)
+cmake_print_variables(TARGET_ALIAS TARGET_LIBRARY TARGET_PREFIX PROJECT_SOURCE_DIR)
+
 target_sources(
   ${TARGET_LIBRARY}
   PRIVATE execution.cpp
