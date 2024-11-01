@@ -2,7 +2,7 @@
   "version": 6,
   "configurePresets": [
     {
-      "name": "_root-config",
+      "name": "root-config",
       "hidden": true,
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/${presetName}",
@@ -19,35 +19,45 @@
       }
     },
     {
-      "name": "_debug-base",
+      "name": "debug-base-unix",
       "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_CXX_FLAGS": "-fsanitize=address -fsanitize=pointer-compare -fsanitize=pointer-subtract -fsanitize=leak -fsanitize=undefined"
+      },
+      "condition": {
+        "type": "notEquals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
       }
     },
     {
-      "name": "_release-base",
+      "name": "release-base-unix",
       "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RelWithDebInfo",
         "CMAKE_CXX_FLAGS": "-Wall -Wextra -Wpedantic -Wno-shadow -Wconversion -Wsign-conversion -Wcast-align -Wcast-qual -Woverloaded-virtual -Wformat=2 -Wno-error"
+      },
+      "condition": {
+        "type": "notEquals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
       }
     },
     {
       "name": "debug",
       "displayName": "Debug Build",
       "inherits": [
-        "_root-config",
-        "_debug-base"
+        "root-config",
+        "debug-base-unix"
       ]
     },
     {
       "name": "release",
       "displayName": "Release Build",
       "inherits": [
-        "_root-config",
-        "_release-base"
+        "root-config",
+        "release-base-unix"
       ]
     }
   ],
@@ -72,7 +82,7 @@
   ],
   "testPresets": [
     {
-      "name": "_test_base",
+      "name": "test_base",
       "hidden": true,
       "output": {
         "outputOnFailure": true
@@ -84,12 +94,12 @@
     },
     {
       "name": "debug",
-      "inherits": "_test_base",
+      "inherits": "test_base",
       "configurePreset": "debug"
     },
     {
       "name": "release",
-      "inherits": "_test_base",
+      "inherits": "test_base",
       "configurePreset": "release"
     }
   ],
