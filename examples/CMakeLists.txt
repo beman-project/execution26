@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # cmake-format: on
 
-list(APPEND EXAMPLES when_all-cancel stop_token stopping allocator)
+list(APPEND EXAMPLES sender-demo when_all-cancel stop_token stopping allocator)
 
 foreach(EXAMPLE ${EXAMPLES})
   set(EXAMPLE_TARGET ${TARGET_PREFIX}.examples.${EXAMPLE})
