@@ -26,7 +26,7 @@ likely observable.
 - [exec.run.loop.types] p9.2: "get_stop_token(REC(o))": REC is a receiver, any
      environment would be attached to get_env(REC(o)).
 - [exec.into.variant] p2: the sender argument to into_variant really needs to
-    have completion_signatures defined - should the constaint be sender_in
+    have completion_signatures defined - should the constraint be sender_in
     instead of sender? oh, actually, only the result of transform_sender needs
     to be a sender_in!
 - [exec.sync.wait] p4.2: what is "e"? probably apply_sender(...)
@@ -43,7 +43,7 @@ likely observable.
     supposed to work? I don't see a reason why a value completion is necessarily
     required. As is, they are not because type_idenity_t ends up being used without
     argument.
-- [exec.then] p5 seems to miss a space betweend sendr and out_sndr
+- [exec.then] p5 seems to miss a space between sendr and out_sndr
 - [exec.let] p9: Env is not defined; it is probably meant to be env_t
 - [exec.schedule.from] p6: the Rcvr in state-type shouldn't be a reference
 - [exec.when.all] uses on-stop-request without saying what it actually does.

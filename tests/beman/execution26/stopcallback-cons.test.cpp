@@ -31,7 +31,7 @@ TEST(stopcallback_cons) {
     // done is to verify that construction and destruction works even if the
     // callback is the only owner of the state.
     // - Given a stop_callback constructed from an engaged stop_token.
-    // - When the corresponding stop_source and stop_token are destoryed.
+    // - When the corresponding stop_source and stop_token are destroyed.
     // - Then the callback can still be destroyed without issues.
 
     auto                                source = ::std::make_unique<::test_std::stop_source>();

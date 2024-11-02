@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 SANITIZERS = release debug msan asan usan tsan
-.PHONY: default run update check ce todo distclean clean build test all $(SANITIZERS)
+.PHONY: default run update check ce todo distclean clean codespell build test all $(SANITIZERS)
 
 COMPILER=system
 CXX_BASE=$(CXX:$(dir $(CXX))%=%)
@@ -78,6 +78,9 @@ check:
 		from=`echo -n $$h | sed -n 's@.*Beman/\(.*\).hpp.*@\1@p'`; \
 		< $$h sed -n "/^ *# *include <Beman\//s@.*[</]Beman/\(.*\).hpp>.*@$$from \1@p"; \
 	done | tsort > /dev/null
+
+codespell:
+	codespell -L statics
 
 todo:
 	bin/mk-todo.py
