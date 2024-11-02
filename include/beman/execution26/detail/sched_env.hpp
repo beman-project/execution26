@@ -12,34 +12,28 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Scheduler>
-    class sched_env
-    {
-    private:
-        Scheduler sched;
+namespace beman::execution26::detail {
+template <typename Scheduler>
+class sched_env {
+  private:
+    Scheduler sched;
 
-    public:
-        template <typename S>
-        explicit sched_env(S&& sch): sched(::std::forward<S>(sch)) {}
+  public:
+    template <typename S>
+    explicit sched_env(S&& sch) : sched(::std::forward<S>(sch)) {}
 
-        auto query(::beman::execution26::get_scheduler_t const&) const noexcept
-        {
-            return this->sched;
-        }
-        auto query(::beman::execution26::get_domain_t const& q) const noexcept
-        {
-            if constexpr (requires{ this-> sched.query(q); })
-                return this->sched.query(q);
-            else
-                return ::beman::execution26::default_domain{};
-        }
-    };
+    auto query(const ::beman::execution26::get_scheduler_t&) const noexcept { return this->sched; }
+    auto query(const ::beman::execution26::get_domain_t& q) const noexcept {
+        if constexpr (requires { this->sched.query(q); })
+            return this->sched.query(q);
+        else
+            return ::beman::execution26::default_domain{};
+    }
+};
 
-    template <typename Scheduler>
-    sched_env(Scheduler&&) -> sched_env<::std::remove_cvref_t<Scheduler>>;
-}
+template <typename Scheduler>
+sched_env(Scheduler&&) -> sched_env<::std::remove_cvref_t<Scheduler>>;
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

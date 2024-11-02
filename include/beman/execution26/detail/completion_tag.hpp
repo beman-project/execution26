@@ -11,14 +11,11 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Tag>
-    concept completion_tag
-        =  ::std::same_as<Tag, ::beman::execution26::set_error_t>
-        || ::std::same_as<Tag, ::beman::execution26::set_stopped_t>
-        || ::std::same_as<Tag, ::beman::execution26::set_value_t>
-        ;
+namespace beman::execution26::detail {
+template <typename Tag>
+concept completion_tag =
+    ::std::same_as<Tag, ::beman::execution26::set_error_t> ||
+    ::std::same_as<Tag, ::beman::execution26::set_stopped_t> || ::std::same_as<Tag, ::beman::execution26::set_value_t>;
 }
 
 // ----------------------------------------------------------------------------

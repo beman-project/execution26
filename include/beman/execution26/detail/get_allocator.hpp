@@ -12,53 +12,39 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    struct get_allocator_t
-    {
-        template <typename Object>
-            requires (not requires(Object&& object, get_allocator_t const& tag)
-            {
-                ::std::as_const(object).query(tag);
-            })
-        auto operator()(Object&&) const
-            = BEMAN_EXECUTION26_DELETE("the object requires a const query(get_allocator_t) overload");
-        template <typename Object>
-            requires (not requires(Object const& object, get_allocator_t const& tag)
-            {
-                object.query(tag);
-            })
-        auto operator()(Object&&) const
-            = BEMAN_EXECUTION26_DELETE("the object requires a query(get_allocator_t) overload");
-        template <typename Object>
-            requires (not requires(Object const& object, get_allocator_t const& tag)
-            {
-                { object.query(tag) } noexcept;
-            })
-        auto operator()(Object&&) const
-            = BEMAN_EXECUTION26_DELETE("the query(get_allocator_t) overload needs to be noexcept");
-        template <typename Object>
-            requires (not requires(Object const& object, get_allocator_t const& tag)
-            {
-                { object.query(tag) } noexcept -> ::beman::execution26::detail::simple_allocator<>;
-            })
-        auto operator()(Object&&) const
-            = BEMAN_EXECUTION26_DELETE("the query(get_allocator_t) overload needs to be noexcept");
+namespace beman::execution26 {
+struct get_allocator_t {
+    template <typename Object>
+        requires(not requires(Object&& object, const get_allocator_t& tag) { ::std::as_const(object).query(tag); })
+    auto operator()(Object&&) const =
+        BEMAN_EXECUTION26_DELETE("the object requires a const query(get_allocator_t) overload");
+    template <typename Object>
+        requires(not requires(const Object& object, const get_allocator_t& tag) { object.query(tag); })
+    auto
+    operator()(Object&&) const = BEMAN_EXECUTION26_DELETE("the object requires a query(get_allocator_t) overload");
+    template <typename Object>
+        requires(not requires(const Object& object, const get_allocator_t& tag) {
+                    { object.query(tag) } noexcept;
+                })
+    auto
+    operator()(Object&&) const = BEMAN_EXECUTION26_DELETE("the query(get_allocator_t) overload needs to be noexcept");
+    template <typename Object>
+        requires(not requires(const Object& object, const get_allocator_t& tag) {
+                    { object.query(tag) } noexcept -> ::beman::execution26::detail::simple_allocator<>;
+                })
+    auto
+    operator()(Object&&) const = BEMAN_EXECUTION26_DELETE("the query(get_allocator_t) overload needs to be noexcept");
 
-        template <typename Object>
-        auto operator()(Object&& object) const
-        {
-            return ::std::as_const(object).query(*this);
-        }
+    template <typename Object>
+    auto operator()(Object&& object) const {
+        return ::std::as_const(object).query(*this);
+    }
 
-        constexpr auto query(::beman::execution26::forwarding_query_t const&) const noexcept -> bool
-        {
-            return true;
-        }
-    };
+    constexpr auto query(const ::beman::execution26::forwarding_query_t&) const noexcept -> bool { return true; }
+};
 
-    inline constexpr get_allocator_t get_allocator{};
-}
+inline constexpr get_allocator_t get_allocator{};
+} // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
 

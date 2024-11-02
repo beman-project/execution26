@@ -12,41 +12,30 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Token>
-    concept decayed_stoppable_token
-        = ::beman::execution26::stoppable_token<::std::decay_t<Token>>
-        ;
+namespace beman::execution26::detail {
+template <typename Token>
+concept decayed_stoppable_token = ::beman::execution26::stoppable_token<::std::decay_t<Token>>;
 }
-namespace beman::execution26
-{
-    struct get_stop_token_t
-    {
-        template <typename Object>
-            requires requires(Object&& object, get_stop_token_t const& tag)
-            {
-                { ::std::as_const(object).query(tag) } noexcept -> ::beman::execution26::detail::decayed_stoppable_token;
-            }
-        auto operator()(Object&& object) const noexcept
-        {
-            return ::std::as_const(object).query(*this);
+namespace beman::execution26 {
+struct get_stop_token_t {
+    template <typename Object>
+        requires requires(Object&& object, const get_stop_token_t& tag) {
+            { ::std::as_const(object).query(tag) } noexcept -> ::beman::execution26::detail::decayed_stoppable_token;
         }
+    auto operator()(Object&& object) const noexcept {
+        return ::std::as_const(object).query(*this);
+    }
 
-        template <typename Object>
-        auto operator()(Object&&) const noexcept -> ::beman::execution26::never_stop_token
-        {
-            return {};
-        }
+    template <typename Object>
+    auto operator()(Object&&) const noexcept -> ::beman::execution26::never_stop_token {
+        return {};
+    }
 
-        constexpr auto query(::beman::execution26::forwarding_query_t const&) const noexcept -> bool
-        {
-            return true;
-        }
-    };
+    constexpr auto query(const ::beman::execution26::forwarding_query_t&) const noexcept -> bool { return true; }
+};
 
-    inline constexpr get_stop_token_t get_stop_token{};
-}
+inline constexpr get_stop_token_t get_stop_token{};
+} // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
 

@@ -3,7 +3,6 @@
 
 #include "test/execution.hpp"
 
-TEST(stoptoken_never)
-{
+TEST(stoptoken_never) {
     // section [stoptoken.never] is empty
 }

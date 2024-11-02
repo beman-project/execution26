@@ -10,22 +10,16 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename> struct is_coroutine_handle: ::std::false_type {};
-    template <typename T>
-    struct is_coroutine_handle<::std::coroutine_handle<T>>
-        : ::std::true_type
-    {
-    };
+namespace beman::execution26::detail {
+template <typename>
+struct is_coroutine_handle : ::std::false_type {};
+template <typename T>
+struct is_coroutine_handle<::std::coroutine_handle<T>> : ::std::true_type {};
 
-    template <typename T>
-    concept await_suspend_result
-        =  ::std::same_as<T, void>
-        || ::std::same_as<T, bool>
-        || ::beman::execution26::detail::is_coroutine_handle<T>::value
-        ;
-}
+template <typename T>
+concept await_suspend_result =
+    ::std::same_as<T, void> || ::std::same_as<T, bool> || ::beman::execution26::detail::is_coroutine_handle<T>::value;
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

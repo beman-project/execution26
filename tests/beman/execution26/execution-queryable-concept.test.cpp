@@ -6,38 +6,32 @@
 
 // ----------------------------------------------------------------------------
 
-namespace
-{
-    template <typename T>
-    concept has_foo
-        = test_std::detail::queryable<T>
-        && requires(T t) { t.foo; }
-        ;
+namespace {
+template <typename T>
+concept has_foo = test_std::detail::queryable<T> && requires(T t) { t.foo; };
 
-    class non_destructible
-    {
-        ~non_destructible() = default;
-    };
+class non_destructible {
+    ~non_destructible() = default;
+};
 
-    template <typename T>
-        requires std::destructible<T>
-    auto f(T const&) -> int
-    {
-        return 0;
-    }
-
-    template <typename T>
-        requires has_foo<T>
-    auto f(T const&) -> int
-    {
-        return 1;
-    }
-
-    struct bar { int foo; };
+template <typename T>
+    requires std::destructible<T>
+auto f(const T&) -> int {
+    return 0;
 }
 
-TEST(queryable)
-{
+template <typename T>
+    requires has_foo<T>
+auto f(const T&) -> int {
+    return 1;
+}
+
+struct bar {
+    int foo;
+};
+} // namespace
+
+TEST(queryable) {
     static_assert(test_std::detail::queryable<int>);
     static_assert(not test_std::detail::queryable<non_destructible>);
 

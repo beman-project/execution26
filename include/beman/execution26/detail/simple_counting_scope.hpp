@@ -13,28 +13,24 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    class simple_counting_scope;
+namespace beman::execution26 {
+class simple_counting_scope;
 }
 
 // ----------------------------------------------------------------------------
 
-class beman::execution26::simple_counting_scope
-{
-public:
+class beman::execution26::simple_counting_scope {
+  public:
     class token;
     class assoc;
 
-    simple_counting_scope() = default;
-    simple_counting_scope(simple_counting_scope &&) = delete;
-    ~simple_counting_scope() = default;
+    simple_counting_scope()                        = default;
+    simple_counting_scope(simple_counting_scope&&) = delete;
+    ~simple_counting_scope()                       = default;
 
     auto get_token() noexcept -> token;
-    auto close() noexcept -> void
-    {
-        switch (this->state)
-        {
+    auto close() noexcept -> void {
+        switch (this->state) {
         default:
             break;
         case state_t::unused:
@@ -48,41 +44,27 @@ public:
             break;
         }
     }
-    auto join() noexcept
-    {
+    auto join() noexcept {
         bool complete{false};
         {
             ::std::lock_guard kerberos(this->mutex);
-            if (0u == this->count)
-            {
+            if (0u == this->count) {
                 this->state = state_t::joined;
-                complete = true;
+                complete    = true;
             }
         }
-        if (complete)
-        {
+        if (complete) {
             n.complete();
         }
         return ::beman::execution26::detail::notify(this->n);
     }
 
-private:
-    enum class state_t
-    {
-        unused,
-        open,
-        open_and_joining,
-        closed,
-        closed_and_joining,
-        unused_and_closed,
-        joined
-    };
+  private:
+    enum class state_t { unused, open, open_and_joining, closed, closed_and_joining, unused_and_closed, joined };
     friend class assoc;
-    auto try_associate() noexcept -> simple_counting_scope*
-    {
+    auto try_associate() noexcept -> simple_counting_scope* {
         ::std::lock_guard lock(this->mutex);
-        switch (this->state)
-        {
+        switch (this->state) {
         default:
             return nullptr;
         case state_t::unused:
@@ -93,8 +75,7 @@ private:
             return this;
         }
     }
-    auto disassociate() noexcept -> void
-    {
+    auto disassociate() noexcept -> void {
         {
             ::std::lock_guard lock(this->mutex);
             if (0u < --this->count)
@@ -111,69 +92,53 @@ private:
 
 // ----------------------------------------------------------------------------
 
-class beman::execution26::simple_counting_scope::assoc
-{
-public:
+class beman::execution26::simple_counting_scope::assoc {
+  public:
     assoc() = default;
-    assoc(assoc const& other) noexcept: assoc(other.scope)
-    {
-    }
-    assoc(assoc&& other) noexcept: scope(::std::exchange(other.scope, nullptr))
-    {
-    }
-    ~assoc()
-    {
-         if (this->scope)
+    assoc(const assoc& other) noexcept : assoc(other.scope) {}
+    assoc(assoc&& other) noexcept : scope(::std::exchange(other.scope, nullptr)) {}
+    ~assoc() {
+        if (this->scope)
             this->scope->disassociate();
     }
 
-    auto operator= (assoc other) noexcept -> assoc
-    {
+    auto operator=(assoc other) noexcept -> assoc {
         ::std::swap(this->scope, other.scope);
         return *this;
     }
 
     explicit operator bool() const noexcept { return this->scope != nullptr; }
 
-private:
+  private:
     friend class beman::execution26::simple_counting_scope::token;
     explicit assoc(beman::execution26::simple_counting_scope* scope)
-        : scope(scope? scope->try_associate(): nullptr)
-    {
-    }
+        : scope(scope ? scope->try_associate() : nullptr) {}
     beman::execution26::simple_counting_scope* scope{};
 };
 
 // ----------------------------------------------------------------------------
 
-class beman::execution26::simple_counting_scope::token
-{
-public:
+class beman::execution26::simple_counting_scope::token {
+  public:
     template <::beman::execution26::sender Sender>
-    auto wrap(Sender&& sender) const noexcept -> Sender&&
-    {
+    auto wrap(Sender&& sender) const noexcept -> Sender&& {
         return ::std::forward<Sender>(sender);
     }
 
-    auto try_associate() const -> beman::execution26::simple_counting_scope::assoc
-    {
+    auto try_associate() const -> beman::execution26::simple_counting_scope::assoc {
         return beman::execution26::simple_counting_scope::assoc(this->scope);
     }
 
-private:
+  private:
     friend class beman::execution26::simple_counting_scope;
-    explicit token(beman::execution26::simple_counting_scope* scope) noexcept
-        : scope(scope)
-    {
-    }
+    explicit token(beman::execution26::simple_counting_scope* scope) noexcept : scope(scope) {}
     beman::execution26::simple_counting_scope* scope;
 };
 
 // ----------------------------------------------------------------------------
 
 inline auto beman::execution26::simple_counting_scope::get_token() noexcept
-    -> beman::execution26::simple_counting_scope::token
-{
+    -> beman::execution26::simple_counting_scope::token {
     return beman::execution26::simple_counting_scope::token(this);
 }
 

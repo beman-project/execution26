@@ -6,14 +6,13 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    struct nostopstate_t {
-        explicit nostopstate_t() = default;
-    };
+namespace beman::execution26 {
+struct nostopstate_t {
+    explicit nostopstate_t() = default;
+};
 
-    inline constexpr nostopstate_t nostopstate{};
-}
+inline constexpr nostopstate_t nostopstate{};
+} // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
 

@@ -8,10 +8,9 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Sender>
-    using indices_for = ::std::remove_reference_t<Sender>::indices_for;
+namespace beman::execution26::detail {
+template <typename Sender>
+using indices_for = ::std::remove_reference_t<Sender>::indices_for;
 }
 
 // ----------------------------------------------------------------------------

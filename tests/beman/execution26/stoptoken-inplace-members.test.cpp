@@ -3,8 +3,7 @@
 
 #include "test/execution.hpp"
 
-auto test_inplace_stop_token_swap() -> void
-{
+auto test_inplace_stop_token_swap() -> void {
     // Plan:
     // - Given two inplace_stop_token objects which don't compare equal but
     //   comparing equal to their respective sources token.
@@ -13,8 +12,8 @@ auto test_inplace_stop_token_swap() -> void
     // Reference: [stoptoken.inplace.members] p1
 
     ::test_std::inplace_stop_source source1, source2;
-    auto token1(source1.get_token());
-    auto token2(source2.get_token());
+    auto                            token1(source1.get_token());
+    auto                            token2(source2.get_token());
 
     ASSERT(token1 == source1.get_token());
     ASSERT(token2 == source2.get_token());
@@ -26,8 +25,7 @@ auto test_inplace_stop_token_swap() -> void
     ASSERT(token2 == source1.get_token());
 }
 
-auto test_inplace_stop_token_stop_requested() -> void
-{
+auto test_inplace_stop_token_stop_requested() -> void {
     // Plan:
     // - Given a connected and a disconnected inplace_stop_token.
     // - Then using stop_requested() it return false.
@@ -49,8 +47,7 @@ auto test_inplace_stop_token_stop_requested() -> void
     ASSERT(disconnected.stop_requested() == false);
 }
 
-auto test_inplace_stop_token_stop_possible() -> void
-{
+auto test_inplace_stop_token_stop_possible() -> void {
     // Plan:
     // - Given a connected and a disconnected inplace_stop_token.
     // - Then using stop_possible() it returns false for the
@@ -73,8 +70,7 @@ auto test_inplace_stop_token_stop_possible() -> void
     ASSERT(disconnected.stop_requested() == false);
 }
 
-TEST(stoptoken_inplace_members)
-{
+TEST(stoptoken_inplace_members) {
     test_inplace_stop_token_swap();
     test_inplace_stop_token_stop_requested();
     test_inplace_stop_token_stop_possible();

@@ -6,20 +6,18 @@
 #include <concepts>
 #include <type_traits>
 
-auto test_stop_callback_interface() -> void
-{
+auto test_stop_callback_interface() -> void {
     // Reference: [stopcallback.general] p1
     struct ThrowInit {};
     struct NothrowInit {};
-    struct Callback
-    {
+    struct Callback {
         explicit Callback(ThrowInit) {}
         explicit Callback(NothrowInit) noexcept {}
         auto operator()() -> void {}
     };
 
     using CB = ::test_std::stop_callback<Callback>;
-    ::test_std::stop_token const ctoken;
+    const ::test_std::stop_token ctoken;
 
     static_assert(::std::same_as<Callback, CB::callback_type>);
     static_assert(not noexcept(CB(ctoken, ThrowInit())));
@@ -30,15 +28,12 @@ auto test_stop_callback_interface() -> void
     CB ccb(ctoken, ThrowInit());
     CB tcb{::test_std::stop_token(), ThrowInit()};
 
-    static_assert(not ::std::is_copy_constructible_v<CB>);
-    static_assert(not ::std::is_move_constructible_v<CB>);
-    static_assert(not ::std::is_copy_assignable_v<CB>);
-    static_assert(not ::std::is_move_assignable_v<CB>);
+    static_assert(not::std::is_copy_constructible_v<CB>);
+    static_assert(not::std::is_move_constructible_v<CB>);
+    static_assert(not::std::is_copy_assignable_v<CB>);
+    static_assert(not::std::is_move_assignable_v<CB>);
 
     ::test_std::stop_callback cb(ctoken, Callback(ThrowInit()));
 }
 
-TEST(stopcallback_general)
-{
-    test_stop_callback_interface();
-}
+TEST(stopcallback_general) { test_stop_callback_interface(); }

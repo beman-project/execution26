@@ -12,16 +12,12 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Sender, typename Receiver>
-    using state_type = ::std::decay_t<
-        ::beman::execution26::detail::call_result_t<
-            decltype(::beman::execution26::detail::impls_for<
-                ::beman::execution26::tag_of_t<Sender>
-            >::get_state), Sender, Receiver&
-        >
-    >;
+namespace beman::execution26::detail {
+template <typename Sender, typename Receiver>
+using state_type = ::std::decay_t< ::beman::execution26::detail::call_result_t<
+    decltype(::beman::execution26::detail::impls_for< ::beman::execution26::tag_of_t<Sender> >::get_state),
+    Sender,
+    Receiver&> >;
 }
 
 // ----------------------------------------------------------------------------

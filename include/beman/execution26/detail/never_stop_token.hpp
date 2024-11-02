@@ -6,26 +6,24 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    class never_stop_token;
+namespace beman::execution26 {
+class never_stop_token;
 }
 
 // ----------------------------------------------------------------------------
 
-class beman::execution26::never_stop_token
-{
-    struct private_callback_type
-    {
+class beman::execution26::never_stop_token {
+    struct private_callback_type {
         explicit private_callback_type(never_stop_token, auto&&) noexcept {}
     };
-public:
+
+  public:
     template <typename>
     using callback_type = private_callback_type;
 
-    static constexpr auto stop_requested() noexcept  -> bool { return {}; }
-    static constexpr auto stop_possible() noexcept  -> bool { return {}; }
-    auto operator== (never_stop_token const&) const -> bool = default;
+    static constexpr auto stop_requested() noexcept -> bool { return {}; }
+    static constexpr auto stop_possible() noexcept -> bool { return {}; }
+    auto                  operator==(const never_stop_token&) const -> bool = default;
 };
 
 // ----------------------------------------------------------------------------

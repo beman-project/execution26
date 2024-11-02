@@ -7,58 +7,51 @@
 
 // ----------------------------------------------------------------------------
 
-namespace
-{
-    template <int> struct arg { int value{}; };
-    struct empty_domain { int value{}; };
-    struct empty_tag {};
-    struct non_sender {};
+namespace {
+template <int>
+struct arg {
+    int value{};
+};
+struct empty_domain {
+    int value{};
+};
+struct empty_tag {};
+struct non_sender {};
 
-    template <bool Noexcept>
-    struct domain
-    {
-        int value{};
-        auto apply_sender(auto tag, auto&& sender, auto&&...) noexcept(Noexcept)
-        {
-            return this->value + tag.value + sender.value;
-        }
-    };
+template <bool Noexcept>
+struct domain {
+    int  value{};
+    auto apply_sender(auto tag, auto&& sender, auto&&...) noexcept(Noexcept) {
+        return this->value + tag.value + sender.value;
+    }
+};
 
-    template <bool Noexcept>
-    struct tag
-    {
-        int value{};
-        auto apply_sender(auto&& sender, auto&&...) noexcept(Noexcept)
-        {
-            return this->value + sender.value;
-        }
-    };
+template <bool Noexcept>
+struct tag {
+    int  value{};
+    auto apply_sender(auto&& sender, auto&&...) noexcept(Noexcept) { return this->value + sender.value; }
+};
 
+struct sender {
+    using sender_concept = test_std::sender_t;
+    int value{};
+};
 
-    struct sender
-    {
-        using sender_concept = test_std::sender_t;
-        int value{};
-    };
-
-    template <bool Expect, bool Noexcept, typename Sender, typename... Args>
-    auto has_apply_sender(auto domain, auto tag, Sender&& sender, Args&&... args)
-    {
-        static_assert(Expect == requires{
-            test_std::apply_sender(domain, tag, std::forward<Sender>(sender), std::forward<Args>(args)...);
-        });
-        if constexpr (Expect)
-        {
-            static_assert(Noexcept == noexcept(
-                test_std::apply_sender(domain, tag, std::forward<Sender>(sender), std::forward<Args>(args)...)
-            ));
-            ASSERT(domain.value + 11 == test_std::apply_sender(domain, tag, std::forward<Sender>(sender), std::forward<Args>(args)...));
-        }
+template <bool Expect, bool Noexcept, typename Sender, typename... Args>
+auto has_apply_sender(auto domain, auto tag, Sender&& sender, Args&&... args) {
+    static_assert(Expect == requires {
+        test_std::apply_sender(domain, tag, std::forward<Sender>(sender), std::forward<Args>(args)...);
+    });
+    if constexpr (Expect) {
+        static_assert(Noexcept == noexcept(test_std::apply_sender(
+                                      domain, tag, std::forward<Sender>(sender), std::forward<Args>(args)...)));
+        ASSERT(domain.value + 11 ==
+               test_std::apply_sender(domain, tag, std::forward<Sender>(sender), std::forward<Args>(args)...));
     }
 }
+} // namespace
 
-TEST(exec_snd_apply)
-{
+TEST(exec_snd_apply) {
     static_assert(test_std::sender<sender>);
     has_apply_sender<false, false>(empty_domain{}, empty_tag{}, non_sender{});
     has_apply_sender<false, false>(empty_domain{}, empty_tag{}, sender{11});

@@ -10,33 +10,27 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    struct empty_variant
-    {
-        empty_variant() = delete;
-    };
+namespace beman::execution26::detail {
+struct empty_variant {
+    empty_variant() = delete;
+};
 
-    template <typename... T> struct variant_or_empty_helper;
+template <typename... T>
+struct variant_or_empty_helper;
 
-    template <>
-    struct variant_or_empty_helper<>
-    {
-        using type = ::beman::execution26::detail::empty_variant;
-    };
+template <>
+struct variant_or_empty_helper<> {
+    using type = ::beman::execution26::detail::empty_variant;
+};
 
-    template <typename... T>
-    struct variant_or_empty_helper
-    {
-        using type = ::beman::execution26::detail::meta::unique<
-            ::std::variant<::std::decay_t<T>...>
-        >;
-    };
+template <typename... T>
+struct variant_or_empty_helper {
+    using type = ::beman::execution26::detail::meta::unique<::std::variant<::std::decay_t<T>...>>;
+};
 
-    template <typename... T>
-    using variant_or_empty
-        = typename ::beman::execution26::detail::variant_or_empty_helper<T...>::type;
-}
+template <typename... T>
+using variant_or_empty = typename ::beman::execution26::detail::variant_or_empty_helper<T...>::type;
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

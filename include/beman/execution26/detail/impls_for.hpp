@@ -8,14 +8,10 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Tag>
-    struct impls_for
-        : ::beman::execution26::detail::default_impls
-    {
-    };
-}
+namespace beman::execution26::detail {
+template <typename Tag>
+struct impls_for : ::beman::execution26::detail::default_impls {};
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

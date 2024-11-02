@@ -3,7 +3,6 @@
 
 #include "test/execution.hpp"
 
-TEST(thread_stoptoken)
-{
+TEST(thread_stoptoken) {
     // section [thread.stoptoken] is empty
 }

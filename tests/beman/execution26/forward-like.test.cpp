@@ -7,33 +7,24 @@
 
 // ----------------------------------------------------------------------------
 
-namespace
-{
-    struct object
-    {
-        int value{};
-    };
+namespace {
+struct object {
+    int value{};
+};
 
-    template <typename Expect, typename T>
-    auto test_forward_like(T&& outer)
-    {
-        static_assert(std::same_as<
-            Expect,
-            decltype(test_detail::own_forward_like<T>(outer.value))
-        >);
-        static_assert(std::same_as<
-            decltype(test_detail::forward_like<T>(outer.value)),
-            decltype(test_detail::own_forward_like<T>(outer.value))
-        >);
-    }
+template <typename Expect, typename T>
+auto test_forward_like(T&& outer) {
+    static_assert(std::same_as<Expect, decltype(test_detail::own_forward_like<T>(outer.value))>);
+    static_assert(std::same_as<decltype(test_detail::forward_like<T>(outer.value)),
+                               decltype(test_detail::own_forward_like<T>(outer.value))>);
 }
+} // namespace
 
-TEST(forward_like)
-{
+TEST(forward_like) {
     object       o{};
-    object const co{};
+    const object co{};
     test_forward_like<int&>(o);
     test_forward_like<int&&>(std::move(o));
-    test_forward_like<int const&>(co);
-    test_forward_like<int const&&>(std::move(co));
+    test_forward_like<const int&>(co);
+    test_forward_like<const int&&>(std::move(co));
 }

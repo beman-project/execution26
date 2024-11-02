@@ -8,32 +8,25 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Expr, typename Promise>
-    auto get_awaiter(Expr&& expr, Promise& promise) -> decltype(auto)
-    {
-        auto transform{[&]() -> decltype(auto) {
-            if constexpr (requires{ promise.await_transform(::std::forward<Expr>(expr)); })
-                return promise.await_transform(::std::forward<Expr>(expr));
-            else
-                return ::std::forward<Expr>(expr);
-        }};
-        if constexpr (requires{ operator co_await(transform()); })
-        {
-
-            static_assert(
-                not requires{ transform().operator co_await(); },
-                "only one operator co_await is allowed"
-            );
-            return operator co_await(transform());
-        }
-        else if constexpr (requires{ transform().operator co_await(); })
-            return transform().operator co_await();
+namespace beman::execution26::detail {
+template <typename Expr, typename Promise>
+auto get_awaiter(Expr&& expr, Promise& promise) -> decltype(auto) {
+    auto transform{[&]() -> decltype(auto) {
+        if constexpr (requires { promise.await_transform(::std::forward<Expr>(expr)); })
+            return promise.await_transform(::std::forward<Expr>(expr));
         else
-            return transform();
-    }
+            return ::std::forward<Expr>(expr);
+    }};
+    if constexpr (requires { operator co_await(transform()); }) {
+
+        static_assert(not requires { transform().operator co_await(); }, "only one operator co_await is allowed");
+        return operator co_await(transform());
+    } else if constexpr (requires { transform().operator co_await(); })
+        return transform().operator co_await();
+    else
+        return transform();
 }
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

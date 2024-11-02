@@ -8,49 +8,40 @@
 
 // ----------------------------------------------------------------------------
 
-namespace
-{
-    struct non_stop_token {};
-    struct stop_token
-    {
-        template <typename CB>
-        struct callback_type {};
-        auto stop_requested() const noexcept -> bool { return {}; }
-        auto stop_possible() const noexcept -> bool { return {}; }
-        auto operator== (stop_token const&) const noexcept -> bool = default;
-    };
+namespace {
+struct non_stop_token {};
+struct stop_token {
+    template <typename CB>
+    struct callback_type {};
+    auto stop_requested() const noexcept -> bool { return {}; }
+    auto stop_possible() const noexcept -> bool { return {}; }
+    auto operator==(const stop_token&) const noexcept -> bool = default;
+};
 
-    struct no_get_stop_token {};
+struct no_get_stop_token {};
 
-    struct non_const_get_stop_token
-    {
-        auto query(test_std::get_stop_token_t const&) noexcept -> stop_token { return {}; }
-    };
-    template <bool Noexcept>
-    struct has_get_stop_token
-    {
-        auto query(test_std::get_stop_token_t const&) const noexcept(Noexcept) -> stop_token { return {}; }
-    };
+struct non_const_get_stop_token {
+    auto query(const test_std::get_stop_token_t&) noexcept -> stop_token { return {}; }
+};
+template <bool Noexcept>
+struct has_get_stop_token {
+    auto query(const test_std::get_stop_token_t&) const noexcept(Noexcept) -> stop_token { return {}; }
+};
 
-    struct inconsistent_get_stop_token
-    {
-        auto query(test_std::get_stop_token_t const&) const noexcept -> stop_token { return {}; }
-        auto query(test_std::get_stop_token_t const&) noexcept -> non_stop_token { return {}; }
-    };
+struct inconsistent_get_stop_token {
+    auto query(const test_std::get_stop_token_t&) const noexcept -> stop_token { return {}; }
+    auto query(const test_std::get_stop_token_t&) noexcept -> non_stop_token { return {}; }
+};
 
-
-    template <typename Result, typename Object>
-    auto test_get_stop_token(Object&& object)
-    {
-        static_assert(requires { test_std::get_stop_token(object); });
-        static_assert(std::same_as<Result, decltype(test_std::get_stop_token(object))>);
-    }
+template <typename Result, typename Object>
+auto test_get_stop_token(Object&& object) {
+    static_assert(requires { test_std::get_stop_token(object); });
+    static_assert(std::same_as<Result, decltype(test_std::get_stop_token(object))>);
 }
+} // namespace
 
-TEST(exec_get_stop_token)
-{
-    static_assert(std::same_as<test_std::get_stop_token_t const,
-                               decltype(test_std::get_stop_token)>);
+TEST(exec_get_stop_token) {
+    static_assert(std::same_as<const test_std::get_stop_token_t, decltype(test_std::get_stop_token)>);
     static_assert(test_std::forwarding_query(test_std::get_stop_token));
 
     test_get_stop_token<test_std::never_stop_token>(no_get_stop_token());

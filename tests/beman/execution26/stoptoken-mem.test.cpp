@@ -6,8 +6,7 @@
 #include "test/execution.hpp"
 #include "test/stop_token.hpp"
 
-auto test_stop_token_swap() -> void
-{
+auto test_stop_token_swap() -> void {
     // Plan:
     // - Given two pairs of stop_tokens compare equal within the pair
     //   but are different between the pairse.
@@ -16,8 +15,8 @@ auto test_stop_token_swap() -> void
     // Reference: [stoptoken.mem] p1
 
     ::test_std::stop_source s0, s1;
-    ::test_std::stop_token pair0[] = { s0.get_token(), s0.get_token() };
-    ::test_std::stop_token pair1[] = { s1.get_token(), s1.get_token() };
+    ::test_std::stop_token  pair0[] = {s0.get_token(), s0.get_token()};
+    ::test_std::stop_token  pair1[] = {s1.get_token(), s1.get_token()};
 
     ASSERT(pair0[0] == pair0[1]);
     ASSERT(pair1[0] == pair1[1]);
@@ -32,8 +31,7 @@ auto test_stop_token_swap() -> void
     ASSERT(pair0[1] == pair1[0]);
 }
 
-auto test_stop_token_stop_requested() -> void
-{
+auto test_stop_token_stop_requested() -> void {
     // Plan:
     // - Given a stop source and its stop token with stop_requested() == false.
     //   Also, a disengaged stop_token needs to have stop_requested() == false.
@@ -54,8 +52,7 @@ auto test_stop_token_stop_requested() -> void
     ASSERT(disengaged.stop_requested() == false);
 }
 
-auto test_stop_token_stop_possible() -> void
-{
+auto test_stop_token_stop_possible() -> void {
     // Plan:
     // - Given a three stop sources:
     //     - remain_source    - which sticks around
@@ -89,8 +86,7 @@ auto test_stop_token_stop_possible() -> void
     ASSERT(stopped_token.stop_possible() == true);
 }
 
-TEST(stoptoken_mem)
-{
+TEST(stoptoken_mem) {
     static_assert(::test_std::stoppable_token<::test_std::stop_token>);
 
     test_stop_token_swap();

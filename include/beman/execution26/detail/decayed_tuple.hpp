@@ -9,10 +9,9 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename... T>
-    using decayed_tuple = ::std::tuple<::std::decay_t<T>...>;
+namespace beman::execution26::detail {
+template <typename... T>
+using decayed_tuple = ::std::tuple<::std::decay_t<T>...>;
 }
 
 // ----------------------------------------------------------------------------

@@ -8,27 +8,21 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Fun>
-    struct matching_sig_transform
-    {
-        using type = Fun;
-    };
-    template <typename Return, typename... Args>
-    struct matching_sig_transform<Return(Args...)>
-    {
-        using type = Return(Args&&...);
-    };
+namespace beman::execution26::detail {
+template <typename Fun>
+struct matching_sig_transform {
+    using type = Fun;
+};
+template <typename Return, typename... Args>
+struct matching_sig_transform<Return(Args...)> {
+    using type = Return(Args&&...);
+};
 
-    template <typename Fun1, typename Fun2>
-    inline constexpr bool matching_sig
-        = ::std::same_as<
-            typename ::beman::execution26::detail::matching_sig_transform<Fun1>::type,
-            typename ::beman::execution26::detail::matching_sig_transform<Fun2>::type
-            >
-        ;
-}
+template <typename Fun1, typename Fun2>
+inline constexpr bool matching_sig =
+    ::std::same_as<typename ::beman::execution26::detail::matching_sig_transform<Fun1>::type,
+                   typename ::beman::execution26::detail::matching_sig_transform<Fun2>::type>;
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

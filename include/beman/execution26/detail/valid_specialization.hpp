@@ -6,13 +6,10 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <template <typename...> class T, typename... Args>
-    concept valid_specialization
-        = requires { typename T<Args...>; }
-        ;
-}
+namespace beman::execution26::detail {
+template <template <typename...> class T, typename... Args>
+concept valid_specialization = requires { typename T<Args...>; };
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

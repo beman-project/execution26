@@ -12,22 +12,16 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    template <typename Sender, typename Env = ::beman::execution26::empty_env>
-    concept sender_in
-        =  ::beman::execution26::sender<Sender>
-        && ::beman::execution26::detail::queryable<Env>
-        && requires(Sender&& sender, Env&& env) {
-            {
-                ::beman::execution26::get_completion_signatures(
-                    ::std::forward<Sender>(sender),
-                    ::std::forward<Env>(env)
-                )
-            } -> ::beman::execution26::detail::valid_completion_signatures;
-        }
-        ;
-}
+namespace beman::execution26 {
+template <typename Sender, typename Env = ::beman::execution26::empty_env>
+concept sender_in =
+    ::beman::execution26::sender<Sender> && ::beman::execution26::detail::queryable<Env> &&
+    requires(Sender&& sender, Env&& env) {
+        {
+            ::beman::execution26::get_completion_signatures(::std::forward<Sender>(sender), ::std::forward<Env>(env))
+        } -> ::beman::execution26::detail::valid_completion_signatures;
+    };
+} // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
 

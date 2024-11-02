@@ -6,10 +6,9 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    struct empty_env {};
-}
+namespace beman::execution26 {
+struct empty_env {};
+} // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
 

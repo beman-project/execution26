@@ -6,17 +6,16 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail::meta
-{
-    template <template <typename...> class To, typename> struct to_type_list;
-    template <template <typename...> class To, template <typename...> class List, typename... T>
-    struct to_type_list<To, List<T...>>
-    {
-        using type = To<T...>;
-    };
-    template <template <typename...> class To, typename T>
-    using to = typename ::beman::execution26::detail::meta::to_type_list<To, T>::type;
-}
+namespace beman::execution26::detail::meta {
+template <template <typename...> class To, typename>
+struct to_type_list;
+template <template <typename...> class To, template <typename...> class List, typename... T>
+struct to_type_list<To, List<T...>> {
+    using type = To<T...>;
+};
+template <template <typename...> class To, typename T>
+using to = typename ::beman::execution26::detail::meta::to_type_list<To, T>::type;
+} // namespace beman::execution26::detail::meta
 
 // ----------------------------------------------------------------------------
 

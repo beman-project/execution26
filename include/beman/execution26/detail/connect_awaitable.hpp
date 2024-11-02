@@ -20,77 +20,52 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
+namespace beman::execution26::detail {
+template <typename T>
+struct awaiter_set_value {
+    using type = ::beman::execution26::set_value_t(T);
+};
+template <>
+struct awaiter_set_value<void> {
+    using type = ::beman::execution26::set_value_t();
+};
+
+template <typename Awaiter, typename Receiver>
+using awaiter_completion_signatures = ::beman::execution26::completion_signatures<
+    typename ::beman::execution26::detail::awaiter_set_value< ::beman::execution26::detail::await_result_type<
+        Awaiter,
+        ::beman::execution26::detail::connect_awaitable_promise<Receiver> > >::type,
+    ::beman::execution26::set_error_t(::std::exception_ptr),
+    ::beman::execution26::set_stopped_t()>;
+
+template <typename Awaiter, ::beman::execution26::receiver Receiver>
+auto connect_awaitable(Awaiter awaiter, Receiver receiver)
+    -> ::beman::execution26::detail::operation_state_task<Receiver>
+    requires ::beman::execution26::
+        receiver_of<Receiver, ::beman::execution26::detail::awaiter_completion_signatures<Awaiter, Receiver> >
 {
-    template <typename T>
-    struct awaiter_set_value
-    {
-        using type = ::beman::execution26::set_value_t(T);
-    };
-    template <>
-    struct awaiter_set_value<void>
-    {
-        using type = ::beman::execution26::set_value_t();
-    };
+    // NOTE: suspened_complete(...) is co_await to make sure that the
+    //    coroutine is suspended at the point when set_*(...) is called.
+    using result_type = ::beman::execution26::detail::
+        await_result_type<Awaiter, ::beman::execution26::detail::connect_awaitable_promise<Receiver> >;
 
-    template <typename Awaiter, typename Receiver>
-    using awaiter_completion_signatures = ::beman::execution26::completion_signatures<
-        typename ::beman::execution26::detail::awaiter_set_value<
-            ::beman::execution26::detail::await_result_type<
-                Awaiter, 
-                ::beman::execution26::detail::connect_awaitable_promise<Receiver>
-            >
-        >::type,
-        ::beman::execution26::set_error_t(::std::exception_ptr),
-        ::beman::execution26::set_stopped_t()
-    >;
-
-    template <typename Awaiter, ::beman::execution26::receiver Receiver>
-    auto connect_awaitable(Awaiter awaiter, Receiver receiver)
-        -> ::beman::execution26::detail::operation_state_task<Receiver>
-        requires ::beman::execution26::receiver_of<
-            Receiver,
-            ::beman::execution26::detail::awaiter_completion_signatures<Awaiter, Receiver>
-        >
-    {
-        // NOTE: suspened_complete(...) is co_await to make sure that the
-        //    coroutine is suspended at the point when set_*(...) is called.
-        using result_type = ::beman::execution26::detail::await_result_type<
-            Awaiter, 
-            ::beman::execution26::detail::connect_awaitable_promise<Receiver>
-            >;
-        
-        ::std::exception_ptr ep;
-        try
-        {
-            if constexpr (std::same_as<void, result_type>)
-            {
-                co_await ::std::move(awaiter);
-                co_await ::beman::execution26::detail::suspend_complete(
-                    ::beman::execution26::set_value,
-                    ::std::move(receiver)
-                );
-            }
-            else
-            {
-                co_await ::beman::execution26::detail::suspend_complete(
-                    ::beman::execution26::set_value,
-                    ::std::move(receiver),
-                    co_await ::std::move(awaiter)
-                );
-            }
+    ::std::exception_ptr ep;
+    try {
+        if constexpr (std::same_as<void, result_type>) {
+            co_await ::std::move(awaiter);
+            co_await ::beman::execution26::detail::suspend_complete(::beman::execution26::set_value,
+                                                                    ::std::move(receiver));
+        } else {
+            co_await ::beman::execution26::detail::suspend_complete(
+                ::beman::execution26::set_value, ::std::move(receiver), co_await ::std::move(awaiter));
         }
-        catch (...)
-        {
-            ep = ::std::current_exception();
-        }
-        co_await ::beman::execution26::detail::suspend_complete(
-            ::beman::execution26::set_error,
-            ::std::move(receiver),
-            ep
-        );
+    } catch (...) {
+        ep = ::std::current_exception();
     }
+    co_await ::beman::execution26::detail::suspend_complete(
+        ::beman::execution26::set_error, ::std::move(receiver), ep);
 }
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

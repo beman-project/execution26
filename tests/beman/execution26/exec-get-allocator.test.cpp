@@ -7,64 +7,43 @@
 
 // ----------------------------------------------------------------------------
 
-namespace
-{
-    struct non_allocator
-    {
-    };
-    struct allocator
-    {
-        int tag{};
-        using value_type = int;
-        auto allocate(std::size_t n) -> int* { return new value_type[n]; }
-        auto deallocate(int* ptr, std::size_t) -> void { delete[] ptr; }
-        auto operator== (allocator const&) const -> bool = default;
-    };
+namespace {
+struct non_allocator {};
+struct allocator {
+    int tag{};
+    using value_type = int;
+    auto allocate(std::size_t n) -> int* { return new value_type[n]; }
+    auto deallocate(int* ptr, std::size_t) -> void { delete[] ptr; }
+    auto operator==(const allocator&) const -> bool = default;
+};
 
-    struct no_allocator
-    {
-        int tag{};
-    };
+struct no_allocator {
+    int tag{};
+};
 
-    template <bool Noexcept>
-    struct throwing_allocator
-    {
-        auto query(test_std::get_allocator_t const&) const noexcept(Noexcept) -> allocator
-        {
-            return {};
-        }
-    };
+template <bool Noexcept>
+struct throwing_allocator {
+    auto query(const test_std::get_allocator_t&) const noexcept(Noexcept) -> allocator { return {}; }
+};
 
-    template <typename Result>
-    struct allocator_object
-    {
-        int tag{};
-        auto query(test_std::get_allocator_t const&) const noexcept -> Result
-        {
-            return Result{this->tag};
-        }
-    };
+template <typename Result>
+struct allocator_object {
+    int  tag{};
+    auto query(const test_std::get_allocator_t&) const noexcept -> Result { return Result{this->tag}; }
+};
 
-    struct non_const_get_allocator
-    {
-        auto query(test_std::get_allocator_t const&) noexcept -> allocator
-        {
-            return {};
-        }
-    };
+struct non_const_get_allocator {
+    auto query(const test_std::get_allocator_t&) noexcept -> allocator { return {}; }
+};
 
-
-    template <bool Expect, typename Object>
-    auto test_get_allocator(Object&& object) -> void
-    {
-        static_assert(Expect == requires{ test_std::get_allocator(::std::forward<Object>(object)); });
-    }
+template <bool Expect, typename Object>
+auto test_get_allocator(Object&& object) -> void {
+    static_assert(Expect == requires { test_std::get_allocator(::std::forward<Object>(object)); });
 }
+} // namespace
 
-TEST(exec_get_allocator)
-{
-    static_assert(std::same_as<test_std::get_allocator_t const,
-                  decltype(test_std::get_allocator)>);
+TEST(exec_get_allocator) {
+    static_assert(std::same_as<const test_std::get_allocator_t, decltype(test_std::get_allocator)>);
     static_assert(test_std::forwarding_query(test_std::get_allocator));
 
     test_get_allocator<false>(no_allocator());

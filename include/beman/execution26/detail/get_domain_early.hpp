@@ -11,29 +11,17 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Sender>
-    constexpr auto get_domain_early(Sender const& sender) noexcept
-    {
-        if constexpr (requires{
-                ::beman::execution26::get_domain(
-                    ::beman::execution26::get_env(sender)
-                );
-            })
-            return decltype(
-                ::beman::execution26::get_domain(
-                    ::beman::execution26::get_env(sender)
-                )
-            ){};
-        else if constexpr (requires{
-                ::beman::execution26::detail::completion_domain(sender);
-            })
-            return decltype(::beman::execution26::detail::completion_domain(sender)){};
-        else
-            return ::beman::execution26::default_domain{};
-    }
+namespace beman::execution26::detail {
+template <typename Sender>
+constexpr auto get_domain_early(const Sender& sender) noexcept {
+    if constexpr (requires { ::beman::execution26::get_domain(::beman::execution26::get_env(sender)); })
+        return decltype(::beman::execution26::get_domain(::beman::execution26::get_env(sender))){};
+    else if constexpr (requires { ::beman::execution26::detail::completion_domain(sender); })
+        return decltype(::beman::execution26::detail::completion_domain(sender)){};
+    else
+        return ::beman::execution26::default_domain{};
 }
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

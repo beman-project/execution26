@@ -9,13 +9,10 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    template <typename Receiver, typename Completions>
-    concept receiver_of
-        =  beman::execution26::receiver<Receiver>
-        && beman::execution26::detail::has_completions<Receiver, Completions>
-        ;
+namespace beman::execution26 {
+template <typename Receiver, typename Completions>
+concept receiver_of =
+    beman::execution26::receiver<Receiver> && beman::execution26::detail::has_completions<Receiver, Completions>;
 
 }
 

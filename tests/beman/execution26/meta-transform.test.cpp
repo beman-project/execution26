@@ -9,39 +9,30 @@
 
 // ----------------------------------------------------------------------------
 
-namespace
-{
-    template <typename>
-    struct foo {};
-    template <typename T>
-    using bar = foo<T>;
+namespace {
+template <typename>
+struct foo {};
+template <typename T>
+using bar = foo<T>;
 
-    template <typename T>
-    struct baz { using type = foo<T>; };
-    template <typename T>
-    using baz_t = typename baz<T>::type;;
-}
+template <typename T>
+struct baz {
+    using type = foo<T>;
+};
+template <typename T>
+using baz_t = typename baz<T>::type;
+;
+} // namespace
 
-TEST(meta_transform)
-{
-    static_assert(std::same_as<
-        test_detail::type_list<>,
-        test_detail::meta::transform<foo, test_detail::type_list<>>
-    >);
-    static_assert(std::same_as<
-        test_detail::type_list<foo<bool>, foo<char>>,
-        test_detail::meta::transform<foo, test_detail::type_list<bool, char>>
-    >);
-    static_assert(std::same_as<
-        test_detail::type_list<foo<bool>, foo<char>>,
-        test_detail::meta::transform<bar, test_detail::type_list<bool, char>>
-    >);
-    static_assert(std::same_as<
-        test_detail::type_list<foo<bool>, foo<char>>,
-        test_detail::meta::transform<baz_t, test_detail::type_list<bool, char>>
-    >);
-    static_assert(std::same_as<
-        test_detail::type_list<bool, char>,
-        test_detail::meta::transform<std::type_identity_t, test_detail::type_list<bool, char>>
-    >);
+TEST(meta_transform) {
+    static_assert(std::same_as<test_detail::type_list<>, test_detail::meta::transform<foo, test_detail::type_list<>>>);
+    static_assert(std::same_as<test_detail::type_list<foo<bool>, foo<char>>,
+                               test_detail::meta::transform<foo, test_detail::type_list<bool, char>>>);
+    static_assert(std::same_as<test_detail::type_list<foo<bool>, foo<char>>,
+                               test_detail::meta::transform<bar, test_detail::type_list<bool, char>>>);
+    static_assert(std::same_as<test_detail::type_list<foo<bool>, foo<char>>,
+                               test_detail::meta::transform<baz_t, test_detail::type_list<bool, char>>>);
+    static_assert(
+        std::same_as<test_detail::type_list<bool, char>,
+                     test_detail::meta::transform<std::type_identity_t, test_detail::type_list<bool, char>>>);
 }

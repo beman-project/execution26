@@ -12,35 +12,29 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename, typename> struct valid_completion_for_aux;
+namespace beman::execution26::detail {
+template <typename, typename>
+struct valid_completion_for_aux;
 
-    template <typename Rcvr, typename Tag, typename... Args>
-    struct valid_completion_for_aux<Rcvr, Tag(*)(Args...)>
-    {
-        static auto test(Tag(*)(Args...)) -> void
-            requires ::beman::execution26::detail::callable<Tag, ::std::remove_cvref_t<Rcvr>, Args...>
-        {
-        }
-    };
+template <typename Rcvr, typename Tag, typename... Args>
+struct valid_completion_for_aux<Rcvr, Tag (*)(Args...)> {
+    static auto test(Tag (*)(Args...)) -> void
+        requires ::beman::execution26::detail::callable<Tag, ::std::remove_cvref_t<Rcvr>, Args...>
+    {}
+};
 
-    template <typename Signature, typename Rcvr>
-    concept valid_completion_for
-        = requires(Signature* signature)
-        {
-            #if 1
-            valid_completion_for_aux<Rcvr, Signature*>::test(signature);
-            #else
-            // This definition crashes some versions of clang.
-            []<typename Tag, typename... Args>(Tag(*)(Args...))
-                requires ::beman::execution26::detail::callable<Tag, ::std::remove_cvref_t<Rcvr>, Args...>
-            {
-            }(signature);
-            #endif
-        }
-        ;
-}
+template <typename Signature, typename Rcvr>
+concept valid_completion_for = requires(Signature* signature) {
+#if 1
+    valid_completion_for_aux<Rcvr, Signature*>::test(signature);
+#else
+    // This definition crashes some versions of clang.
+    []<typename Tag, typename... Args>(Tag (*)(Args...))
+        requires ::beman::execution26::detail::callable<Tag, ::std::remove_cvref_t<Rcvr>, Args...>
+    {}(signature);
+#endif
+};
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

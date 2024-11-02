@@ -8,25 +8,19 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail::meta::detail
-{
-    template <template <typename> class Transform, typename List> struct transform;
+namespace beman::execution26::detail::meta::detail {
+template <template <typename> class Transform, typename List>
+struct transform;
 
-    template <template <typename> class Transform,
-              template <typename... T> class List,
-              typename... T>
-    struct transform<Transform, List<T...>>
-    {
-        using type = List<Transform<T>...>;
-    };
-}
+template <template <typename> class Transform, template <typename... T> class List, typename... T>
+struct transform<Transform, List<T...>> {
+    using type = List<Transform<T>...>;
+};
+} // namespace beman::execution26::detail::meta::detail
 
-namespace beman::execution26::detail::meta
-{
-    template <template <typename> class Transform, typename List>
-    using transform = typename
-        ::beman::execution26::detail::meta::detail::transform<Transform, List>
-        ::type;
+namespace beman::execution26::detail::meta {
+template <template <typename> class Transform, typename List>
+using transform = typename ::beman::execution26::detail::meta::detail::transform<Transform, List>::type;
 }
 
 // ----------------------------------------------------------------------------

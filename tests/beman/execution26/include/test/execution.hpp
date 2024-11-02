@@ -19,16 +19,15 @@ namespace beman::execution26 {}
 namespace test_std    = ::beman::execution26;
 namespace test_detail = ::beman::execution26::detail;
 
-namespace test
-{
-    template <typename> auto type_exists() {}
-    template <typename T0, typename T1>
-    auto check_type(T1&&)
-    {
-        static_assert(std::same_as<T0, T1>);
-    }
-
-    auto use(auto&&...) noexcept -> void {}
+namespace test {
+template <typename>
+auto type_exists() {}
+template <typename T0, typename T1>
+auto check_type(T1&&) {
+    static_assert(std::same_as<T0, T1>);
 }
+
+auto use(auto&&...) noexcept -> void {}
+} // namespace test
 
 #endif // INCLUDED_TEST_EXECUTION

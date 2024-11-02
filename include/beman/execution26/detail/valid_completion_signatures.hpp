@@ -9,24 +9,15 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename>
-    struct valid_completion_signatures_helper
-        : ::std::false_type
-    {
-    };
-    template <typename... Sigs>
-    struct valid_completion_signatures_helper<::beman::execution26::completion_signatures<Sigs...>>
-        : ::std::true_type
-    {
-    };
+namespace beman::execution26::detail {
+template <typename>
+struct valid_completion_signatures_helper : ::std::false_type {};
+template <typename... Sigs>
+struct valid_completion_signatures_helper<::beman::execution26::completion_signatures<Sigs...>> : ::std::true_type {};
 
-    template <typename Signatures>
-    concept valid_completion_signatures
-        = valid_completion_signatures_helper<Signatures>::value
-        ;
-}
+template <typename Signatures>
+concept valid_completion_signatures = valid_completion_signatures_helper<Signatures>::value;
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

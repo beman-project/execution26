@@ -10,13 +10,10 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    template <::beman::execution26::detail::completion_signature...>
-    struct completion_signatures
-    {
-    };
-}
+namespace beman::execution26 {
+template <::beman::execution26::detail::completion_signature...>
+struct completion_signatures {};
+} // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
 

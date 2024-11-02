@@ -9,27 +9,24 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Fun, typename... Args>
-    auto suspend_complete(Fun fun, Args&&... args) noexcept
-    {
-        auto f{[&, fun]() noexcept { fun(::std::forward<Args>(args)...); }};
-        struct awaiter
-        {
-            decltype(f) fun;
+namespace beman::execution26::detail {
+template <typename Fun, typename... Args>
+auto suspend_complete(Fun fun, Args&&... args) noexcept {
+    auto f{[&, fun]() noexcept { fun(::std::forward<Args>(args)...); }};
+    struct awaiter {
+        decltype(f) fun;
 
-            static constexpr auto await_ready() noexcept -> bool { return false; }
-            auto await_suspend(::std::coroutine_handle<>) noexcept { this->fun(); }
+        static constexpr auto await_ready() noexcept -> bool { return false; }
+        auto                  await_suspend(::std::coroutine_handle<>) noexcept { this->fun(); }
 #if __cpp_lib_unreachable < 202202L
-            [[noreturn]] auto await_resume() noexcept -> void { ::std::terminate(); }
+        [[noreturn]] auto await_resume() noexcept -> void { ::std::terminate(); }
 #else
-            [[noreturn]] auto await_resume() noexcept -> void { ::std::unreachable(); }
+        [[noreturn]] auto await_resume() noexcept -> void { ::std::unreachable(); }
 #endif
-        };
-        return awaiter{f};
-    }
+    };
+    return awaiter{f};
 }
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

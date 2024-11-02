@@ -11,13 +11,10 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Sender, typename Tag>
-    concept sender_for
-        =  ::beman::execution26::sender<Sender>
-        && ::std::same_as<::beman::execution26::tag_of_t<Sender>, Tag>
-        ;
+namespace beman::execution26::detail {
+template <typename Sender, typename Tag>
+concept sender_for =
+    ::beman::execution26::sender<Sender> && ::std::same_as<::beman::execution26::tag_of_t<Sender>, Tag>;
 }
 
 // ----------------------------------------------------------------------------

@@ -8,10 +8,9 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail::meta
-{
-    template <typename T, typename... S>
-    inline constexpr bool contains{(::std::same_as<T, S> || ...)};
+namespace beman::execution26::detail::meta {
+template <typename T, typename... S>
+inline constexpr bool contains{(::std::same_as<T, S> || ...)};
 }
 
 // ----------------------------------------------------------------------------

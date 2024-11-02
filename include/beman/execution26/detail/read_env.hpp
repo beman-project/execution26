@@ -19,75 +19,40 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    struct read_env_t
-    {
-        auto operator()(auto&& query) const
-        {
-            return ::beman::execution26::detail::make_sender(*this, query);
+namespace beman::execution26::detail {
+struct read_env_t {
+    auto operator()(auto&& query) const { return ::beman::execution26::detail::make_sender(*this, query); }
+};
+
+template <>
+struct impls_for<::beman::execution26::detail::read_env_t> : ::beman::execution26::detail::default_impls {
+    static constexpr auto start = [](auto query, auto& receiver) noexcept -> void {
+        try {
+            auto env{::beman::execution26::get_env(receiver)};
+            ::beman::execution26::set_value(::std::move(receiver), query(env));
+        } catch (...) {
+            ::beman::execution26::set_error(::std::move(receiver), ::std::current_exception());
         }
     };
+};
 
-    template <>
-    struct impls_for<::beman::execution26::detail::read_env_t>
-        : ::beman::execution26::detail::default_impls
-    {
-        static constexpr auto start
-            = [](auto query, auto& receiver) noexcept -> void
-        {
-            try
-            {
-                auto env{::beman::execution26::get_env(receiver)};
-                ::beman::execution26::set_value(
-                    ::std::move(receiver),
-                    query(env)
-                );
-            }
-            catch(...)
-            {
-                ::beman::execution26::set_error(
-                    ::std::move(receiver),
-                    ::std::current_exception()
-                );
-            }
-            
-        };
-    };
+template <typename Query, typename Env>
+struct completion_signatures_for_impl<
+    ::beman::execution26::detail::basic_sender<::beman::execution26::detail::read_env_t, Query>,
+    Env> {
+    using set_value_type =
+        ::beman::execution26::set_value_t(decltype(::std::declval<Query>()(::std::as_const(::std::declval<Env>()))));
+    using set_error_type = ::beman::execution26::set_error_t(::std::exception_ptr);
+    using type           = ::std::conditional_t<noexcept(::std::declval<Query>()(::std::declval<const Env&>())),
+                                                ::beman::execution26::completion_signatures<set_value_type>,
+                                                ::beman::execution26::completion_signatures<set_value_type, set_error_type>>;
+};
+} // namespace beman::execution26::detail
 
-    template <typename Query, typename Env>
-    struct completion_signatures_for_impl<
-        ::beman::execution26::detail::basic_sender<
-            ::beman::execution26::detail::read_env_t,
-            Query
-            >,
-        Env
-        >
-    {
-        using set_value_type = ::beman::execution26::set_value_t(
-                decltype(::std::declval<Query>()(::std::as_const(::std::declval<Env>())))
-            );
-        using set_error_type = ::beman::execution26::set_error_t(
-                ::std::exception_ptr
-            );
-        using type = ::std::conditional_t<
-            noexcept(::std::declval<Query>()(::std::declval<Env const&>())),
-            ::beman::execution26::completion_signatures<
-                set_value_type
-            >,
-            ::beman::execution26::completion_signatures<
-                set_value_type,
-                set_error_type
-            >
-        >;
-    };
-}
-
-namespace beman::execution26
-{
-    using read_env_t = beman::execution26::detail::read_env_t;
-    inline constexpr read_env_t read_env{};
-}
+namespace beman::execution26 {
+using read_env_t = beman::execution26::detail::read_env_t;
+inline constexpr read_env_t read_env{};
+} // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
 

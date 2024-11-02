@@ -8,17 +8,13 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Fun, typename... Args>
-    concept nothrow_callable
-        =  ::beman::execution26::detail::callable<Fun, Args...>
-        && requires(Fun&& fun, Args&&... args)
-        {
-            { ::std::forward<Fun>(fun)(::std::forward<Args>(args)...) } noexcept;
-        }
-        ;
-}
+namespace beman::execution26::detail {
+template <typename Fun, typename... Args>
+concept nothrow_callable =
+    ::beman::execution26::detail::callable<Fun, Args...> && requires(Fun&& fun, Args&&... args) {
+        { ::std::forward<Fun>(fun)(::std::forward<Args>(args)...) } noexcept;
+    };
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

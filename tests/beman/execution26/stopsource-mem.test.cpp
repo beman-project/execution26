@@ -4,8 +4,7 @@
 #include <beman/execution26/stop_token.hpp>
 #include "test/execution.hpp"
 
-auto test_stopsource_swap() -> void
-{
+auto test_stopsource_swap() -> void {
     // Plan:
     //  - Given two engaged stop sources.
     //  - When two corresponding tokens are obtained.
@@ -31,8 +30,7 @@ auto test_stopsource_swap() -> void
     ASSERT(token2 != source2.get_token());
 }
 
-auto test_stopsource_get_token() -> void
-{
+auto test_stopsource_get_token() -> void {
     // Plan:
     //  - Given an engaged and a disengaged stop sources.
     //  - When two corresponding tokens are obtained.
@@ -51,8 +49,7 @@ auto test_stopsource_get_token() -> void
     ASSERT(disengaged.get_token() == ::test_std::stop_token());
 }
 
-auto test_stopsource_stop_possible() -> void
-{
+auto test_stopsource_stop_possible() -> void {
     // Plan:
     //  - Given an engaged and a disengaged stop sources.
     //  - When using stop_possible()
@@ -73,8 +70,7 @@ auto test_stopsource_stop_possible() -> void
     ASSERT(not disengaged.stop_possible());
 }
 
-auto test_stopsource_stop_requested() -> void
-{
+auto test_stopsource_stop_requested() -> void {
     // Plan:
     //  - Given an engaged and a disengaged stop sources.
     //  - When using stop_requested()
@@ -95,8 +91,7 @@ auto test_stopsource_stop_requested() -> void
     ASSERT(not disengaged.stop_requested());
 }
 
-auto test_stopsource_request_stop() -> void
-{
+auto test_stopsource_request_stop() -> void {
     // Plan:
     //  - Given an engaged and a disengaged stop sources.
     //  - When using request_stop()
@@ -125,8 +120,7 @@ auto test_stopsource_request_stop() -> void
     ASSERT(not disengaged.stop_requested());
 }
 
-TEST(stopsource_mem)
-{
+TEST(stopsource_mem) {
     test_stopsource_swap();
     test_stopsource_get_token();
     test_stopsource_stop_possible();

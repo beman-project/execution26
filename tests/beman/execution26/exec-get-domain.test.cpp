@@ -7,56 +7,40 @@
 
 // ----------------------------------------------------------------------------
 
-namespace
-{
-    struct domain { int value{}; };
+namespace {
+struct domain {
+    int value{};
+};
 
-    struct no_get_domain {};
+struct no_get_domain {};
 
-    template <bool Noexcept>
-    struct non_const_get_domain
-    {
-        auto query(test_std::get_domain_t const&) noexcept(Noexcept) -> domain
-        {
-            return {};
-        }
-    };
+template <bool Noexcept>
+struct non_const_get_domain {
+    auto query(const test_std::get_domain_t&) noexcept(Noexcept) -> domain { return {}; }
+};
 
+template <bool Noexcept, typename Result>
+struct has_get_domain {
+    int            value{};
+    constexpr auto query(const test_std::get_domain_t&) const noexcept(Noexcept) -> Result { return {this->value}; }
+};
 
-    template <bool Noexcept, typename Result>
-    struct has_get_domain
-    {
-        int value{};
-        constexpr auto query(test_std::get_domain_t const&) const noexcept(Noexcept) -> Result
-        {
-            return {this->value};
-        }
-    };
+struct overloaded_get_domain {
+    auto query(const test_std::get_domain_t&) const noexcept -> domain { return {}; }
+    auto query(const test_std::get_domain_t&) noexcept -> void = delete;
+};
 
-    struct overloaded_get_domain
-    {
-        auto query(test_std::get_domain_t const&) const noexcept -> domain
-        {
-            return {};
-        }
-        auto query(test_std::get_domain_t const&) noexcept -> void = delete;
-    };
-
-    template <bool Expect, typename Result, typename Object>
-    auto test_get_domain(Object&& object)
-    {
-        static_assert(Expect == requires{ test_std::get_domain(object); });
-        if constexpr (requires{ test_std::get_domain(object); })
-        {
-            static_assert(std::same_as<Result, decltype(test_std::get_domain(object))>);
-        }
+template <bool Expect, typename Result, typename Object>
+auto test_get_domain(Object&& object) {
+    static_assert(Expect == requires { test_std::get_domain(object); });
+    if constexpr (requires { test_std::get_domain(object); }) {
+        static_assert(std::same_as<Result, decltype(test_std::get_domain(object))>);
     }
 }
+} // namespace
 
-TEST(exec_get_domain)
-{
-    static_assert(std::same_as<test_std::get_domain_t const,
-                               decltype(test_std::get_domain)>);
+TEST(exec_get_domain) {
+    static_assert(std::same_as<const test_std::get_domain_t, decltype(test_std::get_domain)>);
 
     static_assert(test_std::forwarding_query(test_std::get_domain));
 

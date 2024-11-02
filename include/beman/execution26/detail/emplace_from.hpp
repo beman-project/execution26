@@ -11,22 +11,19 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Fun>
-    struct emplace_from
-    {
-        using type = ::beman::execution26::detail::call_result_t<Fun>;
-        Fun fun;
+namespace beman::execution26::detail {
+template <typename Fun>
+struct emplace_from {
+    using type = ::beman::execution26::detail::call_result_t<Fun>;
+    Fun fun;
 
-        constexpr operator type() && noexcept(::beman::execution26::detail::nothrow_callable<Fun>) 
-        {
-            return ::std::move(fun)();
-        }
-    };
-    template <typename Fun>
-    emplace_from(Fun&&) -> emplace_from<::std::remove_cvref_t<Fun>>;
-}
+    constexpr operator type() && noexcept(::beman::execution26::detail::nothrow_callable<Fun>) {
+        return ::std::move(fun)();
+    }
+};
+template <typename Fun>
+emplace_from(Fun&&) -> emplace_from<::std::remove_cvref_t<Fun>>;
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

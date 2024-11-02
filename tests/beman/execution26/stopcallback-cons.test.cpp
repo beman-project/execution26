@@ -6,8 +6,7 @@
 #include <memory>
 #include <type_traits>
 
-TEST(stopcallback_cons)
-{
+TEST(stopcallback_cons) {
     // Reference: [stopcallback.cons] p1
     // Plan:
     // - Given a callback type Callback which can be constructed
@@ -16,23 +15,15 @@ TEST(stopcallback_cons)
     //   constructible.
     // - Then the response is true when an int* is passed as
     //   initializer argument but false otherwise.
-    struct Callback
-    {
+    struct Callback {
         Callback(int*) {}
         auto operator()() -> void {}
     };
-    static_assert(::std::is_constructible_v<::test_std::stop_callback<Callback>,
-                                            ::test_std::stop_token const&,
-                                            int*>);
-    static_assert(not ::std::is_constructible_v<::test_std::stop_callback<Callback>,
-                                                ::test_std::stop_token const&,
-                                                bool*>);
-    static_assert(::std::is_constructible_v<::test_std::stop_callback<Callback>,
-                                            ::test_std::stop_token&&,
-                                            int*>);
-    static_assert(not ::std::is_constructible_v<::test_std::stop_callback<Callback>,
-                                                ::test_std::stop_token&&,
-                                                bool*>);
+    static_assert(::std::is_constructible_v<::test_std::stop_callback<Callback>, const ::test_std::stop_token&, int*>);
+    static_assert(
+        not::std::is_constructible_v<::test_std::stop_callback<Callback>, const ::test_std::stop_token&, bool*>);
+    static_assert(::std::is_constructible_v<::test_std::stop_callback<Callback>, ::test_std::stop_token&&, int*>);
+    static_assert(not::std::is_constructible_v<::test_std::stop_callback<Callback>, ::test_std::stop_token&&, bool*>);
 
     // Reference: [stopcallback.cons] p2, p3
     // Plan:
@@ -43,7 +34,7 @@ TEST(stopcallback_cons)
     // - When the corresponding stop_source and stop_token are destoryed.
     // - Then the callback can still be destroyed without issues.
 
-    auto source = ::std::make_unique<::test_std::stop_source>();
-    auto token  = ::std::make_unique<::test_std::stop_token>(source->get_token());
+    auto                                source = ::std::make_unique<::test_std::stop_source>();
+    auto                                token  = ::std::make_unique<::test_std::stop_token>(source->get_token());
     ::test_std::stop_callback<Callback> cb(*token, nullptr);
 }

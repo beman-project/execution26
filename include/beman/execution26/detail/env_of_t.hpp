@@ -9,10 +9,9 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    template <typename T>
-    using env_of_t = decltype(::beman::execution26::get_env(::std::declval<T>()));
+namespace beman::execution26 {
+template <typename T>
+using env_of_t = decltype(::beman::execution26::get_env(::std::declval<T>()));
 }
 
 // ----------------------------------------------------------------------------

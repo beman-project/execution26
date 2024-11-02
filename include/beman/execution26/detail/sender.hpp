@@ -14,37 +14,27 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    struct sender_t {};
-}
-namespace beman::execution26::detail
-{
-    template <typename Sender>
-    concept is_sender
-        = ::std::derived_from<typename Sender::sender_concept, ::beman::execution26::sender_t>
-        ;
+namespace beman::execution26 {
+struct sender_t {};
+} // namespace beman::execution26
+namespace beman::execution26::detail {
+template <typename Sender>
+concept is_sender = ::std::derived_from<typename Sender::sender_concept, ::beman::execution26::sender_t>;
 
-    template <typename Sender>
-    concept enable_sender
-        =  ::beman::execution26::detail::is_sender<Sender>
-        || ::beman::execution26::detail::is_awaitable<Sender,
-            ::beman::execution26::detail::env_promise<::beman::execution26::empty_env>>
-        ;
-}
-namespace beman::execution26
-{
-    template <typename Sender>
-    concept sender
-        =  ::beman::execution26::detail::enable_sender<::std::remove_cvref_t<Sender>>
-        && requires(::std::remove_cvref_t<Sender> const& sndr)
-        {
-            { ::beman::execution26::get_env(sndr) } -> ::beman::execution26::detail::queryable;
-        }
-        && ::std::move_constructible<::std::remove_cvref_t<Sender>>
-        && ::std::constructible_from<::std::remove_cvref_t<Sender>, Sender>
-        ;
-}
+template <typename Sender>
+concept enable_sender =
+    ::beman::execution26::detail::is_sender<Sender> ||
+    ::beman::execution26::detail::
+        is_awaitable<Sender, ::beman::execution26::detail::env_promise<::beman::execution26::empty_env>>;
+} // namespace beman::execution26::detail
+namespace beman::execution26 {
+template <typename Sender>
+concept sender = ::beman::execution26::detail::enable_sender<::std::remove_cvref_t<Sender>> &&
+                 requires(const ::std::remove_cvref_t<Sender>& sndr) {
+                     { ::beman::execution26::get_env(sndr) } -> ::beman::execution26::detail::queryable;
+                 } && ::std::move_constructible<::std::remove_cvref_t<Sender>> &&
+                 ::std::constructible_from<::std::remove_cvref_t<Sender>, Sender>;
+} // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
 

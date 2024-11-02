@@ -8,10 +8,9 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Fun, typename... Args>
-    using call_result_t = decltype(::std::declval<Fun>()(std::declval<Args>()...));
+namespace beman::execution26::detail {
+template <typename Fun, typename... Args>
+using call_result_t = decltype(::std::declval<Fun>()(std::declval<Args>()...));
 }
 
 // ----------------------------------------------------------------------------

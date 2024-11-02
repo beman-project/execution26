@@ -6,8 +6,7 @@
 
 // ----------------------------------------------------------------------------
 
-TEST(meta_contains)
-{
+TEST(meta_contains) {
     static_assert(not test_detail::meta::contains<bool>);
     static_assert(not test_detail::meta::contains<bool, char>);
     static_assert(not test_detail::meta::contains<bool, char, double>);

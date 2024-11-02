@@ -6,22 +6,19 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail::meta::detail
-{
-    template <typename, typename>
-    struct prepend;
+namespace beman::execution26::detail::meta::detail {
+template <typename, typename>
+struct prepend;
 
-    template <template <typename...> class List, typename H, typename... T>
-    struct prepend<H, List<T...>>
-    {
-        using type = List<H, T...>;
-    };
-}
+template <template <typename...> class List, typename H, typename... T>
+struct prepend<H, List<T...>> {
+    using type = List<H, T...>;
+};
+} // namespace beman::execution26::detail::meta::detail
 
-namespace beman::execution26::detail::meta
-{
-    template <typename H, typename Tail>
-    using prepend = ::beman::execution26::detail::meta::detail::prepend<H, Tail>::type;
+namespace beman::execution26::detail::meta {
+template <typename H, typename Tail>
+using prepend = ::beman::execution26::detail::meta::detail::prepend<H, Tail>::type;
 }
 
 // ----------------------------------------------------------------------------

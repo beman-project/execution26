@@ -9,19 +9,15 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template<typename Source>
-    concept stoppable_source
-        =   requires(Source& source, Source const& csource)
-            {
-                { csource.get_token() } -> ::beman::execution26::stoppable_token;
-                { csource.stop_possible() } noexcept -> ::std::same_as<bool>;
-                { csource.stop_requested() } noexcept -> ::std::same_as<bool>;
-                { source.request_stop() } -> ::std::same_as<bool>;
-            }
-        ;
-}
+namespace beman::execution26::detail {
+template <typename Source>
+concept stoppable_source = requires(Source& source, const Source& csource) {
+    { csource.get_token() } -> ::beman::execution26::stoppable_token;
+    { csource.stop_possible() } noexcept -> ::std::same_as<bool>;
+    { csource.stop_requested() } noexcept -> ::std::same_as<bool>;
+    { source.request_stop() } -> ::std::same_as<bool>;
+};
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

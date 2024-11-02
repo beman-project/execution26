@@ -9,24 +9,21 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Query, typename Value>
-    class make_env
-    {
-    private:
-        Value value;
-    
-    public:
-        template <typename V>
-        make_env(Query const&, V&& value): value(::std::forward<V>(value)) {}
-        constexpr auto query(Query const&) const noexcept -> Value const& { return this->value; }
-        constexpr auto query(Query const&) noexcept -> Value & { return this->value; }
-    };
-    template <typename Query, typename Value>
-    make_env(Query&&, Value&& value)
-        -> make_env<::std::remove_cvref_t<Query>, ::std::remove_cvref_t<Value>>;
-}
+namespace beman::execution26::detail {
+template <typename Query, typename Value>
+class make_env {
+  private:
+    Value value;
+
+  public:
+    template <typename V>
+    make_env(const Query&, V&& value) : value(::std::forward<V>(value)) {}
+    constexpr auto query(const Query&) const noexcept -> const Value& { return this->value; }
+    constexpr auto query(const Query&) noexcept -> Value& { return this->value; }
+};
+template <typename Query, typename Value>
+make_env(Query&&, Value&& value) -> make_env<::std::remove_cvref_t<Query>, ::std::remove_cvref_t<Value>>;
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

@@ -11,16 +11,13 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Sender, typename Receiver>
-    using connect_all_result
-        = ::beman::execution26::detail::call_result_t<
-            decltype(::beman::execution26::detail::connect_all),
-            ::beman::execution26::detail::basic_state<Sender, Receiver>*,
-            Sender,
-            ::beman::execution26::detail::indices_for<Sender>
-        >;
+namespace beman::execution26::detail {
+template <typename Sender, typename Receiver>
+using connect_all_result =
+    ::beman::execution26::detail::call_result_t<decltype(::beman::execution26::detail::connect_all),
+                                                ::beman::execution26::detail::basic_state<Sender, Receiver>*,
+                                                Sender,
+                                                ::beman::execution26::detail::indices_for<Sender> >;
 }
 
 // ----------------------------------------------------------------------------

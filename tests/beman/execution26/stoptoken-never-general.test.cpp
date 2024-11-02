@@ -4,8 +4,7 @@
 #include <beman/execution26/stop_token.hpp>
 #include "test/execution.hpp"
 
-TEST(stoptoken_never_general)
-{
+TEST(stoptoken_never_general) {
     // Reference: [stoptoken.never.general]
     static_assert(::test_std::unstoppable_token<::test_std::never_stop_token>);
 
@@ -14,8 +13,7 @@ TEST(stoptoken_never_general)
     static_assert(false == token.stop_possible());
     static_assert(token == token);
 
-    struct Callback
-    {
+    struct Callback {
         explicit Callback(int*) {}
         auto operator()() -> void {}
     };

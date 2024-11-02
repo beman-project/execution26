@@ -4,8 +4,7 @@
 #include <beman/execution26/stop_token.hpp>
 #include "test/execution.hpp"
 
-auto test_inplace_stop_source_get_token() -> void
-{
+auto test_inplace_stop_source_get_token() -> void {
     // Plan:
     // - Given two inplace_stop_sources.
     // - When getting a stop_token each using get_token().
@@ -24,8 +23,7 @@ auto test_inplace_stop_source_get_token() -> void
     ASSERT(token2 == source2.get_token());
 }
 
-auto test_inplace_stop_source_stop_requested() -> void
-{
+auto test_inplace_stop_source_stop_requested() -> void {
     // Plan:
     // - Given an inplace_stop_source.
     // - When getting using stop_requested() it yields false.
@@ -40,8 +38,7 @@ auto test_inplace_stop_source_stop_requested() -> void
     ASSERT(source.stop_requested() == true);
 }
 
-auto test_inplace_stop_source_request_stop() -> void
-{
+auto test_inplace_stop_source_request_stop() -> void {
     // Plan:
     // - Given an inplace_stop_source.
     // - When getting using stop_requested() it yields false
@@ -54,10 +51,12 @@ auto test_inplace_stop_source_request_stop() -> void
     bool flag2{false};
 
     ::test_std::inplace_stop_source source;
-    auto callback1 = [&flag1]{ flag1 = true; };
-    auto callback2 = [&flag2]{ flag2 = true; };
-    ::test_std::stop_callback_for_t<::test_std::inplace_stop_token, decltype(callback1)> cb1(source.get_token(), callback1);
-    ::test_std::stop_callback_for_t<::test_std::inplace_stop_token, decltype(callback2)> cb2(source.get_token(), callback2);
+    auto                            callback1 = [&flag1] { flag1 = true; };
+    auto                            callback2 = [&flag2] { flag2 = true; };
+    ::test_std::stop_callback_for_t<::test_std::inplace_stop_token, decltype(callback1)> cb1(source.get_token(),
+                                                                                             callback1);
+    ::test_std::stop_callback_for_t<::test_std::inplace_stop_token, decltype(callback2)> cb2(source.get_token(),
+                                                                                             callback2);
 
     ASSERT(source.stop_requested() == false);
     ASSERT(flag1 == false);
@@ -70,9 +69,7 @@ auto test_inplace_stop_source_request_stop() -> void
     ASSERT(flag2 == true);
 }
 
-
-TEST(stopsource_inplace_mem)
-{
+TEST(stopsource_inplace_mem) {
     test_inplace_stop_source_get_token();
     test_inplace_stop_source_stop_requested();
     test_inplace_stop_source_request_stop();

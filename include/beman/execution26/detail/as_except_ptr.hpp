@@ -13,25 +13,18 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Error>
-    decltype(auto) as_except_ptr(Error&& error)
-    {
-        if constexpr (::std::same_as<::std::exception_ptr, ::std::decay_t<Error>>)
-        {
-            return ::std::forward<Error>(error);
-        }
-        else if constexpr (::std::same_as<::std::error_code, ::std::decay_t<Error>>)
-        {
-            return ::std::make_exception_ptr(::std::system_error(error));
-        }
-        else
-        {
-            return ::std::make_exception_ptr(::std::forward<Error>(error));
-        }
+namespace beman::execution26::detail {
+template <typename Error>
+decltype(auto) as_except_ptr(Error&& error) {
+    if constexpr (::std::same_as<::std::exception_ptr, ::std::decay_t<Error>>) {
+        return ::std::forward<Error>(error);
+    } else if constexpr (::std::same_as<::std::error_code, ::std::decay_t<Error>>) {
+        return ::std::make_exception_ptr(::std::system_error(error));
+    } else {
+        return ::std::make_exception_ptr(::std::forward<Error>(error));
     }
 }
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

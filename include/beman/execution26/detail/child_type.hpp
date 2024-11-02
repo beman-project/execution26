@@ -9,10 +9,9 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Sender, ::std::size_t I = 0u>
-    using child_type = decltype(::std::declval<Sender>().template get<I + 2>());
+namespace beman::execution26::detail {
+template <typename Sender, ::std::size_t I = 0u>
+using child_type = decltype(::std::declval<Sender>().template get<I + 2>());
 }
 
 // ----------------------------------------------------------------------------

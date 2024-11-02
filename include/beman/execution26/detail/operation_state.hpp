@@ -10,18 +10,16 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    struct operation_state_t {};
+namespace beman::execution26 {
+struct operation_state_t {};
 
-    template <typename State>
-    concept operation_state
-        =  ::std::derived_from<typename State::operation_state_concept,
-                               ::beman::execution26::operation_state_t>
-        && ::std::is_object_v<State>
-        && requires(State& state) { { ::beman::execution26::start(state) } noexcept; }
-        ;
-}
+template <typename State>
+concept operation_state =
+    ::std::derived_from<typename State::operation_state_concept, ::beman::execution26::operation_state_t> &&
+    ::std::is_object_v<State> && requires(State& state) {
+        { ::beman::execution26::start(state) } noexcept;
+    };
+} // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
 
