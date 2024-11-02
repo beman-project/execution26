@@ -31,7 +31,7 @@ add_subdirectory(src/beman/execution26)
 if(PROJECT_IS_TOP_LEVEL)
   enable_testing()
 
-  add_subdirectory(src/beman/execution26/tests)
+  add_subdirectory(tests/beman/execution26)
   add_subdirectory(examples)
 endif()
 
