@@ -1,65 +1,12 @@
 {
-  "version": 6,
-  "configurePresets": [
-    {
-      "name": "root-config",
-      "hidden": true,
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build/${presetName}",
-      "installDir": "${sourceDir}/stagedir",
-      "cacheVariables": {
-        "CMAKE_PREFIX_PATH": {
-          "type": "path",
-          "value": "${sourceDir}/stagedir"
-        },
-        "CMAKE_CXX_EXTENSIONS": false,
-        "CMAKE_CXX_STANDARD": "23",
-        "CMAKE_CXX_STANDARD_REQUIRED": true,
-        "CMAKE_EXPORT_COMPILE_COMMANDS": true
-      }
-    },
-    {
-      "name": "debug-base-unix",
-      "hidden": true,
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_CXX_FLAGS": "-fsanitize=address -fsanitize=pointer-compare -fsanitize=pointer-subtract -fsanitize=undefined"
-      },
-      "condition": {
-        "type": "notEquals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Windows"
-      }
-    },
-    {
-      "name": "release-base-unix",
-      "hidden": true,
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
-        "CMAKE_CXX_FLAGS": "-Wall -Wextra -Wpedantic -Wno-shadow -Wconversion -Wsign-conversion -Wcast-align -Wcast-qual -Woverloaded-virtual -Wformat=2 -Wno-error"
-      },
-      "condition": {
-        "type": "notEquals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Windows"
-      }
-    },
-    {
-      "name": "debug",
-      "displayName": "Debug Build",
-      "inherits": [
-        "root-config",
-        "debug-base-unix"
-      ]
-    },
-    {
-      "name": "release",
-      "displayName": "Release Build",
-      "inherits": [
-        "root-config",
-        "release-base-unix"
-      ]
-    }
+  "version": 9,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 30,
+    "patch": 0
+  },
+  "include": [
+    "cmake/CMake${hostSystemName}Presets.json"
   ],
   "buildPresets": [
     {
