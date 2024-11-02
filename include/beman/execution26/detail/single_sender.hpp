@@ -9,16 +9,11 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Sender, typename Env>
-    concept single_sender
-        =  ::beman::execution26::sender_in<Sender, Env>
-        && requires{
-            typename ::beman::execution26::detail::single_sender_value_type<Sender, Env>;
-        }
-        ;
-}
+namespace beman::execution26::detail {
+template <typename Sender, typename Env>
+concept single_sender = ::beman::execution26::sender_in<Sender, Env> &&
+                        requires { typename ::beman::execution26::detail::single_sender_value_type<Sender, Env>; };
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

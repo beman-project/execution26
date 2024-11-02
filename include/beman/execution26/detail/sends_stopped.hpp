@@ -14,19 +14,15 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    template <typename Sender, typename Env = ::beman::execution26::empty_env>
-        requires ::beman::execution26::sender_in<Sender, Env>
-    inline constexpr bool sends_stopped{not ::std::same_as<
-        ::beman::execution26::detail::type_list<>,
-        ::beman::execution26::detail::gather_signatures<
-            ::beman::execution26::set_stopped_t,
-            ::beman::execution26::completion_signatures_of_t<Sender, Env>,
-            ::beman::execution26::detail::type_list,
-            ::beman::execution26::detail::type_list
-        >
-    >};
+namespace beman::execution26 {
+template <typename Sender, typename Env = ::beman::execution26::empty_env>
+    requires ::beman::execution26::sender_in<Sender, Env>
+inline constexpr bool sends_stopped{not::std::same_as<
+    ::beman::execution26::detail::type_list<>,
+    ::beman::execution26::detail::gather_signatures< ::beman::execution26::set_stopped_t,
+                                                     ::beman::execution26::completion_signatures_of_t<Sender, Env>,
+                                                     ::beman::execution26::detail::type_list,
+                                                     ::beman::execution26::detail::type_list> >};
 }
 
 // ----------------------------------------------------------------------------

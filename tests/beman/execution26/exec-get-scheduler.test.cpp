@@ -8,30 +8,22 @@
 
 // ----------------------------------------------------------------------------
 
-namespace
-{
-    struct scheduler
-    {
-        int value{};
-        auto operator== (scheduler const&) const -> bool = default;
-    };
+namespace {
+struct scheduler {
+    int  value{};
+    auto operator==(const scheduler&) const -> bool = default;
+};
 
-    struct env
-    {
-        int value{};
-        auto query(test_std::get_scheduler_t const&) const noexcept
-        {
-            return scheduler{this->value};
-        }
-    };
-}
+struct env {
+    int  value{};
+    auto query(const test_std::get_scheduler_t&) const noexcept { return scheduler{this->value}; }
+};
+} // namespace
 
-TEST(exec_get_scheduler)
-{
-    static_assert(std::same_as<test_std::get_scheduler_t const,
-                               decltype(test_std::get_scheduler)>);
+TEST(exec_get_scheduler) {
+    static_assert(std::same_as<const test_std::get_scheduler_t, decltype(test_std::get_scheduler)>);
     static_assert(test_std::forwarding_query(test_std::get_scheduler));
-    env e{17};
+    env  e{17};
     auto sched{test_std::get_scheduler(e)};
     static_assert(::std::same_as<scheduler, decltype(sched)>);
     ASSERT(sched == scheduler{17});

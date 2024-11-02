@@ -10,11 +10,9 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    template <::beman::execution26::scheduler Scheduler>
-    using schedule_result_t
-        = decltype(::beman::execution26::schedule(::std::declval<Scheduler>()));
+namespace beman::execution26 {
+template <::beman::execution26::scheduler Scheduler>
+using schedule_result_t = decltype(::beman::execution26::schedule(::std::declval<Scheduler>()));
 }
 
 // ----------------------------------------------------------------------------

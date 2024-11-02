@@ -12,26 +12,22 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    struct scheduler_t {};
-}
+namespace beman::execution26 {
+struct scheduler_t {};
+} // namespace beman::execution26
 
-namespace beman::execution26::detail
-{
-    template <typename Scheduler>
-    concept almost_scheduler
-        = ::std::derived_from<typename ::std::remove_cvref_t<Scheduler>::scheduler_concept,
-                              ::beman::execution26::scheduler_t>
-        && ::beman::execution26::detail::queryable<Scheduler>
-        && requires(Scheduler&& sched) {
-            { ::beman::execution26::schedule(::std::forward<Scheduler>(sched)) }
-                -> ::beman::execution26::sender;
-        }
-        && ::std::equality_comparable<::std::remove_cvref_t<Scheduler>>
-        && ::std::copy_constructible<::std::remove_cvref_t<Scheduler>>
-        ;
-}
+namespace beman::execution26::detail {
+template <typename Scheduler>
+concept almost_scheduler = ::std::derived_from<typename ::std::remove_cvref_t<Scheduler>::scheduler_concept,
+                                               ::beman::execution26::scheduler_t> &&
+                           ::beman::execution26::detail::queryable<Scheduler> &&
+                           requires(Scheduler&& sched) {
+                               {
+                                   ::beman::execution26::schedule(::std::forward<Scheduler>(sched))
+                               } -> ::beman::execution26::sender;
+                           } && ::std::equality_comparable<::std::remove_cvref_t<Scheduler>> &&
+                           ::std::copy_constructible<::std::remove_cvref_t<Scheduler>>;
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

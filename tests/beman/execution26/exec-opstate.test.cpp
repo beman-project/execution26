@@ -6,39 +6,33 @@
 
 // ----------------------------------------------------------------------------
 
-namespace
-{
-    struct base {};
-    struct opstate_base: test_std::operation_state_t {};
+namespace {
+struct base {};
+struct opstate_base : test_std::operation_state_t {};
 
-    struct non_operation_state {};
-    struct no_tag
-    {
-        using operation_state_concept = test_std::operation_state_t;
-        auto start() noexcept {}
-    };
-    struct no_start
-    {
-        using operation_state_concept = test_std::operation_state_t;
-        auto start() noexcept {}
-    };
+struct non_operation_state {};
+struct no_tag {
+    using operation_state_concept = test_std::operation_state_t;
+    auto start() noexcept {}
+};
+struct no_start {
+    using operation_state_concept = test_std::operation_state_t;
+    auto start() noexcept {}
+};
 
-    template <bool Noexcept, typename Tag>
-    struct operation_state
-    {
-        using operation_state_concept = Tag;
-        auto start() noexcept(Noexcept) {}
-    };
+template <bool Noexcept, typename Tag>
+struct operation_state {
+    using operation_state_concept = Tag;
+    auto start() noexcept(Noexcept) {}
+};
 
-    template <bool Expect, typename State>
-    auto test_operation_state()
-    {
-        static_assert(Expect == test_std::operation_state<State>);
-    }
+template <bool Expect, typename State>
+auto test_operation_state() {
+    static_assert(Expect == test_std::operation_state<State>);
 }
+} // namespace
 
-TEST(exec_opstate)
-{
+TEST(exec_opstate) {
     test_std::operation_state_t state_tag{};
     (void)state_tag;
 

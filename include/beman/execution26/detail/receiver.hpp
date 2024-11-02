@@ -11,23 +11,18 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    struct receiver_t {};
+namespace beman::execution26 {
+struct receiver_t {};
 
-    template <typename Rcvr>
-    concept receiver
-        =  ::std::derived_from<typename ::std::remove_cvref_t<Rcvr>::receiver_concept,
-                             ::beman::execution26::receiver_t>
-        && requires(::std::remove_cvref_t<Rcvr> const& rcvr)
-            {
-                { ::beman::execution26::get_env(rcvr) } -> ::beman::execution26::detail::queryable;
-            }
-        && ::std::move_constructible<::std::remove_cvref_t<Rcvr>>
-        && ::std::constructible_from<::std::remove_cvref_t<Rcvr>, Rcvr>
-        && (not ::std::is_final_v<::std::remove_cvref_t<Rcvr>>)
-        ;
-}
+template <typename Rcvr>
+concept receiver =
+    ::std::derived_from<typename ::std::remove_cvref_t<Rcvr>::receiver_concept, ::beman::execution26::receiver_t> &&
+    requires(const ::std::remove_cvref_t<Rcvr>& rcvr) {
+        { ::beman::execution26::get_env(rcvr) } -> ::beman::execution26::detail::queryable;
+    } && ::std::move_constructible<::std::remove_cvref_t<Rcvr>> &&
+    ::std::constructible_from<::std::remove_cvref_t<Rcvr>, Rcvr> &&
+    (not::std::is_final_v<::std::remove_cvref_t<Rcvr>>);
+} // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
 

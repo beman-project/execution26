@@ -5,10 +5,9 @@
 #include "test/stop_token.hpp"
 #include <cassert>
 
-TEST(stopsource_general)
-{
+TEST(stopsource_general) {
     // Reference: [stopsource.general] p1.
-    test::stop_source([]{ return ::test_std::stop_source(); });
+    test::stop_source([] { return ::test_std::stop_source(); });
 
     ::test_std::stop_source source1;
     ::test_std::stop_source source2{::test_std::nostopstate};

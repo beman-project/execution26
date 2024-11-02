@@ -3,7 +3,6 @@
 
 #include "test/execution.hpp"
 
-TEST(stoptoken)
-{
+TEST(stoptoken) {
     // section [stoptoken] is empty
 }

@@ -8,10 +8,9 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename T>
-    concept queryable = ::std::destructible<T>;
+namespace beman::execution26::detail {
+template <typename T>
+concept queryable = ::std::destructible<T>;
 }
 
 // ----------------------------------------------------------------------------

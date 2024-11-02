@@ -8,56 +8,49 @@
 
 // ----------------------------------------------------------------------------
 
-namespace
-{
-    struct arg { int value; };
-    struct arg_throwing {};
+namespace {
+struct arg {
+    int value;
+};
+struct arg_throwing {};
 
-    struct throws
-    {
-        throws() = default;
-        throws(throws const&) {}
-    };
+struct throws {
+    throws() = default;
+    throws(const throws&) {}
+};
 
-    struct receiver
-    {
-        template <typename Error>
-        auto set_error(Error&&) noexcept -> void {}
-        auto set_error(throws) noexcept -> void {}
-        auto set_error(arg a) noexcept -> void
-        {
-            ASSERT(a.value == 43);
-        }
-        auto set_error(arg_throwing) -> void {}
-    };
+struct receiver {
+    template <typename Error>
+    auto set_error(Error&&) noexcept -> void {}
+    auto set_error(throws) noexcept -> void {}
+    auto set_error(arg a) noexcept -> void { ASSERT(a.value == 43); }
+    auto set_error(arg_throwing) -> void {}
+};
 
-    template <typename R>
-    void test_callable()
-    {
-        static_assert(requires{ test_std::set_error(std::declval<R>(), 42); });
-        static_assert(requires{ test_std::set_error(std::declval<R&&>(), 42); });
+template <typename R>
+void test_callable() {
+    static_assert(requires { test_std::set_error(std::declval<R>(), 42); });
+    static_assert(requires { test_std::set_error(std::declval<R&&>(), 42); });
 
-        static_assert(not requires{ test_std::set_error(std::declval<R const>(), 42); });
-        static_assert(not requires{ test_std::set_error(std::declval<R const&&>(), 42); });
-        static_assert(not requires{ test_std::set_error(std::declval<R&>(), 42); });
-        static_assert(not requires{ test_std::set_error(std::declval<R const&>(), 42); });
-        static_assert(not requires{ test_std::set_error(std::declval<R volatile&>(), 42); });
-        static_assert(not requires{ test_std::set_error(std::declval<R const volatile&>(), 42); });
-    }
-
-    template <typename R>
-    auto test_noexcept()
-    {
-        static_assert(requires{ test_std::set_error(std::declval<R>(), arg()); });
-        static_assert(not requires{ test_std::set_error(std::declval<R>(), throws()); });
-        static_assert(not requires{ test_std::set_error(std::declval<R>(), arg_throwing()); });
-    }
+    static_assert(not requires { test_std::set_error(std::declval<const R>(), 42); });
+    static_assert(not requires { test_std::set_error(std::declval<const R&&>(), 42); });
+    static_assert(not requires { test_std::set_error(std::declval<R&>(), 42); });
+    static_assert(not requires { test_std::set_error(std::declval<const R&>(), 42); });
+    static_assert(not requires { test_std::set_error(std::declval<volatile R&>(), 42); });
+    static_assert(not requires { test_std::set_error(std::declval<const volatile R&>(), 42); });
 }
 
-TEST(exec_set_error)
-{
+template <typename R>
+auto test_noexcept() {
+    static_assert(requires { test_std::set_error(std::declval<R>(), arg()); });
+    static_assert(not requires { test_std::set_error(std::declval<R>(), throws()); });
+    static_assert(not requires { test_std::set_error(std::declval<R>(), arg_throwing()); });
+}
+} // namespace
+
+TEST(exec_set_error) {
     static_assert(std::semiregular<test_std::set_error_t>);
-    static_assert(std::same_as<test_std::set_error_t const, decltype(test_std::set_error)>);
+    static_assert(std::same_as<const test_std::set_error_t, decltype(test_std::set_error)>);
 
     test_callable<receiver>();
 

@@ -9,19 +9,19 @@
 
 // ----------------------------------------------------------------------------
 
-namespace
-{
-    auto use(auto&&...) {}
-}
+namespace {
+auto use(auto&&...) {}
+} // namespace
 
-TEST(exec_run_loop_general)
-{
+TEST(exec_run_loop_general) {
     static_assert(noexcept(test_std::run_loop()));
     static_assert(not std::move_constructible<test_std::run_loop>);
     test_std::run_loop rl;
     use(rl);
 
-    static_assert(requires{ { rl.get_scheduler() } -> test_std::scheduler; });
-    static_assert(requires{ rl.run(); });
-    static_assert(requires{ rl.finish(); });
+    static_assert(requires {
+        { rl.get_scheduler() } -> test_std::scheduler;
+    });
+    static_assert(requires { rl.run(); });
+    static_assert(requires { rl.finish(); });
 }

@@ -9,12 +9,9 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    template<typename T>
-    using stop_token_of_t = ::std::remove_cvref_t<decltype(
-        ::beman::execution26::get_stop_token(::std::declval<T>())
-    )>;
+namespace beman::execution26 {
+template <typename T>
+using stop_token_of_t = ::std::remove_cvref_t<decltype(::beman::execution26::get_stop_token(::std::declval<T>()))>;
 }
 
 // ----------------------------------------------------------------------------

@@ -22,28 +22,26 @@
 
 // ----------------------------------------------------------------------------
 
-namespace test
-{
-    template <::test_std::stoppable_token Token, ::std::invocable Stop>
-    auto stop_visible(Token, Stop) -> void;
-    template <::test_std::stoppable_token Token, ::std::invocable Stop>
-    auto stop_callback(Token, Stop) -> void;
-    template <::test_std::stoppable_token Token, ::std::invocable Stop>
-    auto stop_callback_dtor_deregisters(Token, Stop) -> void;
-    template <::test_std::stoppable_token Token, ::std::invocable Stop>
-    auto stop_callback_dtor_other_thread(Token, Stop) -> void;
-    template <::test_std::stoppable_token Token, ::std::invocable Stop>
-    auto stop_callback_dtor_same_thread(Token, Stop) -> void;
+namespace test {
+template <::test_std::stoppable_token Token, ::std::invocable Stop>
+auto stop_visible(Token, Stop) -> void;
+template <::test_std::stoppable_token Token, ::std::invocable Stop>
+auto stop_callback(Token, Stop) -> void;
+template <::test_std::stoppable_token Token, ::std::invocable Stop>
+auto stop_callback_dtor_deregisters(Token, Stop) -> void;
+template <::test_std::stoppable_token Token, ::std::invocable Stop>
+auto stop_callback_dtor_other_thread(Token, Stop) -> void;
+template <::test_std::stoppable_token Token, ::std::invocable Stop>
+auto stop_callback_dtor_same_thread(Token, Stop) -> void;
 
-    template <typename MakeStopSource>
-    auto stop_source(MakeStopSource) -> void;
-}
+template <typename MakeStopSource>
+auto stop_source(MakeStopSource) -> void;
+} // namespace test
 
 // ----------------------------------------------------------------------------
 
 template <::test_std::stoppable_token Token, ::std::invocable Stop>
-inline auto test::stop_visible(Token token, Stop stop) -> void
-{
+inline auto test::stop_visible(Token token, Stop stop) -> void {
     // Plan:
     // - Given a stoppable_token and function to request stop on its associated source.
     // - When setting up a number of copies of the token they all indicate that
@@ -52,13 +50,12 @@ inline auto test::stop_visible(Token token, Stop stop) -> void
     //   was requested.
     // Reference: [thread.stoptoken.intro] p3
 
-    Token tokens[] = { token, token, token, token };
+    Token tokens[] = {token, token, token, token};
 
-    auto predicate = [](auto&& t){ return t.stop_requested(); };
+    auto predicate = [](auto&& t) { return t.stop_requested(); };
     ASSERT((::std::ranges::none_of(tokens, predicate)));
     stop();
-    if (token.stop_possible())
-    {
+    if (token.stop_possible()) {
         ASSERT((::std::ranges::all_of(tokens, predicate)));
     }
 }
@@ -66,8 +63,7 @@ inline auto test::stop_visible(Token token, Stop stop) -> void
 // ----------------------------------------------------------------------------
 
 template <::test_std::stoppable_token Token, ::std::invocable Stop>
-inline auto test::stop_callback(Token token, Stop stop) -> void
-{
+inline auto test::stop_callback(Token token, Stop stop) -> void {
     // Plan:
     // - Given a stoppable_token and function to request stop on its associated source.
     // - When registering a callback before and after requesting stop. At that
@@ -78,19 +74,16 @@ inline auto test::stop_callback(Token token, Stop stop) -> void
     //   callback is called just once, even if there are additional stop requests.
     // Reference: [thread.stoptoken.intro] p4, [stoptoken.concepts] p2
 
-    struct Data
-    {
+    struct Data {
         Token         token;
         ::std::size_t count{};
         bool          stop_requested{this->token.stop_requested()};
     };
 
-    struct Callback
-    {
+    struct Callback {
         Data* data;
-        Callback(Data* data): data(data) {}
-        auto operator()()
-        {
+        Callback(Data* data) : data(data) {}
+        auto operator()() {
             ++this->data->count;
             this->data->stop_requested = this->data->token.stop_requested();
         }
@@ -103,8 +96,7 @@ inline auto test::stop_callback(Token token, Stop stop) -> void
     ASSERT(data.stop_requested == false);
     stop();
 
-    if (token.stop_possible())
-    {
+    if (token.stop_possible()) {
         ASSERT(data.count == 1);
         ASSERT(data.stop_requested == true);
         stop();
@@ -120,8 +112,7 @@ inline auto test::stop_callback(Token token, Stop stop) -> void
 // ----------------------------------------------------------------------------
 
 template <::test_std::stoppable_token Token, ::std::invocable Stop>
-auto test::stop_callback_dtor_deregisters(Token token, Stop stop) -> void
-{
+auto test::stop_callback_dtor_deregisters(Token token, Stop stop) -> void {
     // Plan:
     // - Given a stop token and a function to request stop.
     // - When registering and deregistering a callback (i.e., constructing
@@ -129,15 +120,14 @@ auto test::stop_callback_dtor_deregisters(Token token, Stop stop) -> void
     // - Then the callback isn't invoked when requesting stop.
     // Reference: [stoptoken.concepts] p3
 
-    struct Callback
-    {
+    struct Callback {
         bool* ptr;
-        Callback(bool* ptr): ptr(ptr) {}
+        Callback(bool* ptr) : ptr(ptr) {}
         auto operator()() { *this->ptr = true; }
     };
 
     bool flag{};
-    ::std::invoke([token, &flag]{
+    ::std::invoke([token, &flag] {
         ::test_std::stop_callback_for_t<Token, Callback> cb(token, &flag);
         ASSERT(flag == false);
     });
@@ -149,8 +139,7 @@ auto test::stop_callback_dtor_deregisters(Token token, Stop stop) -> void
 // ----------------------------------------------------------------------------
 
 template <::test_std::stoppable_token Token, ::std::invocable Stop>
-inline auto test::stop_callback_dtor_other_thread(Token token, Stop stop) -> void
-{
+inline auto test::stop_callback_dtor_other_thread(Token token, Stop stop) -> void {
     // Plan:
     // - Given a stop token and a function to request stop.
     // - When a callback registered with the with a stop token is deregistered
@@ -163,23 +152,20 @@ inline auto test::stop_callback_dtor_other_thread(Token token, Stop stop) -> voi
     // the callback and sets a flag (thread_complete). The callback function sleeps for a bit (yes, I
     // realize that sleeping doesn't constitute a happens-before relationship:
     // suggestions/PRs welcome) before ASSERTing that thread_complete is still false
-    // and sets its own flag which is ASSERTed to be true in the other thread. 
+    // and sets its own flag which is ASSERTed to be true in the other thread.
     // Reference: [stoptoken.concepts] p4
 
-    struct Data
-    {
+    struct Data {
         ::std::atomic<bool>       thread_complete{};
         ::std::atomic<bool>       dtor_done{};
         ::std::mutex              lock;
         ::std::condition_variable cond;
         bool                      dtor_started{};
     };
-    struct Callback
-    {
+    struct Callback {
         Data* data;
-        Callback(Data* data): data(data) {}
-        auto operator()() -> void
-        {
+        Callback(Data* data) : data(data) {}
+        auto operator()() -> void {
             using namespace ::std::chrono_literals;
             {
                 ::std::lock_guard guard(this->data->lock);
@@ -197,10 +183,10 @@ inline auto test::stop_callback_dtor_other_thread(Token token, Stop stop) -> voi
     using CB = ::test_std::stop_callback_for_t<Token, Callback>;
     ::std::unique_ptr<CB> ptr(new CB(token, &data));
 
-    ::std::thread thread([&ptr, &data]{
+    ::std::thread thread([&ptr, &data] {
         {
             std::unique_lock guard(data.lock);
-            data.cond.wait(guard, [&data]{ return data.dtor_started; });
+            data.cond.wait(guard, [&data] { return data.dtor_started; });
         }
 
         ptr.reset();
@@ -216,35 +202,30 @@ inline auto test::stop_callback_dtor_other_thread(Token token, Stop stop) -> voi
 // ----------------------------------------------------------------------------
 
 template <::test_std::stoppable_token Token, ::std::invocable Stop>
-inline auto test::stop_callback_dtor_same_thread(Token token, Stop stop) -> void
-{
+inline auto test::stop_callback_dtor_same_thread(Token token, Stop stop) -> void {
     // Plan:
     // - Given a stop token and a function to request stop.
     // - When registering a callback and destroying/deregistering the object
     //   from within the same thread.
     // - Then the deregistration does not block.
     // Reference: [stoptoken.concepts] p4
-    struct Base
-    {
+    struct Base {
         virtual ~Base() = default;
     };
-    struct Callback
-    {
+    struct Callback {
         ::std::unique_ptr<Base>* self;
-        Callback(::std::unique_ptr<Base>* self): self(self) {}
+        Callback(::std::unique_ptr<Base>* self) : self(self) {}
         auto operator()() { this->self->reset(); }
     };
-    struct Object
-        : Base
-    {
+    struct Object : Base {
         ::test_std::stop_callback_for_t<Token, Callback> cb;
-        Object(Token token, ::std::unique_ptr<Base>* self): cb(token, self) {}
+        Object(Token token, ::std::unique_ptr<Base>* self) : cb(token, self) {}
     };
     ::std::unique_ptr<Base> ptr;
     ptr.reset(new Object(token, &ptr));
 
     ::std::atomic<bool> done{};
-    ::std::thread thread([&done]{
+    ::std::thread       thread([&done] {
         using namespace ::std::chrono_literals;
         ::std::this_thread::sleep_for(10ms);
         ASSERT(done);
@@ -258,9 +239,8 @@ inline auto test::stop_callback_dtor_same_thread(Token token, Stop stop) -> void
 // ----------------------------------------------------------------------------
 
 template <typename MakeStopSource>
-inline auto test::stop_source(MakeStopSource factory) -> void
-{
-    // Plan: 
+inline auto test::stop_source(MakeStopSource factory) -> void {
+    // Plan:
     // - Given a factory function create a stoppable-source.
     // - Verify what the relevant concepts hold.
     // - Run tests confirming the common requirements (see the called
@@ -271,26 +251,23 @@ inline auto test::stop_source(MakeStopSource factory) -> void
 
     {
         auto source{factory()};
-        ::test::stop_visible(source.get_token(), [&source]{ source.request_stop(); });
+        ::test::stop_visible(source.get_token(), [&source] { source.request_stop(); });
     }
     {
         auto source{factory()};
-        ::test::stop_callback(source.get_token(), [&source]{ source.request_stop(); });
+        ::test::stop_callback(source.get_token(), [&source] { source.request_stop(); });
     }
     {
         auto source{factory()};
-        ::test::stop_callback_dtor_deregisters(source.get_token(),
-                                               [&source]{ source.request_stop(); });
+        ::test::stop_callback_dtor_deregisters(source.get_token(), [&source] { source.request_stop(); });
     }
     {
         auto source{factory()};
-        ::test::stop_callback_dtor_other_thread(source.get_token(),
-                                                [&source]{ source.request_stop(); });
+        ::test::stop_callback_dtor_other_thread(source.get_token(), [&source] { source.request_stop(); });
     }
     {
         auto source{factory()};
-        ::test::stop_callback_dtor_same_thread(source.get_token(),
-                                               [&source]{ source.request_stop(); });
+        ::test::stop_callback_dtor_same_thread(source.get_token(), [&source] { source.request_stop(); });
     }
 }
 

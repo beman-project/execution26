@@ -6,11 +6,10 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename...> struct type_list {};
-}
-
+namespace beman::execution26::detail {
+template <typename...>
+struct type_list {};
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

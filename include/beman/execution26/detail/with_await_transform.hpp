@@ -10,26 +10,21 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Derived>
-    struct with_await_transform
-    {
-        template <typename T>
-        auto await_transform(T&& obj) noexcept -> T&&
-        {
-            return ::std::forward<T>(obj);
-        }
+namespace beman::execution26::detail {
+template <typename Derived>
+struct with_await_transform {
+    template <typename T>
+    auto await_transform(T&& obj) noexcept -> T&& {
+        return ::std::forward<T>(obj);
+    }
 
-        template <::beman::execution26::detail::has_as_awaitable<Derived> T>
-        auto await_transform(T&& obj)
-            noexcept(noexcept(::std::forward<T>(obj).as_awaitable(::std::declval<Derived&>())))
-            -> decltype(auto)
-        {
-            return ::std::forward<T>(obj).as_awaitable(static_cast<Derived&>(*this));
-        }
-    };
-}
+    template <::beman::execution26::detail::has_as_awaitable<Derived> T>
+    auto await_transform(T&& obj) noexcept(noexcept(::std::forward<T>(obj).as_awaitable(::std::declval<Derived&>())))
+        -> decltype(auto) {
+        return ::std::forward<T>(obj).as_awaitable(static_cast<Derived&>(*this));
+    }
+};
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

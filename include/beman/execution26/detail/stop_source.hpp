@@ -14,24 +14,22 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    class stop_token;
-    class stop_source;
-    template<typename CallbackFun> class stop_callback;
-    template <typename CallbackFun>
-    stop_callback(::beman::execution26::stop_token, CallbackFun) -> stop_callback<CallbackFun>;
-}
+namespace beman::execution26 {
+class stop_token;
+class stop_source;
+template <typename CallbackFun>
+class stop_callback;
+template <typename CallbackFun>
+stop_callback(::beman::execution26::stop_token, CallbackFun) -> stop_callback<CallbackFun>;
+} // namespace beman::execution26
 
-namespace beman::execution26::detail
-{
-    struct stop_state;
-    struct stop_callback_base;
-}
+namespace beman::execution26::detail {
+struct stop_state;
+struct stop_callback_base;
+} // namespace beman::execution26::detail
 // ----------------------------------------------------------------------------
 
-struct beman::execution26::detail::stop_state
-{
+struct beman::execution26::detail::stop_state {
     ::std::atomic<bool>                             stop_requested{};
     ::std::atomic<::std::size_t>                    sources{};
     ::std::mutex                                    lock{};
@@ -43,19 +41,18 @@ struct beman::execution26::detail::stop_state
 
 // ----------------------------------------------------------------------------
 
-struct beman::execution26::detail::stop_callback_base
-{
-private:
+struct beman::execution26::detail::stop_callback_base {
+  private:
     using stop_state = ::beman::execution26::detail::stop_state;
     ::std::shared_ptr<stop_state> state;
 
     virtual auto do_call() -> void = 0;
 
-protected:
-    stop_callback_base(::beman::execution26::stop_token const&);
+  protected:
+    stop_callback_base(const ::beman::execution26::stop_token&);
     ~stop_callback_base();
 
-public:
+  public:
     auto call() -> void;
     auto setup() -> void;
     auto deregister() -> void;
@@ -66,20 +63,19 @@ public:
 
 // ----------------------------------------------------------------------------
 
-class beman::execution26::stop_source
-{
-private:
+class beman::execution26::stop_source {
+  private:
     using stop_state = ::beman::execution26::detail::stop_state;
 
     ::std::shared_ptr<stop_state> state{::std::make_shared<stop_state>()};
 
-public:
+  public:
     using stop_token = ::beman::execution26::stop_token;
 
     stop_source();
     explicit stop_source(::beman::execution26::nostopstate_t) noexcept;
-    stop_source(stop_source const&);
-    auto operator= (stop_source const&) -> stop_source&;
+    stop_source(const stop_source&);
+    auto operator=(const stop_source&) -> stop_source&;
     ~stop_source();
 
     auto swap(stop_source&) noexcept -> void;
@@ -91,94 +87,73 @@ public:
 
 // ----------------------------------------------------------------------------
 
-class beman::execution26::stop_token
-{
-private:
+class beman::execution26::stop_token {
+  private:
     friend ::beman::execution26::stop_source;
     friend ::beman::execution26::detail::stop_callback_base;
     ::std::shared_ptr<::beman::execution26::detail::stop_state> state;
 
     stop_token(::std::shared_ptr<::beman::execution26::detail::stop_state>);
 
-public:
+  public:
     template <typename Fun>
     using callback_type = ::beman::execution26::stop_callback<Fun>;
 
     stop_token() = default;
 
-    auto swap(stop_token& other) noexcept -> void;
+    auto               swap(stop_token& other) noexcept -> void;
     [[nodiscard]] auto stop_requested() const noexcept -> bool;
     [[nodiscard]] auto stop_possible() const noexcept -> bool;
 
-    [[nodiscard]] auto operator== (stop_token const&) const noexcept -> bool = default;
+    [[nodiscard]] auto operator==(const stop_token&) const noexcept -> bool = default;
 };
 
 // ----------------------------------------------------------------------------
 
-template<typename CallbackFun>
-class beman::execution26::stop_callback final
-    : private CallbackFun
-    , beman::execution26::detail::stop_callback_base
-{
-private:
+template <typename CallbackFun>
+class beman::execution26::stop_callback final : private CallbackFun, beman::execution26::detail::stop_callback_base {
+  private:
     static_assert(::std::invocable<CallbackFun>);
     static_assert(::std::destructible<CallbackFun>);
 
     using stop_token = ::beman::execution26::stop_token;
 
-    auto do_call() -> void override
-    {
-        (*this)();
-    }
+    auto do_call() -> void override { (*this)(); }
 
-public:
+  public:
     using callback_type = CallbackFun;
 
     template <typename Initializer>
-    stop_callback(stop_token const& token, Initializer&& init)
-        noexcept(::std::is_nothrow_constructible_v<CallbackFun, Initializer>)
+    stop_callback(const stop_token& token,
+                  Initializer&&     init) noexcept(::std::is_nothrow_constructible_v<CallbackFun, Initializer>)
         requires(::std::constructible_from<CallbackFun, Initializer>)
-        : CallbackFun(::std::forward<Initializer>(init))
-        , stop_callback_base(token)
-    {
+        : CallbackFun(::std::forward<Initializer>(init)), stop_callback_base(token) {
         this->setup();
     }
     template <typename Initializer>
-    stop_callback(stop_token&& token, Initializer&& init)
-        noexcept(::std::is_nothrow_constructible_v<CallbackFun, Initializer>)
+    stop_callback(stop_token&&  token,
+                  Initializer&& init) noexcept(::std::is_nothrow_constructible_v<CallbackFun, Initializer>)
         requires(::std::is_constructible_v<CallbackFun, Initializer>)
-        : CallbackFun(::std::forward<Initializer>(init))
-        , stop_callback_base(::std::move(token))
-    {
+        : CallbackFun(::std::forward<Initializer>(init)), stop_callback_base(::std::move(token)) {
         this->setup();
     }
-    ~stop_callback()
-    {
-        this->deregister();
-    }
+    ~stop_callback() { this->deregister(); }
     stop_callback(stop_callback&&) = delete;
 };
 
 // ----------------------------------------------------------------------------
 
 inline beman::execution26::detail::stop_callback_base::stop_callback_base(
-    ::beman::execution26::stop_token const& token)
-    : state(token.state)
-{
-}
+    const ::beman::execution26::stop_token& token)
+    : state(token.state) {}
 
-inline beman::execution26::detail::stop_callback_base::~stop_callback_base()
-{
-}
+inline beman::execution26::detail::stop_callback_base::~stop_callback_base() {}
 
-inline auto beman::execution26::detail::stop_callback_base::setup() -> void
-{
-    if (this->state)
-    {
+inline auto beman::execution26::detail::stop_callback_base::setup() -> void {
+    if (this->state) {
         {
             ::std::lock_guard guard(this->state->lock);
-            if (!this->state->stop_requested)
-            {
+            if (!this->state->stop_requested) {
                 this->next = ::std::exchange(this->state->callbacks, this);
                 return;
             }
@@ -187,23 +162,18 @@ inline auto beman::execution26::detail::stop_callback_base::setup() -> void
     }
 }
 
-inline auto beman::execution26::detail::stop_callback_base::deregister() -> void
-{
-    if (this->state)
-    {
+inline auto beman::execution26::detail::stop_callback_base::deregister() -> void {
+    if (this->state) {
         ::std::unique_lock guard(this->state->lock);
-        if (this->state->executing && this->id != ::std::this_thread::get_id())
-        {
-            using lock_again = decltype([](auto p){ p->lock(); });
+        if (this->state->executing && this->id != ::std::this_thread::get_id()) {
+            using lock_again = decltype([](auto p) { p->lock(); });
             ::std::unique_ptr<decltype(guard), lock_again> relock(&guard);
             relock->unlock();
             while (this->state->executing)
                 ;
         }
-        for (auto next = &this->state->callbacks; *next; next = &this->next)
-        {
-            if (*next == this)
-            {
+        for (auto next = &this->state->callbacks; *next; next = &this->next) {
+            if (*next == this) {
                 *next = this->next;
                 break;
             }
@@ -211,95 +181,62 @@ inline auto beman::execution26::detail::stop_callback_base::deregister() -> void
     }
 }
 
-inline auto beman::execution26::detail::stop_callback_base::call() -> void
-{
-    this->do_call();
-}
+inline auto beman::execution26::detail::stop_callback_base::call() -> void { this->do_call(); }
 
 inline beman::execution26::stop_token::stop_token(::std::shared_ptr<::beman::execution26::detail::stop_state> state)
-    : state(::std::move(state))
-{
-}
+    : state(::std::move(state)) {}
 
-inline auto beman::execution26::stop_token::swap(stop_token& other) noexcept -> void
-{
-    this->state.swap(other.state);
-}
+inline auto beman::execution26::stop_token::swap(stop_token& other) noexcept -> void { this->state.swap(other.state); }
 
-inline auto beman::execution26::stop_token::stop_requested() const noexcept -> bool
-{
+inline auto beman::execution26::stop_token::stop_requested() const noexcept -> bool {
     return this->state && this->state->stop_requested;
 }
 
-inline auto beman::execution26::stop_token::stop_possible() const noexcept -> bool
-{
+inline auto beman::execution26::stop_token::stop_possible() const noexcept -> bool {
     return this->state && this->state->stop_possible();
 }
 
 // ----------------------------------------------------------------------------
 
-inline beman::execution26::stop_source::stop_source()
-{
+inline beman::execution26::stop_source::stop_source() { ++this->state->sources; }
+
+inline beman::execution26::stop_source::stop_source(::beman::execution26::nostopstate_t) noexcept : state() {}
+
+inline beman::execution26::stop_source::stop_source(const stop_source& other) : state(other.state) {
     ++this->state->sources;
 }
 
-inline beman::execution26::stop_source::stop_source(::beman::execution26::nostopstate_t) noexcept
-    : state()
-{
-}
-
-inline beman::execution26::stop_source::stop_source(stop_source const& other)
-    : state(other.state)
-{
-    ++this->state->sources;
-}
-
-inline auto beman::execution26::stop_source::operator= (stop_source const& other) -> stop_source&
-{
+inline auto beman::execution26::stop_source::operator=(const stop_source& other) -> stop_source& {
     --this->state->sources;
     this->state = other.state;
     ++this->state->sources;
     return *this;
 }
 
-inline beman::execution26::stop_source::~stop_source()
-{
-    this->state && --this->state->sources;
-}
+inline beman::execution26::stop_source::~stop_source() { this->state && --this->state->sources; }
 
-inline auto beman::execution26::stop_source::swap(::beman::execution26::stop_source& other) noexcept -> void
-{
+inline auto beman::execution26::stop_source::swap(::beman::execution26::stop_source& other) noexcept -> void {
     this->state.swap(other.state);
 }
 
-inline auto beman::execution26::stop_source::get_token() const -> stop_token
-{
-    return stop_token{this->state};
-}
+inline auto beman::execution26::stop_source::get_token() const -> stop_token { return stop_token{this->state}; }
 
-inline auto beman::execution26::stop_source::stop_requested() const noexcept -> bool
-{
+inline auto beman::execution26::stop_source::stop_requested() const noexcept -> bool {
     return this->state && this->state->stop_requested;
 }
 
-inline auto beman::execution26::stop_source::stop_possible() const noexcept -> bool
-{
-    return true && this->state;
-}
+inline auto beman::execution26::stop_source::stop_possible() const noexcept -> bool { return true && this->state; }
 
-inline auto beman::execution26::stop_source::request_stop() noexcept -> bool
-{
-    using release = decltype([](auto p){ *p = false; });
-    using lock_again = decltype([](auto p){ p->lock(); });
+inline auto beman::execution26::stop_source::request_stop() noexcept -> bool {
+    using release    = decltype([](auto p) { *p = false; });
+    using lock_again = decltype([](auto p) { p->lock(); });
 
-    if (this->state && not this->state->stop_requested.exchange(true))
-    {
+    if (this->state && not this->state->stop_requested.exchange(true)) {
         ::std::unique_lock guard(this->state->lock);
-        while (this->state->callbacks)
-        {
+        while (this->state->callbacks) {
             auto front = ::std::exchange(this->state->callbacks, this->state->callbacks->next);
             ::std::unique_ptr<::std::atomic<bool>, release> reset(&state->executing);
-            *reset = true;
+            *reset    = true;
             front->id = ::std::this_thread::get_id();
             ::std::unique_ptr<decltype(guard), lock_again> relock(&guard);
             relock->unlock();

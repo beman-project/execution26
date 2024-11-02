@@ -8,29 +8,27 @@
 
 // ----------------------------------------------------------------------------
 
-TEST(notify)
-{
-    static_assert(std::same_as<test_detail::notify_t const, decltype(test_detail::notify)>);
+TEST(notify) {
+    static_assert(std::same_as<const test_detail::notify_t, decltype(test_detail::notify)>);
 
     {
         test_detail::notifier n;
-        auto s{test_detail::notify(n)};
+        auto                  s{test_detail::notify(n)};
         static_assert(test_std::sender<decltype(s)>);
         static_assert(test_std::sender_in<decltype(s)>);
         n.complete();
         test_std::sync_wait(::std::move(s));
     }
     {
-        struct receiver
-        {
+        struct receiver {
             using receiver_concept = test_std::receiver_t;
             bool& result;
-            auto set_value() && noexcept -> void { this->result = true; }
+            auto  set_value() && noexcept -> void { this->result = true; }
         };
-        bool finish1{};
-        bool finish2{};
+        bool                  finish1{};
+        bool                  finish2{};
         test_detail::notifier n;
-        auto op1{test_std::connect(test_detail::notify(n), receiver{finish1})};
+        auto                  op1{test_std::connect(test_detail::notify(n), receiver{finish1})};
         test_std::start(op1);
         auto op2{test_std::connect(test_detail::notify(n), receiver{finish2})};
         test_std::start(op2);
@@ -40,5 +38,4 @@ TEST(notify)
         ASSERT(finish1 == true);
         ASSERT(finish2 == true);
     }
-
 }

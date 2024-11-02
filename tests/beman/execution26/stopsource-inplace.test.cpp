@@ -3,7 +3,6 @@
 
 #include "test/execution.hpp"
 
-TEST(stopsource_inplace)
-{
+TEST(stopsource_inplace) {
     // section [stopsource.inplace] is empty
 }

@@ -13,21 +13,17 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    template <typename Sender,
-             typename Env = ::beman::execution26::empty_env,
-             template <typename...> class Tuple = ::beman::execution26::detail::decayed_tuple,
-             template <typename...> class Variant = ::beman::execution26::detail::variant_or_empty
-             >
-        requires ::beman::execution26::sender_in<Sender, Env>
-    using value_types_of_t
-        = ::beman::execution26::detail::gather_signatures<
-            ::beman::execution26::set_value_t,
-            ::beman::execution26::completion_signatures_of_t<Sender, Env>,
-            Tuple,
-            Variant
-        >;
+namespace beman::execution26 {
+template <typename Sender,
+          typename Env                         = ::beman::execution26::empty_env,
+          template <typename...> class Tuple   = ::beman::execution26::detail::decayed_tuple,
+          template <typename...> class Variant = ::beman::execution26::detail::variant_or_empty>
+    requires ::beman::execution26::sender_in<Sender, Env>
+using value_types_of_t =
+    ::beman::execution26::detail::gather_signatures< ::beman::execution26::set_value_t,
+                                                     ::beman::execution26::completion_signatures_of_t<Sender, Env>,
+                                                     Tuple,
+                                                     Variant>;
 }
 // ----------------------------------------------------------------------------
 

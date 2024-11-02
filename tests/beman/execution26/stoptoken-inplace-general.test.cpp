@@ -6,8 +6,7 @@
 #include <type_traits>
 #include <cassert>
 
-TEST(stoptoken_inplace_general)
-{
+TEST(stoptoken_inplace_general) {
     // Reference [stoptoken.inplace.general]
     static_assert(::test_std::stoppable_token<::test_std::inplace_stop_token>);
     static_assert(::std::is_swappable_v<::test_std::inplace_stop_token>);
@@ -18,8 +17,7 @@ TEST(stoptoken_inplace_general)
     token.swap(token2);
     ASSERT(token == token2);
 
-    struct Callback
-    {
+    struct Callback {
         explicit Callback(int*) {}
         auto operator()() const -> void {}
     };

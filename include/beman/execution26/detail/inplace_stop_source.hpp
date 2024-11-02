@@ -12,59 +12,55 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    class inplace_stop_token;
-    class inplace_stop_source;
-    template<typename CallbackFun> class inplace_stop_callback;
-    template <typename CallbackFun>
-    inplace_stop_callback(::beman::execution26::inplace_stop_token, CallbackFun)
-        -> inplace_stop_callback<CallbackFun>;
-}
+namespace beman::execution26 {
+class inplace_stop_token;
+class inplace_stop_source;
+template <typename CallbackFun>
+class inplace_stop_callback;
+template <typename CallbackFun>
+inplace_stop_callback(::beman::execution26::inplace_stop_token, CallbackFun) -> inplace_stop_callback<CallbackFun>;
+} // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
 
-class beman::execution26::inplace_stop_token
-{
-public:
+class beman::execution26::inplace_stop_token {
+  public:
     template <typename CallbackFun>
     using callback_type = ::beman::execution26::inplace_stop_callback<CallbackFun>;
 
     inplace_stop_token() = default;
 
-    constexpr auto stop_requested() const noexcept  -> bool;
-    constexpr auto stop_possible() const noexcept  -> bool;
-    auto operator== (inplace_stop_token const&) const -> bool = default;
+    constexpr auto stop_requested() const noexcept -> bool;
+    constexpr auto stop_possible() const noexcept -> bool;
+    auto           operator==(const inplace_stop_token&) const -> bool = default;
 
     auto swap(inplace_stop_token&) noexcept -> void;
 
-private:
+  private:
     friend class ::beman::execution26::inplace_stop_source;
     template <typename CallbackFun>
     friend class ::beman::execution26::inplace_stop_callback;
-    inplace_stop_token(::beman::execution26::inplace_stop_source* source): source(source) {}
+    inplace_stop_token(::beman::execution26::inplace_stop_source* source) : source(source) {}
 
     ::beman::execution26::inplace_stop_source* source{};
 };
 
 // ----------------------------------------------------------------------------
 
-class beman::execution26::inplace_stop_source
-{
-    struct callback_base
-    {
+class beman::execution26::inplace_stop_source {
+    struct callback_base {
         callback_base* next{};
-        virtual auto call() -> void = 0;
+        virtual auto   call() -> void = 0;
     };
 
-public:
-    auto stop_requested() const noexcept -> bool;
+  public:
+    auto                  stop_requested() const noexcept -> bool;
     static constexpr auto stop_possible() noexcept -> bool;
-    auto get_token() const -> ::beman::execution26::inplace_stop_token;
+    auto                  get_token() const -> ::beman::execution26::inplace_stop_token;
 
     auto request_stop() -> bool;
 
-private:
+  private:
     template <typename CallbackFun>
     friend class ::beman::execution26::inplace_stop_callback;
     ::std::atomic<bool>           stopped{};
@@ -81,69 +77,53 @@ private:
 
 template <typename CallbackFun>
 class beman::execution26::inplace_stop_callback final
-    : public ::beman::execution26::inplace_stop_source::callback_base 
-{
-public:
+    : public ::beman::execution26::inplace_stop_source::callback_base {
+  public:
     using callback_type = CallbackFun;
 
     template <typename Init>
     inplace_stop_callback(::beman::execution26::inplace_stop_token, Init&&);
     inplace_stop_callback(inplace_stop_callback&&) = delete;
-    ~inplace_stop_callback()
-    {
-        if (this->source)
-        {
+    ~inplace_stop_callback() {
+        if (this->source) {
             this->source->deregister(this);
         }
     }
 
-private:
+  private:
     auto call() -> void override;
 
-    CallbackFun                          fun;
+    CallbackFun                                fun;
     ::beman::execution26::inplace_stop_source* source;
 };
 
 // ----------------------------------------------------------------------------
 
-inline constexpr auto beman::execution26::inplace_stop_token::stop_requested() const noexcept  -> bool
-{
+inline constexpr auto beman::execution26::inplace_stop_token::stop_requested() const noexcept -> bool {
     return this->source && this->source->stop_requested();
 }
 
-inline constexpr auto beman::execution26::inplace_stop_token::stop_possible() const noexcept  -> bool
-{
+inline constexpr auto beman::execution26::inplace_stop_token::stop_possible() const noexcept -> bool {
     return this->source;
 }
 
-inline auto beman::execution26::inplace_stop_token::swap(inplace_stop_token& other) noexcept -> void
-{
+inline auto beman::execution26::inplace_stop_token::swap(inplace_stop_token& other) noexcept -> void {
     ::std::swap(this->source, other.source);
 }
 
-inline auto beman::execution26::inplace_stop_source::stop_requested() const noexcept -> bool
-{
-    return this->stopped;
-}
+inline auto beman::execution26::inplace_stop_source::stop_requested() const noexcept -> bool { return this->stopped; }
 
-inline constexpr auto beman::execution26::inplace_stop_source::stop_possible() noexcept -> bool
-{
-    return true;
-}
+inline constexpr auto beman::execution26::inplace_stop_source::stop_possible() noexcept -> bool { return true; }
 
-inline auto beman::execution26::inplace_stop_source::get_token() const -> ::beman::execution26::inplace_stop_token
-{
+inline auto beman::execution26::inplace_stop_source::get_token() const -> ::beman::execution26::inplace_stop_token {
     return ::beman::execution26::inplace_stop_token(const_cast<::beman::execution26::inplace_stop_source*>(this));
 }
 
-inline auto beman::execution26::inplace_stop_source::request_stop() -> bool
-{
-    using relock = ::std::unique_ptr<::std::unique_lock<::std::mutex>, decltype([](auto p){ p->lock(); })>;
-    if (false == this->stopped.exchange(true))
-    {
+inline auto beman::execution26::inplace_stop_source::request_stop() -> bool {
+    using relock = ::std::unique_ptr<::std::unique_lock<::std::mutex>, decltype([](auto p) { p->lock(); })>;
+    if (false == this->stopped.exchange(true)) {
         ::std::unique_lock guard(this->lock);
-        for (auto it = this->callbacks; it != nullptr; it = this->callbacks)
-        {
+        for (auto it = this->callbacks; it != nullptr; it = this->callbacks) {
             this->running   = it;
             this->id        = ::std::this_thread::get_id();
             this->callbacks = it->next;
@@ -159,39 +139,29 @@ inline auto beman::execution26::inplace_stop_source::request_stop() -> bool
     return false;
 }
 
-inline auto beman::execution26::inplace_stop_source::add(callback_base* cb) -> void
-{
-    if (this->stopped)
-    {
+inline auto beman::execution26::inplace_stop_source::add(callback_base* cb) -> void {
+    if (this->stopped) {
         cb->call();
-    }
-    else
-    {
+    } else {
         ::std::lock_guard guard(this->lock);
         cb->next = ::std::exchange(this->callbacks, cb);
     }
 }
 
-inline auto beman::execution26::inplace_stop_source::deregister(callback_base* cb) -> void
-{
+inline auto beman::execution26::inplace_stop_source::deregister(callback_base* cb) -> void {
     ::std::unique_lock guard(this->lock);
-    if (this->running == cb)
-    {
-        if (this->id == ::std::this_thread::get_id())
-        {
+    if (this->running == cb) {
+        if (this->id == ::std::this_thread::get_id()) {
             return;
         }
         guard.unlock();
-        while (this->running == cb)
-        {
+        while (this->running == cb) {
         }
         return;
     }
 
-    for (callback_base** it{&this->callbacks}; *it; it = &(*it)->next)
-    {
-        if (*it == cb)
-        {
+    for (callback_base** it{&this->callbacks}; *it; it = &(*it)->next) {
+        if (*it == cb) {
             *it = cb->next;
             break;
         }
@@ -199,25 +169,19 @@ inline auto beman::execution26::inplace_stop_source::deregister(callback_base* c
 }
 
 template <typename CallbackFun>
-    template <typename Init>
+template <typename Init>
 inline beman::execution26::inplace_stop_callback<CallbackFun>::inplace_stop_callback(
-    ::beman::execution26::inplace_stop_token token,
-    Init&& init)
-    : fun(::std::forward<Init>(init))
-    , source(token.source)
-{
-    if (this->source)
-    {
+    ::beman::execution26::inplace_stop_token token, Init&& init)
+    : fun(::std::forward<Init>(init)), source(token.source) {
+    if (this->source) {
         this->source->add(this);
     }
 }
 
 template <typename CallbackFun>
-inline auto beman::execution26::inplace_stop_callback<CallbackFun>::call() -> void 
-{
+inline auto beman::execution26::inplace_stop_callback<CallbackFun>::call() -> void {
     this->fun();
 }
-
 
 // ----------------------------------------------------------------------------
 

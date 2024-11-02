@@ -9,12 +9,9 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    template <typename Sender, typename Receiver>
-    using connect_result_t
-        = decltype(::beman::execution26::connect(::std::declval<Sender>(),
-                                                 ::std::declval<Receiver>()));
+namespace beman::execution26 {
+template <typename Sender, typename Receiver>
+using connect_result_t = decltype(::beman::execution26::connect(::std::declval<Sender>(), ::std::declval<Receiver>()));
 }
 
 // ----------------------------------------------------------------------------

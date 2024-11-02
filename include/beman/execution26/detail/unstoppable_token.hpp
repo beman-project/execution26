@@ -9,17 +9,11 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    template<typename Token>
-    concept unstoppable_token
-        =  ::beman::execution26::stoppable_token<Token>
-        && requires()
-            {
-                requires ::std::bool_constant<not Token::stop_possible()>::value;
-            }
-        ;
-}
+namespace beman::execution26 {
+template <typename Token>
+concept unstoppable_token = ::beman::execution26::stoppable_token<Token> &&
+                            requires() { requires ::std::bool_constant<not Token::stop_possible()>::value; };
+} // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
 

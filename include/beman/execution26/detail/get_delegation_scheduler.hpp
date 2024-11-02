@@ -10,29 +10,20 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    struct get_delegation_scheduler_t
-    {
-        template <typename Env>
-            requires requires(Env&& env, get_delegation_scheduler_t const& g)
-            {
-                { ::std::as_const(env).query(g) } noexcept
-                    -> ::beman::execution26::scheduler;
-            }
-        auto operator()(Env&& env) const noexcept
-        {
-            return ::std::as_const(env).query(*this);
+namespace beman::execution26 {
+struct get_delegation_scheduler_t {
+    template <typename Env>
+        requires requires(Env&& env, const get_delegation_scheduler_t& g) {
+            { ::std::as_const(env).query(g) } noexcept -> ::beman::execution26::scheduler;
         }
-        constexpr auto query(::beman::execution26::forwarding_query_t const&) const
-            noexcept -> bool
-        {
-            return true;
-        }
-    };
+    auto operator()(Env&& env) const noexcept {
+        return ::std::as_const(env).query(*this);
+    }
+    constexpr auto query(const ::beman::execution26::forwarding_query_t&) const noexcept -> bool { return true; }
+};
 
-    inline constexpr get_delegation_scheduler_t get_delegation_scheduler{};
-}
+inline constexpr get_delegation_scheduler_t get_delegation_scheduler{};
+} // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
 

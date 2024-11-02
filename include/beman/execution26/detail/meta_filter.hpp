@@ -9,35 +9,25 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail::meta::detail
-{
-    template <template <typename> class, typename> struct filter;
+namespace beman::execution26::detail::meta::detail {
+template <template <typename> class, typename>
+struct filter;
 
-    template <template <typename> class Predicate,
-              template <typename...> class List>
-    struct filter<Predicate, List<>>
-    {
-        using type = List<>;
-    };
+template <template <typename> class Predicate, template <typename...> class List>
+struct filter<Predicate, List<>> {
+    using type = List<>;
+};
 
-    template <template <typename> class Predicate,
-              template <typename...> class List,
-              typename H, typename... T>
-    struct filter<Predicate, List<H, T...>>
-    {
-        using tail = typename beman::execution26::detail::meta::detail::filter<Predicate, List<T...>>::type;
-        using type = ::std::conditional_t<
-            Predicate<H>::value,
-            ::beman::execution26::detail::meta::prepend<H, tail>,
-            tail
-        >;
-    };
-}
+template <template <typename> class Predicate, template <typename...> class List, typename H, typename... T>
+struct filter<Predicate, List<H, T...>> {
+    using tail = typename beman::execution26::detail::meta::detail::filter<Predicate, List<T...>>::type;
+    using type = ::std::conditional_t<Predicate<H>::value, ::beman::execution26::detail::meta::prepend<H, tail>, tail>;
+};
+} // namespace beman::execution26::detail::meta::detail
 
-namespace beman::execution26::detail::meta
-{
-    template <template <typename> class Predicate, typename List>
-    using filter = ::beman::execution26::detail::meta::detail::filter<Predicate, List>::type;
+namespace beman::execution26::detail::meta {
+template <template <typename> class Predicate, typename List>
+using filter = ::beman::execution26::detail::meta::detail::filter<Predicate, List>::type;
 }
 
 // ----------------------------------------------------------------------------

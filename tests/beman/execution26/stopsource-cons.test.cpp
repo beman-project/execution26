@@ -10,22 +10,12 @@
 
 bool fail{};
 
-auto operator new(::std::size_t size) -> void*
-{
-    return fail? throw ::std::bad_alloc(): ::std::malloc(size);
-}
+auto operator new(::std::size_t size) -> void* { return fail ? throw ::std::bad_alloc() : ::std::malloc(size); }
 
-auto operator delete(void* ptr) noexcept -> void
-{
-    ::std::free(ptr);
-}
-auto operator delete(void* ptr, ::std::size_t) noexcept -> void
-{
-    ::std::free(ptr);
-}
+auto operator delete(void* ptr) noexcept -> void { ::std::free(ptr); }
+auto operator delete(void* ptr, ::std::size_t) noexcept -> void { ::std::free(ptr); }
 
-TEST(stopsource_cons)
-{
+TEST(stopsource_cons) {
     // Reference: [stopsource.cons] p1
     ::test_std::stop_source source;
     ASSERT(source.stop_possible());
@@ -33,13 +23,10 @@ TEST(stopsource_cons)
 
     // Reference: [stopsource.cons] p3
     fail = true;
-    try
-    {
-         ::test_std::stop_source();
-         ASSERT(nullptr == "can't be reached");
-    }
-    catch (::std::bad_alloc const&)
-    {
+    try {
+        ::test_std::stop_source();
+        ASSERT(nullptr == "can't be reached");
+    } catch (const ::std::bad_alloc&) {
         ASSERT(nullptr != "bad_alloc was thrown");
     }
 }

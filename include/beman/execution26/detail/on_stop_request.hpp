@@ -6,17 +6,15 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename St>
-    struct on_stop_request
-    {
-        St&       st;
-        auto operator()() const -> void { this->st.request_stop(); }
-    };
-    template <typename T>
-    on_stop_request(T&) -> on_stop_request<T>;
-}
+namespace beman::execution26::detail {
+template <typename St>
+struct on_stop_request {
+    St&  st;
+    auto operator()() const -> void { this->st.request_stop(); }
+};
+template <typename T>
+on_stop_request(T&) -> on_stop_request<T>;
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

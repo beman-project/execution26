@@ -9,15 +9,11 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename T, typename Promise>
-    using await_result_type = decltype(
-        ::beman::execution26::detail::get_awaiter(
-            ::std::declval<T>(),
-            ::std::declval<Promise&>()
-        ).await_resume()
-    );
+namespace beman::execution26::detail {
+template <typename T, typename Promise>
+using await_result_type =
+    decltype(::beman::execution26::detail::get_awaiter(::std::declval<T>(), ::std::declval<Promise&>())
+                 .await_resume());
 }
 
 // ----------------------------------------------------------------------------

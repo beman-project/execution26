@@ -5,8 +5,7 @@
 #include "test/execution.hpp"
 #include <cassert>
 
-TEST(stopsource_inplace_cons)
-{
+TEST(stopsource_inplace_cons) {
     // Plan:
     // - Given a default constructed inplace_stop_source.
     // - Then stop_requested() yields true.

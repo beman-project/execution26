@@ -15,58 +15,53 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Receiver>
-    struct operation_state_task;
+namespace beman::execution26::detail {
+template <typename Receiver>
+struct operation_state_task;
 
-    template <typename Receiver>
-    struct connect_awaitable_promise;
-}
+template <typename Receiver>
+struct connect_awaitable_promise;
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 
 template <typename Receiver>
 struct beman::execution26::detail::connect_awaitable_promise
-    : ::beman::execution26::detail::with_await_transform<connect_awaitable_promise<Receiver>>
-{
-    connect_awaitable_promise(auto&&, Receiver& receiver) noexcept: receiver(receiver) {}
-    auto initial_suspend() noexcept -> ::std::suspend_always { return {}; }
+    : ::beman::execution26::detail::with_await_transform<connect_awaitable_promise<Receiver>> {
+    connect_awaitable_promise(auto&&, Receiver& receiver) noexcept : receiver(receiver) {}
+    auto              initial_suspend() noexcept -> ::std::suspend_always { return {}; }
     [[noreturn]] auto final_suspend() noexcept -> ::std::suspend_always { ::std::terminate(); }
     [[noreturn]] auto unhandled_exception() noexcept -> void { ::std::terminate(); }
     [[noreturn]] auto return_void() noexcept -> void { ::std::terminate(); }
 
-    auto unhandled_stopped() noexcept -> ::std::coroutine_handle<>
-    {
+    auto unhandled_stopped() noexcept -> ::std::coroutine_handle<> {
         ::beman::execution26::set_stopped(::std::move(this->receiver));
         return ::std::noop_coroutine();
     }
 
-    auto get_env() const noexcept -> ::beman::execution26::env_of_t<Receiver>
-    {
+    auto get_env() const noexcept -> ::beman::execution26::env_of_t<Receiver> {
         return ::beman::execution26::get_env(this->receiver);
     }
 
     auto get_return_object() noexcept -> ::beman::execution26::detail::operation_state_task<Receiver>;
 
-private:
+  private:
     Receiver& receiver;
 };
 
 // ----------------------------------------------------------------------------
 
 template <typename Receiver>
-struct beman::execution26::detail::operation_state_task
-{
+struct beman::execution26::detail::operation_state_task {
     using operation_state_concept = ::beman::execution26::operation_state_t;
-    using promise_type = ::beman::execution26::detail::connect_awaitable_promise<Receiver>;
+    using promise_type            = ::beman::execution26::detail::connect_awaitable_promise<Receiver>;
 
-    explicit operation_state_task(::std::coroutine_handle<> handle) noexcept: handle(handle) {}
-    operation_state_task(operation_state_task&& other) noexcept
-        : handle(::std::exchange(other.handle, {}))
-    {
+    explicit operation_state_task(::std::coroutine_handle<> handle) noexcept : handle(handle) {}
+    operation_state_task(operation_state_task&& other) noexcept : handle(::std::exchange(other.handle, {})) {}
+    ~operation_state_task() {
+        if (this->handle)
+            this->handle.destroy();
     }
-    ~operation_state_task() { if (this->handle) this->handle.destroy(); }
 
     auto start() & noexcept -> void { this->handle.resume(); }
 
@@ -76,13 +71,10 @@ struct beman::execution26::detail::operation_state_task
 // ----------------------------------------------------------------------------
 
 template <typename Receiver>
-auto beman::execution26::detail::connect_awaitable_promise<Receiver>::get_return_object()
-    noexcept
-    -> ::beman::execution26::detail::operation_state_task<Receiver>
-{
+auto beman::execution26::detail::connect_awaitable_promise<Receiver>::get_return_object() noexcept
+    -> ::beman::execution26::detail::operation_state_task<Receiver> {
     return ::beman::execution26::detail::operation_state_task<Receiver>(
-        std::coroutine_handle<connect_awaitable_promise>::from_promise(*this)
-    );
+        std::coroutine_handle<connect_awaitable_promise>::from_promise(*this));
 }
 
 // ----------------------------------------------------------------------------

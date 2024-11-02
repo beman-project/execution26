@@ -3,7 +3,6 @@
 
 #include "test/execution.hpp"
 
-TEST(stopsource)
-{
+TEST(stopsource) {
     // section [thread] is empty
 }

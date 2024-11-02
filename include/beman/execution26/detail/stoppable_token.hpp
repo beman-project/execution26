@@ -9,22 +9,15 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    template<typename Token>
-    concept stoppable_token
-        =   requires(Token const& token)
-            {
-                typename ::beman::execution26::detail::check_type_alias_exist<Token::template callback_type>;
-                { token.stop_requested() } noexcept -> ::std::same_as<bool>;
-                { token.stop_possible() } noexcept -> ::std::same_as<bool>;
-                { Token(token) } noexcept;
-            }
-        &&  ::std::copyable<Token>
-        &&  ::std::equality_comparable<Token>
-        &&  ::std::swappable<Token>
-        ;
-}
+namespace beman::execution26 {
+template <typename Token>
+concept stoppable_token = requires(const Token& token) {
+    typename ::beman::execution26::detail::check_type_alias_exist<Token::template callback_type>;
+    { token.stop_requested() } noexcept -> ::std::same_as<bool>;
+    { token.stop_possible() } noexcept -> ::std::same_as<bool>;
+    { Token(token) } noexcept;
+} && ::std::copyable<Token> && ::std::equality_comparable<Token> && ::std::swappable<Token>;
+} // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
 

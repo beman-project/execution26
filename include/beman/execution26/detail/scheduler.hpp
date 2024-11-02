@@ -15,24 +15,15 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    template <typename Scheduler>
-    concept scheduler
-        = ::beman::execution26::detail::almost_scheduler<Scheduler>
-        && requires(Scheduler&& sched) {
-            {
-                ::beman::execution26::get_completion_scheduler<::beman::execution26::set_value_t>(
-                    ::beman::execution26::get_env(
-                        ::beman::execution26::schedule(
-                            ::std::forward<Scheduler>(sched)
-                        )
-                    )
-                )
-            } -> ::beman::execution26::detail::decayed_same_as<Scheduler>;
-        }
-        ;
-}
+namespace beman::execution26 {
+template <typename Scheduler>
+concept scheduler = ::beman::execution26::detail::almost_scheduler<Scheduler> && requires(Scheduler&& sched) {
+    {
+        ::beman::execution26::get_completion_scheduler<::beman::execution26::set_value_t>(
+            ::beman::execution26::get_env(::beman::execution26::schedule(::std::forward<Scheduler>(sched))))
+    } -> ::beman::execution26::detail::decayed_same_as<Scheduler>;
+};
+} // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
 

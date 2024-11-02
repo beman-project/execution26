@@ -6,9 +6,9 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <template<typename> class> struct check_type_alias_exist;
+namespace beman::execution26::detail {
+template <template <typename> class>
+struct check_type_alias_exist;
 }
 
 // ----------------------------------------------------------------------------

@@ -11,45 +11,33 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail::meta::detail
-{
-    template <typename, typename> struct make_unique;
-    template <typename> struct unique;
+namespace beman::execution26::detail::meta::detail {
+template <typename, typename>
+struct make_unique;
+template <typename>
+struct unique;
 
-    template <template <typename...> class List, typename... R>
-    struct make_unique<List<R...>, List<>>
-    {
-        using type = List<R...>;
-    };
+template <template <typename...> class List, typename... R>
+struct make_unique<List<R...>, List<>> {
+    using type = List<R...>;
+};
 
-    template <template <typename...> class List, typename... R, typename H, typename... T>
-    struct make_unique<List<R...>, List<H, T...>>
-    {
-        using type = typename ::beman::execution26::detail::meta::detail::make_unique<
-            ::std::conditional_t<
-                ::beman::execution26::detail::meta::contains<H, R...>,
-                List<R...>,
-                List<R..., H>
-            >,
-            List<T...>
-        >::type;
-    };
+template <template <typename...> class List, typename... R, typename H, typename... T>
+struct make_unique<List<R...>, List<H, T...>> {
+    using type = typename ::beman::execution26::detail::meta::detail::make_unique<
+        ::std::conditional_t<::beman::execution26::detail::meta::contains<H, R...>, List<R...>, List<R..., H>>,
+        List<T...>>::type;
+};
 
-    template <template <typename...> class List, typename... T>
-    struct unique<List<T...>>
-    {
-        using type = typename ::beman::execution26::detail::meta::detail::make_unique<
-            List<>,
-            List<T...>
-        >::type;
-    };
-}
+template <template <typename...> class List, typename... T>
+struct unique<List<T...>> {
+    using type = typename ::beman::execution26::detail::meta::detail::make_unique<List<>, List<T...>>::type;
+};
+} // namespace beman::execution26::detail::meta::detail
 
-namespace beman::execution26::detail::meta
-{
-    template <typename T>
-    using unique
-        = ::beman::execution26::detail::meta::detail::unique<T>::type;
+namespace beman::execution26::detail::meta {
+template <typename T>
+using unique = ::beman::execution26::detail::meta::detail::unique<T>::type;
 }
 
 // ----------------------------------------------------------------------------

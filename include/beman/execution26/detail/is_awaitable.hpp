@@ -10,17 +10,14 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename T, typename Promise>
-    concept is_awaitable
-        = requires(Promise& promise)
-        {
-            { ::beman::execution26::detail::get_awaiter(::std::declval<T>(), promise) }
-                -> ::beman::execution26::detail::is_awaiter<Promise>;
-        }
-        ;
-}
+namespace beman::execution26::detail {
+template <typename T, typename Promise>
+concept is_awaitable = requires(Promise& promise) {
+    {
+        ::beman::execution26::detail::get_awaiter(::std::declval<T>(), promise)
+    } -> ::beman::execution26::detail::is_awaiter<Promise>;
+};
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

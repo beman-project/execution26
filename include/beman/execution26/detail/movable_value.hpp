@@ -9,14 +9,11 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename T>
-    concept movable_value
-        =  ::std::move_constructible<::std::decay_t<T>>
-        && ::std::constructible_from<::std::decay_t<T>, T>
-        && (not ::std::is_array_v<::std::remove_reference_t<T>>)
-        ;
+namespace beman::execution26::detail {
+template <typename T>
+concept movable_value =
+    ::std::move_constructible<::std::decay_t<T>> && ::std::constructible_from<::std::decay_t<T>, T> &&
+    (not::std::is_array_v<::std::remove_reference_t<T>>);
 }
 
 // ----------------------------------------------------------------------------

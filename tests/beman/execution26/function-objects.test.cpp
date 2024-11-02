@@ -3,7 +3,6 @@
 
 #include <test/execution.hpp>
 
-TEST(function_objects)
-{
+TEST(function_objects) {
     // section [function.objects] is empty
 }

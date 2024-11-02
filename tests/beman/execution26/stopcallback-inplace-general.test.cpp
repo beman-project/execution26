@@ -6,24 +6,22 @@
 #include <concepts>
 #include <type_traits>
 
-TEST(stopcallback_inplace_general)
-{
+TEST(stopcallback_inplace_general) {
     // Reference: [stopcallback.inplace.general]
 
-    struct Callback
-    {
+    struct Callback {
         auto operator()() {};
     };
 
     using CB = ::test_std::inplace_stop_callback<Callback>;
     static_assert(::std::same_as<CB::callback_type, Callback>);
     static_assert(::std::destructible<CB>);
-    static_assert(not ::std::move_constructible<CB>);
-    static_assert(not ::std::copy_constructible<CB>);
-    static_assert(not ::std::is_move_assignable_v<CB>);
-    static_assert(not ::std::is_copy_assignable_v<CB>);
+    static_assert(not::std::move_constructible<CB>);
+    static_assert(not::std::copy_constructible<CB>);
+    static_assert(not::std::is_move_assignable_v<CB>);
+    static_assert(not::std::is_copy_assignable_v<CB>);
 
-    Callback callback;
+    Callback                          callback;
     ::test_std::inplace_stop_callback cb(::test_std::inplace_stop_token(), callback);
     static_assert(::std::same_as<decltype(cb), CB>);
 }

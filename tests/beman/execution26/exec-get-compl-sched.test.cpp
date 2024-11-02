@@ -14,61 +14,51 @@
 
 // ----------------------------------------------------------------------------
 
-namespace
-{
-    struct tag {};
+namespace {
+struct tag {};
 
-    template <typename> struct env;
+template <typename>
+struct env;
 
-    template <typename Tag>
-    struct sender
-    {
-        using sender_concept = test_std::sender_t;
-        auto get_env() const noexcept -> env<Tag> { return {}; }
+template <typename Tag>
+struct sender {
+    using sender_concept = test_std::sender_t;
+    auto get_env() const noexcept -> env<Tag> { return {}; }
+};
 
-    };
+template <typename Tag>
+struct scheduler {
+    using scheduler_concept = test_std::scheduler_t;
+    int  value{};
+    auto operator==(const scheduler&) const -> bool = default;
+    auto schedule() noexcept -> sender<Tag> { return {}; }
+};
 
-    template <typename Tag>
-    struct scheduler
-    {
-        using scheduler_concept = test_std::scheduler_t;
-        int value{};
-        auto operator== (scheduler const&) const -> bool = default;
-        auto schedule() noexcept -> sender<Tag> { return {}; }
-    };
-
-    template <typename Tag>
-    struct env
-    {
-        int value{};
-        auto query(test_std::get_completion_scheduler_t<test_std::set_value_t> const&) const noexcept
-        {
-            return scheduler<Tag>{this->value + 1};
-        }
-        auto query(test_std::get_completion_scheduler_t<test_std::set_error_t> const&) const noexcept
-        {
-            return scheduler<test_std::set_error_t>{this->value + 2};
-        }
-        auto query(test_std::get_completion_scheduler_t<test_std::set_stopped_t> const&) const noexcept
-        {
-            return scheduler<test_std::set_stopped_t>{this->value + 3};
-        }
-        template <typename T>
-        auto query(test_std::get_completion_scheduler_t<T> const&) const noexcept
-        {
-            return scheduler<T>{this->value};
-        }
-    };
-
-    template <bool Expect, typename Tag, typename Env>
-    auto test_tag(Env&& env) -> void
-    {
-        static_assert(Expect == requires{ test_std::get_completion_scheduler<Tag>(env); });
+template <typename Tag>
+struct env {
+    int  value{};
+    auto query(const test_std::get_completion_scheduler_t<test_std::set_value_t>&) const noexcept {
+        return scheduler<Tag>{this->value + 1};
     }
-}
+    auto query(const test_std::get_completion_scheduler_t<test_std::set_error_t>&) const noexcept {
+        return scheduler<test_std::set_error_t>{this->value + 2};
+    }
+    auto query(const test_std::get_completion_scheduler_t<test_std::set_stopped_t>&) const noexcept {
+        return scheduler<test_std::set_stopped_t>{this->value + 3};
+    }
+    template <typename T>
+    auto query(const test_std::get_completion_scheduler_t<T>&) const noexcept {
+        return scheduler<T>{this->value};
+    }
+};
 
-TEST(exec_get_compl_sched)
-{
+template <bool Expect, typename Tag, typename Env>
+auto test_tag(Env&& env) -> void {
+    static_assert(Expect == requires { test_std::get_completion_scheduler<Tag>(env); });
+}
+} // namespace
+
+TEST(exec_get_compl_sched) {
     static_assert(test_std::sender<sender<test_std::set_error_t>>);
     static_assert(test_std::sender<sender<test_std::set_stopped_t>>);
     static_assert(test_std::sender<sender<test_std::set_value_t>>);
@@ -76,12 +66,12 @@ TEST(exec_get_compl_sched)
     static_assert(test_std::scheduler<scheduler<test_std::set_stopped_t>>);
     static_assert(test_std::scheduler<scheduler<test_std::set_value_t>>);
 
-    static_assert(std::same_as<test_std::get_completion_scheduler_t<test_std::set_error_t> const,
-                  decltype(test_std::get_completion_scheduler<test_std::set_error_t>)>);
-    static_assert(std::same_as<test_std::get_completion_scheduler_t<test_std::set_stopped_t> const,
-                  decltype(test_std::get_completion_scheduler<test_std::set_stopped_t>)>);
-    static_assert(std::same_as<test_std::get_completion_scheduler_t<test_std::set_value_t> const,
-                  decltype(test_std::get_completion_scheduler<test_std::set_value_t>)>);
+    static_assert(std::same_as<const test_std::get_completion_scheduler_t<test_std::set_error_t>,
+                               decltype(test_std::get_completion_scheduler<test_std::set_error_t>)>);
+    static_assert(std::same_as<const test_std::get_completion_scheduler_t<test_std::set_stopped_t>,
+                               decltype(test_std::get_completion_scheduler<test_std::set_stopped_t>)>);
+    static_assert(std::same_as<const test_std::get_completion_scheduler_t<test_std::set_value_t>,
+                               decltype(test_std::get_completion_scheduler<test_std::set_value_t>)>);
     static_assert(test_std::forwarding_query(test_std::get_completion_scheduler<test_std::set_error_t>));
     static_assert(test_std::forwarding_query(test_std::get_completion_scheduler<test_std::set_stopped_t>));
     static_assert(test_std::forwarding_query(test_std::get_completion_scheduler<test_std::set_value_t>));
@@ -92,19 +82,13 @@ TEST(exec_get_compl_sched)
     test_tag<true, test_std::set_value_t>(e);
     test_tag<false, tag>(e);
 
-    static_assert(::std::same_as<
-                    decltype(test_std::get_completion_scheduler<test_std::set_error_t>(e)),
-                    scheduler<test_std::set_error_t>>);
-    static_assert(::std::same_as<
-                    decltype(test_std::get_completion_scheduler<test_std::set_stopped_t>(e)),
-                    scheduler<test_std::set_stopped_t>>);
-    static_assert(::std::same_as<
-                    decltype(test_std::get_completion_scheduler<test_std::set_value_t>(e)),
-                    scheduler<test_std::set_value_t>>);
-    ASSERT(test_std::get_completion_scheduler<test_std::set_error_t>(e)
-           == scheduler<test_std::set_error_t>{19});
-    ASSERT(test_std::get_completion_scheduler<test_std::set_stopped_t>(e)
-           == scheduler<test_std::set_stopped_t>{20});
-    ASSERT(test_std::get_completion_scheduler<test_std::set_value_t>(e)
-           == scheduler<test_std::set_value_t>{18});
+    static_assert(::std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_error_t>(e)),
+                                 scheduler<test_std::set_error_t>>);
+    static_assert(::std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_stopped_t>(e)),
+                                 scheduler<test_std::set_stopped_t>>);
+    static_assert(::std::same_as<decltype(test_std::get_completion_scheduler<test_std::set_value_t>(e)),
+                                 scheduler<test_std::set_value_t>>);
+    ASSERT(test_std::get_completion_scheduler<test_std::set_error_t>(e) == scheduler<test_std::set_error_t>{19});
+    ASSERT(test_std::get_completion_scheduler<test_std::set_stopped_t>(e) == scheduler<test_std::set_stopped_t>{20});
+    ASSERT(test_std::get_completion_scheduler<test_std::set_value_t>(e) == scheduler<test_std::set_value_t>{18});
 }

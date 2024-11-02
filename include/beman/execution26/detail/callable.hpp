@@ -8,16 +8,10 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Fun, typename... Args>
-    concept callable
-        = requires(Fun&& fun, Args&&... args)
-        {
-            ::std::forward<Fun>(fun)(::std::forward<Args>(args)...);
-        }
-        ;
-}
+namespace beman::execution26::detail {
+template <typename Fun, typename... Args>
+concept callable = requires(Fun&& fun, Args&&... args) { ::std::forward<Fun>(fun)(::std::forward<Args>(args)...); };
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

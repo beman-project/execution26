@@ -8,30 +8,21 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    template<class Token, class CallbackFun>
-    using stop_callback_for_t = Token::template callback_type<CallbackFun>;
+namespace beman::execution26 {
+template <class Token, class CallbackFun>
+using stop_callback_for_t = Token::template callback_type<CallbackFun>;
 }
 
-namespace beman::execution26::detail
-{
-    template<typename CallbackFun, typename Token, typename Initializer = CallbackFun>
-    concept stoppable_callback_for
-        =  ::std::invocable<CallbackFun>
-        && ::std::constructible_from<CallbackFun, Initializer>
-        && requires { typename ::beman::execution26::stop_callback_for_t<Token, CallbackFun>; }
-        && ::std::constructible_from<::beman::execution26::stop_callback_for_t<Token, CallbackFun>,
-                                     Token,
-                                     Initializer>
-        && ::std::constructible_from<::beman::execution26::stop_callback_for_t<Token, CallbackFun>,
-                                     Token&,
-                                     Initializer>
-        && ::std::constructible_from<::beman::execution26::stop_callback_for_t<Token, CallbackFun>,
-                                     Token const&,
-                                     Initializer>
-        ;
-}
+namespace beman::execution26::detail {
+template <typename CallbackFun, typename Token, typename Initializer = CallbackFun>
+concept stoppable_callback_for =
+    ::std::invocable<CallbackFun> && ::std::constructible_from<CallbackFun, Initializer> &&
+    requires { typename ::beman::execution26::stop_callback_for_t<Token, CallbackFun>; } &&
+    ::std::constructible_from<::beman::execution26::stop_callback_for_t<Token, CallbackFun>, Token, Initializer> &&
+    ::std::constructible_from<::beman::execution26::stop_callback_for_t<Token, CallbackFun>, Token&, Initializer> &&
+    ::std::
+        constructible_from<::beman::execution26::stop_callback_for_t<Token, CallbackFun>, const Token&, Initializer>;
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

@@ -8,17 +8,16 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail::meta
-{
-    template <typename> struct size;
-    template <template <typename...> class L, typename... T>
-    struct size<L<T...>>
-    {
-        static constexpr ::std::size_t value{sizeof...(T)};
-    };
-    template <typename T>
-    inline constexpr ::std::size_t size_v{::beman::execution26::detail::meta::size<T>::value};
-}
+namespace beman::execution26::detail::meta {
+template <typename>
+struct size;
+template <template <typename...> class L, typename... T>
+struct size<L<T...>> {
+    static constexpr ::std::size_t value{sizeof...(T)};
+};
+template <typename T>
+inline constexpr ::std::size_t size_v{::beman::execution26::detail::meta::size<T>::value};
+} // namespace beman::execution26::detail::meta
 
 // ----------------------------------------------------------------------------
 

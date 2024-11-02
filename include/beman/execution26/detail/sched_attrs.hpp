@@ -15,36 +15,32 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
+namespace beman::execution26::detail {
 
-    template <typename Scheduler>
-    class sched_attrs
-    {
-    private:
-        Scheduler sched;
-    
-    public:
-        template <typename S>
-        sched_attrs(S&& sched): sched(::std::forward<S>(sched)) {}
+template <typename Scheduler>
+class sched_attrs {
+  private:
+    Scheduler sched;
 
-        template <typename Tag>
-        auto query(::beman::execution26::get_completion_scheduler_t<Tag> const&) const noexcept
-        {
-            return this->sched;
-        }
+  public:
+    template <typename S>
+    sched_attrs(S&& sched) : sched(::std::forward<S>(sched)) {}
 
-        template <typename T = bool>
-            requires requires(Scheduler&& s){ s.query(::beman::execution26::get_domain); }
-        auto query(::beman::execution26::get_domain_t const& q, T = true) const noexcept
-        {
-            return this->sched.query(q);
-        }
-    };
+    template <typename Tag>
+    auto query(const ::beman::execution26::get_completion_scheduler_t<Tag>&) const noexcept {
+        return this->sched;
+    }
 
-    template <typename Scheduler>
-    sched_attrs(Scheduler&&) -> sched_attrs<::std::remove_cvref_t<Scheduler>>;
-}
+    template <typename T = bool>
+        requires requires(Scheduler&& s) { s.query(::beman::execution26::get_domain); }
+    auto query(const ::beman::execution26::get_domain_t& q, T = true) const noexcept {
+        return this->sched.query(q);
+    }
+};
+
+template <typename Scheduler>
+sched_attrs(Scheduler&&) -> sched_attrs<::std::remove_cvref_t<Scheduler>>;
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

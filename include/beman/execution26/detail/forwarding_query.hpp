@@ -10,28 +10,23 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    struct forwarding_query_t
-    {
-        template <typename Object>
-            requires requires(Object&& object, forwarding_query_t const& query)
-            {
-                 { ::std::forward<Object>(object).query(query) } noexcept -> ::std::same_as<bool>;
-            }
-        constexpr auto operator()(Object&& object) const noexcept -> bool
-        {
-            return ::std::forward<Object>(object).query(*this);
+namespace beman::execution26 {
+struct forwarding_query_t {
+    template <typename Object>
+        requires requires(Object&& object, const forwarding_query_t& query) {
+            { ::std::forward<Object>(object).query(query) } noexcept -> ::std::same_as<bool>;
         }
-        template <typename Object>
-        constexpr auto operator()(Object&&) const noexcept -> bool
-        {
-            return ::std::derived_from<::std::remove_cvref_t<Object>, ::beman::execution26::forwarding_query_t>;
-        }
-    };
+    constexpr auto operator()(Object&& object) const noexcept -> bool {
+        return ::std::forward<Object>(object).query(*this);
+    }
+    template <typename Object>
+    constexpr auto operator()(Object&&) const noexcept -> bool {
+        return ::std::derived_from<::std::remove_cvref_t<Object>, ::beman::execution26::forwarding_query_t>;
+    }
+};
 
-    inline constexpr forwarding_query_t forwarding_query{};
-}
+inline constexpr forwarding_query_t forwarding_query{};
+} // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
 

@@ -8,41 +8,38 @@
 
 // ----------------------------------------------------------------------------
 
-namespace
-{
-    struct with_non_env;
-    struct non_env
-    {
-    private:
-        friend struct with_non_env;
-        ~non_env() = default;
-    };
-    struct with_non_env
-    {
-        auto get_env() const noexcept -> non_env& { static non_env rc{}; return rc; }
-    };
+namespace {
+struct with_non_env;
+struct non_env {
+  private:
+    friend struct with_non_env;
+    ~non_env() = default;
+};
+struct with_non_env {
+    auto get_env() const noexcept -> non_env& {
+        static non_env rc{};
+        return rc;
+    }
+};
 
-    struct other_env {};
-    struct test_env {};
-    struct non_const
-    {
-        auto get_env() -> test_env { return test_env{}; }
-    };
+struct other_env {};
+struct test_env {};
+struct non_const {
+    auto get_env() -> test_env { return test_env{}; }
+};
 
-    template <typename Env, bool Noexcept = true>
-    struct normal
-    {
-        auto get_env() const noexcept(Noexcept) -> Env { return Env{}; }
-        auto get_env() noexcept(Noexcept) -> Env { return other_env{}; }
-    };
-}
+template <typename Env, bool Noexcept = true>
+struct normal {
+    auto get_env() const noexcept(Noexcept) -> Env { return Env{}; }
+    auto get_env() noexcept(Noexcept) -> Env { return other_env{}; }
+};
+} // namespace
 
-TEST(exec_get_env)
-{
+TEST(exec_get_env) {
     static_assert(std::semiregular<test_std::empty_env>);
 
     static_assert(std::semiregular<test_std::get_env_t>);
-    static_assert(std::same_as<test_std::get_env_t const, decltype(test_std::get_env)>);
+    static_assert(std::same_as<const test_std::get_env_t, decltype(test_std::get_env)>);
 
     auto e0 = test_std::get_env(0);
     static_assert(std::same_as<test_std::empty_env, decltype(e0)>);

@@ -12,17 +12,13 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26::detail
-{
-    template <typename Index, typename Sender, typename Receiver>
-    using env_type = ::beman::execution26::detail::call_result_t<
-        decltype(::beman::execution26::detail::impls_for<
-            ::beman::execution26::tag_of_t<Sender>
-        >::get_env),
-        Index,
-        ::beman::execution26::detail::state_type<Sender, Receiver>&,
-        Receiver const&
-    >;
+namespace beman::execution26::detail {
+template <typename Index, typename Sender, typename Receiver>
+using env_type = ::beman::execution26::detail::call_result_t<
+    decltype(::beman::execution26::detail::impls_for< ::beman::execution26::tag_of_t<Sender> >::get_env),
+    Index,
+    ::beman::execution26::detail::state_type<Sender, Receiver>&,
+    const Receiver&>;
 }
 
 // ----------------------------------------------------------------------------

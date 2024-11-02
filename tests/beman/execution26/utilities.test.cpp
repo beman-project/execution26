@@ -3,7 +3,6 @@
 
 #include "test/execution.hpp"
 
-TEST(utilities)
-{
+TEST(utilities) {
     // section [utilities] is empty
 }

@@ -10,37 +10,32 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26
-{
-    template <typename Domain, typename Tag, ::beman::execution26::sender Sender, typename... Args>
-        requires requires(Domain domain, Tag tag, Sender&& sender, Args&&... args)
-        {
-            domain.apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...);
-        }
-    constexpr auto apply_sender(Domain domain, Tag, Sender&& sender, Args&&... args)
-        noexcept(noexcept(domain.apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...)))
-        -> decltype(auto)
-    {
-        return domain.apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...);
+namespace beman::execution26 {
+template <typename Domain, typename Tag, ::beman::execution26::sender Sender, typename... Args>
+    requires requires(Domain domain, Tag tag, Sender&& sender, Args&&... args) {
+        domain.apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...);
     }
-
-    template <typename Domain, typename Tag, ::beman::execution26::sender Sender, typename... Args>
-        requires (not requires(Domain domain, Tag tag, Sender&& sender, Args&&... args)
-        {
-            domain.apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...);
-        })
-        && requires(Tag tag, Sender&& sender, Args&&... args)
-        {
-            beman::execution26::default_domain().apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...);
-        }
-    constexpr auto apply_sender(Domain, Tag, Sender&& sender, Args&&... args)
-        noexcept(noexcept(beman::execution26::default_domain().apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...)))
-        -> decltype(auto)
-    {
-        return beman::execution26::default_domain().apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...);
-    }
-
+constexpr auto apply_sender(Domain domain, Tag, Sender&& sender, Args&&... args) noexcept(noexcept(
+    domain.apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...))) -> decltype(auto) {
+    return domain.apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...);
 }
+
+template <typename Domain, typename Tag, ::beman::execution26::sender Sender, typename... Args>
+    requires(not requires(Domain domain, Tag tag, Sender&& sender, Args&&... args) {
+                domain.apply_sender(Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...);
+            }) && requires(Tag tag, Sender&& sender, Args&&... args) {
+        beman::execution26::default_domain().apply_sender(
+            Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...);
+    }
+constexpr auto apply_sender(Domain, Tag, Sender&& sender, Args&&... args) noexcept(
+    noexcept(beman::execution26::default_domain().apply_sender(Tag(),
+                                                               ::std::forward<Sender>(sender),
+                                                               ::std::forward<Args>(args)...))) -> decltype(auto) {
+    return beman::execution26::default_domain().apply_sender(
+        Tag(), ::std::forward<Sender>(sender), ::std::forward<Args>(args)...);
+}
+
+} // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
 

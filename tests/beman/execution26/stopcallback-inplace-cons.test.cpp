@@ -4,8 +4,7 @@
 #include <beman/execution26/stop_token.hpp>
 #include "test/execution.hpp"
 
-auto test_inplace_stopcallback_ctor() -> void
-{
+auto test_inplace_stopcallback_ctor() -> void {
     // Plan:
     // - Given an inplace_stop_source.
     // - When constructing an inplace_stop_callback with a corresponding
@@ -18,8 +17,8 @@ auto test_inplace_stopcallback_ctor() -> void
     bool flag1{};
     bool flag2{};
 
-    ::test_std::inplace_stop_source source;
-    ::test_std::inplace_stop_callback cb1(source.get_token(), [&flag1]{ flag1 = true; });
+    ::test_std::inplace_stop_source   source;
+    ::test_std::inplace_stop_callback cb1(source.get_token(), [&flag1] { flag1 = true; });
 
     ASSERT(flag1 == false);
     ASSERT(flag2 == false);
@@ -29,14 +28,13 @@ auto test_inplace_stopcallback_ctor() -> void
     ASSERT(flag1 == true);
     ASSERT(flag2 == false);
 
-    ::test_std::inplace_stop_callback cb2(source.get_token(), [&flag2]{ flag2 = true; });
+    ::test_std::inplace_stop_callback cb2(source.get_token(), [&flag2] { flag2 = true; });
 
     ASSERT(flag1 == true);
     ASSERT(flag2 == true);
 }
 
-auto test_inplace_stopcallback_dtor() -> void
-{
+auto test_inplace_stopcallback_dtor() -> void {
     // Plan:
     // - Given an inplace_stop_source.
     // - When constructing two inplace_stop_callbacks with a corresponding
@@ -47,11 +45,10 @@ auto test_inplace_stopcallback_dtor() -> void
     bool flag1{};
     bool flag2{};
 
-    ::test_std::inplace_stop_source source;
-    ::test_std::inplace_stop_callback callback1(source.get_token(), [&flag1]{ flag1 = true; });
+    ::test_std::inplace_stop_source   source;
+    ::test_std::inplace_stop_callback callback1(source.get_token(), [&flag1] { flag1 = true; });
     {
-        ::test_std::inplace_stop_callback callback2(source.get_token(), [&flag2]{ flag2 = true; });
-
+        ::test_std::inplace_stop_callback callback2(source.get_token(), [&flag2] { flag2 = true; });
     }
 
     ASSERT(flag1 == false);
@@ -63,8 +60,7 @@ auto test_inplace_stopcallback_dtor() -> void
     ASSERT(flag2 == false);
 }
 
-TEST(stopcallback_inplace_cons)
-{
+TEST(stopcallback_inplace_cons) {
     test_inplace_stopcallback_ctor();
     test_inplace_stopcallback_dtor();
 }

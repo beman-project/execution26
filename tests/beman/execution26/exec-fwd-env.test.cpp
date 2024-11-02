@@ -7,54 +7,32 @@
 
 // ----------------------------------------------------------------------------
 
-namespace
-{
-    struct derived
-        : test_std::forwarding_query_t
-    {
-    };
+namespace {
+struct derived : test_std::forwarding_query_t {};
 
-    template <bool Noexcept = true, typename Result = bool, Result Value = true>
-    struct static_query
-    {
-        constexpr auto query(test_std::forwarding_query_t) noexcept(Noexcept) -> Result
-        {
-            return Value;
-        }
-    };
+template <bool Noexcept = true, typename Result = bool, Result Value = true>
+struct static_query {
+    constexpr auto query(test_std::forwarding_query_t) noexcept(Noexcept) -> Result { return Value; }
+};
 
-    struct rvalue_query
-    {
-        constexpr auto query(test_std::forwarding_query_t) && noexcept -> bool
-        {
-            return true;
-        }
-    };
+struct rvalue_query {
+    constexpr auto query(test_std::forwarding_query_t) && noexcept -> bool { return true; }
+};
 
-    struct const_query
-    {
-        constexpr auto query(test_std::forwarding_query_t&&) noexcept -> bool = delete;
-        constexpr auto query(test_std::forwarding_query_t&) noexcept -> bool = delete;
-        constexpr auto query(test_std::forwarding_query_t const&) noexcept -> bool
-        {
-            return true;
-        }
-    };
+struct const_query {
+    constexpr auto query(test_std::forwarding_query_t&&) noexcept -> bool = delete;
+    constexpr auto query(test_std::forwarding_query_t&) noexcept -> bool  = delete;
+    constexpr auto query(const test_std::forwarding_query_t&) noexcept -> bool { return true; }
+};
 
-    struct dynamic_query
-    {
-        bool value{true};
-        constexpr auto query(test_std::forwarding_query_t) && noexcept -> bool
-        {
-            return value;
-        }
-    };
-}
+struct dynamic_query {
+    bool           value{true};
+    constexpr auto query(test_std::forwarding_query_t) && noexcept -> bool { return value; }
+};
+} // namespace
 
-TEST(exec_fwd_env)
-{
-    static_assert(std::same_as<test_std::forwarding_query_t const,
-                               decltype(test_std::forwarding_query)>);
+TEST(exec_fwd_env) {
+    static_assert(std::same_as<const test_std::forwarding_query_t, decltype(test_std::forwarding_query)>);
 
     static_assert(not test_std::forwarding_query(0));
     static_assert(test_std::forwarding_query(derived()));
