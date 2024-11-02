@@ -96,6 +96,14 @@ list(
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+if(NOT DEFINED CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 23)
+endif()
+
+if(NOT DEFINED CMAKE_PREFIX_PATH)
+  set(CMAKE_PREFIX_PATH ${CMAKE_INSTALL_PREFIX})
+endif()
+
 if(PROJECT_IS_TOP_LEVEL)
   enable_testing()
   find_package(beman_execution26 0.0.1 EXACT QUIET)
@@ -106,7 +114,6 @@ if(PROJECT_IS_TOP_LEVEL)
 
     include(CMakePrintHelpers)
     cmake_print_variables(TARGET_ALIAS TARGET_LIBRARY TARGET_PREFIX PROJECT_SOURCE_DIR)
-    # FIXME: include_directories(${PROJECT_SOURCE_DIR}/include)
   endif()
 endif()
 

@@ -22,14 +22,6 @@ endif()
 include(GNUInstallDirs)
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
-if(NOT DEFINED CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 23)
-endif()
-
-if(NOT DEFINED CMAKE_PREFIX_PATH)
-  set(CMAKE_PREFIX_PATH ${CMAKE_INSTALL_PREFIX})
-endif()
-
 add_subdirectory(src/beman/execution26)
 
 if(PROJECT_IS_TOP_LEVEL)

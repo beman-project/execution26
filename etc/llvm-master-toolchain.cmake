@@ -6,7 +6,7 @@ set(CMAKE_CXX_COMPILER ${LLVM_ROOT}/bin/clang++)
 set(CMAKE_CXX_FLAGS
     "-std=c++2a \
    -Wall -Wextra \
-   -stdlib=libc++ "
+   -stdlib=libc++"
     CACHE STRING "CXX_FLAGS" FORCE
 )
 
