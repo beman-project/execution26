@@ -80,7 +80,7 @@ check:
 	done | tsort > /dev/null
 
 codespell:
-	codespell -L statics
+	codespell -L statics,snd,copyable,cancelled
 
 todo:
 	bin/mk-todo.py
