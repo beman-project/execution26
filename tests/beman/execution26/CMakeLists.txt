@@ -4,6 +4,10 @@ cmake_minimum_required(VERSION 3.25...3.31)
 
 project(beman_execution26_tests LANGUAGES CXX)
 
+if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+  message(FATAL_ERROR "In-source builds are not allowed!")
+endif()
+
 list(
   APPEND
   execution_tests
@@ -93,24 +97,23 @@ list(
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 if(PROJECT_IS_TOP_LEVEL)
-  set(TARGET_ALIAS beman_execution26::beman_execution26)
   enable_testing()
   find_package(beman_execution26 0.0.1 EXACT QUIET)
   if(beman_execution26_FOUND)
     set(execution_tests exec-awaitable.test) # only one sample to save time! CK
   else()
-    add_subdirectory(../../../.. beman_execution26)
-    include_directories(${PROJECT_SOURCE_DIR}/include)
+    add_subdirectory(../../.. beman_execution26)
 
     include(CMakePrintHelpers)
     cmake_print_variables(TARGET_ALIAS TARGET_LIBRARY TARGET_PREFIX PROJECT_SOURCE_DIR)
+    # FIXME: include_directories(${PROJECT_SOURCE_DIR}/include)
   endif()
 endif()
 
 foreach(test ${execution_tests})
   set(TEST_EXE ${TARGET_PREFIX}.${test})
   add_executable(${TEST_EXE} ${test}.cpp)
-  target_link_libraries(${TEST_EXE} PRIVATE ${TARGET_ALIAS})
+  target_link_libraries(${TEST_EXE} PRIVATE beman_execution26::beman_execution26)
   add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
 endforeach()
 

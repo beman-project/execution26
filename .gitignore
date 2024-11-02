@@ -38,3 +38,7 @@ olderr
 .vs
 .vscode
 stagedir
+
+# In-source builds are not allowed
+CMakeCache.txt
+CMakeFiles/

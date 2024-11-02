@@ -15,6 +15,10 @@ set(TARGET_ALIAS ${TARGET_LIBRARY}::${TARGET_LIBRARY})
 set(TARGET_PACKAGE_NAME ${PROJECT_NAME}-config)
 set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-targets)
 
+if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+  message(FATAL_ERROR "In-source builds are not allowed!")
+endif()
+
 include(GNUInstallDirs)
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
