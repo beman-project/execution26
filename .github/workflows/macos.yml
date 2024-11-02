@@ -29,8 +29,8 @@ jobs:
 
       matrix:
         sanitizer: [debug, release]
-        # TODO: compiler: [g++-14, clang++-19]
-        compiler: [clang++-18]
+        # TODO: compiler: [g++, clang++-19]
+        compiler: [g++, clang++-18]
 
     steps:
       - uses: actions/checkout@v4
@@ -39,7 +39,7 @@ jobs:
         # if: startsWith(matrix.compiler, 'clang')
         uses: aminya/setup-cpp@v1
         with:
-          # compiler: llvm-19
+          # TODO: compiler: llvm-19
           # clangtidy: true
           # cmake: true
           ninja: true
@@ -47,3 +47,7 @@ jobs:
       - name: macos ${{ matrix.compiler }} ${{ matrix.sanitizer }}
         if: startsWith(matrix.compiler, 'clang')
         run: CXX=$(brew --prefix llvm@18)/bin/clang++ make ${{ matrix.sanitizer }}
+
+      - name: macos ${{ matrix.compiler }} ${{ matrix.sanitizer }}
+        if: startsWith(matrix.compiler, 'g++')
+        run: CXX=${{ matrix.compiler }} make ${{ matrix.sanitizer }}
