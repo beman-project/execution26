@@ -231,13 +231,15 @@ template <typename Data, typename Env, typename... Sender>
 struct completion_signatures_for_impl<
     ::beman::execution26::detail::basic_sender<::beman::execution26::detail::when_all_t, Data, Sender...>,
     Env> {
+    template <typename... E>
+    using error_comps = ::beman::execution26::completion_signatures<::beman::execution26::set_error_t(E)...>;
     using value_types =
         typename ::beman::execution26::detail::when_all_value_types<::beman::execution26::detail::meta::combine<
             ::beman::execution26::
                 value_types_of_t<Sender, Env, ::beman::execution26::detail::type_list, ::std::type_identity_t>...>>::
             type;
     using error_types = ::beman::execution26::detail::meta::unique<::beman::execution26::detail::meta::combine<
-        ::beman::execution26::error_types_of_t<Sender, Env, ::beman::execution26::completion_signatures>...>>;
+        ::beman::execution26::error_types_of_t<Sender, Env, error_comps>...>>;
     using type        = ::beman::execution26::detail::meta::combine<value_types, error_types>;
 };
 } // namespace beman::execution26::detail

@@ -46,16 +46,18 @@ static_assert(ex::sender<just_sender<std::pmr::string>>);
 static_assert(ex::sender_in<just_sender<std::pmr::string>>);
 
 int main() {
-    auto j  = just_sender{std::pmr::string("value")};
-    auto t  = std::move(j) | ex::then([](std::pmr::string v) { return v + " then"; });
-    auto w  = ex::when_all(std::move(t));
-    auto t2 = std::move(w) | ex::then([](auto&& v) { std::cout << "got " << v << "\n"; });
-    auto e  = ex::detail::write_env(std::move(t2),
+    auto j = just_sender{std::pmr::string("value")};
+    auto t = std::move(j) | ex::then([](std::pmr::string v) { return v + " then"; });
+    auto w = ex::when_all(std::move(t));
+    auto e = ex::detail::write_env(std::move(w),
                                    ex::detail::make_env(ex::get_allocator, std::pmr::polymorphic_allocator<>()));
 
-    auto o = ex::connect(std::move(e), test_receiver{});
     std::cout << "before start\n";
-    ex::start(o);
-    // auto r = ex::sync_wait(std::move(w) | ex::then([](auto&&){}));
+    auto r = ex::sync_wait(std::move(e));
+    if (r) {
+        auto [v] = *r;
+        std::cout << "produced='" << v << "'\n";
+    } else
+        std::cout << "operation was cancelled\n";
     std::cout << "after start\n";
 }
