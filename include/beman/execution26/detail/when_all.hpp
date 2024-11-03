@@ -232,7 +232,12 @@ struct completion_signatures_for_impl<
     ::beman::execution26::detail::basic_sender<::beman::execution26::detail::when_all_t, Data, Sender...>,
     Env> {
     template <typename... E>
-    using error_comps = ::beman::execution26::completion_signatures<::beman::execution26::set_error_t(E)...>;
+    struct error_comps_t {
+        using type = ::beman::execution26::completion_signatures<::beman::execution26::set_error_t(E)...>;
+    };
+    template <typename... E>
+    using error_comps = typename error_comps_t<E...>::type;
+
     using value_types =
         typename ::beman::execution26::detail::when_all_value_types<::beman::execution26::detail::meta::combine<
             ::beman::execution26::
