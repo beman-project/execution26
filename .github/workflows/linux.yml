@@ -30,8 +30,7 @@ jobs:
       matrix:
         # TODO: sanitizer: [debug, release, asan, usan, tsan]
         sanitizer: [debug, release]
-        # TODO: compiler: [g++-14, clang++-18]
-        compiler: [g++-14]
+        compiler: [g++-14, clang++-18]
 
     steps:
       - uses: actions/checkout@v4
