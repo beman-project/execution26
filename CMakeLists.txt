@@ -49,3 +49,5 @@ install(
         ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_PACKAGE_NAME}-version.cmake
   DESTINATION ${INSTALL_CONFIGDIR}
 )
+
+include(CPack)

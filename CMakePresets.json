@@ -50,6 +50,18 @@
       "configurePreset": "release"
     }
   ],
+  "packagePresets": [
+    {
+      "name": "release",
+      "configurePreset": "release",
+      "configurations": [
+        "Release"
+      ],
+      "generators": [
+        "TGZ"
+      ]
+    }
+  ],
   "workflowPresets": [
     {
       "name": "debug",
@@ -81,6 +93,10 @@
         },
         {
           "type": "test",
+          "name": "release"
+        },
+        {
+          "type": "package",
           "name": "release"
         }
       ]
