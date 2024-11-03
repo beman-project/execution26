@@ -1,0 +1,71 @@
+#include <beman/execution26/execution.hpp>
+#include <type_traits>
+#include <string>
+#include <memory_resource>
+#include <utility>
+#include <iostream>
+
+namespace ex = beman::execution26;
+
+template <typename Receiver>
+struct just_op_state
+{
+    using operation_state_concept = ex::operation_state_t;
+    std::remove_cvref_t<Receiver> rec;
+    std::pmr::string              value;
+
+    template <typename R>
+    just_op_state(R&& r, std::pmr::string&& value)
+        : rec(std::forward<R>(r))
+        , value(std::move(value), ex::get_allocator(ex::get_env(rec)))
+    {
+    }
+
+    void start() & noexcept { ex::set_value(std::move(rec), std::move(value)); }
+};
+
+struct test_receiver
+{
+    using receiver_concept = ex::receiver_t;
+    auto set_value(auto&&...) && noexcept -> void { std::cout << "set_value\n"; }
+    auto set_error(auto&&) && noexcept -> void { std::cout << "set_error\n"; }
+    auto set_stopped() && noexcept -> void { std::cout << "set_stopped\n"; }
+};
+
+static_assert(ex::receiver<test_receiver>);
+static_assert(ex::operation_state<just_op_state<test_receiver>>);
+
+template <typename T>
+struct just_sender
+{
+    using sender_concept = ex::sender_t;
+    using completion_signatures = ex::completion_signatures<ex::set_value_t(T)>;
+
+    T value;
+    template<ex::receiver Receiver>
+    auto connect(Receiver&& r) &&  -> just_op_state<Receiver> { return { std::forward<Receiver>(r), std::move(value) }; }
+};
+
+static_assert(ex::sender<just_sender<std::pmr::string>>);
+static_assert(ex::sender_in<just_sender<std::pmr::string>>);
+
+int main()
+{
+    auto j = just_sender{std::pmr::string("value")};
+    auto t = std::move(j) | ex::then([](std::pmr::string v){ return v + " then"; });
+    auto w = ex::when_all(std::move(t));
+    auto t2 = std::move(w) | ex::then([](auto&& v){ std::cout << "got " << v << "\n"; });
+    auto e = ex::detail::write_env(
+        std::move(t2),
+        ex::detail::make_env(
+            ex::get_allocator, std::pmr::polymorphic_allocator<>()
+        )
+    );
+
+    auto o = ex::connect(std::move(e), test_receiver{});
+    std::cout << "before start\n";
+    ex::start(o);
+    // auto r = ex::sync_wait(std::move(w) | ex::then([](auto&&){}));
+    std::cout << "after start\n";
+}
+
