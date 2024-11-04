@@ -5,7 +5,7 @@ name: Linux Build
 
 on:
   push:
-    # branches: [ "main" ]
+    # branches: ["main"]
     paths:
       - "include/**"
       - "src/**"
@@ -13,7 +13,7 @@ on:
       - "CMakeLists.txt"
       - ".github/workflows/linux.yml"
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
     paths:
       - "include/**"
       - "src/**"
@@ -35,13 +35,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install static analyzers
+      - name: Install build tools
         run: >-
-          sudo apt-get install clang-tidy-19 ninja-build -y -q
+          sudo apt-get install ninja-build -y -q
 
-          sudo update-alternatives --install
-          /usr/bin/clang-tidy clang-tidy
-          /usr/bin/clang-tidy-19 140
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo sudo ./llvm.sh 19 # all
 
       - name: Linux ${{ matrix.compiler }} ${{ matrix.sanitizer }}
         run: CXX=${{ matrix.compiler }} make ${{ matrix.sanitizer }}

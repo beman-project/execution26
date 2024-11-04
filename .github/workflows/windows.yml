@@ -5,7 +5,7 @@ name: Windows Build
 
 on:
   push:
-    # branches: [ "main" ]
+    # branches: ["main"]
     paths:
       - "include/**"
       - "src/**"
@@ -13,7 +13,7 @@ on:
       - "CMakeLists.txt"
       - ".github/workflows/windows.yml"
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
     paths:
       - "include/**"
       - "src/**"
