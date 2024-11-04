@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 SANITIZERS = release debug msan asan usan tsan
-.PHONY: default run update check ce todo distclean clean build test all format $(SANITIZERS)
+.PHONY: default doc run update check ce todo distclean clean build test all format $(SANITIZERS)
 
 COMPILER=system
 CXX_BASE=$(CXX:$(dir $(CXX))%=%)
@@ -50,6 +50,9 @@ all: $(SANITIZERS)
 
 run: test
 	./$(BUILD)/examples/$(EXAMPLE)
+
+doc:
+	doxygen docs/Doxyfile
 
 release: test
 

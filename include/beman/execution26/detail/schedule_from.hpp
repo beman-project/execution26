@@ -40,8 +40,16 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief Turn a completion signatures into a std::tuple type.
+ * \internal
+ */
 template <typename>
 struct as_tuple;
+/*!
+ * \brief The actual operational partial specialization of as_tuple.
+ * \internal
+ */
 template <typename Tag, typename... T>
 struct as_tuple<Tag(T...)> {
     using type = ::beman::execution26::detail::decayed_tuple<Tag, T...>;
@@ -72,7 +80,7 @@ struct impls_for<::beman::execution26::detail::schedule_from_t> : ::beman::execu
         auto set_value() && noexcept -> void {
             ::std::visit(
                 [this]<typename Tuple>(Tuple& result) noexcept -> void {
-                    if constexpr (not::std::same_as<::std::monostate, Tuple>) {
+                    if constexpr (not ::std::same_as<::std::monostate, Tuple>) {
                         ::std::apply([this](auto&& tag,
                                             auto&&... args) { tag(std::move(state->receiver), std::move(args)...); },
                                      result);

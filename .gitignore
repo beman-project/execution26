@@ -32,9 +32,9 @@
 *.app
 
 build
-mkerr
-olderr
 .DS_store
 .vs
 .vscode
 stagedir
+docs/html
+docs/latex

@@ -9,6 +9,10 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26 {
+/*!
+ * \brief Turn an entity, e.g., a sender, into an awaitable.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ */
 struct as_awaitable_t {
     template <typename E, typename P>
     auto operator()(E&& e, P& p) const {

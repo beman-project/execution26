@@ -14,6 +14,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief Turn an error into a suitable exception_ptr.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Error>
 decltype(auto) as_except_ptr(Error&& error) {
     if constexpr (::std::same_as<::std::exception_ptr, ::std::decay_t<Error>>) {

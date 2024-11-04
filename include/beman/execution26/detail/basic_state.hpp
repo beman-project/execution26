@@ -13,6 +13,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief Class template used to present the receiver and operation state for library senders.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Sender, typename Receiver>
 struct basic_state {
     basic_state(Sender&& sender, Receiver&& receiver) noexcept(true)

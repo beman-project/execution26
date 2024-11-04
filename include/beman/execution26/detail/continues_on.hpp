@@ -70,6 +70,10 @@ auto get_domain_late(Sender&& sender, Env&&) {
 
 namespace beman::execution26 {
 using ::beman::execution26::detail::continues_on_t;
+/*!
+ * \brief Customization point object to create a `continues_on` sender.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ */
 inline constexpr continues_on_t continues_on{};
 } // namespace beman::execution26
 
