@@ -6,17 +6,19 @@
 
 #include <beman/execution26/detail/queryable.hpp>
 #include <beman/execution26/detail/schedule.hpp>
+#include <beman/execution26/detail/scheduler_t.hpp>
 #include <beman/execution26/detail/sender.hpp>
 #include <concepts>
 #include <utility>
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26 {
-struct scheduler_t {};
-} // namespace beman::execution26
-
 namespace beman::execution26::detail {
+/*!
+ * \brief Auxiliary concept used to break cycle for scheduler concept.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Scheduler>
 concept almost_scheduler = ::std::derived_from<typename ::std::remove_cvref_t<Scheduler>::scheduler_concept,
                                                ::beman::execution26::scheduler_t> &&

@@ -18,6 +18,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief Class template used to factor out common sender implementation for library senders.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Tag, typename Data, typename... Child>
 struct basic_sender : ::beman::execution26::detail::product_type<Tag, Data, Child...> {
     friend struct ::beman::execution26::connect_t;
@@ -34,7 +39,7 @@ struct basic_sender : ::beman::execution26::detail::product_type<Tag, Data, Chil
 
   private:
     template <typename Receiver>
-        requires(not::beman::execution26::receiver<Receiver>)
+        requires(not ::beman::execution26::receiver<Receiver>)
     auto connect(Receiver receiver) = BEMAN_EXECUTION26_DELETE("the passed receiver doesn't model receiver");
 #if __cpp_explicit_this_parameter < 202110L
     template <::beman::execution26::receiver Receiver>

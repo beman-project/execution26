@@ -10,6 +10,10 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26 {
+/*!
+ * \brief Type of the customization point object for successful completions.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ */
 struct set_value_t {
     template <typename Receiver, typename... Args>
     auto operator()(Receiver&, Args&&...) const
@@ -33,6 +37,11 @@ struct set_value_t {
         ::std::forward<Receiver>(receiver).set_value(::std::forward<Args>(args)...);
     }
 };
+/*!
+ * \var set_value
+ * \brief Customization point object for successful completions.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ */
 inline constexpr set_value_t set_value{};
 } // namespace beman::execution26
 

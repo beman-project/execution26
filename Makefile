@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 SANITIZERS = release debug msan asan usan tsan
-.PHONY: default run update check ce todo distclean clean codespell build test all $(SANITIZERS)
+
+.PHONY: default doc run update check ce todo distclean clean codespell build test all format $(SANITIZERS)
 
 COMPILER=system
 CXX_BASE=$(CXX:$(dir $(CXX))%=%)
@@ -51,6 +52,9 @@ all: $(SANITIZERS)
 run: test
 	./$(BUILD)/examples/$(EXAMPLE)
 
+doc:
+	doxygen docs/Doxyfile
+
 release: test
 
 $(SANITIZERS):
@@ -79,8 +83,12 @@ check:
 		< $$h sed -n "/^ *# *include <Beman\//s@.*[</]Beman/\(.*\).hpp>.*@$$from \1@p"; \
 	done | tsort > /dev/null
 
+
 codespell:
 	codespell -L statics,snd,copyable,cancelled
+
+format:
+	clang-format -i `git diff --name-only main | egrep '\.[ch]pp'`
 
 todo:
 	bin/mk-todo.py

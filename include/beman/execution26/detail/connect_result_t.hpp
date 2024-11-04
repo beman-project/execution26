@@ -10,9 +10,13 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26 {
+/*!
+ * \brief Type alias to determine the operation state type returned from `connect()`.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ */
 template <typename Sender, typename Receiver>
 using connect_result_t = decltype(::beman::execution26::connect(::std::declval<Sender>(), ::std::declval<Receiver>()));
-}
+} // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
 

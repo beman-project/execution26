@@ -32,8 +32,6 @@
 *.app
 
 build
-mkerr
-olderr
 .DS_store
 .vs
 .vscode
@@ -42,3 +40,6 @@ stagedir
 # In-source builds are not allowed
 CMakeCache.txt
 CMakeFiles/
+
+docs/html
+docs/latex

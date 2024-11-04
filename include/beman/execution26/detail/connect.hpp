@@ -14,7 +14,7 @@
 
 // ----------------------------------------------------------------------------
 
-namespace beman::execution26 {
+namespace beman::execution26::detail {
 struct connect_t {
     template <typename Sender, typename Receiver>
     auto operator()(Sender&& sender, Receiver&& receiver) const noexcept(true /*-dk:TODO*/) {
@@ -42,6 +42,13 @@ struct connect_t {
         }
     }
 };
+} // namespace beman::execution26::detail
+
+namespace beman::execution26 {
+using beman::execution26::detail::connect_t;
+/*!
+ * \brief Customization point object used to connect a sender and a receiver.
+ */
 inline constexpr connect_t connect{};
 } // namespace beman::execution26
 

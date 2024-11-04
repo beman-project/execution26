@@ -22,6 +22,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief Class template used as receiver for child completions for library senders.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Sender, typename Receiver, typename Index>
     requires ::beman::execution26::detail::
         valid_specialization< ::beman::execution26::detail::env_type, Index, Sender, Receiver>

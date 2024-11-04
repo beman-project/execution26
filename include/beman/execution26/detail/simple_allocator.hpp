@@ -10,11 +10,13 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
-template <typename Alloc = bool>
-concept simple_allocator = requires(Alloc alloc, ::std::size_t n) {
-    { *alloc.allocate(n) } -> ::std::same_as<typename Alloc::value_type&>;
-    alloc.deallocate(alloc.allocate(n), n);
-} && ::std::copy_constructible<Alloc> && ::std::equality_comparable<Alloc>;
+template <typename Alloc>
+concept simple_allocator =
+    requires(::std::remove_cvref_t<Alloc> alloc, ::std::size_t n) {
+        { *alloc.allocate(n) } -> ::std::same_as<typename ::std::remove_cvref_t<Alloc>::value_type&>;
+        alloc.deallocate(alloc.allocate(n), n);
+    } && ::std::copy_constructible<::std::remove_cvref_t<Alloc>> &&
+    ::std::equality_comparable<::std::remove_cvref_t<Alloc>>;
 } // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
