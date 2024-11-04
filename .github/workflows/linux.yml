@@ -36,9 +36,8 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install build tools
-        run: >-
+        run: |
           sudo apt-get install ninja-build -y -q
-
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
           sudo sudo ./llvm.sh 19 # all

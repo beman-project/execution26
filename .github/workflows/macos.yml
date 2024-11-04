@@ -46,8 +46,8 @@ jobs:
 
       - name: Install llvm-19
         if: startsWith(matrix.compiler, 'clang')
-        run: >-
-          brew install llvm-19 | echo ignored
+        run: |
+          brew install llvm@19 || echo ignored
 
       - name: macos clang++-18 ${{ matrix.sanitizer }}
         if: startsWith(matrix.compiler, 'clang')
