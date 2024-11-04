@@ -52,7 +52,7 @@ run: test
 	./$(BUILD)/examples/$(EXAMPLE)
 
 doc:
-	cd docs; doxygen Doxyfile
+	doxygen docs/Doxyfile
 
 release: test
 
