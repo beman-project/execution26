@@ -39,15 +39,15 @@ jobs:
         # if: startsWith(matrix.compiler, 'clang')
         uses: aminya/setup-cpp@v1
         with:
-          # TODO: compiler: llvm-19
+          compiler: llvm-19
           # clangtidy: true
           # cmake: true
           ninja: true
 
-      - name: macos ${{ matrix.compiler }} ${{ matrix.sanitizer }}
+      - name: macos clang++-19 ${{ matrix.sanitizer }}
         if: startsWith(matrix.compiler, 'clang')
-        run: CXX=$(brew --prefix llvm@18)/bin/clang++ make ${{ matrix.sanitizer }}
+        run: CXX=$(brew --prefix llvm@19)/bin/clang++ make ${{ matrix.sanitizer }}
 
-      - name: macos ${{ matrix.compiler }} ${{ matrix.sanitizer }}
+      - name: macos g++ ${{ matrix.sanitizer }}
         if: startsWith(matrix.compiler, 'g++')
         run: CXX=${{ matrix.compiler }} make ${{ matrix.sanitizer }}
