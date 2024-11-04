@@ -14,6 +14,11 @@
 
 namespace beman::execution26::detail {
 template <typename T, typename Context>
+/*!
+ * \brief Utilitiy function use to move a possibly allocator aware object with an allocator from an environment.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 auto allocator_aware_move(T&& obj, Context&& context) -> decltype(auto) {
     if constexpr (requires { ::beman::execution26::get_allocator(::beman::execution26::get_env(context)); }) {
         if constexpr (decltype(::beman::execution26::detail::is_product_type(obj))()) {

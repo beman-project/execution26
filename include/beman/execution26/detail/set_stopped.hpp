@@ -10,6 +10,10 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26 {
+/*!
+ * \brief Type of the customization point object for cancellation completions.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ */
 struct set_stopped_t {
     template <typename Receiver>
     auto operator()(Receiver&) const
@@ -32,6 +36,10 @@ struct set_stopped_t {
     }
 };
 
+/*!
+ * \brief Customization point object for cancellation completions.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ */
 inline constexpr set_stopped_t set_stopped{};
 } // namespace beman::execution26
 

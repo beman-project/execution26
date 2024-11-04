@@ -19,6 +19,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief Class template use to factor out common operation state needs.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Sender, typename Receiver>
     requires ::beman::execution26::detail::
         valid_specialization<::beman::execution26::detail::state_type, Sender, Receiver>

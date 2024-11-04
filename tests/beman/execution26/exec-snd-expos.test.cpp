@@ -862,14 +862,14 @@ auto test_connect_all() -> void {
         test_detail::basic_state state{std::move(s), receiver{}};
         auto                     product{test_detail::connect_all(&state, std::move(s), std::index_sequence<>{})};
         ASSERT(product.size() == 0);
-        test_std::detail::use(product);
+        test::use(product);
     }
     {
         const sender0            s{};
         test_detail::basic_state state{std::move(s), receiver{}};
         auto                     product{test_detail::connect_all(&state, std::move(s), std::index_sequence<>{})};
         ASSERT(product.size() == 0);
-        test_std::detail::use(product);
+        test::use(product);
     }
     {
         static_assert(requires { sender1{}.connect(receiver{}); });
@@ -877,7 +877,7 @@ auto test_connect_all() -> void {
         test_detail::basic_state state{sender1{}, receiver{}};
         auto                     product{test_detail::connect_all(&state, sender1{}, std::index_sequence<0>{})};
         ASSERT(product.size() == 1);
-        test_std::detail::use(product);
+        test::use(product);
     }
     {
         const sender1 s{};
@@ -886,7 +886,7 @@ auto test_connect_all() -> void {
         test_detail::basic_state state{std::move(s), receiver{}};
         auto                     product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0>{})};
         ASSERT(product.size() == 1);
-        test_std::detail::use(product);
+        test::use(product);
     }
     {
         static_assert(requires { sender2{}.connect(receiver{}); });
@@ -894,7 +894,7 @@ auto test_connect_all() -> void {
         test_detail::basic_state state{sender2{}, receiver{}};
         auto                     product{test_detail::connect_all(&state, sender2{}, std::index_sequence<0, 1>{})};
         ASSERT(product.size() == 2);
-        test_std::detail::use(product);
+        test::use(product);
     }
     {
         const sender2 s{};
@@ -903,7 +903,7 @@ auto test_connect_all() -> void {
         test_detail::basic_state state{std::move(s), receiver{}};
         auto                     product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1>{})};
         ASSERT(product.size() == 2);
-        test_std::detail::use(product);
+        test::use(product);
     }
     {
         static_assert(requires { sender3{}.connect(receiver{}); });
@@ -911,7 +911,7 @@ auto test_connect_all() -> void {
         test_detail::basic_state state{sender3{}, receiver{}};
         auto                     product{test_detail::connect_all(&state, sender3{}, std::index_sequence<0, 1, 2>{})};
         ASSERT(product.size() == 3);
-        test_std::detail::use(product);
+        test::use(product);
     }
     {
         const sender3 s{};
@@ -920,7 +920,7 @@ auto test_connect_all() -> void {
         test_detail::basic_state state{std::move(s), receiver{}};
         auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1, 2>{})};
         ASSERT(product.size() == 3);
-        test_std::detail::use(product);
+        test::use(product);
     }
     {
         static_assert(requires { sender4{}.connect(receiver{}); });
@@ -928,7 +928,7 @@ auto test_connect_all() -> void {
         test_detail::basic_state state{sender4{}, receiver{}};
         auto product{test_detail::connect_all(&state, sender4{}, std::index_sequence<0, 1, 2, 3>{})};
         ASSERT(product.size() == 4);
-        test_std::detail::use(product);
+        test::use(product);
     }
     {
         const sender4 s{};
@@ -937,7 +937,7 @@ auto test_connect_all() -> void {
         test_detail::basic_state state{std::move(s), receiver{}};
         auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1, 2, 3>{})};
         ASSERT(product.size() == 4);
-        test_std::detail::use(product);
+        test::use(product);
     }
 
     //-dk: TODO test connect_all
@@ -1058,9 +1058,9 @@ auto test_basic_sender() -> void {
 
     {
         auto&& [a, b, c] = tagged_sender{basic_sender_tag{}, data{}, sender0{}};
-        test_std::detail::use(a);
-        test_std::detail::use(b);
-        test_std::detail::use(c);
+        test::use(a);
+        test::use(b);
+        test::use(c);
         static_assert(std::same_as<basic_sender_tag, std::remove_cvref_t<decltype(a)>>);
     }
 
@@ -1079,10 +1079,10 @@ auto test_basic_sender() -> void {
 
     basic_sender        bs{basic_sender_tag{}, data{}, sender0{}};
     const basic_sender& cbs{bs};
-    test_std::detail::use(cbs);
+    test::use(cbs);
 
     auto&& [tag, data, children] = test_detail::get_sender_data(bs);
-    test_std::detail::use(tag, data, children);
+    test::use(tag, data, children);
     static_assert(std::same_as<basic_sender_tag, std::remove_cvref_t<decltype(tag)>>);
 
     static_assert(std::same_as<basic_sender_tag, test_std::tag_of_t<basic_sender>>);
@@ -1103,11 +1103,11 @@ auto test_basic_sender() -> void {
 #endif
 
     auto ge{test_std::get_env(bs)};
-    test_std::detail::use(ge);
+    test::use(ge);
     static_assert(std::same_as<test_detail::fwd_env<sender0::env>, decltype(ge)>);
 
     auto op{test_std::connect(bs, receiver{})};
-    test_std::detail::use(op);
+    test::use(op);
 #if 0
         static_assert(std::same_as<
             basic_sender_tag::sender::completion_signatures,
@@ -1240,7 +1240,7 @@ auto test_write_env() -> void {
     auto we_op{test_std::connect(we_sender, write_env_receiver{&has_both_properties})};
     test_std::start(we_op);
     ASSERT(has_both_properties);
-    test_std::detail::use(we_op);
+    test::use(we_op);
 }
 
 template <typename... T>

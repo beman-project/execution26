@@ -10,9 +10,14 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief Auxiliary type alias used to determine the type of a child sender.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Sender, ::std::size_t I = 0u>
 using child_type = decltype(::std::declval<Sender>().template get<I + 2>());
-}
+} // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
 

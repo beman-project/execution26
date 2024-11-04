@@ -10,6 +10,11 @@
 
 namespace beman::execution26::detail {
 template <typename Fun, typename... Args>
+/*!
+ * \brief Type alias used determine the result of function [object] call.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 using call_result_t = decltype(::std::declval<Fun>()(std::declval<Args>()...));
 }
 

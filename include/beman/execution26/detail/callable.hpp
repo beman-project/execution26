@@ -9,6 +9,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief Concept used to detect callable objects.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Fun, typename... Args>
 concept callable = requires(Fun&& fun, Args&&... args) { ::std::forward<Fun>(fun)(::std::forward<Args>(args)...); };
 } // namespace beman::execution26::detail

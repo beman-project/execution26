@@ -10,6 +10,10 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26 {
+/*!
+ * \brief Type of the customization point object for error completions.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ */
 struct set_error_t {
     template <typename Receiver, typename Error>
     auto operator()(Receiver&, Error&&) const
@@ -34,6 +38,10 @@ struct set_error_t {
     }
 };
 
+/*!
+ * \brief Customization point object for error completions.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ */
 inline constexpr set_error_t set_error{};
 } // namespace beman::execution26
 
