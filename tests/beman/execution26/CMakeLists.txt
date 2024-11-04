@@ -117,6 +117,8 @@ if(PROJECT_IS_TOP_LEVEL)
   endif()
 endif()
 
+remove_definitions(-DNDEBUG) # NOTE: we want ASSERT statements in Release too! CK
+
 foreach(test ${execution_tests})
   set(TEST_EXE ${TARGET_PREFIX}.${test})
   add_executable(${TEST_EXE} ${test}.cpp)

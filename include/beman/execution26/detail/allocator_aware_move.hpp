@@ -15,7 +15,7 @@
 namespace beman::execution26::detail {
 template <typename T, typename Context>
 /*!
- * \brief Utilitiy function use to move a possibly allocator aware object with an allocator from an environment.
+ * \brief Utility function use to move a possibly allocator aware object with an allocator from an environment.
  * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
  * \internal
  */
