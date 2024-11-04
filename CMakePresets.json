@@ -12,6 +12,7 @@
     {
       "name": "debug",
       "configurePreset": "debug",
+      "configuration": "Debug",
       "targets": [
         "install"
       ]
@@ -19,6 +20,7 @@
     {
       "name": "release",
       "configurePreset": "release",
+      "configuration": "Release",
       "targets": [
         "all_verify_interface_header_sets",
         "install"
@@ -40,11 +42,13 @@
     {
       "name": "debug",
       "inherits": "test_base",
+      "configuration": "Debug",
       "configurePreset": "debug"
     },
     {
       "name": "release",
       "inherits": "test_base",
+      "configuration": "Release",
       "configurePreset": "release"
     }
   ],
