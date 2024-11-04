@@ -13,7 +13,6 @@
       "name": "debug",
       "configurePreset": "debug",
       "targets": [
-        "all",
         "install"
       ]
     },
@@ -21,7 +20,6 @@
       "name": "release",
       "configurePreset": "release",
       "targets": [
-        "all",
         "all_verify_interface_header_sets",
         "install"
       ]
