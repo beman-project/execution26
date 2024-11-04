@@ -15,7 +15,8 @@
         "CMAKE_CXX_EXTENSIONS": false,
         "CMAKE_CXX_STANDARD": "23",
         "CMAKE_CXX_STANDARD_REQUIRED": true,
-        "CMAKE_EXPORT_COMPILE_COMMANDS": true
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+        "CMAKE_SKIP_TEST_ALL_DEPENDENCY": false
       }
     }
   ]
