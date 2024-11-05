@@ -3,7 +3,7 @@
 
 SANITIZERS = release debug msan asan usan tsan
 
-.PHONY: default doc run update check ce todo distclean clean codespell build test all format $(SANITIZERS)
+.PHONY: default doc run update check ce todo distclean clean codespell clang-tidy build test all format $(SANITIZERS)
 
 COMPILER=system
 CXX_BASE=$(CXX:$(dir $(CXX))%=%)
@@ -83,6 +83,8 @@ check:
 		< $$h sed -n "/^ *# *include <Beman\//s@.*[</]Beman/\(.*\).hpp>.*@$$from \1@p"; \
 	done | tsort > /dev/null
 
+clang-tidy:
+	clang-tidy-17 -p build/debug tests/beman/execution26/exec-just.test.cpp
 
 codespell:
 	codespell -L statics,snd,copyable,cancelled
