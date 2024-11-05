@@ -60,7 +60,7 @@ auto own_forward_like(U&& u) noexcept -> decltype(auto) {
 
 template <typename T, typename U>
 auto forward_like(U&& u) noexcept -> decltype(auto) {
-#if 202207 <= __cpp_lib_forward_like
+#if 202207 <= disabled__cpp_lib_forward_like
     return ::std::forward_like<T>(::std::forward<U>(u));
 #else
     return ::beman::execution26::detail::forward_like_helper<T>::forward(::std::forward<U>(u));
