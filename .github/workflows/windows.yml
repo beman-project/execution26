@@ -24,25 +24,38 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    strategy:
+      fail-fast: false
+
+      matrix:
+        # TODO: sanitizer: [debug, release]
+        sanitizer: [release]
+        # TODO: compiler: [cl, clang-cl]
+        compiler: [cl]
+
     steps:
       - uses: actions/checkout@v4
+
+      # see https://github.com/marketplace/actions/enable-developer-command-prompt
       - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          vsversion: 2022
 
-      - name: cmake workflow
+      # - name: build environment
+      #   run: pip install -r requirements.txt
+
+      - name: cmake workflow ${{ matrix.sanitizer }}
+        shell: bash
         run: |
-          cmake --workflow --preset release || echo ignored
-
-      # - name: environment
-      #   run: cmake -E make_directory ${{github.workspace}}/build/VS
+          cmake --version
+          ninja --version
+          CXX=${{ matrix.compiler }} cmake --workflow --preset ${{ matrix.sanitizer }}
 
       # - name: configure
-      #   working-directory: ${{github.workspace}}/build/VS
-      #   run: cmake ${{github.workspace}}
+      #   run: CXX=${{ matrix.compiler }} cmake --preset ${{ matrix.sanitizer }}
 
       # - name: build
-      #   working-directory: ${{github.workspace}}/build/VS
-      #   run: cmake --build . --config Release --target all_verify_interface_header_sets install
+      #   run: cmake --build --preset ${{ matrix.sanitizer }}
 
       # - name: ctest
-      #   working-directory: ${{github.workspace}}/build/VS
-      #   run: ctest --build-config Release --output-on-failure
+      #   run: ctest --preset ${{ matrix.sanitizer }}
