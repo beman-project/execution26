@@ -83,8 +83,8 @@ check:
 		< $$h sed -n "/^ *# *include <Beman\//s@.*[</]Beman/\(.*\).hpp>.*@$$from \1@p"; \
 	done | tsort > /dev/null
 
-clang-tidy:
-	clang-tidy-17 -p build/debug tests/beman/execution26/exec-just.test.cpp
+clang-tidy: build/debug/compile_commands.json
+	run-clang-tidy-17 -p build/debug tests
 
 codespell:
 	codespell -L statics,snd,copyable,cancelled
