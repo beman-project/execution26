@@ -5,7 +5,7 @@ name: Linux Build
 
 on:
   push:
-    # branches: ["main"]
+    branches: ["main"]
     paths:
       - "include/**"
       - "src/**"
@@ -40,7 +40,7 @@ jobs:
           sudo apt-get install ninja-build -y -q
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
-          sudo sudo ./llvm.sh 19 all
+          sudo ./llvm.sh 19 all
 
       - name: Linux ${{ matrix.compiler }} ${{ matrix.sanitizer }}
         run: CXX=${{ matrix.compiler }} make ${{ matrix.sanitizer }}
