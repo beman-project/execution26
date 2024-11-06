@@ -25,9 +25,9 @@ struct default_domain {
                                                                       ::std::forward<Env>(env)...);
         }
     static constexpr auto transform_sender(Sender&& sender, Env&&... env) noexcept(
-        noexcept(::beman::execution26::tag_of_t<Sender>().transform_sender(
-            ::std::forward<Sender>(sender), ::std::forward<Env>(env)...))) -> ::beman::execution26::sender
-        decltype(auto) {
+        noexcept(::beman::execution26::tag_of_t<Sender>().transform_sender(::std::forward<Sender>(sender),
+                                                                           ::std::forward<Env>(env)...)))
+        -> ::beman::execution26::sender decltype(auto) {
         return ::beman::execution26::tag_of_t<Sender>().transform_sender(::std::forward<Sender>(sender),
                                                                          ::std::forward<Env>(env)...);
     }
@@ -37,8 +37,9 @@ struct default_domain {
                     ::beman::execution26::tag_of_t<Sender>().transform_sender(::std::forward<Sender>(sender),
                                                                               ::std::forward<Env>(env)...);
                 })
-    static constexpr auto transform_sender(Sender&& sender, Env&&...) noexcept(
-        noexcept(::std::forward<Sender>(sender))) -> ::beman::execution26::sender decltype(auto) {
+    static constexpr auto transform_sender(Sender&& sender,
+                                           Env&&...) noexcept(noexcept(::std::forward<Sender>(sender)))
+        -> ::beman::execution26::sender decltype(auto) {
         return ::std::forward<Sender>(sender);
     }
 
@@ -55,9 +56,9 @@ struct default_domain {
 
     template <::beman::execution26::sender Sender, ::beman::execution26::detail::queryable Env>
         requires(not requires(Sender&& sender, Env&& env) {
-                    ::beman::execution26::tag_of_t<Sender>().transform_env(::std::forward<Sender>(sender),
-                                                                           ::std::forward<Env>(env));
-                })
+            ::beman::execution26::tag_of_t<Sender>().transform_env(::std::forward<Sender>(sender),
+                                                                   ::std::forward<Env>(env));
+        })
     static constexpr auto transform_env(Sender&&, Env&& env) noexcept -> ::beman::execution26::detail::queryable
         decltype(auto) {
         return static_cast<Env>(::std::forward<Env>(env));

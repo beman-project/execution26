@@ -16,8 +16,7 @@ struct get_domain_t {
         requires(not requires(Object&& object, const get_domain_t& tag) {
                     ::std::forward<Object>(object).query(tag);
                 }) && (not requires(Object&& object, const get_domain_t& tag) { ::std::as_const(object).query(tag); })
-    auto
-    operator()(Object&&) const noexcept = BEMAN_EXECUTION26_DELETE("object needs a query(get_domain_t) overload");
+    auto operator()(Object&&) const noexcept = BEMAN_EXECUTION26_DELETE("object needs a query(get_domain_t) overload");
     template <typename Object>
         requires(not requires(Object&& object, const get_domain_t& tag) { ::std::as_const(object).query(tag); })
     auto

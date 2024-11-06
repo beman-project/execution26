@@ -16,7 +16,7 @@ endif
 
 CXX_FLAGS = -g
 SANITIZER = release
-SOURCEDIR = $(shell pwd)
+SOURCEDIR = $(CURDIR)
 BUILDROOT = build
 BUILD     = $(BUILDROOT)/$(SANITIZER)
 EXAMPLE   = beman.execution26.examples.stop_token
@@ -83,14 +83,15 @@ check:
 		< $$h sed -n "/^ *# *include <Beman\//s@.*[</]Beman/\(.*\).hpp>.*@$$from \1@p"; \
 	done | tsort > /dev/null
 
-clang-tidy: build/debug/compile_commands.json
-	run-clang-tidy-17 -p build/debug tests
+clang-tidy: build/$(SANITIZER)/compile_commands.json
+	run-clang-tidy -p build/$(SANITIZER) tests
 
 codespell:
 	codespell -L statics,snd,copyable,cancelled
 
 format:
-	clang-format -i `git diff --name-only main | egrep '\.[ch]pp'`
+	cmake-format -i `git diff --name-only main | egrep '(CMakeLists.txt|\.cmake)'`
+	git clang-format main
 
 todo:
 	bin/mk-todo.py
