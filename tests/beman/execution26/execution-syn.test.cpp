@@ -265,6 +265,7 @@ auto test_conect_result_t() -> void {
     static_assert(requires { connect_sender{}.connect(receiver{}); });
 
     auto op{test_std::connect(connect_sender{}, receiver{})};
+    test::use(op);
     static_assert(std::same_as<decltype(op), test_std::connect_result_t<connect_sender, receiver>>);
 }
 auto test_decays_to() -> void {
@@ -306,8 +307,10 @@ auto test_sender_adaptor_closure() -> void {
     static_assert(not test_std::sender<closure_t>);
 
     auto direct{closure(sender{})};
+    test::use(direct);
     static_assert(std::same_as<adapted_sender<sender>, decltype(direct)>);
     auto via_op{sender{} | closure};
+    test::use(via_op);
     static_assert(std::same_as<adapted_sender<sender>, decltype(via_op)>);
 }
 
@@ -329,8 +332,10 @@ auto test_sender_adaptor() -> void {
     auto closure{arg_closure(17)};
     static_assert(std::same_as<test_detail::sender_adaptor<arg_closure_t, int>, decltype(closure)>);
     auto direct{closure(sender{})};
+    test::use(direct);
     static_assert(std::same_as<adapted_sender<sender>, decltype(direct)>);
     auto via_op{sender{} | closure};
+    test::use(via_op);
     static_assert(std::same_as<adapted_sender<sender>, decltype(via_op)>);
 }
 

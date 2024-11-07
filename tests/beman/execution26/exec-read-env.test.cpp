@@ -45,6 +45,7 @@ auto test_read_env() -> void {
     ASSERT(domain{17} == test_std::get_domain(env{17}));
     ASSERT(domain{17} == test_std::get_domain(test_std::get_env(receiver{17})));
     auto sender{test_std::read_env(test_std::get_domain)};
+    test::use(sender);
     static_assert(test_std::sender<decltype(sender)>);
     static_assert(test_std::sender_in<decltype(sender), env>);
     static_assert(

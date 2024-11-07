@@ -14,4 +14,5 @@
 #define BEMAN_EXECUTION26_DIAGNOSTIC_PUSHED
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-braces"
+#pragma clang diagnostic ignored "-Wc++26-extensions"
 #endif

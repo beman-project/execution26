@@ -9,6 +9,8 @@
 #include <type_traits>
 #include <utility>
 
+#include <beman/execution26/detail/suppress_push.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
@@ -38,5 +40,7 @@ fwd_env(Env&&) -> fwd_env<Env>;
 } // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
+
+#include <beman/execution26/detail/suppress_pop.hpp>
 
 #endif

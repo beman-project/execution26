@@ -246,6 +246,7 @@ auto test_connect_awaitable() -> void {
         ASSERT(handle != std::coroutine_handle<>());
         ASSERT(iv == 0 && bv == false);
         result = 42;
+        test::use(result);
         handle.resume();
         ASSERT(iv == 42 && bv == true);
     }
@@ -261,6 +262,7 @@ auto test_connect_awaitable() -> void {
         ASSERT(handle != std::coroutine_handle<>());
         ASSERT(iv == 0 && bv == false);
         result = 0;
+        test::use(result);
         handle.resume();
         ASSERT(iv == 0 && bv == true);
     }

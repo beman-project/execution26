@@ -6,6 +6,8 @@
 
 #include <beman/execution26/detail/common.hpp>
 
+#include <beman/execution26/detail/suppress_push.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26 {
@@ -44,5 +46,7 @@ inline constexpr start_t start{};
 } // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
+
+#include <beman/execution26/detail/suppress_pop.hpp>
 
 #endif

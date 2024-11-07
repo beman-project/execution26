@@ -15,6 +15,8 @@
 #include <beman/execution26/detail/get_completion_signatures.hpp>
 #include <utility>
 
+#include <beman/execution26/detail/suppress_push.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
@@ -96,5 +98,7 @@ struct basic_sender : ::beman::execution26::detail::product_type<Tag, Data, Chil
 } // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
+
+#include <beman/execution26/detail/suppress_pop.hpp>
 
 #endif

@@ -10,6 +10,8 @@
 #include <concepts>
 #include <utility>
 
+#include <beman/execution26/detail/suppress_push.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26 {
@@ -53,5 +55,7 @@ inline constexpr get_allocator_t get_allocator{};
 } // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
+
+#include <beman/execution26/detail/suppress_pop.hpp>
 
 #endif
