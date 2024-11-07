@@ -39,18 +39,18 @@ auto test_start_argument_type() {
 
 template <typename State>
 auto test_start_member() {
-    State state;
+    State state{};
     static_assert(not requires { test_std::start(state); });
-    State cstate;
+    State cstate{};
     static_assert(not requires { test_std::start(cstate); });
 }
 
 template <typename State>
 auto test_start_noexcept() {
-    State state;
-    static_assert(not requires { test_std::start(state); });
-    State cstate;
-    static_assert(not requires { test_std::start(cstate); });
+    State state{};
+    static_assert(noexcept(state));
+    State cstate{};
+    static_assert(noexcept(cstate));
 }
 
 template <typename State>

@@ -5,20 +5,17 @@
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_NOTIFY
 
 #include <beman/execution26/detail/make_sender.hpp>
+#include <beman/execution26/detail/immovable.hpp>
 #include <mutex>
 #include <utility>
-#include <iostream> //-dk:TODO remove
-#include <cassert>  //-dk:TODO remove
 
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
 struct notify_t;
-class notifier {
+class notifier
+: ::beman::execution26::detail::immovable {
   public:
-    notifier()           = default;
-    notifier(notifier&&) = delete;
-
     auto complete() -> void {
         ::std::unique_lock kerberos(this->lock);
         this->completed = true;

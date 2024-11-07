@@ -51,6 +51,5 @@ TEST(exec_get_domain) {
     test_get_domain<false, bool>(has_get_domain<false, domain>{42});
     test_get_domain<true, domain>(overloaded_get_domain{});
 
-    ASSERT(42 == test_std::get_domain(has_get_domain<true, domain>{42}).value);
     static_assert(42 == test_std::get_domain(has_get_domain<true, domain>{42}).value);
 }

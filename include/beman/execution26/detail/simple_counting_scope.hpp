@@ -6,6 +6,7 @@
 
 #include <beman/execution26/detail/sender.hpp>
 #include <beman/execution26/detail/notify.hpp>
+#include <beman/execution26/detail/immovable.hpp>
 #include <atomic>
 #include <mutex>
 #include <utility>
@@ -19,14 +20,11 @@ class simple_counting_scope;
 
 // ----------------------------------------------------------------------------
 
-class beman::execution26::simple_counting_scope {
+class beman::execution26::simple_counting_scope
+: ::beman::execution26::detail::immovable {
   public:
     class token;
     class assoc;
-
-    simple_counting_scope()                        = default;
-    simple_counting_scope(simple_counting_scope&&) = delete;
-    ~simple_counting_scope()                       = default;
 
     auto get_token() noexcept -> token;
     auto close() noexcept -> void {
@@ -60,7 +58,7 @@ class beman::execution26::simple_counting_scope {
     }
 
   private:
-    enum class state_t { unused, open, open_and_joining, closed, closed_and_joining, unused_and_closed, joined };
+    enum class state_t: unsigned char { unused, open, open_and_joining, closed, closed_and_joining, unused_and_closed, joined };
     friend class assoc;
     auto try_associate() noexcept -> simple_counting_scope* {
         ::std::lock_guard lock(this->mutex);
@@ -92,6 +90,7 @@ class beman::execution26::simple_counting_scope {
 
 // ----------------------------------------------------------------------------
 
+// NOLINTBEGIN(misc-unconventional-assign-operator)
 class beman::execution26::simple_counting_scope::assoc {
   public:
     assoc() = default;
@@ -102,7 +101,7 @@ class beman::execution26::simple_counting_scope::assoc {
             this->scope->disassociate();
     }
 
-    auto operator=(assoc other) noexcept -> assoc {
+    auto operator=(assoc other) noexcept -> assoc& {
         ::std::swap(this->scope, other.scope);
         return *this;
     }
@@ -115,6 +114,7 @@ class beman::execution26::simple_counting_scope::assoc {
         : scope(scope ? scope->try_associate() : nullptr) {}
     beman::execution26::simple_counting_scope* scope{};
 };
+// NOLINTEND(misc-unconventional-assign-operator)
 
 // ----------------------------------------------------------------------------
 

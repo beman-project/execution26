@@ -44,7 +44,7 @@ auto test_when_all_breathing() -> void {
     static_assert(test_std::sender<decltype(s)>);
     test::check_type<test_std::completion_signatures<test_std::set_value_t(int, bool, double)>>(
         test_std::get_completion_signatures(s, test_std::empty_env{}));
-    auto res{test_std::sync_wait(std::move(s))};
+    auto res{test_std::sync_wait(s)};
     ASSERT(res.has_value());
     ASSERT((*res == std::tuple{3, true, 1.5}));
 }
@@ -58,7 +58,7 @@ struct await_cancel {
         using operation_state_concept = test_std::operation_state_t;
         struct callback {
             Receiver* receiver;
-            callback(Receiver* receiver) : receiver(receiver) {}
+            explicit callback(Receiver* receiver) : receiver(receiver) {}
             auto operator()() const noexcept -> void { test_std::set_stopped(std::move(*this->receiver)); }
         };
 
@@ -115,12 +115,12 @@ struct test_sender {
         Result                                                                                          expect;
         std::remove_cvref_t<Receiver>                                                                   receiver;
         decltype(test_std::connect(std::declval<Sender>(), std::declval<upstream<Result, Receiver>>())) inner_state;
-        template <typename R>
-        state(auto&& sender, auto&& expect, R&& receiver)
+        template <typename S, typename R>
+        state(S&& sender, auto&& expect, R&& receiver)
             : expect(expect),
               receiver(std::forward<R>(receiver)),
               inner_state(
-                  test_std::connect(std::move(sender), upstream<Result, Receiver>{this->expect, this->receiver})) {}
+                  test_std::connect(std::forward<S>(sender), upstream<Result, Receiver>{this->expect, this->receiver})) {}
         auto start() & noexcept -> void { test_std::start(this->inner_state); }
     };
 
@@ -216,7 +216,7 @@ auto test_when_all() -> void {
 
 auto test_when_all_with_variant() -> void {
     auto s{test_std::when_all_with_variant(test_std::just(17), test_std::just('a', true))};
-    auto res{test_std::sync_wait(std::move(s))};
+    auto res{test_std::sync_wait(s)};
     ASSERT(res);
     auto&& [v0, v1]{*res};
     test::use(v0, v1);

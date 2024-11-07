@@ -19,10 +19,8 @@ class sched_env {
     Scheduler sched;
 
   public:
-    sched_env(const sched_env&) = default;
-    sched_env(sched_env&&)      = default;
     template <typename S>
-    explicit sched_env(S&& sch) : sched(::std::forward<S>(sch)) {}
+    explicit sched_env(S sch) : sched(::std::move(sch)) {}
 
     auto query(const ::beman::execution26::get_scheduler_t&) const noexcept { return this->sched; }
     auto query(const ::beman::execution26::get_domain_t& q) const noexcept {

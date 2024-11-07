@@ -40,7 +40,7 @@ class beman::execution26::inplace_stop_token {
     friend class ::beman::execution26::inplace_stop_source;
     template <typename CallbackFun>
     friend class ::beman::execution26::inplace_stop_callback;
-    inplace_stop_token(::beman::execution26::inplace_stop_source* source) : source(source) {}
+    explicit inplace_stop_token(::beman::execution26::inplace_stop_source* source) : source(source) {}
 
     ::beman::execution26::inplace_stop_source* source{};
 };
