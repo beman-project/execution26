@@ -34,8 +34,9 @@ auto test_schedule(Scheduler&& sched) {
     if constexpr (Expect) {
         static_assert(noexcept(test_std::schedule(std::forward<Scheduler>(sched))) ==
                       noexcept(std::forward<Scheduler>(sched).schedule()));
+        auto value{sched.value};
         auto s = test_std::schedule(std::forward<Scheduler>(sched));
-        ASSERT(s.value == sched.value);
+        ASSERT(s.value == value);
     }
 }
 } // namespace

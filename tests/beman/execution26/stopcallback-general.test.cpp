@@ -6,6 +6,7 @@
 #include <concepts>
 #include <type_traits>
 
+namespace {
 auto test_stop_callback_interface() -> void {
     // Reference: [stopcallback.general] p1
     struct ThrowInit {};
@@ -34,6 +35,7 @@ auto test_stop_callback_interface() -> void {
     static_assert(not::std::is_move_assignable_v<CB>);
 
     ::test_std::stop_callback cb(ctoken, Callback(ThrowInit()));
+}
 }
 
 TEST(stopcallback_general) { test_stop_callback_interface(); }

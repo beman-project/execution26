@@ -31,6 +31,8 @@ struct no_scheduler_concept {
 
 struct not_queryable {
     using scheduler_concept = test_std::scheduler_t;
+    not_queryable() = default;
+    not_queryable(not_queryable&&) = default;
     ~not_queryable()        = delete;
     auto schedule() -> sender<env<not_queryable>> { return {}; }
     auto operator==(const not_queryable&) const -> bool = default;
@@ -49,6 +51,8 @@ struct not_equality_comparable {
 struct not_copy_constructible {
     using scheduler_concept                               = test_std::scheduler_t;
     not_copy_constructible(const not_copy_constructible&) = delete;
+    not_copy_constructible(not_copy_constructible&&) = default;
+    ~not_copy_constructible() = default;
     auto schedule() -> sender<env<not_copy_constructible>> { return {}; }
     auto operator==(const not_copy_constructible&) const -> bool = default;
 };
