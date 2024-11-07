@@ -17,8 +17,8 @@ auto test_stop_token_swap() -> void {
     // Reference: [stoptoken.mem] p1
 
     ::test_std::stop_source s0, s1;
-    ::std::array<::test_std::stop_token, 2>  pair0 = {s0.get_token(), s0.get_token()};
-    ::std::array<::test_std::stop_token, 2>  pair1 = {s1.get_token(), s1.get_token()};
+    ::std::array<::test_std::stop_token, 2> pair0 = {s0.get_token(), s0.get_token()};
+    ::std::array<::test_std::stop_token, 2> pair1 = {s1.get_token(), s1.get_token()};
 
     ASSERT(pair0[0] == pair0[1]);
     ASSERT(pair1[0] == pair1[1]);
@@ -87,7 +87,7 @@ auto test_stop_token_stop_possible() -> void {
     ASSERT(unstopped_token.stop_possible() == false);
     ASSERT(stopped_token.stop_possible() == true);
 }
-}
+} // namespace
 
 TEST(stoptoken_mem) {
     static_assert(::test_std::stoppable_token<::test_std::stop_token>);

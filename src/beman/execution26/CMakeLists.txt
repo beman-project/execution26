@@ -86,6 +86,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/get_stop_token.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/has_as_awaitable.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/has_completions.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/immovable.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/impls_for.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/indices_for.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/indirect_meta_apply.hpp
@@ -128,6 +129,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/schedule_from.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/schedule_result_t.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/scheduler.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/scheduler_t.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/sender.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/sender_adaptor.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/sender_adaptor_closure.hpp

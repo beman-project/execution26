@@ -16,8 +16,10 @@ struct sender_adaptor_closure_base {};
 } // namespace beman::execution26::detail::pipeable
 
 namespace beman::execution26 {
+// NOLINTBEGIN(bugprone-crtp-constructor-accessibility)
 template <typename>
 struct sender_adaptor_closure : ::beman::execution26::detail::pipeable::sender_adaptor_closure_base {};
+// NOLINTEND(bugprone-crtp-constructor-accessibility)
 } // namespace beman::execution26
 
 namespace beman::execution26::detail::pipeable {

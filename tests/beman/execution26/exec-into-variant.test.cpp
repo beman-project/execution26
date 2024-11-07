@@ -79,7 +79,7 @@ struct error_receiver {
     bool* called{};
 
     auto set_error(int e) && noexcept -> void { *this->called = e == 17; }
-    auto set_error(std::exception_ptr) && noexcept -> void {}
+    auto set_error(const std::exception_ptr&) && noexcept -> void {}
     auto set_stopped() && noexcept -> void {}
     auto set_value(auto&&...) && noexcept -> void {}
 };
@@ -97,7 +97,7 @@ struct stopped_receiver {
 
     bool* called{};
 
-    auto set_error(std::exception_ptr) && noexcept -> void {}
+    auto set_error(const std::exception_ptr&) && noexcept -> void {}
     auto set_stopped() && noexcept -> void { *this->called = true; }
     auto set_value(auto&&...) && noexcept -> void {}
 };

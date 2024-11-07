@@ -211,15 +211,15 @@ inline auto test::stop_callback_dtor_same_thread(Token token, Stop stop) -> void
     // - Then the deregistration does not block.
     // Reference: [stoptoken.concepts] p4
     struct Base {
-        Base() = default;
-        Base(Base&&) = delete;
+        Base()          = default;
+        Base(Base&&)    = delete;
         virtual ~Base() = default;
     };
     struct Callback {
         ::std::unique_ptr<Base>* self;
         explicit Callback(::std::unique_ptr<Base>* self) : self(self) {}
-        Callback(Callback const&) = default;
-        Callback(Callback&&) = default;
+        Callback(const Callback&) = default;
+        Callback(Callback&&)      = default;
         auto operator()() { this->self->reset(); }
     };
     struct Object : Base {

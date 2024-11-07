@@ -57,11 +57,14 @@ struct beman::execution26::detail::operation_state_task {
     using promise_type            = ::beman::execution26::detail::connect_awaitable_promise<Receiver>;
 
     explicit operation_state_task(::std::coroutine_handle<> handle) noexcept : handle(handle) {}
+    operation_state_task(const operation_state_task&) = delete;
     operation_state_task(operation_state_task&& other) noexcept : handle(::std::exchange(other.handle, {})) {}
     ~operation_state_task() {
         if (this->handle)
             this->handle.destroy();
     }
+    auto operator=(operation_state_task&&) -> operation_state_task&      = delete;
+    auto operator=(const operation_state_task&) -> operation_state_task& = delete;
 
     auto start() & noexcept -> void { this->handle.resume(); }
 

@@ -146,8 +146,9 @@ auto test_then_multi_type() -> void {
 }
 
 auto test_then_value() -> void {
-    ASSERT(std::tuple{17} ==
-           test_std::sync_wait(test_std::just(5, 12) | test_std::then([](int a, int b) { return a + b; })).value_or(0));
+    ASSERT(
+        std::tuple{17} ==
+        test_std::sync_wait(test_std::just(5, 12) | test_std::then([](int a, int b) { return a + b; })).value_or(0));
     ASSERT(std::tuple{17} ==
            test_std::sync_wait(test_std::just_error(17) | test_std::upon_error([](int a) { return a; })));
     ASSERT(std::tuple{17} ==
@@ -185,14 +186,14 @@ struct allocator_fun {
 
     explicit allocator_fun(std::pmr::polymorphic_allocator<> alloc) : alloc(alloc), data(alloc.allocate(1)) {}
     allocator_fun(const allocator_fun&, std::pmr::polymorphic_allocator<> = {}) {}
-    allocator_fun(allocator_fun&& other) noexcept: alloc(other.alloc), data(std::exchange(other.data, nullptr)) {}
+    allocator_fun(allocator_fun&& other) noexcept : alloc(other.alloc), data(std::exchange(other.data, nullptr)) {}
     allocator_fun(allocator_fun&& other, std::pmr::polymorphic_allocator<> alloc)
         : alloc(alloc), data(alloc == other.alloc ? std::exchange(other.data, nullptr) : alloc.allocate(1)) {}
     ~allocator_fun() {
         if (this->data)
             this->alloc.deallocate(this->data, 1u);
     }
-    auto operator= (allocator_fun&&) -> allocator_fun = delete;
+    auto operator=(allocator_fun&&) -> allocator_fun = delete;
     auto operator()(auto&&...) const {}
 };
 

@@ -120,7 +120,7 @@ auto test_stopsource_request_stop() -> void {
     ASSERT(res4 == false);
     ASSERT(not disengaged.stop_requested());
 }
-}
+} // namespace
 
 TEST(stopsource_mem) {
     test_stopsource_swap();

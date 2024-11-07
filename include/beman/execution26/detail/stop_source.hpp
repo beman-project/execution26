@@ -49,10 +49,14 @@ struct beman::execution26::detail::stop_callback_base {
     virtual auto do_call() -> void = 0;
 
   protected:
-    stop_callback_base(const ::beman::execution26::stop_token&);
+    explicit stop_callback_base(const ::beman::execution26::stop_token&);
     ~stop_callback_base();
 
   public:
+    stop_callback_base(stop_callback_base&&)                         = delete;
+    stop_callback_base(const stop_callback_base&)                    = delete;
+    auto operator=(stop_callback_base&&) -> stop_callback_base&      = delete;
+    auto operator=(const stop_callback_base&) -> stop_callback_base& = delete;
     auto call() -> void;
     auto setup() -> void;
     auto deregister() -> void;
@@ -75,7 +79,9 @@ class beman::execution26::stop_source {
     stop_source();
     explicit stop_source(::beman::execution26::nostopstate_t) noexcept;
     stop_source(const stop_source&);
+    stop_source(stop_source&&) = default;
     auto operator=(const stop_source&) -> stop_source&;
+    auto operator=(stop_source&&) -> stop_source& = default;
     ~stop_source();
 
     auto swap(stop_source&) noexcept -> void;
@@ -93,7 +99,7 @@ class beman::execution26::stop_token {
     friend ::beman::execution26::detail::stop_callback_base;
     ::std::shared_ptr<::beman::execution26::detail::stop_state> state;
 
-    stop_token(::std::shared_ptr<::beman::execution26::detail::stop_state>);
+    explicit stop_token(::std::shared_ptr<::beman::execution26::detail::stop_state>);
 
   public:
     template <typename Fun>
@@ -137,8 +143,11 @@ class beman::execution26::stop_callback final : private CallbackFun, beman::exec
         : CallbackFun(::std::forward<Initializer>(init)), stop_callback_base(::std::move(token)) {
         this->setup();
     }
-    ~stop_callback() { this->deregister(); }
+    stop_callback(const stop_callback&) = delete;
     stop_callback(stop_callback&&) = delete;
+    ~stop_callback() { this->deregister(); }
+    auto operator=(stop_callback&&) -> stop_callback&      = delete;
+    auto operator=(const stop_callback&) -> stop_callback& = delete;
 };
 
 // ----------------------------------------------------------------------------
@@ -207,9 +216,7 @@ inline beman::execution26::stop_source::stop_source(const stop_source& other) : 
 }
 
 inline auto beman::execution26::stop_source::operator=(const stop_source& other) -> stop_source& {
-    --this->state->sources;
-    this->state = other.state;
-    ++this->state->sources;
+    stop_source(other).swap(*this);
     return *this;
 }
 

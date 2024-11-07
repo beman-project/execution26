@@ -13,7 +13,7 @@ struct with_non_env;
 struct non_env {
   private:
     friend struct with_non_env;
-    non_env() = default;
+    non_env()          = default;
     non_env(non_env&&) = delete;
     ~non_env() = default;
 };

@@ -36,6 +36,6 @@ auto test_stop_callback_interface() -> void {
 
     ::test_std::stop_callback cb(ctoken, Callback(ThrowInit()));
 }
-}
+} // namespace
 
 TEST(stopcallback_general) { test_stop_callback_interface(); }

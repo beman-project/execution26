@@ -13,7 +13,7 @@
 namespace beman::execution26::detail {
 struct sender_convert_to_any_t {
     template <typename T>
-    constexpr operator T() const;
+    constexpr operator T() const; // NOLINT(hicpp-explicit-conversions)
 };
 
 template <typename Tag, typename Data, typename Children>
