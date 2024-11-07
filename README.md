@@ -55,8 +55,13 @@ for contributing to the library.
 
 The following instructions build the library and the examples:
 
-    cmake -B build
-    cmake --build build
+    cmake --workflow --list-presets
+    Available workflow presets:
+
+      "debug"
+      "release"
+
+    cmake --workflow --preset release
 
 The implementation compiles and passes tests using [clang](https://clang.llvm.org/),
 [gcc](http://gcc.gnu.org), and [MSVC++](https://visualstudio.microsoft.com/vs/features/cplusplus/).

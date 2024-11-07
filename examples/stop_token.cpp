@@ -19,7 +19,7 @@ namespace exec = beman::execution26;
 // There are two different needs on how the cancallation is
 // indicated:
 // - Active work, e.g., doing a lengthy computation,
-//   would occassionally check the results are still needed
+//   would occasionally check the results are still needed
 //   and abort the computation if it is not. To do so, the
 //   function would use token.stop_requested() which yields
 //   true once stopping was requested.

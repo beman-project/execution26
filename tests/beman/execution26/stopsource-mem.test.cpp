@@ -54,7 +54,7 @@ auto test_stopsource_stop_possible() -> void {
     //  - Given an engaged and a disengaged stop sources.
     //  - When using stop_possible()
     //  - Then the result is true for the engaged stop source (both
-    //    before request_stop() was calle and after) while
+    //    before request_stop() was called and after) while
     //    the result is false for the disengaged stop source.
     // Reference: [stopsource.mem] p3
 

@@ -15,16 +15,12 @@ set(TARGET_ALIAS ${TARGET_LIBRARY}::${TARGET_LIBRARY})
 set(TARGET_PACKAGE_NAME ${PROJECT_NAME}-config)
 set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-targets)
 
+if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+  message(FATAL_ERROR "In-source builds are not allowed!")
+endif()
+
 include(GNUInstallDirs)
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
-
-if(NOT DEFINED CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 23)
-endif()
-
-if(NOT DEFINED CMAKE_PREFIX_PATH)
-  set(CMAKE_PREFIX_PATH ${CMAKE_INSTALL_PREFIX})
-endif()
 
 add_subdirectory(src/beman/execution26)
 
@@ -53,3 +49,5 @@ install(
         ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_PACKAGE_NAME}-version.cmake
   DESTINATION ${INSTALL_CONFIGDIR}
 )
+
+include(CPack)
