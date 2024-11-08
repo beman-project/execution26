@@ -48,18 +48,17 @@ struct product_type_base<::std::index_sequence<I...>, T...>
     }
     template <::std::size_t J>
     auto get() const& -> decltype(auto) {
-        return this->element_get<J>(::std::move(*this));
+        return this->element_get<J>(*this);
     }
 
     template <::std::size_t J, typename Allocator, typename Self>
     static auto make_element(Allocator&& alloc, Self&& self) -> decltype(auto) {
-        using type = ::std::remove_cvref_t<decltype(std::forward<Self>(self).template element_get<J>(
-            std::forward<Self>(self)))>;
+        using type = ::std::remove_cvref_t<decltype(product_type_base::element_get<J>(std::forward<Self>(self)))>;
         if constexpr (::std::uses_allocator_v<type, Allocator>)
-            return ::std::make_obj_using_allocator<type>(
-                alloc, std::forward<Self>(self).template element_get<J>(std::forward<Self>(self)));
+            return ::std::make_obj_using_allocator<type>(alloc,
+                                                         product_type_base::element_get<J>(std::forward<Self>(self)));
         else
-            return std::forward<Self>(self).template element_get<J>(std::forward<Self>(self));
+            return product_type_base::element_get<J>(std::forward<Self>(self));
     }
 
     auto operator==(const product_type_base&) const -> bool = default;
@@ -69,8 +68,7 @@ template <typename... T>
 struct product_type : ::beman::execution26::detail::product_type_base<::std::index_sequence_for<T...>, T...> {
     template <typename Allocator, typename Product, std::size_t... I>
     static auto make_from(Allocator&& allocator, Product&& product, std::index_sequence<I...>) -> product_type {
-        return {
-            ::std::forward<Product>(product).template make_element<I>(allocator, ::std::forward<Product>(product))...};
+        return {product_type::template make_element<I>(allocator, ::std::forward<Product>(product))...};
     }
 
     template <typename Allocator, typename Product>

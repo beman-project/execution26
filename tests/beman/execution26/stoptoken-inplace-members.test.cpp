@@ -3,6 +3,7 @@
 
 #include "test/execution.hpp"
 
+namespace {
 auto test_inplace_stop_token_swap() -> void {
     // Plan:
     // - Given two inplace_stop_token objects which don't compare equal but
@@ -69,6 +70,7 @@ auto test_inplace_stop_token_stop_possible() -> void {
     ASSERT(connected.stop_possible() == true);
     ASSERT(disconnected.stop_requested() == false);
 }
+} // namespace
 
 TEST(stoptoken_inplace_members) {
     test_inplace_stop_token_swap();

@@ -17,7 +17,11 @@
 namespace {
 struct not_movable {
     not_movable()              = default;
+    not_movable(const not_movable&)                    = delete;
     not_movable(not_movable&&) = delete;
+    ~not_movable()                                     = default;
+    auto operator=(const not_movable&) -> not_movable& = delete;
+    auto operator=(not_movable&&) -> not_movable&      = delete;
 };
 template <bool Expect, typename Completion, typename CPO, typename... T>
 auto test_just_constraints(CPO const& cpo, T&&... args) -> void {
@@ -60,7 +64,7 @@ auto test_just_constraints() -> void {
 template <typename... T>
 struct value_receiver {
     using receiver_concept = test_std::receiver_t;
-    bool*                                         called;
+    bool*                                         called{};
     test_detail::product_type<std::decay_t<T>...> expect{};
 
     template <typename... A>
@@ -206,7 +210,7 @@ TEST(exec_just) {
         test_just();
         test_just_allocator();
     } catch (...) {
-        ASSERT(nullptr ==
-               "the just tests shouldn't throw"); // NOLINT(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+        // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+        ASSERT(nullptr == "the just tests shouldn't throw");
     }
 }
