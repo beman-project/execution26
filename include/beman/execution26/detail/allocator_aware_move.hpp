@@ -19,7 +19,7 @@ template <typename T, typename Context>
  * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
  * \internal
  */
-auto allocator_aware_move(T&& obj, Context&& context) -> decltype(auto) {
+auto allocator_aware_move(T&& obj, Context&& context) noexcept -> decltype(auto) {
     if constexpr (requires { ::beman::execution26::get_allocator(::beman::execution26::get_env(context)); }) {
         if constexpr (decltype(::beman::execution26::detail::is_product_type(obj))()) {
             return obj.make_from(::beman::execution26::get_allocator(::beman::execution26::get_env(context)),

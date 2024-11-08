@@ -96,7 +96,7 @@ TEST(stoptoken_mem) {
         test_stop_token_swap();
         test_stop_token_stop_requested();
         test_stop_token_stop_possible();
-    } catch (const std::exception& e) {
+    } catch (...) {
         // NOLINTBEGIN(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "the stop token tests are not expected to throw");
         // NOLINTEND(cert-dcl03-c,hicpp-static-assert,misc-static-assert)

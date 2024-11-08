@@ -158,8 +158,8 @@ auto test_sync_wait_receiver() -> void {
         } catch (const error& e) {
             ASSERT(e.value == 17);
         } catch (...) {
-            ASSERT(nullptr ==
-                   "unexpected exception type"); // NOLINT(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+            // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+            ASSERT(nullptr == "unexpected exception type");
         }
     }
     {
@@ -175,8 +175,8 @@ auto test_sync_wait_receiver() -> void {
         } catch (const error& e) {
             ASSERT(e.value == 17);
         } catch (...) {
-            ASSERT(nullptr ==
-                   "unexpected exception type"); // NOLINT(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+            // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+            ASSERT(nullptr == "unexpected exception type");
         }
     }
     {
@@ -209,18 +209,18 @@ auto test_sync_wait() -> void {
     } catch (const error& e) {
         ASSERT(e.value == 17);
     } catch (...) {
-        ASSERT(
-            nullptr ==
-            "no exception expected from sync_wait(just(...)"); // NOLINT(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+        // NOLINTBEGIN(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+        ASSERT(nullptr == "no exception expected from sync_wait(just(...)");
+        // NOLINTEND(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
     }
 
     try {
         auto value{test_std::sync_wait(send_stopped())};
         ASSERT(not value);
     } catch (...) {
-        ASSERT(
-            nullptr ==
-            "no exception expected from sync_wait(just(...)"); // NOLINT(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+        // NOLINTBEGIN(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+        ASSERT(nullptr == "no exception expected from sync_wait(just(...)");
+        // NOLINTEND(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
     }
 }
 } // namespace
