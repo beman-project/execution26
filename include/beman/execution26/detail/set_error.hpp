@@ -30,7 +30,7 @@ struct set_error_t {
                 })
     = BEMAN_EXECUTION26_DELETE("set_error requires a suitable member overload on the receiver");
     template <typename Receiver, typename Error>
-        requires(not noexcept(::std::declval<Receiver>().set_error(::std::declval<Error>())))
+        requires(not noexcept(::std::declval<Receiver>().set_error(static_cast<Error>(::std::declval<Error>()))))
     auto operator()(Receiver&&, Error&&) const
         -> void = BEMAN_EXECUTION26_DELETE("the call to receiver.set_error(error) has to be noexcept");
 
