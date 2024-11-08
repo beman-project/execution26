@@ -193,7 +193,9 @@ struct allocator_fun {
         if (this->data)
             this->alloc.deallocate(this->data, 1u);
     }
-    auto operator=(allocator_fun&&) -> allocator_fun = delete;
+    auto operator=(const allocator_fun&) -> allocator_fun = delete;
+    auto operator=(allocator_fun&&) -> allocator_fun      = delete;
+
     auto operator()(auto&&...) const {}
 };
 

@@ -121,9 +121,11 @@ auto test_decayed_tuple() -> void {
     static_assert(std::same_as<std::tuple<int, bool, char>, test_detail::decayed_tuple<int, bool, char>>);
     static_assert(std::same_as<std::tuple<int, bool, char>,
                                test_detail::decayed_tuple<const int, volatile bool, const volatile char>>);
-    static_assert(std::same_as<std::tuple<int, bool, char*>, test_detail::decayed_tuple<int&, bool&&, char[5]>>);
-    static_assert(
-        std::same_as<std::tuple<int, bool, char*>, test_detail::decayed_tuple<const int&, volatile bool&&, char[5]>>);
+    static_assert(std::same_as<std::tuple<int, bool, char*>,
+                               test_detail::decayed_tuple<int&, bool&&, char[5]>>); // NOLINT(hicpp-avoid-c-arrays)
+    static_assert(std::same_as<
+                  std::tuple<int, bool, char*>,
+                  test_detail::decayed_tuple<const int&, volatile bool&&, char[5]>>); // NOLINT(hicpp-avoid-c-arrays)
 }
 
 auto test_variant_or_empty() -> void {
@@ -276,8 +278,8 @@ auto test_decays_to() -> void {
     static_assert(test_detail::decays_to<type&, type>);
     static_assert(test_detail::decays_to<type&&, type>);
     static_assert(test_detail::decays_to<const type&, type>);
-    static_assert(test_detail::decays_to<type[1], type*>);
-    static_assert(test_detail::decays_to<type[], type*>);
+    static_assert(test_detail::decays_to<type[1], type*>); // NOLINT(hicpp-avoid-c-arrays)
+    static_assert(test_detail::decays_to<type[], type*>);  // NOLINT(hicpp-avoid-c-arrays)
     static_assert(not test_detail::decays_to<type&, type&>);
     static_assert(not test_detail::decays_to<type, type&>);
     static_assert(not test_detail::decays_to<other, type>);

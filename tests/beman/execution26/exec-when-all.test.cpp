@@ -119,8 +119,8 @@ struct test_sender {
         state(S&& sender, auto&& expect, R&& receiver)
             : expect(expect),
               receiver(std::forward<R>(receiver)),
-              inner_state(
-                  test_std::connect(std::forward<S>(sender), upstream<Result, Receiver>{this->expect, this->receiver})) {}
+              inner_state(test_std::connect(std::forward<S>(sender),
+                                            upstream<Result, Receiver>{this->expect, this->receiver})) {}
         auto start() & noexcept -> void { test_std::start(this->inner_state); }
     };
 

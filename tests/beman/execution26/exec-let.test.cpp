@@ -6,6 +6,7 @@
 #include <beman/execution26/detail/then.hpp>
 #include <beman/execution26/detail/sync_wait.hpp>
 #include <test/execution.hpp>
+#include <array>
 #include <cstdlib>
 #include <concepts>
 #include <memory_resource>
@@ -70,7 +71,7 @@ auto test_let_value() {
 
 template <std::size_t Size>
 struct inline_resource : std::pmr::memory_resource {
-    std::byte  buffer[Size];
+    std::array<std::byte, Size> buffer;
     std::byte* next{+this->buffer};
 
     void* do_allocate(std::size_t size, std::size_t) override {
@@ -90,7 +91,7 @@ namespace ex = test_std;
 struct fun {
     std::pmr::polymorphic_allocator<> allocator{};
     fun() {}
-    fun(std::pmr::polymorphic_allocator<> allocator) : allocator(allocator) {}
+    explicit fun(std::pmr::polymorphic_allocator<> allocator) : allocator(allocator) {}
     auto operator()(std::span<int> s) noexcept {
         return ex::just(std::pmr::vector<int>(s.begin(), s.end(), this->allocator));
     }
@@ -102,7 +103,7 @@ auto test_let_value_allocator() -> void {
     static_assert(test_std::sender<decltype(s)>);
     static_assert(test_std::sender_in<decltype(s)>);
     // static_assert(std::same_as<void, decltype(test_std::get_completion_signatures(s, test_std::empty_env{}))>);
-    ex::sync_wait(std::move(s));
+    ex::sync_wait(s);
 }
 } // namespace
 
@@ -113,8 +114,14 @@ TEST(exec_let) {
     static_assert(std::same_as<const test_std::let_stopped_t, decltype(test_std::let_stopped)>);
     static_assert(std::same_as<const test_std::let_value_t, decltype(test_std::let_value)>);
 
-    test_let_value();
-    test_let_value_allocator();
+    try {
+        test_let_value();
+        test_let_value_allocator();
+    } catch (const std::exception& e) {
+        // NOLINTBEGIN(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+        ASSERT(nullptr == "let tests are not expected to throw");
+        // NOLINTEND(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+    }
 
     return EXIT_SUCCESS;
 }

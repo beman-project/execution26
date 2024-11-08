@@ -36,7 +36,11 @@ struct receiver {
         ASSERT(d == domain{this->value});
         *this->called = true;
     }
-    auto set_error(auto&&) && noexcept -> void { ASSERT(nullptr == "error function was incorrectly called"); }
+    auto set_error(auto&&) && noexcept -> void {
+        // NOLINTBEGIN(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+        ASSERT(nullptr == "error function was incorrectly called");
+        // NOLINTEND(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+    }
     auto get_env() const noexcept -> env { return {this->value}; }
 };
 

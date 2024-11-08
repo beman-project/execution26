@@ -13,8 +13,7 @@
 
 namespace beman::execution26::detail {
 struct notify_t;
-class notifier
-: ::beman::execution26::detail::immovable {
+class notifier : ::beman::execution26::detail::immovable {
   public:
     auto complete() -> void {
         ::std::unique_lock kerberos(this->lock);

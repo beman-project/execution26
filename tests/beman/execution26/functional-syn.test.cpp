@@ -8,15 +8,30 @@
 // ----------------------------------------------------------------------------
 
 namespace {
-class non_destructible {
-    ~non_destructible();
+struct non_destructible {
+    non_destructible()                                           = default;
+    non_destructible(non_destructible&&)                         = default;
+    non_destructible(const non_destructible&)                    = default;
+    ~non_destructible()                                          = delete;
+    auto operator=(non_destructible&&) -> non_destructible&      = default;
+    auto operator=(const non_destructible&) -> non_destructible& = default;
 };
 struct non_copyable {
+    non_copyable()                                       = default;
+    non_copyable(const non_copyable&)                    = delete;
     non_copyable(non_copyable&&) = delete;
+    ~non_copyable()                                      = default;
+    auto operator=(const non_copyable&) -> non_copyable& = delete;
+    auto operator=(non_copyable&&) -> non_copyable&      = delete;
 };
 struct arg {};
 struct throws {
-    throws(const throws&) {}
+    throws() noexcept(false) {}
+    throws(throws&&) noexcept(false) {}
+    throws(const throws&) noexcept(false) {}
+    ~throws() {}
+    auto operator=(throws&&) noexcept(false) -> throws& { return *this; }
+    auto operator=(const throws&) noexcept(false) -> throws& { return *this; }
 };
 
 template <bool Noexcept>

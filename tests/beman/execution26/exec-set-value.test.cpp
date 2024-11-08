@@ -12,12 +12,16 @@ template <int>
 struct arg {};
 struct throws {
     throws() = default;
-    throws(const throws&) {}
+    throws(throws&&) noexcept(false) {}
+    throws(const throws&) noexcept(false) {}
+    ~throws() = default;
+    auto operator=(throws&&) noexcept(false) -> throws& { return *this; }
+    auto operator=(const throws&) noexcept(false) -> throws& { return *this; } // NOLINT(cert-oop54-cpp)
 };
 struct receiver {
     template <typename... T>
     auto set_value(T&&...) noexcept -> void {}
-    auto set_value(throws) noexcept -> void {}
+    auto set_value(throws) noexcept -> void {} // NOLINT(performance-unnecessary-value-param)
     auto set_value(int i, bool b, double d) noexcept {
         ASSERT(i == 42);
         ASSERT(b == true);

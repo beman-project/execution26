@@ -65,7 +65,12 @@ struct deallocate_size_type_mismatch {
 struct not_copy_constructible {
     using value_type = int;
 
-    not_copy_constructible(const not_copy_constructible&) = delete;
+    not_copy_constructible()                                                = default;
+    not_copy_constructible(not_copy_constructible&&)                        = delete;
+    not_copy_constructible(const not_copy_constructible&)                   = delete;
+    ~not_copy_constructible()                                               = default;
+    auto operator=(not_copy_constructible&&) -> not_copy_constructible      = delete;
+    auto operator=(const not_copy_constructible&) -> not_copy_constructible = delete;
     auto allocate(::std::size_t n) -> int* { return new int[n]; }
     auto deallocate(/*long*/ int*, ::std::size_t) -> void {}
 

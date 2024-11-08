@@ -6,6 +6,7 @@
 #define INCLUDED_TEST_STOP_TOKEN
 
 #include <beman/execution26/stop_token.hpp>
+#include <beman/execution26/detail/immovable.hpp>
 #include <test/execution.hpp>
 
 #include <algorithm>
@@ -211,15 +212,16 @@ inline auto test::stop_callback_dtor_same_thread(Token token, Stop stop) -> void
     // - Then the deregistration does not block.
     // Reference: [stoptoken.concepts] p4
     struct Base {
-        Base()          = default;
-        Base(Base&&)    = delete;
+        Base()                               = default;
+        Base(Base&&)                         = default;
+        Base(const Base&)                    = default;
         virtual ~Base() = default;
+        auto operator=(Base&&) -> Base&      = default;
+        auto operator=(const Base&) -> Base& = default;
     };
     struct Callback {
         ::std::unique_ptr<Base>* self;
         explicit Callback(::std::unique_ptr<Base>* self) : self(self) {}
-        Callback(const Callback&) = default;
-        Callback(Callback&&)      = default;
         auto operator()() { this->self->reset(); }
     };
     struct Object : Base {

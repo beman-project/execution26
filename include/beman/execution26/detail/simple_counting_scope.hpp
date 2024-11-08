@@ -20,8 +20,7 @@ class simple_counting_scope;
 
 // ----------------------------------------------------------------------------
 
-class beman::execution26::simple_counting_scope
-: ::beman::execution26::detail::immovable {
+class beman::execution26::simple_counting_scope : ::beman::execution26::detail::immovable {
   public:
     class token;
     class assoc;
@@ -58,7 +57,15 @@ class beman::execution26::simple_counting_scope
     }
 
   private:
-    enum class state_t: unsigned char { unused, open, open_and_joining, closed, closed_and_joining, unused_and_closed, joined };
+    enum class state_t : unsigned char {
+        unused,
+        open,
+        open_and_joining,
+        closed,
+        closed_and_joining,
+        unused_and_closed,
+        joined
+    };
     friend class assoc;
     auto try_associate() noexcept -> simple_counting_scope* {
         ::std::lock_guard lock(this->mutex);
@@ -90,7 +97,7 @@ class beman::execution26::simple_counting_scope
 
 // ----------------------------------------------------------------------------
 
-// NOLINTBEGIN(misc-unconventional-assign-operator)
+// NOLINTBEGIN(misc-unconventional-assign-operator,hicpp-special-member-functions)
 class beman::execution26::simple_counting_scope::assoc {
   public:
     assoc() = default;
@@ -114,7 +121,7 @@ class beman::execution26::simple_counting_scope::assoc {
         : scope(scope ? scope->try_associate() : nullptr) {}
     beman::execution26::simple_counting_scope* scope{};
 };
-// NOLINTEND(misc-unconventional-assign-operator)
+// NOLINTEND(misc-unconventional-assign-operator,hicpp-special-member-functions)
 
 // ----------------------------------------------------------------------------
 

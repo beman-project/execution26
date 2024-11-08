@@ -23,8 +23,11 @@ struct state {
 
     template <typename R>
     state(int value, R&& r) : value(value), receiver(std::forward<R>(r)) {}
+    state(const state&)                    = delete;
     state(state&&) = delete;
-    ~state()       = default;
+    ~state()                               = default;
+    auto operator=(const state&) -> state& = delete;
+    auto operator=(state&&) -> state&      = delete;
     auto start() noexcept -> void {}
 };
 
@@ -43,8 +46,11 @@ struct rvalue_sender {
     int value{};
 
     explicit rvalue_sender(int value) : value(value) {}
+    rvalue_sender(const rvalue_sender&)                    = delete;
     rvalue_sender(rvalue_sender&&) = default;
-    auto operator=(rvalue_sender&&) -> rvalue_sender& = default;
+    auto operator=(const rvalue_sender&) -> rvalue_sender& = delete;
+    auto operator=(rvalue_sender&&) -> rvalue_sender&      = default;
+    ~rvalue_sender()                                       = default;
 
     template <typename Receiver>
     auto connect(Receiver&& receiver) && -> state<kind::plain, Receiver> {
@@ -64,7 +70,10 @@ struct receiver {
     explicit receiver(int value, bool* set_stopped_called = {})
         : value(value), set_stopped_called(set_stopped_called) {}
     receiver(receiver&&)                           = default;
+    receiver(const receiver&)                      = delete;
+    ~receiver()                                    = default;
     auto operator=(receiver&&) -> receiver&        = default;
+    auto operator=(const receiver&) -> receiver&   = delete;
     auto operator==(const receiver&) const -> bool = default;
 
     auto get_env() const noexcept -> env { return {this->value + 2}; }
@@ -97,7 +106,10 @@ struct domain_receiver {
 
     explicit domain_receiver(int value) : value(value) {}
     domain_receiver(domain_receiver&&)                    = default;
-    auto operator=(domain_receiver&&) -> domain_receiver& = default;
+    domain_receiver(const domain_receiver&)                    = delete;
+    ~domain_receiver()                                         = default;
+    auto operator=(domain_receiver&&) -> domain_receiver&      = default;
+    auto operator=(const domain_receiver&) -> domain_receiver& = delete;
 
     auto operator==(const domain_receiver&) const -> bool = default;
 
