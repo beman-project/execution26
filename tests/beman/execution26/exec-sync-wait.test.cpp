@@ -196,22 +196,21 @@ auto test_sync_wait() -> void {
         ASSERT(value);
         ASSERT(*value == (std::tuple{arg<0>{7}, arg<1>{11}}));
     } catch (...) {
-        ASSERT(
-            nullptr ==
-            "no exception expected from sync_wait(just(...)"); // NOLINT(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+        // NOLINTBEGIN(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+        ASSERT(nullptr == "no exception expected from sync_wait(just(...)");
+        // NOLINTEND(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
     }
 
     try {
         auto value{test_std::sync_wait(send_error{17})};
         use(value);
-        ASSERT(nullptr ==
-               "this line should never be reached"); // NOLINT(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+        // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+        ASSERT(nullptr == "this line should never be reached");
     } catch (const error& e) {
         ASSERT(e.value == 17);
     } catch (...) {
-        // NOLINTBEGIN(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+        // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "no exception expected from sync_wait(just(...)");
-        // NOLINTEND(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
     }
 
     try {

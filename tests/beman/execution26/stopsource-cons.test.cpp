@@ -21,8 +21,8 @@ auto operator delete(void* ptr, ::std::size_t) noexcept -> void { ::std::free(pt
 
 TEST(stopsource_cons) {
     // Reference: [stopsource.cons] p1
-    ::test_std::stop_source source;
     try {
+        ::test_std::stop_source source;
         ASSERT(source.stop_possible());
         ASSERT((not source.stop_requested()));
     } catch (...) {

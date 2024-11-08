@@ -136,13 +136,17 @@ struct impls_for<::beman::execution26::detail::when_all_t> : ::beman::execution2
             } break;
             case disposition::error:
                 this->on_stop.reset();
-                ::std::visit(
-                    [&]<typename Error>(Error& error) noexcept {
-                        if constexpr (!::std::same_as<Error, nonesuch>) {
-                            ::beman::execution26::set_error(::std::move(receiver), ::std::move(error));
-                        }
-                    },
-                    this->errors);
+                try {
+                    ::std::visit(
+                        [&]<typename Error>(Error& error) noexcept {
+                            if constexpr (!::std::same_as<Error, nonesuch>) {
+                                ::beman::execution26::set_error(::std::move(receiver), ::std::move(error));
+                            }
+                        },
+                        this->errors);
+                } catch (...) {
+                    ::beman::execution26::set_error(::std::move(receiver), ::std::current_exception());
+                }
                 break;
             case disposition::stopped:
                 this->on_stop.reset();

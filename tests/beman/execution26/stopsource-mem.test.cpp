@@ -123,9 +123,15 @@ auto test_stopsource_request_stop() -> void {
 } // namespace
 
 TEST(stopsource_mem) {
-    test_stopsource_swap();
-    test_stopsource_get_token();
-    test_stopsource_stop_possible();
-    test_stopsource_stop_requested();
-    test_stopsource_request_stop();
+    try {
+        test_stopsource_swap();
+        test_stopsource_get_token();
+        test_stopsource_stop_possible();
+        test_stopsource_stop_requested();
+        test_stopsource_request_stop();
+
+    } catch (...) {
+        // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+        ASSERT(nullptr == "the stop source tests shouldn't throw");
+    }
 }

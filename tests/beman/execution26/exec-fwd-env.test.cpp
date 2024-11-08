@@ -52,6 +52,8 @@ TEST(exec_fwd_env) {
     static_assert(test_std::forwarding_query(dynamic_query()));
     static_assert(test_std::forwarding_query(dynamic_query{true}));
     static_assert(not test_std::forwarding_query(dynamic_query{false}));
+    // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
     ASSERT(test_std::forwarding_query(dynamic_query{true}));
+    // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
     ASSERT(not test_std::forwarding_query(dynamic_query{false}));
 }

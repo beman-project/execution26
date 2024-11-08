@@ -14,15 +14,11 @@ struct arg {
 };
 struct arg_throwing {};
 
-struct throws {
-    throws() = default;
-    throws(const throws&) {}
-};
-
 struct receiver {
     template <typename Error>
     auto set_error(Error&&) noexcept -> void {}
-    auto set_error(throws) noexcept -> void {}
+    // NOTLINTNEXTLINE(performance-unnecessary-value-param)
+    auto set_error(test::throws) noexcept -> void {}
     auto set_error(arg a) noexcept -> void { ASSERT(a.value == 43); }
     auto set_error(arg_throwing) -> void {}
 };
@@ -43,7 +39,7 @@ void test_callable() {
 template <typename R>
 auto test_noexcept() {
     static_assert(requires { test_std::set_error(std::declval<R>(), arg()); });
-    static_assert(not requires { test_std::set_error(std::declval<R>(), throws()); });
+    static_assert(not requires { test_std::set_error(std::declval<R>(), test::throws()); });
     static_assert(not requires { test_std::set_error(std::declval<R>(), arg_throwing()); });
 }
 } // namespace

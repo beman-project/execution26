@@ -28,6 +28,16 @@ auto check_type(T1&&) {
 }
 
 auto use(auto&&...) noexcept -> void {}
+
+struct throws {
+    throws()                                                 = default;
+    throws(throws&&) noexcept(false)                         = default;
+    throws(const throws&) noexcept(false)                    = default;
+    ~throws()                                                = default;
+    auto operator=(throws&&) noexcept(false) -> throws&      = default;
+    auto operator=(const throws&) noexcept(false) -> throws& = default;
+};
+
 } // namespace test
 
 #endif // INCLUDED_TEST_EXECUTION

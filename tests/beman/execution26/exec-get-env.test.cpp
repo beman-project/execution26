@@ -11,10 +11,14 @@
 namespace {
 struct with_non_env;
 struct non_env {
+    non_env(non_env&&)                         = delete;
+    non_env(const non_env&)                    = delete;
+    auto operator=(non_env&&) -> non_env&      = delete;
+    auto operator=(const non_env&) -> non_env& = delete;
+
   private:
     friend struct with_non_env;
-    non_env()          = default;
-    non_env(non_env&&) = delete;
+    non_env()  = default;
     ~non_env() = default;
 };
 struct with_non_env {

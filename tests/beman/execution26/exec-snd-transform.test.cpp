@@ -76,7 +76,11 @@ auto test_transform_sender(Dom&& dom, Sender&& sndr) {
         static_assert(Noexcept == noexcept(test_std::transform_sender(dom, std::forward<Sender>(sndr))));
         ASSERT(value == test_std::transform_sender(dom, std::forward<Sender>(sndr)).value);
     }
+}
 
+template <bool Noexcept, typename Expect, typename Dom, typename Sender>
+auto test_transform_sender_env(Dom&& dom, Sender&& sndr) {
+    auto value{sndr.value};
     static_assert(requires { test_std::transform_sender(dom, std::forward<Sender>(sndr), env{}); });
     if constexpr (requires { test_std::transform_sender(dom, std::forward<Sender>(sndr), env{}); }) {
         static_assert(
@@ -91,10 +95,13 @@ auto test_transform_sender(Dom&& dom, Sender&& sndr) {
 
 TEST(exec_snd_transform) {
     test_transform_sender<true, final_sender<kind::tag>&&>(empty_domain{}, final_sender<kind::tag>{42});
+    test_transform_sender_env<true, final_sender<kind::tag>&&>(empty_domain{}, final_sender<kind::tag>{42});
     final_sender<kind::tag> fs{42};
     test_transform_sender<true, final_sender<kind::tag>&>(empty_domain{}, fs);
+    test_transform_sender_env<true, final_sender<kind::tag>&>(empty_domain{}, fs);
     const final_sender<kind::tag> cfs{42};
     test_transform_sender<true, const final_sender<kind::tag>&>(empty_domain{}, cfs);
+    test_transform_sender_env<true, const final_sender<kind::tag>&>(empty_domain{}, cfs);
 
     static_assert(std::same_as<tag<1>, test_std::tag_of_t<sender<1>>>);
     static_assert(std::same_as<tag<2>, test_std::tag_of_t<sender<2>>>);
@@ -110,8 +117,11 @@ TEST(exec_snd_transform) {
     static_assert(std::same_as<sender<1>, decltype(tag<2>{}.transform_sender(sender<2>{{}, 0}, env{}))>);
 
     test_transform_sender<true, final_sender<kind::tag>>(empty_domain{}, sender<1>{{}, 42});
+    test_transform_sender_env<true, final_sender<kind::tag>>(empty_domain{}, sender<1>{{}, 42});
     test_transform_sender<true, final_sender<kind::tag>>(empty_domain{}, sender<2>{{}, 42});
+    test_transform_sender_env<true, final_sender<kind::tag>>(empty_domain{}, sender<2>{{}, 42});
     test_transform_sender<true, final_sender<kind::tag>>(empty_domain{}, sender<5>{{}, 42});
+    test_transform_sender_env<true, final_sender<kind::tag>>(empty_domain{}, sender<5>{{}, 42});
 
     static_assert(std::same_as<final_sender<kind::dom>&&,
                                decltype(special_domain{}.transform_sender(final_sender<kind::dom>{}))>);
@@ -121,12 +131,19 @@ TEST(exec_snd_transform) {
         std::same_as<final_sender<kind::dom>, decltype(special_domain{}.transform_sender(sender<1>{{}, 42}))>);
     static_assert(std::same_as<sender<1>, decltype(special_domain{}.transform_sender(sender<2>{{}, 42}))>);
     test_transform_sender<true, final_sender<kind::dom>&&>(special_domain{}, final_sender<kind::dom>{42});
+    test_transform_sender_env<true, final_sender<kind::dom>&&>(special_domain{}, final_sender<kind::dom>{42});
     final_sender<kind::dom> fd{42};
     test_transform_sender<true, final_sender<kind::dom>&>(special_domain{}, fd);
+    test_transform_sender_env<true, final_sender<kind::dom>&>(special_domain{}, fd);
     const final_sender<kind::dom> cfd{42};
     test_transform_sender<true, const final_sender<kind::dom>&>(special_domain{}, cfd);
+    test_transform_sender_env<true, const final_sender<kind::dom>&>(special_domain{}, cfd);
     test_transform_sender<true, final_sender<kind::dom>>(special_domain{}, final_sender<kind::tag>{42});
+    test_transform_sender_env<true, final_sender<kind::dom>>(special_domain{}, final_sender<kind::tag>{42});
     test_transform_sender<true, final_sender<kind::dom>>(special_domain{}, sender<1>{{}, 42});
+    test_transform_sender_env<true, final_sender<kind::dom>>(special_domain{}, sender<1>{{}, 42});
     test_transform_sender<true, final_sender<kind::dom>>(special_domain{}, sender<2>{{}, 42});
+    test_transform_sender_env<true, final_sender<kind::dom>>(special_domain{}, sender<2>{{}, 42});
     test_transform_sender<true, final_sender<kind::dom>>(special_domain{}, sender<5>{{}, 42});
+    test_transform_sender_env<true, final_sender<kind::dom>>(special_domain{}, sender<5>{{}, 42});
 }

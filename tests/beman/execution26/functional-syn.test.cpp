@@ -30,8 +30,8 @@ struct throws {
     throws(throws&&) noexcept(false) {}
     throws(const throws&) noexcept(false) {}
     ~throws() {}
-    auto operator=(throws&&) noexcept(false) -> throws& { return *this; }
-    auto operator=(const throws&) noexcept(false) -> throws& { return *this; }
+    auto operator=(throws&&) noexcept(false) -> throws&      = default;
+    auto operator=(const throws&) noexcept(false) -> throws& = default;
 };
 
 template <bool Noexcept>
@@ -40,6 +40,7 @@ struct fun {
     auto operator()(int) noexcept(Noexcept) -> void {}
     auto operator()(non_copyable&&) noexcept(Noexcept) -> void {}
     auto operator()(arg) && noexcept(Noexcept) -> void {}
+    // NOLINTNEXTLINE(performance-unnecessary-value-param)
     auto operator()(throws) noexcept(Noexcept) -> void {}
 };
 

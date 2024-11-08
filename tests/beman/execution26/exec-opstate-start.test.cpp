@@ -10,63 +10,68 @@
 
 namespace {
 struct receiver {
-    int  value{};
+    int& value;
     auto set_value(int value) && noexcept -> void { this->value = value; }
 };
 
-struct non_opstate {};
+struct non_opstate {
+    receiver rcvr;
+};
 
 template <bool Noexcept>
 struct opstate {
-    receiver* rcvr;
-    auto      start() const noexcept(Noexcept) -> void { test_std::set_value(::std::move(*rcvr), 42); }
+    receiver rcvr;
+    auto     start() const noexcept(Noexcept) -> void { test_std::set_value(receiver(this->rcvr.value), 42); }
 };
 
 template <typename State>
 auto test_start_argument_type() {
-    receiver    rcvr{};
-    State       state{&rcvr};
-    receiver    crcvr{};
-    const State cstate{&crcvr};
+    int         value{};
+    State       state{receiver{value}};
+    int         cvalue{};
+    const State cstate{receiver{cvalue}};
 
     static_assert(requires { test_std::start(state); });
     static_assert(requires { test_std::start(cstate); });
 
-    static_assert(not requires { test_std::start(State(&rcvr)); });
+    static_assert(not requires { test_std::start(State(receiver{value})); });
     static_assert(not requires { test_std::start(std::move(state)); });
     static_assert(not requires { test_std::start(std::move(cstate)); });
 }
 
 template <typename State>
 auto test_start_member() {
-    State state{};
+    int   value{};
+    State state{receiver{value}};
     static_assert(not requires { test_std::start(state); });
-    State cstate{};
+    const State cstate{receiver{value}};
     static_assert(not requires { test_std::start(cstate); });
 }
 
 template <typename State>
 auto test_start_noexcept() {
-    State state{};
+    int   value{};
+    State state{receiver{value}};
     static_assert(noexcept(state));
-    State cstate{};
+    int         cvalue{};
+    const State cstate{receiver{cvalue}};
     static_assert(noexcept(cstate));
 }
 
 template <typename State>
 auto test_start_call() {
-    receiver    rcvr{};
-    State       state{&rcvr};
-    receiver    crcvr{};
-    const State cstate{&crcvr};
+    int         value{};
+    State       state{receiver{value}};
+    int         cvalue{};
+    const State cstate{receiver{cvalue}};
 
-    ASSERT(rcvr.value == 0);
+    ASSERT(value == 0);
     test_std::start(state);
-    ASSERT(rcvr.value == 42);
+    ASSERT(value == 42);
 
-    ASSERT(crcvr.value == 0);
+    ASSERT(cvalue == 0);
     test_std::start(cstate);
-    ASSERT(crcvr.value == 42);
+    ASSERT(cvalue == 42);
 }
 } // namespace
 
