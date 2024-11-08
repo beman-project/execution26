@@ -6,22 +6,27 @@
 #include <cassert>
 
 TEST(stopsource_general) {
-    // Reference: [stopsource.general] p1.
-    test::stop_source([] { return ::test_std::stop_source(); });
-
-    ::test_std::stop_source source1;
-    ::test_std::stop_source source2{::test_std::nostopstate};
-    static_assert(noexcept(::test_std::stop_source(::test_std::nostopstate_t())));
     try {
-        ASSERT(not source2.stop_possible());
-        ASSERT(not source2.stop_requested());
+        // Reference: [stopsource.general] p1.
+        test::stop_source([] { return ::test_std::stop_source(); });
+
+        ::test_std::stop_source source1;
+        ::test_std::stop_source source2{::test_std::nostopstate};
+        static_assert(noexcept(::test_std::stop_source(::test_std::nostopstate_t())));
+        try {
+            ASSERT(not source2.stop_possible());
+            ASSERT(not source2.stop_requested());
+        } catch (...) {
+            // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+            ASSERT(nullptr == "the stop source should not throw");
+        }
+
+        static_assert(noexcept(source1.swap(source2)));
+        static_assert(noexcept(source1.stop_requested()));
+        static_assert(noexcept(source1.stop_possible()));
+        static_assert(noexcept(source1.request_stop()));
     } catch (...) {
         // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
-        ASSERT(nullptr == "the stop source should not throw");
+        ASSERT(nullptr == "stop source tests shouldn't throw");
     }
-
-    static_assert(noexcept(source1.swap(source2)));
-    static_assert(noexcept(source1.stop_requested()));
-    static_assert(noexcept(source1.stop_possible()));
-    static_assert(noexcept(source1.request_stop()));
 }

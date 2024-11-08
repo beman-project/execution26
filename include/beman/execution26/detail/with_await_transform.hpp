@@ -11,6 +11,7 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+// NOLINTBEGIN(bugprone-crtp-constructor-accessibility)
 template <typename Derived>
 struct with_await_transform {
     template <typename T>
@@ -24,6 +25,7 @@ struct with_await_transform {
         return ::std::forward<T>(obj).as_awaitable(static_cast<Derived&>(*this));
     }
 };
+// NOLINTEND(bugprone-crtp-constructor-accessibility)
 } // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------

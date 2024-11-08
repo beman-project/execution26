@@ -96,11 +96,10 @@ struct tag {
 };
 
 template <typename Receiver>
-struct operation_state {
+struct operation_state : test_detail::immovable {
     using operation_state_concept = test_std::operation_state_t;
     int* counter;
-    operation_state(int* counter) : counter(counter) {}
-    operation_state(operation_state&&) = delete;
+    explicit operation_state(int* counter) : counter(counter) {}
     auto start() & noexcept -> void { ++*counter; }
 };
 
@@ -541,34 +540,34 @@ auto test_default_impls_get_state() -> void {
         auto operator==(const data&) const -> bool = default;
     };
     struct sender0 {
-        tag  t;
+        tag  t{};
         data d{1, 2};
     };
     struct sender1 {
-        tag  t;
+        tag  t{};
         data d{1, 2};
-        int  i1;
+        int  i1{};
     };
     struct sender2 {
-        tag  t;
+        tag  t{};
         data d{1, 2};
-        int  i1;
-        int  i2;
+        int  i1{};
+        int  i2{};
     };
     struct sender3 {
-        tag  t;
+        tag  t{};
         data d{1, 2};
-        int  i1;
-        int  i2;
-        int  i3;
+        int  i1{};
+        int  i2{};
+        int  i3{};
     };
     struct sender4 {
-        tag  t;
+        tag  t{};
         data d{1, 2};
-        int  i1;
-        int  i2;
-        int  i3;
-        int  i4;
+        int  i1{};
+        int  i2{};
+        int  i3{};
+        int  i4{};
     };
     struct receiver {};
 
@@ -816,9 +815,12 @@ auto test_completion_tag() -> void {
 auto test_product_type() -> void {
     struct nm {
         int value{};
-        nm() = default;
-        nm(int value) : value(value) {}
+        explicit nm(int value) : value(value) {}
         nm(nm&&)                                 = delete;
+        nm(const nm&)                            = delete;
+        ~nm()                                    = default;
+        auto operator=(nm&&) -> nm&              = delete;
+        auto operator=(const nm&) -> nm&         = delete;
         auto operator==(const nm&) const -> bool = default;
     };
     auto p0{test_detail::product_type{}};
@@ -827,47 +829,46 @@ auto test_product_type() -> void {
 
     auto p1{test_detail::product_type{nm(1)}};
     static_assert(p1.size() == 1u);
-    ASSERT(p1.get<0>() == 1);
+    ASSERT(p1.get<0>() == nm(1));
 
     auto p2{test_detail::product_type{nm(1), nm(2)}};
     static_assert(p2.size() == 2u);
-    ASSERT(p2.get<0>() == 1);
-    ASSERT(p2.get<1>() == 2);
+    ASSERT(p2.get<0>() == nm(1));
+    ASSERT(p2.get<1>() == nm(2));
 
     auto p3{test_detail::product_type{nm(1), nm(2), nm(3)}};
     static_assert(p3.size() == 3u);
-    ASSERT(p3.get<0>() == 1);
-    ASSERT(p3.get<1>() == 2);
-    ASSERT(p3.get<2>() == 3);
+    ASSERT(p3.get<0>() == nm(1));
+    ASSERT(p3.get<1>() == nm(2));
+    ASSERT(p3.get<2>() == nm(3));
 
     auto p4{test_detail::product_type{nm(1), nm(2), nm(3), nm(4)}};
     static_assert(p4.size() == 4u);
-    ASSERT(p4.get<0>() == 1);
-    ASSERT(p4.get<1>() == 2);
-    ASSERT(p4.get<2>() == 3);
-    ASSERT(p4.get<3>() == 4);
+    ASSERT(p4.get<0>() == nm(1));
+    ASSERT(p4.get<1>() == nm(2));
+    ASSERT(p4.get<2>() == nm(3));
+    ASSERT(p4.get<3>() == nm(4));
 
     auto p5{test_detail::product_type{nm(1), nm(2), nm(3), nm(4), nm(5)}};
     static_assert(p5.size() == 5u);
-    ASSERT(p5.get<0>() == 1);
-    ASSERT(p5.get<1>() == 2);
-    ASSERT(p5.get<2>() == 3);
-    ASSERT(p5.get<3>() == 4);
-    ASSERT(p5.get<4>() == 5);
+    ASSERT(p5.get<0>() == nm(1));
+    ASSERT(p5.get<1>() == nm(2));
+    ASSERT(p5.get<2>() == nm(3));
+    ASSERT(p5.get<3>() == nm(4));
+    ASSERT(p5.get<4>() == nm(5));
 }
 auto test_connect_all() -> void {
     static_assert(test_std::operation_state<operation_state<receiver>>);
     {
-        sender0                  s{};
-        test_detail::basic_state state{std::move(s), receiver{}};
-        auto                     product{test_detail::connect_all(&state, std::move(s), std::index_sequence<>{})};
+        test_detail::basic_state state{sender0{}, receiver{}};
+        auto                     product{test_detail::connect_all(&state, sender0{}, std::index_sequence<>{})};
         ASSERT(product.size() == 0);
         test::use(product);
     }
     {
-        const sender0            s{};
-        test_detail::basic_state state{std::move(s), receiver{}};
-        auto                     product{test_detail::connect_all(&state, std::move(s), std::index_sequence<>{})};
+        using csender0 = const sender0;
+        test_detail::basic_state state{csender0{}, receiver{}};
+        auto                     product{test_detail::connect_all(&state, csender0{}, std::index_sequence<>{})};
         ASSERT(product.size() == 0);
         test::use(product);
     }
@@ -880,11 +881,12 @@ auto test_connect_all() -> void {
         test::use(product);
     }
     {
-        const sender1 s{};
+        using csender1 = const sender1;
+        csender1 s{};
         static_assert(requires { s.connect(receiver{}); });
         static_assert(requires { test_std::connect(s, receiver{}); });
-        test_detail::basic_state state{std::move(s), receiver{}};
-        auto                     product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0>{})};
+        test_detail::basic_state state{csender1{}, receiver{}};
+        auto                     product{test_detail::connect_all(&state, csender1{}, std::index_sequence<0>{})};
         ASSERT(product.size() == 1);
         test::use(product);
     }
@@ -897,11 +899,12 @@ auto test_connect_all() -> void {
         test::use(product);
     }
     {
-        const sender2 s{};
+        using csender2 = const sender2;
+        csender2 s{};
         static_assert(requires { s.connect(receiver{}); });
         static_assert(requires { test_std::connect(s, receiver{}); });
-        test_detail::basic_state state{std::move(s), receiver{}};
-        auto                     product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1>{})};
+        test_detail::basic_state state{csender2{}, receiver{}};
+        auto                     product{test_detail::connect_all(&state, csender2{}, std::index_sequence<0, 1>{})};
         ASSERT(product.size() == 2);
         test::use(product);
     }
@@ -914,11 +917,12 @@ auto test_connect_all() -> void {
         test::use(product);
     }
     {
-        const sender3 s{};
+        using csender3 = const sender3;
+        csender3 s{};
         static_assert(requires { s.connect(receiver{}); });
         static_assert(requires { test_std::connect(s, receiver{}); });
-        test_detail::basic_state state{std::move(s), receiver{}};
-        auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1, 2>{})};
+        test_detail::basic_state state{csender3{}, receiver{}};
+        auto                     product{test_detail::connect_all(&state, csender3{}, std::index_sequence<0, 1, 2>{})};
         ASSERT(product.size() == 3);
         test::use(product);
     }
@@ -931,12 +935,12 @@ auto test_connect_all() -> void {
         test::use(product);
     }
     {
-        const sender4 s{};
+        using csender4 = const sender4;
+        csender4 s{};
         static_assert(requires { s.connect(receiver{}); });
         static_assert(requires { test_std::connect(s, receiver{}); });
-        test_detail::basic_state state{std::move(s), receiver{}};
-        const sender4            s1{};
-        auto product{test_detail::connect_all(&state, std::move(s1), std::index_sequence<0, 1, 2, 3>{})};
+        test_detail::basic_state state{csender4{}, receiver{}};
+        auto product{test_detail::connect_all(&state, csender4{}, std::index_sequence<0, 1, 2, 3>{})};
         ASSERT(product.size() == 4);
         test::use(product);
     }

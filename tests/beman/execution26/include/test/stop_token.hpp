@@ -26,13 +26,13 @@
 
 namespace test {
 template <::test_std::stoppable_token Token, ::std::invocable Stop>
-auto stop_visible(Token, Stop) -> void;
+auto stop_visible(const Token&, Stop) -> void;
 template <::test_std::stoppable_token Token, ::std::invocable Stop>
-auto stop_callback(Token, Stop) -> void;
+auto stop_callback(const Token&, Stop) -> void;
 template <::test_std::stoppable_token Token, ::std::invocable Stop>
-auto stop_callback_dtor_deregisters(Token, Stop) -> void;
+auto stop_callback_dtor_deregisters(const Token&, Stop) -> void;
 template <::test_std::stoppable_token Token, ::std::invocable Stop>
-auto stop_callback_dtor_other_thread(Token, Stop) -> void;
+auto stop_callback_dtor_other_thread(const Token&, Stop) -> void;
 template <::test_std::stoppable_token Token, ::std::invocable Stop>
 auto stop_callback_dtor_same_thread(Token, Stop) -> void;
 
@@ -43,7 +43,7 @@ auto stop_source(MakeStopSource) -> void;
 // ----------------------------------------------------------------------------
 
 template <::test_std::stoppable_token Token, ::std::invocable Stop>
-inline auto test::stop_visible(Token token, Stop stop) -> void {
+inline auto test::stop_visible(const Token& token, Stop stop) -> void {
     // Plan:
     // - Given a stoppable_token and function to request stop on its associated source.
     // - When setting up a number of copies of the token they all indicate that
@@ -65,7 +65,7 @@ inline auto test::stop_visible(Token token, Stop stop) -> void {
 // ----------------------------------------------------------------------------
 
 template <::test_std::stoppable_token Token, ::std::invocable Stop>
-inline auto test::stop_callback(Token token, Stop stop) -> void {
+inline auto test::stop_callback(const Token& token, Stop stop) -> void {
     // Plan:
     // - Given a stoppable_token and function to request stop on its associated source.
     // - When registering a callback before and after requesting stop. At that
@@ -114,7 +114,7 @@ inline auto test::stop_callback(Token token, Stop stop) -> void {
 // ----------------------------------------------------------------------------
 
 template <::test_std::stoppable_token Token, ::std::invocable Stop>
-auto test::stop_callback_dtor_deregisters(Token token, Stop stop) -> void {
+auto test::stop_callback_dtor_deregisters(const Token& token, Stop stop) -> void {
     // Plan:
     // - Given a stop token and a function to request stop.
     // - When registering and deregistering a callback (i.e., constructing
@@ -141,7 +141,7 @@ auto test::stop_callback_dtor_deregisters(Token token, Stop stop) -> void {
 // ----------------------------------------------------------------------------
 
 template <::test_std::stoppable_token Token, ::std::invocable Stop>
-inline auto test::stop_callback_dtor_other_thread(Token token, Stop stop) -> void {
+inline auto test::stop_callback_dtor_other_thread(const Token& token, Stop stop) -> void {
     // Plan:
     // - Given a stop token and a function to request stop.
     // - When a callback registered with the with a stop token is deregistered

@@ -60,9 +60,8 @@ using as_tuple_t = typename as_tuple<T>::type;
 struct schedule_from_t {
     template <::beman::execution26::scheduler Scheduler, ::beman::execution26::sender Sender>
     auto operator()(Scheduler&& scheduler, Sender&& sender) const {
-        auto domain{::beman::execution26::detail::query_with_default(::beman::execution26::get_domain,
-                                                                     ::std::forward<Scheduler>(scheduler),
-                                                                     ::beman::execution26::default_domain{})};
+        auto domain{::beman::execution26::detail::query_with_default(
+            ::beman::execution26::get_domain, scheduler, ::beman::execution26::default_domain{})};
         return ::beman::execution26::transform_sender(
             domain,
             ::beman::execution26::detail::make_sender(
@@ -78,15 +77,21 @@ struct impls_for<::beman::execution26::detail::schedule_from_t> : ::beman::execu
         State* state;
 
         auto set_value() && noexcept -> void {
-            ::std::visit(
-                [this]<typename Tuple>(Tuple& result) noexcept -> void {
-                    if constexpr (not::std::same_as<::std::monostate, Tuple>) {
-                        ::std::apply([this](auto&& tag,
-                                            auto&&... args) { tag(std::move(state->receiver), std::move(args)...); },
-                                     result);
-                    }
-                },
-                state->async_result);
+            try {
+                ::std::visit(
+                    [this]<typename Tuple>(Tuple& result) noexcept -> void {
+                        if constexpr (not::std::same_as<::std::monostate, Tuple>) {
+                            ::std::apply(
+                                [this](auto&& tag, auto&&... args) {
+                                    tag(::std::move(this->state->receiver), ::std::move(args)...);
+                                },
+                                result);
+                        }
+                    },
+                    state->async_result);
+            } catch (...) {
+                ::beman::execution26::set_error(::std::move(state->receiver), ::std::current_exception());
+            }
         }
 
         template <typename Error>

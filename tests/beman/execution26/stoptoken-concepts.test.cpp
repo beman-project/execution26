@@ -5,6 +5,7 @@
 #include <type_traits>
 #include "test/execution.hpp"
 
+namespace {
 namespace detail_stopppable_callback_for {
 struct NonToken {};
 struct TokenNonCtorCallback {
@@ -86,7 +87,11 @@ struct token {
     template <typename>
     struct callback_type {};
 
+    token(token&&) noexcept(CopyNoexcept);
     token(const token&) noexcept(CopyNoexcept);
+    ~token();
+    auto operator=(token&&) noexcept(CopyNoexcept) -> token&;
+    auto operator=(const token&) noexcept(CopyNoexcept) -> token&;
     auto stop_requested() const noexcept(RequestedNoexcept) -> Requested;
     auto stop_possible() const noexcept(PossibleNoexcept) -> Possible;
     auto operator==(const token&) const -> bool = default;
@@ -96,7 +101,10 @@ struct non_assignable {
     template <typename>
     struct callback_type {};
 
+    non_assignable(non_assignable&&) noexcept;
     non_assignable(const non_assignable&) noexcept;
+    ~non_assignable();
+    auto operator=(non_assignable&&) -> non_assignable&      = delete;
     auto operator=(const non_assignable&) -> non_assignable& = delete;
     auto stop_requested() const noexcept -> bool;
     auto stop_possible() const noexcept -> bool;
@@ -116,6 +124,9 @@ struct non_swappable {
     struct callback_type {};
 
     non_swappable(const non_swappable&) noexcept               = default;
+    non_swappable(non_swappable&&) noexcept                         = delete;
+    ~non_swappable() noexcept                                       = default;
+    auto operator=(const non_swappable&) noexcept -> non_swappable& = delete;
     auto operator=(non_swappable&&) noexcept -> non_swappable& = delete;
     auto stop_requested() const noexcept -> bool;
     auto stop_possible() const noexcept -> bool;
@@ -152,8 +163,12 @@ struct token {
     template <typename>
     struct callback_type {};
 
-    constexpr token() {}
+    constexpr token();
+    constexpr token(token&&) noexcept;
     constexpr token(const token&) noexcept(CopyNoexcept);
+    constexpr ~token();
+    constexpr auto        operator=(token&&) noexcept -> token&;
+    constexpr auto        operator=(const token&) noexcept(CopyNoexcept) -> token&;
     auto                  stop_requested() const noexcept -> bool;
     static constexpr auto stop_possible() noexcept -> bool { return Possible; }
     auto                  operator==(const token&) const -> bool = default;
@@ -180,7 +195,12 @@ struct token {
     template <typename>
     struct callback_type {};
 
+    token() noexcept(IsToken);
+    token(token&&) noexcept(IsToken);
     token(const token&) noexcept(IsToken);
+    ~token();
+    auto operator=(token&&) noexcept(IsToken) -> token&;
+    auto operator=(const token&) noexcept(IsToken) -> token&;
     auto stop_requested() const noexcept -> bool;
     auto stop_possible() const noexcept -> bool;
     auto operator==(const token&) const -> bool = default;
@@ -215,6 +235,7 @@ auto test_detail_stoppable_source() -> void {
     static_assert(not::test_detail::stoppable_source<::stoppable_source::source<true, bool, true, bool, false, bool>>);
     static_assert(not::test_detail::stoppable_source<::stoppable_source::source<true, bool, true, bool, true, int>>);
 }
+} // namespace
 
 TEST(stoptoken_concepts) {
     test_detail_stopppable_callback_for();

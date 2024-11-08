@@ -242,6 +242,12 @@ TEST(exec_when_all) {
     static_assert(std::same_as<const test_std::when_all_t, decltype(test_std::when_all)>);
     static_assert(std::same_as<const test_std::when_all_with_variant_t, decltype(test_std::when_all_with_variant)>);
 
-    test_when_all();
-    test_when_all_with_variant();
+    try {
+
+        test_when_all();
+        test_when_all_with_variant();
+    } catch (...) {
+        // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+        ASSERT(nullptr == "the when_all tests shouldn't throw");
+    }
 }

@@ -16,10 +16,17 @@ struct error {
 
 struct non_movable {
     non_movable(non_movable&&) = delete;
+    non_movable(const non_movable&)                    = delete;
+    ~non_movable()                                     = default;
+    auto operator=(non_movable&&) -> non_movable&      = delete;
+    auto operator=(const non_movable&) -> non_movable& = delete;
 };
 struct non_copyable {
     non_copyable(non_copyable&&)      = default;
     non_copyable(const non_copyable&) = delete;
+    ~non_copyable()                                      = default;
+    auto operator=(non_copyable&&) -> non_copyable&      = default;
+    auto operator=(const non_copyable&) -> non_copyable& = delete;
 };
 
 auto test_movable_value() -> void {
@@ -63,6 +70,7 @@ auto test_as_except_ptr() -> void {
     } catch (error& e) {
         ASSERT(e.value == 17);
     } catch (...) {
+        // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "wrong exception type produced by as_except_ptr for random error");
     }
 
@@ -73,6 +81,7 @@ auto test_as_except_ptr() -> void {
     } catch (std::system_error& e) {
         ASSERT(e.code() == errc);
     } catch (...) {
+        // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "wrong exception type produced by as_except_ptr for error code");
     }
 }
