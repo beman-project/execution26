@@ -4,6 +4,7 @@
 #include <beman/execution26/stop_token.hpp>
 #include "test/execution.hpp"
 
+namespace {
 auto test_stopsource_swap() -> void {
     // Plan:
     //  - Given two engaged stop sources.
@@ -119,6 +120,7 @@ auto test_stopsource_request_stop() -> void {
     ASSERT(res4 == false);
     ASSERT(not disengaged.stop_requested());
 }
+} // namespace
 
 TEST(stopsource_mem) {
     test_stopsource_swap();

@@ -29,8 +29,8 @@ auto test_movable_value() -> void {
 
     static_assert(not test_detail::movable_value<non_movable>);
     static_assert(not test_detail::movable_value<const non_copyable>);
-    static_assert(not test_detail::movable_value<int[1]>);
-    static_assert(not test_detail::movable_value<int(&)[1]>);
+    static_assert(not test_detail::movable_value<int[1]>);    // NOLINT(hicpp-avoid-c-arrays)
+    static_assert(not test_detail::movable_value<int(&)[1]>); // NOLINT(hicpp-avoid-c-arrays)
 }
 
 auto test_matching_sig() -> void {

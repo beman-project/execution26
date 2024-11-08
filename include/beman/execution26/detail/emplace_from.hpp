@@ -17,7 +17,7 @@ struct emplace_from {
     using type = ::beman::execution26::detail::call_result_t<Fun>;
     Fun fun;
 
-    constexpr operator type() && noexcept(::beman::execution26::detail::nothrow_callable<Fun>) {
+    explicit constexpr operator type() && noexcept(::beman::execution26::detail::nothrow_callable<Fun>) {
         return ::std::move(fun)();
     }
 };

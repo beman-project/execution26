@@ -10,8 +10,13 @@ namespace {
 template <typename T>
 concept has_foo = test_std::detail::queryable<T> && requires(T t) { t.foo; };
 
-class non_destructible {
-    ~non_destructible() = default;
+struct non_destructible {
+    non_destructible()                                           = default;
+    non_destructible(non_destructible&&)                         = default;
+    non_destructible(const non_destructible&)                    = default;
+    ~non_destructible()                                          = delete;
+    auto operator=(non_destructible&&) -> non_destructible&      = default;
+    auto operator=(const non_destructible&) -> non_destructible& = default;
 };
 
 template <typename T>

@@ -23,7 +23,7 @@
 namespace {
 auto use(auto&&...) -> void {}
 
-enum class signal_type { none, error, stopped, value };
+enum class signal_type : unsigned char { none, error, stopped, value };
 
 struct token_env {
     test_std::inplace_stop_token token;
@@ -37,7 +37,7 @@ struct receiver {
     test_std::inplace_stop_token token;
 
     auto set_value() && noexcept { *result = signal_type::value; }
-    auto set_error(std::exception_ptr) && noexcept { *result = signal_type::error; }
+    auto set_error(const std::exception_ptr&) && noexcept { *result = signal_type::error; }
     auto set_stopped() && noexcept { *result = signal_type::stopped; }
 
     auto get_env() const noexcept -> token_env { return {this->token}; }
@@ -48,7 +48,7 @@ struct finish_receiver {
     using receiver_concept = test_std::receiver_t;
 
     auto set_value() && noexcept { this->loop->finish(); }
-    auto set_error(std::exception_ptr) && noexcept { this->loop->finish(); }
+    auto set_error(const std::exception_ptr&) && noexcept { this->loop->finish(); }
     auto set_stopped() && noexcept { this->loop->finish(); }
 };
 

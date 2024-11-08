@@ -14,7 +14,7 @@
 // ----------------------------------------------------------------------------
 
 namespace {
-enum class kind { plain, domain };
+enum class kind : unsigned char { plain, domain };
 template <kind, test_std::receiver Receiver>
 struct state {
     using operation_state_concept = test_std::operation_state_t;
@@ -23,7 +23,11 @@ struct state {
 
     template <typename R>
     state(int value, R&& r) : value(value), receiver(std::forward<R>(r)) {}
+    state(const state&)                    = delete;
     state(state&&) = delete;
+    ~state()                               = default;
+    auto operator=(const state&) -> state& = delete;
+    auto operator=(state&&) -> state&      = delete;
     auto start() noexcept -> void {}
 };
 
@@ -41,8 +45,12 @@ struct rvalue_sender {
     using sender_concept = test_std::sender_t;
     int value{};
 
-    rvalue_sender(int value) : value(value) {}
+    explicit rvalue_sender(int value) : value(value) {}
+    rvalue_sender(const rvalue_sender&)                    = delete;
     rvalue_sender(rvalue_sender&&) = default;
+    auto operator=(const rvalue_sender&) -> rvalue_sender& = delete;
+    auto operator=(rvalue_sender&&) -> rvalue_sender&      = default;
+    ~rvalue_sender()                                       = default;
 
     template <typename Receiver>
     auto connect(Receiver&& receiver) && -> state<kind::plain, Receiver> {
@@ -59,8 +67,13 @@ struct receiver {
     int   value{};
     bool* set_stopped_called{};
 
-    receiver(int value, bool* set_stopped_called = {}) : value(value), set_stopped_called(set_stopped_called) {}
+    explicit receiver(int value, bool* set_stopped_called = {})
+        : value(value), set_stopped_called(set_stopped_called) {}
     receiver(receiver&&)                           = default;
+    receiver(const receiver&)                      = delete;
+    ~receiver()                                    = default;
+    auto operator=(receiver&&) -> receiver&        = default;
+    auto operator=(const receiver&) -> receiver&   = delete;
     auto operator==(const receiver&) const -> bool = default;
 
     auto get_env() const noexcept -> env { return {this->value + 2}; }
@@ -91,8 +104,13 @@ struct domain_receiver {
     using receiver_concept = test_std::receiver_t;
     int value{};
 
-    domain_receiver(int value) : value(value) {}
+    explicit domain_receiver(int value) : value(value) {}
     domain_receiver(domain_receiver&&)                    = default;
+    domain_receiver(const domain_receiver&)                    = delete;
+    ~domain_receiver()                                         = default;
+    auto operator=(domain_receiver&&) -> domain_receiver&      = default;
+    auto operator=(const domain_receiver&) -> domain_receiver& = delete;
+
     auto operator==(const domain_receiver&) const -> bool = default;
 
     auto get_env() const noexcept -> domain_env { return {}; }
@@ -217,12 +235,13 @@ auto test_connect_awaitable() -> void {
             this->iv = value;
             this->bv = true;
         }
-        auto set_error(::std::exception_ptr error) && noexcept -> void {
+        auto set_error(const ::std::exception_ptr& error) && noexcept -> void {
             try {
                 std::rethrow_exception(error);
             } catch (const std::runtime_error&) {
                 this->bv = true;
             } catch (...) {
+                this->bv = false;
             }
         }
         auto set_stopped() && noexcept -> void {}
@@ -240,6 +259,7 @@ auto test_connect_awaitable() -> void {
         ASSERT(handle != std::coroutine_handle<>());
         ASSERT(iv == 0 && bv == false);
         result = 42;
+        test::use(result);
         handle.resume();
         ASSERT(iv == 42 && bv == true);
     }
@@ -255,6 +275,7 @@ auto test_connect_awaitable() -> void {
         ASSERT(handle != std::coroutine_handle<>());
         ASSERT(iv == 0 && bv == false);
         result = 0;
+        test::use(result);
         handle.resume();
         ASSERT(iv == 0 && bv == true);
     }
@@ -285,7 +306,7 @@ auto test_connect_with_awaiter() -> void {
         using receiver_concept = test_std::receiver_t;
         bool& result;
         auto  set_value(int i) && noexcept -> void { this->result = i == 17; }
-        auto  set_error(std::exception_ptr) && noexcept -> void {}
+        auto  set_error(const std::exception_ptr&) && noexcept -> void {}
         auto  set_stopped() && noexcept -> void {}
     };
 

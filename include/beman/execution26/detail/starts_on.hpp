@@ -43,9 +43,8 @@ struct starts_on_t {
 
     template <::beman::execution26::scheduler Scheduler, ::beman::execution26::sender Sender>
     auto operator()(Scheduler&& scheduler, Sender&& sender) const {
-        auto domain{::beman::execution26::detail::query_with_default(::beman::execution26::get_domain,
-                                                                     ::std::forward<Scheduler>(scheduler),
-                                                                     ::beman::execution26::default_domain{})};
+        auto domain{::beman::execution26::detail::query_with_default(
+            ::beman::execution26::get_domain, scheduler, ::beman::execution26::default_domain{})};
         return ::beman::execution26::transform_sender(
             domain,
             ::beman::execution26::detail::make_sender(

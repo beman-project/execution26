@@ -8,6 +8,7 @@
 #include <beman/execution26/detail/get_completion_scheduler.hpp>
 #include <beman/execution26/detail/get_env.hpp>
 #include <beman/execution26/detail/get_stop_token.hpp>
+#include <beman/execution26/detail/immovable.hpp>
 #include <beman/execution26/detail/operation_state.hpp>
 #include <beman/execution26/detail/scheduler.hpp>
 #include <beman/execution26/detail/sender.hpp>
@@ -36,7 +37,7 @@ class run_loop {
             return {this->loop};
         }
     };
-    struct opstate_base {
+    struct opstate_base : ::beman::execution26::detail::immovable {
         opstate_base* next{};
         virtual auto  execute() noexcept -> void = 0;
     };
@@ -49,7 +50,6 @@ class run_loop {
 
         template <typename R>
         opstate(run_loop* loop, R&& receiver) : loop(loop), receiver(::std::forward<Receiver>(receiver)) {}
-        opstate(opstate&&) = delete;
         auto start() & noexcept -> void {
             try {
                 this->loop->push_back(this);
@@ -88,7 +88,7 @@ class run_loop {
         auto operator==(const scheduler&) const -> bool = default;
     };
 
-    enum class state { starting, running, finishing };
+    enum class state : unsigned char { starting, running, finishing };
 
     state                     current_state{state::starting};
     ::std::mutex              mutex{};
@@ -115,12 +115,15 @@ class run_loop {
 
   public:
     run_loop() noexcept  = default;
+    run_loop(const run_loop&) = delete;
     run_loop(run_loop&&) = delete;
     ~run_loop() {
         ::std::lock_guard guard(this->mutex);
         if (this->front != nullptr || this->current_state == state::running)
             ::std::terminate();
     }
+    auto operator=(const run_loop&) -> run_loop& = delete;
+    auto operator=(run_loop&&) -> run_loop&      = delete;
 
     auto get_scheduler() -> scheduler { return {this}; }
 

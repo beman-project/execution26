@@ -91,7 +91,7 @@ struct impls_for<::beman::execution26::detail::when_all_t> : ::beman::execution2
             ::beman::execution26::get_env(receiver));
     }};
 
-    enum class disposition { started, error, stopped };
+    enum class disposition : unsigned char { started, error, stopped };
 
     template <typename Receiver, typename... Sender>
     struct state_type {

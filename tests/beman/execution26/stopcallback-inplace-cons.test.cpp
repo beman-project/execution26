@@ -4,6 +4,7 @@
 #include <beman/execution26/stop_token.hpp>
 #include "test/execution.hpp"
 
+namespace {
 auto test_inplace_stopcallback_ctor() -> void {
     // Plan:
     // - Given an inplace_stop_source.
@@ -59,6 +60,7 @@ auto test_inplace_stopcallback_dtor() -> void {
     ASSERT(flag1 == true);
     ASSERT(flag2 == false);
 }
+} // namespace
 
 TEST(stopcallback_inplace_cons) {
     test_inplace_stopcallback_ctor();

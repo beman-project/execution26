@@ -16,7 +16,7 @@ TEST(stopcallback_cons) {
     // - Then the response is true when an int* is passed as
     //   initializer argument but false otherwise.
     struct Callback {
-        Callback(int*) {}
+        explicit Callback(int*) {}
         auto operator()() -> void {}
     };
     static_assert(::std::is_constructible_v<::test_std::stop_callback<Callback>, const ::test_std::stop_token&, int*>);

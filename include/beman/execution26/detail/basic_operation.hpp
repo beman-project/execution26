@@ -38,8 +38,11 @@ template <typename Sender, typename Receiver>
     basic_operation(Sender&& sender, Receiver&& receiver) noexcept(true /*-dk:TODO*/)
         : ::beman::execution26::detail::basic_state<Sender, Receiver>(::std::forward<Sender>(sender),
                                                                       ::std::move(receiver)),
+          // NOLINTBEGIN(bugprone-use-after-move,hicpp-invalid-access-moved)
+          //-dk:TODO deal with moving the sender twice
           inner_ops(::beman::execution26::detail::connect_all(
               this, ::std::forward<Sender>(sender), ::beman::execution26::detail::indices_for<Sender>())) {}
+    // NOLINTEND(bugprone-use-after-move,hicpp-invalid-access-moved)
 
   private:
     auto start() & noexcept -> void {

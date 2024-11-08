@@ -12,8 +12,13 @@ TEST(stopsource_general) {
     ::test_std::stop_source source1;
     ::test_std::stop_source source2{::test_std::nostopstate};
     static_assert(noexcept(::test_std::stop_source(::test_std::nostopstate_t())));
-    ASSERT(not source2.stop_possible());
-    ASSERT(not source2.stop_requested());
+    try {
+        ASSERT(not source2.stop_possible());
+        ASSERT(not source2.stop_requested());
+    } catch (...) {
+        // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+        ASSERT(nullptr == "the stop source should not throw");
+    }
 
     static_assert(noexcept(source1.swap(source2)));
     static_assert(noexcept(source1.stop_requested()));

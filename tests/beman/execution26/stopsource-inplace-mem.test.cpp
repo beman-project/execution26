@@ -4,6 +4,7 @@
 #include <beman/execution26/stop_token.hpp>
 #include "test/execution.hpp"
 
+namespace {
 auto test_inplace_stop_source_get_token() -> void {
     // Plan:
     // - Given two inplace_stop_sources.
@@ -68,6 +69,7 @@ auto test_inplace_stop_source_request_stop() -> void {
     ASSERT(flag1 == true);
     ASSERT(flag2 == true);
 }
+} // namespace
 
 TEST(stopsource_inplace_mem) {
     test_inplace_stop_source_get_token();

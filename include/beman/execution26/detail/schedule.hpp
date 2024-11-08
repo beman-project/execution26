@@ -8,6 +8,8 @@
 #include <beman/execution26/detail/common.hpp>
 #include <utility>
 
+#include <beman/execution26/detail/suppress_push.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26 {
@@ -32,5 +34,7 @@ inline constexpr ::beman::execution26::schedule_t schedule{};
 } // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
+
+#include <beman/execution26/detail/suppress_pop.hpp>
 
 #endif

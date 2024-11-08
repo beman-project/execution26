@@ -19,14 +19,14 @@ template <typename T>
 struct forward_like_helper {
     template <typename U>
     static auto forward(U&& u) -> ::std::remove_reference_t<U>&& {
-        return ::std::move(u);
+        return ::std::move(u); // NOLINT(bugprone-move-forwarding-reference)
     }
 };
 template <typename T>
 struct forward_like_helper<T&&> {
     template <typename U>
     static auto forward(U&& u) -> ::std::remove_cvref_t<U>&& {
-        return ::std::move(u);
+        return ::std::move(u); // NOLINT(bugprone-move-forwarding-reference)
     }
 };
 template <typename T>
@@ -40,7 +40,7 @@ template <typename T>
 struct forward_like_helper<const T&&> {
     template <typename U>
     static auto forward(U&& u) -> const ::std::remove_cvref_t<U>&& {
-        return ::std::move(u);
+        return ::std::move(u); // NOLINT(bugprone-move-forwarding-reference)
     }
 };
 template <typename T>

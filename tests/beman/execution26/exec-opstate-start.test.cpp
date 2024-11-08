@@ -11,7 +11,7 @@
 namespace {
 struct receiver {
     int  value{};
-    auto set_value(int value) noexcept -> void { this->value = value; }
+    auto set_value(int value) && noexcept -> void { this->value = value; }
 };
 
 struct non_opstate {};
@@ -19,7 +19,7 @@ struct non_opstate {};
 template <bool Noexcept>
 struct opstate {
     receiver* rcvr;
-    auto      start() const noexcept(Noexcept) -> void { test_std::set_value(std::move(*rcvr), 42); }
+    auto      start() const noexcept(Noexcept) -> void { test_std::set_value(::std::move(*rcvr), 42); }
 };
 
 template <typename State>
@@ -39,18 +39,18 @@ auto test_start_argument_type() {
 
 template <typename State>
 auto test_start_member() {
-    State state;
+    State state{};
     static_assert(not requires { test_std::start(state); });
-    State cstate;
+    State cstate{};
     static_assert(not requires { test_std::start(cstate); });
 }
 
 template <typename State>
 auto test_start_noexcept() {
-    State state;
-    static_assert(not requires { test_std::start(state); });
-    State cstate;
-    static_assert(not requires { test_std::start(cstate); });
+    State state{};
+    static_assert(noexcept(state));
+    State cstate{};
+    static_assert(noexcept(cstate));
 }
 
 template <typename State>

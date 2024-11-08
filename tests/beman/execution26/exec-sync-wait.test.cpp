@@ -137,22 +137,20 @@ auto test_sync_wait_state() -> void {
 auto test_sync_wait_receiver() -> void {
     {
         using sender = decltype(test_std::just(arg<0>{}, arg<1>{}, arg<2>{}));
-        test_detail::sync_wait_state<sender>    state{};
-        test_detail::sync_wait_receiver<sender> receiver{&state};
+        test_detail::sync_wait_state<sender> state{};
         ASSERT(not state.result);
         ASSERT(not state.error);
-        test_std::set_value(std::move(receiver), arg<0>{2}, arg<1>{3}, arg<2>{5});
+        test_std::set_value(test_detail::sync_wait_receiver<sender>{&state}, arg<0>{2}, arg<1>{3}, arg<2>{5});
         ASSERT(state.result);
         ASSERT(not state.error);
         ASSERT(*state.result == (std::tuple{arg<0>{2}, arg<1>{3}, arg<2>{5}}));
     }
     {
         using sender = decltype(test_std::just(arg<0>{}, arg<1>{}, arg<2>{}));
-        test_detail::sync_wait_state<sender>    state{};
-        test_detail::sync_wait_receiver<sender> receiver{&state};
+        test_detail::sync_wait_state<sender> state{};
         ASSERT(not state.result);
         ASSERT(not state.error);
-        test_std::set_error(std::move(receiver), error{17});
+        test_std::set_error(test_detail::sync_wait_receiver<sender>{&state}, error{17});
         ASSERT(not state.result);
         ASSERT(state.error);
         try {
@@ -160,16 +158,16 @@ auto test_sync_wait_receiver() -> void {
         } catch (const error& e) {
             ASSERT(e.value == 17);
         } catch (...) {
+            // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
             ASSERT(nullptr == "unexpected exception type");
         }
     }
     {
         using sender = decltype(test_std::just(arg<0>{}, arg<1>{}, arg<2>{}));
-        test_detail::sync_wait_state<sender>    state{};
-        test_detail::sync_wait_receiver<sender> receiver{&state};
+        test_detail::sync_wait_state<sender> state{};
         ASSERT(not state.result);
         ASSERT(not state.error);
-        test_std::set_error(std::move(receiver), std::make_exception_ptr(error{17}));
+        test_std::set_error(test_detail::sync_wait_receiver<sender>{&state}, std::make_exception_ptr(error{17}));
         ASSERT(not state.result);
         ASSERT(state.error);
         try {
@@ -177,16 +175,16 @@ auto test_sync_wait_receiver() -> void {
         } catch (const error& e) {
             ASSERT(e.value == 17);
         } catch (...) {
+            // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
             ASSERT(nullptr == "unexpected exception type");
         }
     }
     {
         using sender = decltype(test_std::just(arg<0>{}, arg<1>{}, arg<2>{}));
-        test_detail::sync_wait_state<sender>    state{};
-        test_detail::sync_wait_receiver<sender> receiver{&state};
+        test_detail::sync_wait_state<sender> state{};
         ASSERT(not state.result);
         ASSERT(not state.error);
-        test_std::set_stopped(std::move(receiver));
+        test_std::set_stopped(test_detail::sync_wait_receiver<sender>{&state});
         ASSERT(not state.result);
         ASSERT(not state.error);
     }
@@ -198,24 +196,31 @@ auto test_sync_wait() -> void {
         ASSERT(value);
         ASSERT(*value == (std::tuple{arg<0>{7}, arg<1>{11}}));
     } catch (...) {
-        ASSERT(nullptr == "no exception expected from sync_wait(just(...)");
+        ASSERT(
+            nullptr ==
+            "no exception expected from sync_wait(just(...)"); // NOLINT(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
     }
 
     try {
         auto value{test_std::sync_wait(send_error{17})};
         use(value);
-        ASSERT(nullptr == "this line should never be reached");
+        ASSERT(nullptr ==
+               "this line should never be reached"); // NOLINT(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
     } catch (const error& e) {
         ASSERT(e.value == 17);
     } catch (...) {
+        // NOLINTBEGIN(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "no exception expected from sync_wait(just(...)");
+        // NOLINTEND(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
     }
 
     try {
         auto value{test_std::sync_wait(send_stopped())};
         ASSERT(not value);
     } catch (...) {
+        // NOLINTBEGIN(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "no exception expected from sync_wait(just(...)");
+        // NOLINTEND(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
     }
 }
 } // namespace

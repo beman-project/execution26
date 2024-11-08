@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <beman/execution26/stop_token.hpp>
+#include <array>
 #include <memory>
 #include "test/execution.hpp"
 #include "test/stop_token.hpp"
 
+namespace {
 auto test_stop_token_swap() -> void {
     // Plan:
     // - Given two pairs of stop_tokens compare equal within the pair
@@ -15,8 +17,8 @@ auto test_stop_token_swap() -> void {
     // Reference: [stoptoken.mem] p1
 
     ::test_std::stop_source s0, s1;
-    ::test_std::stop_token  pair0[] = {s0.get_token(), s0.get_token()};
-    ::test_std::stop_token  pair1[] = {s1.get_token(), s1.get_token()};
+    ::std::array<::test_std::stop_token, 2> pair0 = {s0.get_token(), s0.get_token()};
+    ::std::array<::test_std::stop_token, 2> pair1 = {s1.get_token(), s1.get_token()};
 
     ASSERT(pair0[0] == pair0[1]);
     ASSERT(pair1[0] == pair1[1]);
@@ -85,11 +87,18 @@ auto test_stop_token_stop_possible() -> void {
     ASSERT(unstopped_token.stop_possible() == false);
     ASSERT(stopped_token.stop_possible() == true);
 }
+} // namespace
 
 TEST(stoptoken_mem) {
     static_assert(::test_std::stoppable_token<::test_std::stop_token>);
 
-    test_stop_token_swap();
-    test_stop_token_stop_requested();
-    test_stop_token_stop_possible();
+    try {
+        test_stop_token_swap();
+        test_stop_token_stop_requested();
+        test_stop_token_stop_possible();
+    } catch (...) {
+        // NOLINTBEGIN(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+        ASSERT(nullptr == "the stop token tests are not expected to throw");
+        // NOLINTEND(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+    }
 }

@@ -24,7 +24,7 @@ class sched_attrs {
 
   public:
     template <typename S>
-    sched_attrs(S&& sched) : sched(::std::forward<S>(sched)) {}
+    explicit sched_attrs(S sched) : sched(::std::move(sched)) {}
 
     template <typename Tag>
     auto query(const ::beman::execution26::get_completion_scheduler_t<Tag>&) const noexcept {

@@ -18,6 +18,8 @@
 #include <type_traits>
 #include <utility>
 
+#include <beman/execution26/detail/suppress_push.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26 {
@@ -81,5 +83,7 @@ inline constexpr get_completion_scheduler_t<Tag> get_completion_scheduler{};
 } // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
+
+#include <beman/execution26/detail/suppress_pop.hpp>
 
 #endif

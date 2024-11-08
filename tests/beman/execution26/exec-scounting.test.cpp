@@ -26,7 +26,10 @@ auto test_scounting_ctor() -> void {
     static_assert(not std::assignable_from<test_std::simple_counting_scope&, const test_std::simple_counting_scope>);
 
     // a scope is created unused and can be destroyed:
-    test_std::simple_counting_scope{};
+    {
+        test_std::simple_counting_scope scope{};
+        test::use(scope);
+    }
     // a scope can be used and closed and can be destroyed:
     {
         test_std::simple_counting_scope scope{};

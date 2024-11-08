@@ -89,8 +89,12 @@ clang-tidy: build/$(SANITIZER)/compile_commands.json
 codespell:
 	codespell -L statics,snd,copyable,cancelled
 
-format:
+format: cmake-format clang-format
+
+cmake-format:
 	cmake-format -i `git diff --name-only main | egrep '(CMakeLists.txt|\.cmake)'`
+
+clang-format:
 	git clang-format main
 
 todo:

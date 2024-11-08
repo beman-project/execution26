@@ -9,6 +9,8 @@
 #include <type_traits>
 #include <utility>
 
+#include <beman/execution26/detail/suppress_push.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
@@ -18,7 +20,7 @@ class fwd_env {
     Env env;
 
   public:
-    fwd_env(Env&& env) : env(::std::forward<Env>(env)) {}
+    explicit fwd_env(Env&& env) : env(::std::forward<Env>(env)) {}
 
     template <typename Query, typename... Args>
         requires(not::beman::execution26::forwarding_query(::std::remove_cvref_t<Query>()))
@@ -38,5 +40,7 @@ fwd_env(Env&&) -> fwd_env<Env>;
 } // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
+
+#include <beman/execution26/detail/suppress_pop.hpp>
 
 #endif

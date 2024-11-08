@@ -935,7 +935,8 @@ auto test_connect_all() -> void {
         static_assert(requires { s.connect(receiver{}); });
         static_assert(requires { test_std::connect(s, receiver{}); });
         test_detail::basic_state state{std::move(s), receiver{}};
-        auto product{test_detail::connect_all(&state, std::move(s), std::index_sequence<0, 1, 2, 3>{})};
+        const sender4            s1{};
+        auto product{test_detail::connect_all(&state, std::move(s1), std::index_sequence<0, 1, 2, 3>{})};
         ASSERT(product.size() == 4);
         test::use(product);
     }

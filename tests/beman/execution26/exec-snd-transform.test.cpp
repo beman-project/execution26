@@ -12,7 +12,7 @@
 // ----------------------------------------------------------------------------
 
 namespace {
-enum class kind { dom, tag };
+enum class kind : unsigned char { dom, tag };
 struct env {};
 struct empty_domain {};
 
@@ -68,12 +68,13 @@ struct special_domain {
 
 template <bool Noexcept, typename Expect, typename Dom, typename Sender>
 auto test_transform_sender(Dom&& dom, Sender&& sndr) {
+    auto value{sndr.value};
     static_assert(test_std::sender<std::remove_cvref_t<Sender>>);
     static_assert(requires { test_std::transform_sender(dom, std::forward<Sender>(sndr)); });
     if constexpr (requires { test_std::transform_sender(dom, std::forward<Sender>(sndr)); }) {
         static_assert(std::same_as<Expect, decltype(test_std::transform_sender(dom, std::forward<Sender>(sndr)))>);
         static_assert(Noexcept == noexcept(test_std::transform_sender(dom, std::forward<Sender>(sndr))));
-        ASSERT(sndr.value == test_std::transform_sender(dom, std::forward<Sender>(sndr)).value);
+        ASSERT(value == test_std::transform_sender(dom, std::forward<Sender>(sndr)).value);
     }
 
     static_assert(requires { test_std::transform_sender(dom, std::forward<Sender>(sndr), env{}); });
@@ -81,7 +82,7 @@ auto test_transform_sender(Dom&& dom, Sender&& sndr) {
         static_assert(
             std::same_as<Expect, decltype(test_std::transform_sender(dom, std::forward<Sender>(sndr), env{}))>);
         static_assert(Noexcept == noexcept(test_std::transform_sender(dom, std::forward<Sender>(sndr), env{})));
-        ASSERT(sndr.value == test_std::transform_sender(dom, std::forward<Sender>(sndr), env{}).value);
+        ASSERT(value == test_std::transform_sender(dom, std::forward<Sender>(sndr), env{}).value);
     }
 
     static_assert(not requires { test_std::transform_sender(dom, std::forward<Sender>(sndr), env{}, env{}); });

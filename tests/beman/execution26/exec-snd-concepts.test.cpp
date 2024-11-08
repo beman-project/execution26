@@ -118,7 +118,12 @@ auto test_sender() -> void {
 
 auto test_sender_in() -> void {
     struct non_queryable {
+        non_queryable()                                        = default;
+        non_queryable(non_queryable&&)                         = default;
+        non_queryable(const non_queryable&)                    = default;
         ~non_queryable() = delete;
+        auto operator=(non_queryable&&) -> non_queryable&      = default;
+        auto operator=(const non_queryable&) -> non_queryable& = default;
     };
     struct queryable {};
     struct non_sender_in {};

@@ -75,7 +75,7 @@ struct product_type : ::beman::execution26::detail::product_type_base<::std::ind
 
     template <typename Allocator, typename Product>
     static auto make_from(Allocator&& allocator, Product&& product) -> product_type {
-        return std::forward<Product>(product).make_from(
+        return product_type::make_from(
             ::std::forward<Allocator>(allocator), ::std::forward<Product>(product), ::std::index_sequence_for<T...>{});
     }
 

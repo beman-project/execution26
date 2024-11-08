@@ -147,6 +147,7 @@ auto test_with_await_transform() -> void {
     static_assert(noexcept(promise.await_transform(with_as_awaitable<awaiter<bool, void>, true>{})));
     static_assert(not noexcept(promise.await_transform(with_as_awaitable<awaiter<bool, void>, false>{})));
     auto a2{promise.await_transform(with_as_awaitable<awaiter<bool, void>>{})};
+    test::use(a2);
     static_assert(std::same_as<awaiter<bool, void>, decltype(a2)>);
 }
 

@@ -17,7 +17,7 @@ TEST(notify) {
         static_assert(test_std::sender<decltype(s)>);
         static_assert(test_std::sender_in<decltype(s)>);
         n.complete();
-        test_std::sync_wait(::std::move(s));
+        test_std::sync_wait(s);
     }
     {
         struct receiver {

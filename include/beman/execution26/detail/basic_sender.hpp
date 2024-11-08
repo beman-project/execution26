@@ -15,6 +15,8 @@
 #include <beman/execution26/detail/get_completion_signatures.hpp>
 #include <utility>
 
+#include <beman/execution26/detail/suppress_push.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
@@ -37,10 +39,11 @@ struct basic_sender : ::beman::execution26::detail::product_type<Tag, Data, Chil
             data.children);
     }
 
-  private:
     template <typename Receiver>
         requires(not::beman::execution26::receiver<Receiver>)
     auto connect(Receiver receiver) = BEMAN_EXECUTION26_DELETE("the passed receiver doesn't model receiver");
+
+  private:
 #if __cpp_explicit_this_parameter < 202110L
     template <::beman::execution26::receiver Receiver>
     auto connect(Receiver receiver) & noexcept(true /*-dk:TODO*/)
@@ -96,5 +99,7 @@ struct basic_sender : ::beman::execution26::detail::product_type<Tag, Data, Chil
 } // namespace beman::execution26::detail
 
 // ----------------------------------------------------------------------------
+
+#include <beman/execution26/detail/suppress_pop.hpp>
 
 #endif

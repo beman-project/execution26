@@ -24,7 +24,7 @@ TEST(forward_like) {
     object       o{};
     const object co{};
     test_forward_like<int&>(o);
-    test_forward_like<int&&>(std::move(o));
+    test_forward_like<int&&>(std::move(o)); // NOLINT(hicpp-move-const-arg,performance-move-const-arg)
     test_forward_like<const int&>(co);
-    test_forward_like<const int&&>(std::move(co));
+    test_forward_like<const int&&>(std::move(co)); // NOLINT(hicpp-move-const-arg,performance-move-const-arg)
 }

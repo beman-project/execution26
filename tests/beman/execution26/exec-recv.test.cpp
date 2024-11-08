@@ -19,6 +19,12 @@ struct no_get_env;
 struct non_env {
     friend struct no_get_env;
 
+    non_env()                                  = default;
+    non_env(non_env&&)                         = default;
+    non_env(const non_env&)                    = default;
+    auto operator=(non_env&&) -> non_env&      = default;
+    auto operator=(const non_env&) -> non_env& = default;
+
   private:
     ~non_env() {}
 };
@@ -35,12 +41,18 @@ struct not_move_constructible {
     not_move_constructible()                              = default;
     not_move_constructible(const not_move_constructible&) = default;
     not_move_constructible(not_move_constructible&&)      = delete;
+    ~not_move_constructible()                                                = default;
+    auto operator=(const not_move_constructible&) -> not_move_constructible& = default;
+    auto operator=(not_move_constructible&&) -> not_move_constructible&      = delete;
 };
 struct not_copy_constructible {
     using receiver_concept                                = test_std::receiver_t;
     not_copy_constructible()                              = default;
     not_copy_constructible(const not_copy_constructible&) = delete;
     not_copy_constructible(not_copy_constructible&&)      = default;
+    ~not_copy_constructible()                                                = default;
+    auto operator=(const not_copy_constructible&) -> not_copy_constructible& = delete;
+    auto operator=(not_copy_constructible&&) -> not_copy_constructible&      = default;
 };
 
 struct receiver_final final {
@@ -52,7 +64,6 @@ struct receiver_base {
 struct receiver_derived {
     using receiver_concept = derived;
 };
-} // namespace
 
 auto test_receiver_concept() -> void {
     static_assert(not test_std::receiver<no_receiver_concept>);
@@ -67,7 +78,6 @@ auto test_receiver_concept() -> void {
     static_assert(test_std::receiver<receiver_derived>);
 }
 
-namespace {
 template <int>
 struct arg_t {};
 
@@ -78,7 +88,6 @@ struct receiver1 {
     auto set_error(int) -> void {}
     auto set_stopped() noexcept -> void {}
 };
-} // namespace
 
 auto test_valid_completions_for_concept() -> void {
     test_std::set_value(receiver1{}, arg_t<0>());
@@ -94,6 +103,7 @@ auto test_valid_completions_for_concept() -> void {
 
     static_assert(test_std::detail::valid_completion_for<auto()->test_std::set_stopped_t, receiver1>);
 }
+} // namespace
 
 TEST(exec_recv) {
     test_receiver_concept();

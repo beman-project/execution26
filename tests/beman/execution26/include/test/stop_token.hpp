@@ -6,9 +6,11 @@
 #define INCLUDED_TEST_STOP_TOKEN
 
 #include <beman/execution26/stop_token.hpp>
+#include <beman/execution26/detail/immovable.hpp>
 #include <test/execution.hpp>
 
 #include <algorithm>
+#include <array>
 #include <atomic>
 #include <cassert>
 #include <chrono>
@@ -50,7 +52,7 @@ inline auto test::stop_visible(Token token, Stop stop) -> void {
     //   was requested.
     // Reference: [thread.stoptoken.intro] p3
 
-    Token tokens[] = {token, token, token, token};
+    std::array<Token, 4> tokens{token, token, token, token};
 
     auto predicate = [](auto&& t) { return t.stop_requested(); };
     ASSERT((::std::ranges::none_of(tokens, predicate)));
@@ -82,7 +84,7 @@ inline auto test::stop_callback(Token token, Stop stop) -> void {
 
     struct Callback {
         Data* data;
-        Callback(Data* data) : data(data) {}
+        explicit Callback(Data* data) : data(data) {}
         auto operator()() {
             ++this->data->count;
             this->data->stop_requested = this->data->token.stop_requested();
@@ -91,7 +93,7 @@ inline auto test::stop_callback(Token token, Stop stop) -> void {
 
     Data data{token};
 
-    ::test_std::stop_callback_for_t<Token, Callback> cb0(token, &data);
+    ::test_std::stop_callback_for_t<Token, Callback> cb0(token, Callback{&data});
     ASSERT(data.count == 0);
     ASSERT(data.stop_requested == false);
     stop();
@@ -102,7 +104,7 @@ inline auto test::stop_callback(Token token, Stop stop) -> void {
         stop();
         ASSERT(data.count == 1);
 
-        ::test_std::stop_callback_for_t<Token, Callback> cb1(token, &data);
+        ::test_std::stop_callback_for_t<Token, Callback> cb1(token, Callback{&data});
         ASSERT(data.count == 2);
         stop();
         ASSERT(data.count == 2);
@@ -122,13 +124,13 @@ auto test::stop_callback_dtor_deregisters(Token token, Stop stop) -> void {
 
     struct Callback {
         bool* ptr;
-        Callback(bool* ptr) : ptr(ptr) {}
+        explicit Callback(bool* ptr) : ptr(ptr) {}
         auto operator()() { *this->ptr = true; }
     };
 
     bool flag{};
     ::std::invoke([token, &flag] {
-        ::test_std::stop_callback_for_t<Token, Callback> cb(token, &flag);
+        ::test_std::stop_callback_for_t<Token, Callback> cb(token, Callback{&flag});
         ASSERT(flag == false);
     });
 
@@ -164,7 +166,7 @@ inline auto test::stop_callback_dtor_other_thread(Token token, Stop stop) -> voi
     };
     struct Callback {
         Data* data;
-        Callback(Data* data) : data(data) {}
+        explicit Callback(Data* data) : data(data) {}
         auto operator()() -> void {
             using namespace ::std::chrono_literals;
             {
@@ -181,7 +183,7 @@ inline auto test::stop_callback_dtor_other_thread(Token token, Stop stop) -> voi
     Data data;
 
     using CB = ::test_std::stop_callback_for_t<Token, Callback>;
-    ::std::unique_ptr<CB> ptr(new CB(token, &data));
+    ::std::unique_ptr<CB> ptr(new CB(token, Callback{&data}));
 
     ::std::thread thread([&ptr, &data] {
         {
@@ -210,19 +212,24 @@ inline auto test::stop_callback_dtor_same_thread(Token token, Stop stop) -> void
     // - Then the deregistration does not block.
     // Reference: [stoptoken.concepts] p4
     struct Base {
+        Base()                               = default;
+        Base(Base&&)                         = default;
+        Base(const Base&)                    = default;
         virtual ~Base() = default;
+        auto operator=(Base&&) -> Base&      = default;
+        auto operator=(const Base&) -> Base& = default;
     };
     struct Callback {
         ::std::unique_ptr<Base>* self;
-        Callback(::std::unique_ptr<Base>* self) : self(self) {}
+        explicit Callback(::std::unique_ptr<Base>* self) : self(self) {}
         auto operator()() { this->self->reset(); }
     };
     struct Object : Base {
         ::test_std::stop_callback_for_t<Token, Callback> cb;
-        Object(Token token, ::std::unique_ptr<Base>* self) : cb(token, self) {}
+        Object(Token token, ::std::unique_ptr<Base>* self) : cb(std::move(token), Callback{self}) {}
     };
     ::std::unique_ptr<Base> ptr;
-    ptr.reset(new Object(token, &ptr));
+    ptr.reset(new Object(std::move(token), &ptr));
 
     ::std::atomic<bool> done{};
     ::std::thread       thread([&done] {

@@ -196,11 +196,17 @@ auto test_just_allocator() -> void {
 } // namespace
 
 TEST(exec_just) {
-    test_just_constraints();
-    test_just();
-    test_just_allocator();
+
     using type = test_detail::
         call_result_t<test_std::get_completion_signatures_t, decltype(test_std::just()), test_std::empty_env>;
 
     static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t()>, type>);
+    try {
+        test_just_constraints();
+        test_just();
+        test_just_allocator();
+    } catch (...) {
+        ASSERT(nullptr ==
+               "the just tests shouldn't throw"); // NOLINT(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
+    }
 }

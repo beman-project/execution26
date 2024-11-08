@@ -8,6 +8,8 @@
 #include <beman/execution26/detail/forwarding_query.hpp>
 #include <utility>
 
+#include <beman/execution26/detail/suppress_push.hpp>
+
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26 {
@@ -39,5 +41,7 @@ inline constexpr get_domain_t get_domain{};
 } // namespace beman::execution26
 
 // ----------------------------------------------------------------------------
+
+#include <beman/execution26/detail/suppress_pop.hpp>
 
 #endif
