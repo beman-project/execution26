@@ -15,8 +15,7 @@ struct arg {
 struct arg_throwing {};
 
 struct receiver {
-    template <typename Error>
-    auto set_error(Error&&) noexcept -> void {}
+    auto set_error(int) noexcept -> void {}
     // NOTLINTNEXTLINE(performance-unnecessary-value-param)
     auto set_error(test::throws) noexcept -> void {}
     auto set_error(arg a) noexcept -> void { ASSERT(a.value == 43); }
