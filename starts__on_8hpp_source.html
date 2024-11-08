@@ -123,25 +123,24 @@ $(function() {
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">template</span> &lt;::beman::execution26::scheduler Scheduler, ::beman::execution26::sender Sender&gt;</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keyword">auto</span> operator()(Scheduler&amp;&amp; scheduler, Sender&amp;&amp; sender)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keyword">auto</span> domain{::beman::execution26::detail::query_with_default(::beman::execution26::get_domain,</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                                                                     ::std::forward&lt;Scheduler&gt;(scheduler),</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                                                                     <a class="code hl_struct" href="structbeman_1_1execution26_1_1default__domain.html">::beman::execution26::default_domain</a>{})};</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        return ::beman::execution26::transform_sender(</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            domain,</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            ::beman::execution26::detail::make_sender(</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                *<span class="keyword">this</span>, ::std::forward&lt;Scheduler&gt;(scheduler), ::std::forward&lt;Sender&gt;(sender)));</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    }</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>};</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>} <span class="comment">// namespace beman::execution26::detail</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution26.html">beman::execution26</a> {</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>using ::beman::execution26::detail::starts_on_t;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="keyword">inline</span> constexpr ::beman::execution26::detail::starts_on_t starts_on{};</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>} <span class="comment">// namespace beman::execution26</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keyword">auto</span> domain{::beman::execution26::detail::query_with_default(</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            ::beman::execution26::get_domain, scheduler, <a class="code hl_struct" href="structbeman_1_1execution26_1_1default__domain.html">::beman::execution26::default_domain</a>{})};</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        return ::beman::execution26::transform_sender(</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            domain,</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            ::beman::execution26::detail::make_sender(</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                *<span class="keyword">this</span>, ::std::forward&lt;Scheduler&gt;(scheduler), ::std::forward&lt;Sender&gt;(sender)));</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>};</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>} <span class="comment">// namespace beman::execution26::detail</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution26.html">beman::execution26</a> {</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>using ::beman::execution26::detail::starts_on_t;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">inline</span> constexpr ::beman::execution26::detail::starts_on_t starts_on{};</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>} <span class="comment">// namespace beman::execution26</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="anamespacebeman_1_1execution26_html"><div class="ttname"><a href="namespacebeman_1_1execution26.html">beman::execution26</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> allocator_aware_move.hpp:15</div></div>
 <div class="ttc" id="astructbeman_1_1execution26_1_1default__domain_html"><div class="ttname"><a href="structbeman_1_1execution26_1_1default__domain.html">beman::execution26::default_domain</a></div><div class="ttdoc">Domain type used when no domain is specified explicitly.</div><div class="ttdef"><b>Definition:</b> default_domain.hpp:21</div></div>
 </div><!-- fragment --></div><!-- contents -->
