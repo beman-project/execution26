@@ -38,8 +38,9 @@ void test_callable() {
 
 template <typename R>
 auto test_noexcept() {
+    test::throws obj{};
     static_assert(requires { test_std::set_error(std::declval<R>(), arg()); });
-    static_assert(not requires { test_std::set_error(std::declval<R>(), test::throws()); });
+    static_assert(not requires { test_std::set_error(std::declval<R>(), obj); });
     static_assert(not requires { test_std::set_error(std::declval<R>(), arg_throwing()); });
 }
 } // namespace
