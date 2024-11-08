@@ -117,7 +117,7 @@ TEST(exec_let) {
     try {
         test_let_value();
         test_let_value_allocator();
-    } catch (const std::exception& e) {
+    } catch (...) {
         // NOLINTBEGIN(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "let tests are not expected to throw");
         // NOLINTEND(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
