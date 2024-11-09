@@ -6,6 +6,7 @@
 list(
   APPEND
   EXAMPLES
+  playground
   sender-demo
   when_all-cancel
   stop_token
