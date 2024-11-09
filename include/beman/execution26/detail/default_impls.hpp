@@ -20,6 +20,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief Helper type providing default implementations for basic_sender
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 struct default_impls {
     static constexpr auto get_attrs = [](const auto&, const auto&... child) noexcept -> decltype(auto) {
         if constexpr (1 == sizeof...(child))

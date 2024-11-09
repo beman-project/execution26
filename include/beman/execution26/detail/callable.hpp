@@ -12,6 +12,7 @@ namespace beman::execution26::detail {
 /*!
  * \brief Concept used to detect callable objects.
  * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \concept callable
  * \internal
  */
 template <typename Fun, typename... Args>

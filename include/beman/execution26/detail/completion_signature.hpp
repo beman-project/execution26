@@ -37,6 +37,7 @@ struct is_set_value<::beman::execution26::set_value_t(Args...)> : ::std::true_ty
  * - set_value_t(A...) for successful completion with a set of argument.
  *
  * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \concept copmletion_signature
  * \internal
  */
 template <typename Fun>

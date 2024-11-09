@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_SUSPEND_COMPLETE
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_SUSPEND_COMPLETE
 
+#include <exception>
 #include <coroutine>
 #include <utility>
 

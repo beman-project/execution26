@@ -9,6 +9,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief Helper type alias to get the type after decaying the argument
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <auto&& Tag>
 using decayed_typeof = ::std::decay_t<decltype(Tag)>;
 }

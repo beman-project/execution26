@@ -12,6 +12,10 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26 {
+/*!
+ * \brief Alias to access the completion signatures of a sender
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ */
 template <typename Sender, typename Env = ::beman::execution26::empty_env>
     requires ::beman::execution26::sender_in<Sender, Env>
 using completion_signatures_of_t =

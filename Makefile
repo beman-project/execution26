@@ -100,8 +100,12 @@ clang-format:
 todo:
 	bin/mk-todo.py
 
-clean:
-	$(RM) -r $(BUILD)
+.PHONY: clean-doc
+clean-doc:
+	$(RM) -r docs/html docs/latex
+
+clean: clean-doc
+	$(RM) -r $(BUILD) 
 	$(RM) mkerr olderr *~
 
 distclean: clean

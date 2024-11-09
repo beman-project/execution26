@@ -17,6 +17,12 @@ namespace beman::execution26 {
 /*!
  * \brief Domain type used when no domain is specified explicitly.
  * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ *
+ * \details
+ * The default_domain tries to delegate any of the transformations to a member
+ * function of the
+ * tag type of the passed sender. If there is no corresponding member function
+ * no transformation is applied.
  */
 struct default_domain {
     template <::beman::execution26::sender Sender, ::beman::execution26::detail::queryable... Env>

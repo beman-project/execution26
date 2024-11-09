@@ -30,6 +30,11 @@
 
 namespace beman::execution26::detail {
 // specialize default_domain appropriately
+/*!
+ * \brief The actual implementation of the continues_on customization point object
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 struct continues_on_t {
     template <::beman::execution26::detail::sender_for<continues_on_t> Sender, typename... Env>
     static auto transform_sender(Sender&& sender, Env&&...) {
@@ -49,6 +54,11 @@ struct continues_on_t {
     }
 };
 
+/*!
+ * \brief Specialization of impls_for to implement the continues_on functionality
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <>
 struct impls_for<::beman::execution26::detail::continues_on_t> : ::beman::execution26::detail::default_impls {
     static constexpr auto get_attrs{[](const auto& data, const auto& child) noexcept -> decltype(auto) {
@@ -58,6 +68,11 @@ struct impls_for<::beman::execution26::detail::continues_on_t> : ::beman::execut
     }};
 };
 
+/*!
+ * \brief Get the sender's domain when the sender is continue_on
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <::beman::execution26::detail::sender_for<::beman::execution26::detail::continues_on_t> Sender, typename Env>
 auto get_domain_late(Sender&& sender, Env&&) {
     auto scheduler{sender.template get<1>()};

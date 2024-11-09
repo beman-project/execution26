@@ -34,6 +34,11 @@ struct completion_domain_merge<completion_domain_undefined, completion_domain_un
     using type = completion_domain_undefined;
 };
 
+/*!
+ * \brief Get a sender's completion domain or the specified default.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Default = ::beman::execution26::default_domain, typename Sender>
 constexpr auto completion_domain(const Sender& sender) noexcept {
 

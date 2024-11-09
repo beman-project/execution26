@@ -6,7 +6,6 @@
 
 #include <beman/execution26/detail/completion_signatures.hpp>
 #include <beman/execution26/detail/completion_signatures_for.hpp>
-#include <beman/execution26/detail/decayed_typeof.hpp>
 #include <beman/execution26/detail/default_impls.hpp>
 #include <beman/execution26/detail/get_env.hpp>
 #include <beman/execution26/detail/impls_for.hpp>

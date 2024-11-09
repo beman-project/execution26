@@ -10,6 +10,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief Helper concept to determine if the first argument decays to the second argument
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename From, typename To>
 concept decays_to = ::std::same_as<::std::decay_t<From>, To>;
 }

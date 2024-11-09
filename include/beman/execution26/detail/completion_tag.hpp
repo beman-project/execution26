@@ -12,6 +12,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief A helper concept used to determine if a type is one of the completion tags.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Tag>
 concept completion_tag =
     ::std::same_as<Tag, ::beman::execution26::set_error_t> ||

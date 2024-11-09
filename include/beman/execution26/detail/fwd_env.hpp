@@ -14,6 +14,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief A helper class to create environments and taking forwarding_query into account
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Env>
 class fwd_env {
   private:

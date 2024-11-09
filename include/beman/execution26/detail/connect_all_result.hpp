@@ -12,6 +12,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief Helper type used to determine the state type when connecting all senders in a basic_sender
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Sender, typename Receiver>
 using connect_all_result =
     ::beman::execution26::detail::call_result_t<decltype(::beman::execution26::detail::connect_all),
