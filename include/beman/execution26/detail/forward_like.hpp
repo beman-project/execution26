@@ -58,6 +58,11 @@ auto own_forward_like(U&& u) noexcept -> decltype(auto) {
     return ::beman::execution26::detail::forward_like_helper<T>::forward(::std::forward<U>(u));
 }
 
+/*!
+ * \brief Helper function to forward a subobject (in case the standard library version is unavailable)
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename T, typename U>
 auto forward_like(U&& u) noexcept -> decltype(auto) {
 #if 202207 <= disabled__cpp_lib_forward_like

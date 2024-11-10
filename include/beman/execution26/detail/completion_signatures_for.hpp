@@ -13,25 +13,28 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief Tag type used to determine if completion signatures were defined.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 struct no_completion_signatures_defined_in_sender {};
 
+/*!
+ * \brief Primary template declaration for the customisation of sender completion signatures.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Sender, typename Env>
 struct completion_signatures_for_impl {
     using type = ::beman::execution26::detail::no_completion_signatures_defined_in_sender;
 };
-#if 0
-    {
-        using type = decltype(::std::invoke([]{
-            if constexpr (::beman::execution26::sender_in<Sender, Env>)
-                return decltype(::beman::execution26::get_completion_signatures(
-                    ::std::declval<Sender>(), ::std::declval<Env>())
-                ){};
-            else
-                return ::beman::execution26::detail::no_completion_signatures_defined_in_sender{};
-        }));
-    };
-#endif
 
+/*!
+ * \brief Type alias used to access a senders completion signatures.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Sender, typename Env>
 using completion_signatures_for = ::std::conditional_t<
     ::std::same_as<beman::execution26::detail::no_completion_signatures_defined_in_sender,

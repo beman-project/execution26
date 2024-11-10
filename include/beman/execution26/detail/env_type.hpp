@@ -13,6 +13,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief Helper alias to determine the environment type associated with sender in a basic_sender
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Index, typename Sender, typename Receiver>
 using env_type = ::beman::execution26::detail::call_result_t<
     decltype(::beman::execution26::detail::impls_for< ::beman::execution26::tag_of_t<Sender> >::get_env),

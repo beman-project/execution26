@@ -36,7 +36,15 @@ namespace beman {
  *
  * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
  */
-namespace execution26 {}
+namespace execution26 {
+
+/*!
+ * \namespace beman::execution26::detail
+ * \brief Namespace for implementation details related to beman::execution26
+ * \internal
+ */
+namespace detail {}
+} // namespace execution26
 } // namespace beman
 
 // ----------------------------------------------------------------------------

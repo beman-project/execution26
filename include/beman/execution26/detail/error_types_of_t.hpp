@@ -15,6 +15,10 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26 {
+/*!
+ * \brief Type alias to get error types for a sender
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ */
 template <typename Sender,
           typename Env                         = ::beman::execution26::empty_env,
           template <typename...> class Variant = ::beman::execution26::detail::variant_or_empty>

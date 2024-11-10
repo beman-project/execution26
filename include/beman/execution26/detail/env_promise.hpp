@@ -10,6 +10,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief A helper promise type with an associated environment
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Env>
 struct env_promise : ::beman::execution26::detail::with_await_transform<Env> {
     auto get_return_object() noexcept -> void;

@@ -18,6 +18,7 @@ namespace beman::execution26::detail {
  * \brief Auxiliary concept used to break cycle for scheduler concept.
  * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
  * \internal
+ * \concept almost_scheduler
  */
 template <typename Scheduler>
 concept almost_scheduler = ::std::derived_from<typename ::std::remove_cvref_t<Scheduler>::scheduler_concept,

@@ -19,6 +19,11 @@
 #include <beman/execution26/detail/suppress_push.hpp>
 
 namespace beman::execution26::detail {
+/*!
+ * \brief A helper types whose call operator connects all children of a basic_sender
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 struct connect_all_t {
     static auto use(auto&&...) {}
     //-dk:TODO is the S parameter deviating from the spec?
@@ -40,6 +45,12 @@ struct connect_all_t {
             data.children);
     }
 };
+
+/*!
+ * \brief A helper object of type connect_all_t
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 inline constexpr connect_all_t connect_all{};
 } // namespace beman::execution26::detail
 

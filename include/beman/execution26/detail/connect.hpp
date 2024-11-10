@@ -15,6 +15,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief The actual implementation of the connect customization point type
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 struct connect_t {
     template <typename Sender, typename Receiver>
     auto operator()(Sender&& sender, Receiver&& receiver) const noexcept(true /*-dk:TODO*/) {
@@ -45,9 +50,18 @@ struct connect_t {
 } // namespace beman::execution26::detail
 
 namespace beman::execution26 {
+/*!
+ * \brief Type of the connect customization point object.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ */
 using beman::execution26::detail::connect_t;
 /*!
  * \brief Customization point object used to connect a sender and a receiver.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ *
+ * \details
+ * `connect(sender, receiver)` returns the result of calling `sender.connect(receiver)`.
+ * The returned object `state` is an `operation_state` object.
  */
 inline constexpr connect_t connect{};
 } // namespace beman::execution26

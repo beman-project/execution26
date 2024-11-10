@@ -12,6 +12,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief Helper class to get the result of a function which may be only called once.
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Fun>
 struct emplace_from {
     using type = ::beman::execution26::detail::call_result_t<Fun>;

@@ -21,15 +21,30 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief A helper template used determine the completion signature for type T which may be void
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename T>
 struct awaiter_set_value {
     using type = ::beman::execution26::set_value_t(T);
 };
+/*!
+ * \brief Specialization for awaiter_set_value when the type is void
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <>
 struct awaiter_set_value<void> {
     using type = ::beman::execution26::set_value_t();
 };
 
+/*!
+ * \brief A helper template used to determine the completion signature matching an awaiter
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Awaiter, typename Receiver>
 using awaiter_completion_signatures = ::beman::execution26::completion_signatures<
     typename ::beman::execution26::detail::awaiter_set_value< ::beman::execution26::detail::await_result_type<
@@ -38,6 +53,11 @@ using awaiter_completion_signatures = ::beman::execution26::completion_signature
     ::beman::execution26::set_error_t(::std::exception_ptr),
     ::beman::execution26::set_stopped_t()>;
 
+/*!
+ * \brief A helper function used to connect an awaiter to a receiver
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename Awaiter, ::beman::execution26::receiver Receiver>
 auto connect_awaitable(Awaiter awaiter, Receiver receiver)
     -> ::beman::execution26::detail::operation_state_task<Receiver>

@@ -11,7 +11,6 @@
 #include <beman/execution26/detail/product_type.hpp>
 #include <beman/execution26/detail/completion_signatures_for.hpp>
 #include <beman/execution26/detail/impls_for.hpp>
-#include <beman/execution26/detail/decayed_typeof.hpp>
 #include <beman/execution26/detail/default_impls.hpp>
 #include <concepts>
 #include <memory>

@@ -10,6 +10,11 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26::detail {
+/*!
+ * \brief Helper type alias to get type type of a tuple after decaying the argument types
+ * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
+ * \internal
+ */
 template <typename... T>
 using decayed_tuple = ::std::tuple<::std::decay_t<T>...>;
 }
