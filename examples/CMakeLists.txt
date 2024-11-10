@@ -12,6 +12,9 @@ list(
   stop_token
   stopping
   allocator
+  intro-1-hello-world
+  intro-2-hello-async
+  intro-5-consumer
 )
 
 foreach(EXAMPLE ${EXAMPLES})
