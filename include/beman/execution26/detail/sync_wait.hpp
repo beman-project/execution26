@@ -53,6 +53,10 @@ struct sync_wait_receiver {
 
     ::beman::execution26::detail::sync_wait_state<Sender>* state{};
 
+    auto get_env() const noexcept -> ::beman::execution26::detail::sync_wait_env {
+        return sync_wait_env{ &this->state->loop }; 
+    }
+
     template <typename Error>
     auto set_error(Error&& error) && noexcept -> void {
         this->state->error = ::beman::execution26::detail::as_except_ptr(::std::forward<Error>(error));
