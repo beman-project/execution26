@@ -94,13 +94,13 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn an entity, e.g., a sender, into an awaitable.  <a href="structbeman_1_1execution26_1_1as__awaitable__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution26_1_1completion__signatures.html">completion_signatures</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class template used to a specify a list of completion signatures.  <a href="structbeman_1_1execution26_1_1completion__signatures.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution26_1_1default__domain.html">default_domain</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Domain type used when no domain is specified explicitly.  <a href="structbeman_1_1execution26_1_1default__domain.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution26_1_1empty__env.html">empty_env</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution26_1_1forwarding__query__t.html">forwarding_query_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An empty type used as an environment when there is no environment available.  <a href="structbeman_1_1execution26_1_1empty__env.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbeman_1_1execution26_1_1get__allocator__t.html">get_allocator_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -187,6 +187,7 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ad2a4badfeeb6303c4c2d950eab7a1a63"><td class="memTemplParams" colspan="2"><a id="ad2a4badfeeb6303c4c2d950eab7a1a63" name="ad2a4badfeeb6303c4c2d950eab7a1a63"></a>
 template&lt;typename Sender , typename Env  = ::beman::execution26::empty_env&gt; </td></tr>
 <tr class="memitem:ad2a4badfeeb6303c4c2d950eab7a1a63"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>completion_signatures_of_t</b> = ::beman::execution26::detail::call_result_t&lt; <a class="el" href="structbeman_1_1execution26_1_1get__completion__signatures__t.html">::beman::execution26::get_completion_signatures_t</a>, Sender, Env &gt;</td></tr>
+<tr class="memdesc:ad2a4badfeeb6303c4c2d950eab7a1a63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias to access the completion signatures of a sender. <br /></td></tr>
 <tr class="separator:ad2a4badfeeb6303c4c2d950eab7a1a63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a028aed6a889e804bf07fdf3119967eeb"><td class="memTemplParams" colspan="2"><a id="a028aed6a889e804bf07fdf3119967eeb" name="a028aed6a889e804bf07fdf3119967eeb"></a>
 template&lt;typename Sender , typename Receiver &gt; </td></tr>
@@ -196,11 +197,17 @@ template&lt;typename Sender , typename Receiver &gt; </td></tr>
 <tr class="memitem:a07f2e946c713fb3ed266de3f19c633ce"><td class="memTemplParams" colspan="2"><a id="a07f2e946c713fb3ed266de3f19c633ce" name="a07f2e946c713fb3ed266de3f19c633ce"></a>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a07f2e946c713fb3ed266de3f19c633ce"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>env_of_t</b> = decltype(::beman::execution26::get_env(::std::declval&lt; T &gt;()))</td></tr>
+<tr class="memdesc:a07f2e946c713fb3ed266de3f19c633ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the type of the environment associated with a type. <br /></td></tr>
 <tr class="separator:a07f2e946c713fb3ed266de3f19c633ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4892fa295bb46f5f59e2f070a04b000"><td class="memTemplParams" colspan="2"><a id="aa4892fa295bb46f5f59e2f070a04b000" name="aa4892fa295bb46f5f59e2f070a04b000"></a>
 template&lt;typename Sender , typename Env  = ::beman::execution26::empty_env, template&lt; typename... &gt; class Variant = ::beman::execution26::detail::variant_or_empty&gt; </td></tr>
-<tr class="memitem:aa4892fa295bb46f5f59e2f070a04b000"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>error_types_of_t</b> = ::beman::execution26::detail::gather_signatures&lt; <a class="el" href="structbeman_1_1execution26_1_1set__error__t.html">::beman::execution26::set_error_t</a>, ::beman::execution26::completion_signatures_of_t&lt; Sender, Env &gt;, ::std::type_identity_t, Variant &gt;</td></tr>
+<tr class="memitem:aa4892fa295bb46f5f59e2f070a04b000"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>error_types_of_t</b> = ::beman::execution26::detail::gather_signatures&lt; <a class="el" href="structbeman_1_1execution26_1_1set__error__t.html">::beman::execution26::set_error_t</a>, <a class="el" href="namespacebeman_1_1execution26.html#ad2a4badfeeb6303c4c2d950eab7a1a63">::beman::execution26::completion_signatures_of_t</a>&lt; Sender, Env &gt;, ::std::type_identity_t, Variant &gt;</td></tr>
+<tr class="memdesc:aa4892fa295bb46f5f59e2f070a04b000"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type alias to get error types for a sender. <br /></td></tr>
 <tr class="separator:aa4892fa295bb46f5f59e2f070a04b000"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42d24e74ef3440d30bb76fca1e4e99ff"><td class="memItemLeft" align="right" valign="top"><a id="a42d24e74ef3440d30bb76fca1e4e99ff" name="a42d24e74ef3440d30bb76fca1e4e99ff"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>forwarding_query_t</b> = beman::execution26::detail::forwarding_query_t</td></tr>
+<tr class="memdesc:a42d24e74ef3440d30bb76fca1e4e99ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of the forwarding_query customization point object. <br /></td></tr>
+<tr class="separator:a42d24e74ef3440d30bb76fca1e4e99ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad00f346adebdc4292c5fd7dbe729203c"><td class="memItemLeft" align="right" valign="top"><a id="ad00f346adebdc4292c5fd7dbe729203c" name="ad00f346adebdc4292c5fd7dbe729203c"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>into_variant_t</b> = ::beman::execution26::detail::into_variant_t</td></tr>
 <tr class="separator:ad00f346adebdc4292c5fd7dbe729203c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -258,7 +265,7 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>upon_stopped_t</b> =
 <tr class="separator:a853b435e0260ee70f9eba9eb672b4e65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17cc4dec22bd91c25e1edd2085190978"><td class="memTemplParams" colspan="2"><a id="a17cc4dec22bd91c25e1edd2085190978" name="a17cc4dec22bd91c25e1edd2085190978"></a>
 template&lt;typename Sender , typename Env  = ::beman::execution26::empty_env, template&lt; typename... &gt; class Tuple = ::beman::execution26::detail::decayed_tuple, template&lt; typename... &gt; class Variant = ::beman::execution26::detail::variant_or_empty&gt; </td></tr>
-<tr class="memitem:a17cc4dec22bd91c25e1edd2085190978"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>value_types_of_t</b> = ::beman::execution26::detail::gather_signatures&lt; <a class="el" href="structbeman_1_1execution26_1_1set__value__t.html">::beman::execution26::set_value_t</a>, ::beman::execution26::completion_signatures_of_t&lt; Sender, Env &gt;, Tuple, Variant &gt;</td></tr>
+<tr class="memitem:a17cc4dec22bd91c25e1edd2085190978"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>value_types_of_t</b> = ::beman::execution26::detail::gather_signatures&lt; <a class="el" href="structbeman_1_1execution26_1_1set__value__t.html">::beman::execution26::set_value_t</a>, <a class="el" href="namespacebeman_1_1execution26.html#ad2a4badfeeb6303c4c2d950eab7a1a63">::beman::execution26::completion_signatures_of_t</a>&lt; Sender, Env &gt;, Tuple, Variant &gt;</td></tr>
 <tr class="separator:a17cc4dec22bd91c25e1edd2085190978"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -267,11 +274,13 @@ Functions</h2></td></tr>
 template&lt;typename Domain , typename Tag , ::beman::execution26::sender Sender, typename... Args&gt; <br />
 requires requires(Domain domain, Tag tag, Sender&amp;&amp; sender, Args&amp;&amp;... args) { domain.apply_sender(Tag(), ::std::forward&lt;Sender&gt;(sender), ::std::forward&lt;Args&gt;(args)...); }</td></tr>
 <tr class="memitem:af6bd76164b9d30fe6729d7407dd7f865"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>apply_sender</b> (Domain domain, Tag, Sender &amp;&amp;sender, Args &amp;&amp;... args) noexcept(noexcept(domain.apply_sender(Tag(), ::std::forward&lt; Sender &gt;(sender), ::std::forward&lt; Args &gt;(args)...))) -&gt; decltype(auto)</td></tr>
+<tr class="memdesc:af6bd76164b9d30fe6729d7407dd7f865"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function used to transform a sender and its arguments for a domain. <br /></td></tr>
 <tr class="separator:af6bd76164b9d30fe6729d7407dd7f865"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cae29560944db3d2f4d59f62839b022"><td class="memTemplParams" colspan="2"><a id="a6cae29560944db3d2f4d59f62839b022" name="a6cae29560944db3d2f4d59f62839b022"></a>
 template&lt;typename Domain , typename Tag , ::beman::execution26::sender Sender, typename... Args&gt; <br />
 requires (not requires(Domain domain, Tag tag, Sender&amp;&amp; sender, Args&amp;&amp;... args) { domain.apply_sender(Tag(), ::std::forward&lt;Sender&gt;(sender), ::std::forward&lt;Args&gt;(args)...); }) &amp;&amp; requires(Tag tag, Sender&amp;&amp; sender, Args&amp;&amp;... args) { <a class="el" href="structbeman_1_1execution26_1_1default__domain.html">beman::execution26::default_domain</a>().apply_sender( Tag(), ::std::forward&lt;Sender&gt;(sender), ::std::forward&lt;Args&gt;(args)...); }</td></tr>
 <tr class="memitem:a6cae29560944db3d2f4d59f62839b022"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>apply_sender</b> (Domain, Tag, Sender &amp;&amp;sender, Args &amp;&amp;... args) noexcept(noexcept(<a class="el" href="structbeman_1_1execution26_1_1default__domain.html">beman::execution26::default_domain</a>().apply_sender(Tag(), ::std::forward&lt; Sender &gt;(sender), ::std::forward&lt; Args &gt;(args)...))) -&gt; decltype(auto)</td></tr>
+<tr class="memdesc:a6cae29560944db3d2f4d59f62839b022"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default function used to transform a second and its arguments. <br /></td></tr>
 <tr class="separator:a6cae29560944db3d2f4d59f62839b022"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac77ad3e1ceff6e9717542e17564822de"><td class="memTemplParams" colspan="2"><a id="ac77ad3e1ceff6e9717542e17564822de" name="ac77ad3e1ceff6e9717542e17564822de"></a>
 template&lt;typename CallbackFun &gt; </td></tr>
@@ -307,16 +316,15 @@ Variables</h2></td></tr>
 <tr class="memitem:aeebf68f4f32cffcf259f0fd96287cae9"><td class="memItemLeft" align="right" valign="top"><a id="aeebf68f4f32cffcf259f0fd96287cae9" name="aeebf68f4f32cffcf259f0fd96287cae9"></a>
 constexpr <a class="el" href="structbeman_1_1execution26_1_1as__awaitable__t.html">::beman::execution26::as_awaitable_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>as_awaitable</b> {}</td></tr>
 <tr class="separator:aeebf68f4f32cffcf259f0fd96287cae9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20d6a7e8f250d3b019b817922fad6cd1"><td class="memItemLeft" align="right" valign="top"><a id="a20d6a7e8f250d3b019b817922fad6cd1" name="a20d6a7e8f250d3b019b817922fad6cd1"></a>
-constexpr connect_t&#160;</td><td class="memItemRight" valign="bottom"><b>connect</b> {}</td></tr>
-<tr class="memdesc:a20d6a7e8f250d3b019b817922fad6cd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Customization point object used to connect a sender and a receiver. <br /></td></tr>
+<tr class="memitem:a20d6a7e8f250d3b019b817922fad6cd1"><td class="memItemLeft" align="right" valign="top">constexpr connect_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution26.html#a20d6a7e8f250d3b019b817922fad6cd1">connect</a> {}</td></tr>
+<tr class="memdesc:a20d6a7e8f250d3b019b817922fad6cd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Customization point object used to connect a sender and a receiver.  <br /></td></tr>
 <tr class="separator:a20d6a7e8f250d3b019b817922fad6cd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0aa435ede6ae9ce4499fe3ffcac0630"><td class="memItemLeft" align="right" valign="top"><a id="ac0aa435ede6ae9ce4499fe3ffcac0630" name="ac0aa435ede6ae9ce4499fe3ffcac0630"></a>
 constexpr continues_on_t&#160;</td><td class="memItemRight" valign="bottom"><b>continues_on</b> {}</td></tr>
 <tr class="memdesc:ac0aa435ede6ae9ce4499fe3ffcac0630"><td class="mdescLeft">&#160;</td><td class="mdescRight">Customization point object to create a <code>continues_on</code> sender. <br /></td></tr>
 <tr class="separator:ac0aa435ede6ae9ce4499fe3ffcac0630"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71292bc7b842cbd7a9684e08f07e4c0c"><td class="memItemLeft" align="right" valign="top"><a id="a71292bc7b842cbd7a9684e08f07e4c0c" name="a71292bc7b842cbd7a9684e08f07e4c0c"></a>
-constexpr <a class="el" href="structbeman_1_1execution26_1_1forwarding__query__t.html">forwarding_query_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>forwarding_query</b> {}</td></tr>
+<tr class="memitem:a71292bc7b842cbd7a9684e08f07e4c0c"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespacebeman_1_1execution26.html#a42d24e74ef3440d30bb76fca1e4e99ff">forwarding_query_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution26.html#a71292bc7b842cbd7a9684e08f07e4c0c">forwarding_query</a> {}</td></tr>
+<tr class="memdesc:a71292bc7b842cbd7a9684e08f07e4c0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The customizatoin point object to determine whether querys should be forwarded.  <br /></td></tr>
 <tr class="separator:a71292bc7b842cbd7a9684e08f07e4c0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a10d5b6a1ee9760aa89318738935d81"><td class="memItemLeft" align="right" valign="top"><a id="a7a10d5b6a1ee9760aa89318738935d81" name="a7a10d5b6a1ee9760aa89318738935d81"></a>
 constexpr <a class="el" href="structbeman_1_1execution26_1_1get__allocator__t.html">get_allocator_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_allocator</b> {}</td></tr>
@@ -423,6 +431,61 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>version</b> {000}</td>
 <div class="textblock"><p>Namespace for asynchronous operations and their vocabulary. </p>
 <p>The <a class="el" href="namespacebeman_1_1execution26.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution26</a> namespace contains various components for accessing asynchronous operations. </p>
 </div><h2 class="groupheader">Variable Documentation</h2>
+<a id="a20d6a7e8f250d3b019b817922fad6cd1" name="a20d6a7e8f250d3b019b817922fad6cd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20d6a7e8f250d3b019b817922fad6cd1">&#9670;&#160;</a></span>connect</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr connect_t beman::execution26::connect {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Customization point object used to connect a sender and a receiver. </p>
+<p><code><a class="el" href="namespacebeman_1_1execution26.html#a20d6a7e8f250d3b019b817922fad6cd1" title="Customization point object used to connect a sender and a receiver.">connect(sender, receiver)</a></code> returns the result of calling <code>sender.connect(receiver)</code>. The returned object <code>state</code> is an <code>operation_state</code> object. </p>
+
+</div>
+</div>
+<a id="a71292bc7b842cbd7a9684e08f07e4c0c" name="a71292bc7b842cbd7a9684e08f07e4c0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71292bc7b842cbd7a9684e08f07e4c0c">&#9670;&#160;</a></span>forwarding_query</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="namespacebeman_1_1execution26.html#a42d24e74ef3440d30bb76fca1e4e99ff">forwarding_query_t</a> beman::execution26::forwarding_query {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The customizatoin point object to determine whether querys should be forwarded. </p>
+<p>The <code>constexpr</code> call <code><a class="el" href="namespacebeman_1_1execution26.html#a71292bc7b842cbd7a9684e08f07e4c0c" title="The customizatoin point object to determine whether querys should be forwarded.">forwarding_query(q)</a></code> determines whether the query <code>q</code> passed as argument should be forwarded. The result is determined as follows:</p>
+<ul>
+<li>If the <code>q.query(forwarding_query)</code> is a <code>noexcept</code> expression of type <code>bool</code> the result of this call.</li>
+<li>If the type of <code>q</code> is derived from <code>forwarding_query_t</code>.</li>
+<li><code>false</code> otherwise. </li>
+</ul>
+
+</div>
+</div>
 <a id="a6740b8ee2f45f2effc7695931e48b8eb" name="a6740b8ee2f45f2effc7695931e48b8eb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6740b8ee2f45f2effc7695931e48b8eb">&#9670;&#160;</a></span>sends_stopped</h2>
 
@@ -447,9 +510,10 @@ template&lt;typename Sender , typename Env  = ::beman::execution26::empty_env&gt
 <b>Initial value:</b><div class="fragment"><div class="line">{not::std::same_as&lt;</div>
 <div class="line">    ::beman::execution26::detail::type_list&lt;&gt;,</div>
 <div class="line">    ::beman::execution26::detail::gather_signatures&lt; <a class="code hl_struct" href="structbeman_1_1execution26_1_1set__stopped__t.html">::beman::execution26::set_stopped_t</a>,</div>
-<div class="line">                                                     ::beman::execution26::completion_signatures_of_t&lt;Sender, Env&gt;,</div>
+<div class="line">                                                     <a class="code hl_typedef" href="namespacebeman_1_1execution26.html#ad2a4badfeeb6303c4c2d950eab7a1a63">::beman::execution26::completion_signatures_of_t&lt;Sender, Env&gt;</a>,</div>
 <div class="line">                                                     ::beman::execution26::detail::type_list,</div>
 <div class="line">                                                     ::beman::execution26::detail::type_list&gt; &gt;}</div>
+<div class="ttc" id="anamespacebeman_1_1execution26_html_ad2a4badfeeb6303c4c2d950eab7a1a63"><div class="ttname"><a href="namespacebeman_1_1execution26.html#ad2a4badfeeb6303c4c2d950eab7a1a63">beman::execution26::completion_signatures_of_t</a></div><div class="ttdeci">::beman::execution26::detail::call_result_t&lt; ::beman::execution26::get_completion_signatures_t, Sender, Env &gt; completion_signatures_of_t</div><div class="ttdoc">Alias to access the completion signatures of a sender.</div><div class="ttdef"><b>Definition:</b> completion_signatures_of_t.hpp:22</div></div>
 <div class="ttc" id="astructbeman_1_1execution26_1_1set__stopped__t_html"><div class="ttname"><a href="structbeman_1_1execution26_1_1set__stopped__t.html">beman::execution26::set_stopped_t</a></div><div class="ttdoc">Type of the customization point object for cancellation completions.</div><div class="ttdef"><b>Definition:</b> set_stopped.hpp:19</div></div>
 </div><!-- fragment -->
 </div>

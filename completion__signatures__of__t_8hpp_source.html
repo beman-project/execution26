@@ -92,16 +92,17 @@ $(function() {
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacebeman_1_1execution26.html">beman::execution26</a> {</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender, <span class="keyword">typename</span> Env = ::beman::execution26::empty_env&gt;</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    requires ::beman::execution26::sender_in&lt;Sender, Env&gt;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">using </span>completion_signatures_of_t =</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    ::beman::execution26::detail::call_result_t&lt; ::beman::execution26::get_completion_signatures_t, Sender, Env&gt;;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>}</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender, <span class="keyword">typename</span> Env = ::beman::execution26::empty_env&gt;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    requires ::beman::execution26::sender_in&lt;Sender, Env&gt;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="namespacebeman_1_1execution26.html#ad2a4badfeeb6303c4c2d950eab7a1a63">   21</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespacebeman_1_1execution26.html#ad2a4badfeeb6303c4c2d950eab7a1a63">completion_signatures_of_t</a> =</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    ::beman::execution26::detail::call_result_t&lt; ::beman::execution26::get_completion_signatures_t, Sender, Env&gt;;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>}</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="anamespacebeman_1_1execution26_html"><div class="ttname"><a href="namespacebeman_1_1execution26.html">beman::execution26</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> allocator_aware_move.hpp:16</div></div>
+<div class="ttc" id="anamespacebeman_1_1execution26_html_ad2a4badfeeb6303c4c2d950eab7a1a63"><div class="ttname"><a href="namespacebeman_1_1execution26.html#ad2a4badfeeb6303c4c2d950eab7a1a63">beman::execution26::completion_signatures_of_t</a></div><div class="ttdeci">::beman::execution26::detail::call_result_t&lt; ::beman::execution26::get_completion_signatures_t, Sender, Env &gt; completion_signatures_of_t</div><div class="ttdoc">Alias to access the completion signatures of a sender.</div><div class="ttdef"><b>Definition:</b> completion_signatures_of_t.hpp:22</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

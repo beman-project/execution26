@@ -114,33 +114,33 @@ $(function() {
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">using </span>type = completion_domain_undefined;</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>};</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Default = ::beman::execution26::default_domain, <span class="keyword">typename</span> Sender&gt;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">constexpr</span> <span class="keyword">auto</span> completion_domain(<span class="keyword">const</span> Sender&amp; sender) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">static_assert</span>(::beman::execution26::sender&lt;Sender&gt;);</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">auto</span> get = [&amp;sender]&lt;<span class="keyword">typename</span> Tag&gt;(Tag) {</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> {</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                          ::beman::execution26::get_domain(::beman::execution26::get_completion_scheduler&lt;Tag&gt;(</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                              ::beman::execution26::get_env(sender)));</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                      }) {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            return ::beman::execution26::get_domain(</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                ::beman::execution26::get_completion_scheduler&lt;Tag&gt;(::beman::execution26::get_env(sender)));</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            <span class="keywordflow">return</span> completion_domain_undefined{};</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        }</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    };</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">using </span>type = <span class="keyword">typename</span> completion_domain_merge&lt;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="keyword">typename</span> completion_domain_merge&lt;<span class="keyword">decltype</span>(get(<a class="code hl_variable" href="namespacebeman_1_1execution26.html#a5a55250379dfed82487b42003ff270b7">::beman::execution26::set_error</a>)),</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                                         <span class="keyword">decltype</span>(get(<a class="code hl_variable" href="namespacebeman_1_1execution26.html#ab5950df93e9bed15bda2d87615fe6f39">::beman::execution26::set_stopped</a>))&gt;::type,</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keyword">decltype</span>(get(<a class="code hl_variable" href="namespacebeman_1_1execution26.html#ae49d099ae6a14cda99cd4b5a7f0be069">::beman::execution26::set_value</a>))&gt;::type;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    return ::std::conditional_t&lt; ::std::same_as&lt;type, completion_domain_undefined&gt;, Default, type&gt;();</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>}</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>} <span class="comment">// namespace beman::execution26::detail</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Default = ::beman::execution26::default_domain, <span class="keyword">typename</span> Sender&gt;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">constexpr</span> <span class="keyword">auto</span> completion_domain(<span class="keyword">const</span> Sender&amp; sender) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keyword">static_assert</span>(::beman::execution26::sender&lt;Sender&gt;);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">auto</span> get = [&amp;sender]&lt;<span class="keyword">typename</span> Tag&gt;(Tag) {</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                          ::beman::execution26::get_domain(::beman::execution26::get_completion_scheduler&lt;Tag&gt;(</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                              ::beman::execution26::get_env(sender)));</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                      }) {</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            return ::beman::execution26::get_domain(</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                ::beman::execution26::get_completion_scheduler&lt;Tag&gt;(::beman::execution26::get_env(sender)));</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            <span class="keywordflow">return</span> completion_domain_undefined{};</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        }</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    };</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keyword">using </span>type = <span class="keyword">typename</span> completion_domain_merge&lt;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keyword">typename</span> completion_domain_merge&lt;<span class="keyword">decltype</span>(get(<a class="code hl_variable" href="namespacebeman_1_1execution26.html#a5a55250379dfed82487b42003ff270b7">::beman::execution26::set_error</a>)),</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                                         <span class="keyword">decltype</span>(get(<a class="code hl_variable" href="namespacebeman_1_1execution26.html#ab5950df93e9bed15bda2d87615fe6f39">::beman::execution26::set_stopped</a>))&gt;::type,</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keyword">decltype</span>(get(<a class="code hl_variable" href="namespacebeman_1_1execution26.html#ae49d099ae6a14cda99cd4b5a7f0be069">::beman::execution26::set_value</a>))&gt;::type;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    return ::std::conditional_t&lt; ::std::same_as&lt;type, completion_domain_undefined&gt;, Default, type&gt;();</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>}</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>} <span class="comment">// namespace beman::execution26::detail</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="anamespacebeman_1_1execution26_html_a5a55250379dfed82487b42003ff270b7"><div class="ttname"><a href="namespacebeman_1_1execution26.html#a5a55250379dfed82487b42003ff270b7">beman::execution26::set_error</a></div><div class="ttdeci">constexpr set_error_t set_error</div><div class="ttdoc">Customization point object for error completions.</div><div class="ttdef"><b>Definition:</b> set_error.hpp:47</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution26_html_ab5950df93e9bed15bda2d87615fe6f39"><div class="ttname"><a href="namespacebeman_1_1execution26.html#ab5950df93e9bed15bda2d87615fe6f39">beman::execution26::set_stopped</a></div><div class="ttdeci">constexpr set_stopped_t set_stopped</div><div class="ttdoc">Customization point object for cancellation completions.</div><div class="ttdef"><b>Definition:</b> set_stopped.hpp:45</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution26_html_ae49d099ae6a14cda99cd4b5a7f0be069"><div class="ttname"><a href="namespacebeman_1_1execution26.html#ae49d099ae6a14cda99cd4b5a7f0be069">beman::execution26::set_value</a></div><div class="ttdeci">constexpr set_value_t set_value</div><div class="ttdoc">Customization point object for successful completions.</div><div class="ttdef"><b>Definition:</b> set_value.hpp:47</div></div>
