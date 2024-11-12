@@ -45,14 +45,15 @@ namespace exec = beman::execution26;
 //   doesn't seem to be readily enabled on MacOS.
 // - std::print isn't available everywhere, yet. Let's try a simple
 //   placeholder.
-static ::std::mutex io_lock;
+namespace {
+::std::mutex io_lock;
 void                print(std::string_view text, auto&&...) {
-    std::lock_guard guard(io_lock);
+    std::lock_guard const guard(io_lock);
     ::std::cout << text;
 }
 
 template <typename Token>
-auto active(Token token) -> void {
+auto active(const Token& token) -> void {
     auto i{0ull};
     while (not token.stop_requested()) {
         // do work
@@ -69,9 +70,9 @@ struct stop_callback_for_t {
 
 #ifdef __cpp_lib_latch
 template <typename Token>
-auto inactive(Token token) -> void {
+auto inactive(const Token& token) -> void {
     ::std::latch        latch(1);
-    stop_callback_for_t cb(token, [&latch] { latch.count_down(); });
+    stop_callback_for_t const cb(token, [&latch] { latch.count_down(); });
 
     latch.wait();
     print("inactive thread done (latch)\n");
@@ -88,6 +89,7 @@ auto inactive(Token token) -> void {
     print("inactive thread done (condition_variable)\n");
 }
 #endif
+} // namespace
 
 auto main() -> int {
     exec::stop_source source;

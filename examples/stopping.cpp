@@ -18,10 +18,11 @@ namespace ex = beman::execution26;
 
 // ----------------------------------------------------------------------------
 
+namespace {
 struct env {
     ex::inplace_stop_token token;
 
-    env(ex::inplace_stop_token token) : token(token) {}
+    env(ex::inplace_stop_token token) : token(token) {} // NOLINT(hicpp-explicit-conversions)
 
     auto query(const ex::get_stop_token_t&) const noexcept { return this->token; }
 };
@@ -73,6 +74,7 @@ struct receiver {
     auto set_error(auto&&) noexcept -> void {}
     auto set_stopped() noexcept -> void {}
 };
+} // namespace
 
 int main() {
     ex::inplace_stop_source source;

@@ -47,7 +47,7 @@ static_assert(ex::sender_in<just_sender<std::pmr::string>>);
 
 int main() {
     auto j = just_sender{std::pmr::string("value")};
-    auto t = std::move(j) | ex::then([](std::pmr::string v) { return v + " then"; });
+    auto t = std::move(j) | ex::then([](const std::pmr::string& v) { return v + " then"; });
     auto w = ex::when_all(std::move(t));
     auto e = ex::detail::write_env(std::move(w),
                                    ex::detail::make_env(ex::get_allocator, std::pmr::polymorphic_allocator<>()));

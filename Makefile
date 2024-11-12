@@ -1,7 +1,7 @@
 # Makefile
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-SANITIZERS = release debug msan asan usan tsan
+SANITIZERS = release debug msan asan usan tsan lsan
 
 .PHONY: default doc run update check ce todo distclean clean codespell clang-tidy build test all format $(SANITIZERS)
 
@@ -83,8 +83,9 @@ check:
 		< $$h sed -n "/^ *# *include <Beman\//s@.*[</]Beman/\(.*\).hpp>.*@$$from \1@p"; \
 	done | tsort > /dev/null
 
+build/$(SANITIZER)/compile_commands.json: $(SANITIZER)
 clang-tidy: build/$(SANITIZER)/compile_commands.json
-	run-clang-tidy -p build/$(SANITIZER) tests
+	run-clang-tidy -p build/$(SANITIZER) tests examples
 
 codespell:
 	codespell -L statics,snd,copyable,cancelled
@@ -105,7 +106,7 @@ clean-doc:
 	$(RM) -r docs/html docs/latex
 
 clean: clean-doc
-	$(RM) -r $(BUILD) 
+	$(RM) -r $(BUILD)
 	$(RM) mkerr olderr *~
 
 distclean: clean
