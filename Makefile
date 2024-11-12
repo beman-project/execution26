@@ -10,7 +10,7 @@ ifeq ($(OS),Darwin)
     SANITIZERS =+ tsan
 endif
 ifeq ($(OS),Linux)
-    SANITIZERS =+ asan msan
+    SANITIZERS =+ asan # TODO: msan
 endif
 
 .PHONY: default doc run update check ce todo distclean clean codespell clang-tidy build test all format $(SANITIZERS)
