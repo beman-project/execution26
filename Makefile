@@ -1,21 +1,30 @@
 # Makefile
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-SANITIZERS = release debug usan tsan # TODO: lsan
-OS := $(uname)
+MAKEFLAGS+= --no-builtin-rules          # Disable the built-in implicit rules.
+MAKEFLAGS+= --warn-undefined-variables  # Warn when an undefined variable is referenced.
+
+SANITIZERS = release debug usan # TODO: lsan
+OS := $(shell /usr/bin/uname)
+ifeq ($(OS),Darwin)
+    SANITIZERS =+ tsan
+endif
 ifeq ($(OS),Linux)
     SANITIZERS =+ asan msan
 endif
 
 .PHONY: default doc run update check ce todo distclean clean codespell clang-tidy build test all format $(SANITIZERS)
 
-COMPILER=system
+SYSROOT   ?=
+TOOLCHAIN ?=
+
+COMPILER=c++
 CXX_BASE=$(CXX:$(dir $(CXX))%=%)
 ifeq ($(CXX_BASE),g++)
-    COMPILER=gcc
+    COMPILER=g++
 endif
 ifeq ($(CXX_BASE),clang++)
-    COMPILER=clang
+    COMPILER=clang++
 endif
 
 CXX_FLAGS = -g
@@ -24,7 +33,6 @@ SOURCEDIR = $(CURDIR)
 BUILDROOT = build
 BUILD     = $(BUILDROOT)/$(SANITIZER)
 EXAMPLE   = beman.execution26.examples.stop_token
-CMAKE_C_COMPILER=$(COMPILER)
 CMAKE_CXX_COMPILER=$(COMPILER)
 
 ifeq ($(SANITIZER),release)
