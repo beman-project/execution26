@@ -28,7 +28,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        sanitizer: [debug, release]
+        preset: [debug, release]
         # TODO: compiler: [g++, clang++-19]
         compiler: [g++, clang++-18]
 
@@ -49,10 +49,18 @@ jobs:
         run: |
           brew install llvm@19 || echo ignored
 
-      - name: macos clang++-18 ${{ matrix.sanitizer }}
+      - name: macos clang++-18 ${{ matrix.preset }}
         if: startsWith(matrix.compiler, 'clang')
-        run: CXX=$(brew --prefix llvm@18)/bin/clang++ make ${{ matrix.sanitizer }}
+        run: CXX=$(brew --prefix llvm@18)/bin/clang++ cmake --workflow --preset ${{ matrix.preset }}
 
-      - name: macos g++ ${{ matrix.sanitizer }}
+      - name: macos clang++-18 sanitizer
+        if: startsWith(matrix.compiler, 'clang')
+        run: CXX=$(brew --prefix llvm@18)/bin/clang++ make all
+
+      - name: macos g++ ${{ matrix.preset }}
         if: startsWith(matrix.compiler, 'g++')
-        run: CXX=${{ matrix.compiler }} make ${{ matrix.sanitizer }}
+        run: CXX=${{ matrix.compiler }} cmake --workflow --preset ${{ matrix.preset }}
+
+      - name: macos g++ sanitizer
+        if: startsWith(matrix.compiler, 'g++')
+        run: CXX=${{ matrix.compiler }} make all

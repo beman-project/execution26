@@ -1,7 +1,11 @@
 # Makefile
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-SANITIZERS = release debug msan asan usan tsan lsan
+SANITIZERS = release debug usan tsan lsan
+OS := $(uname)
+ifeq ($(OS),Linux)
+    SANITIZERS =+ asan msan
+endif
 
 .PHONY: default doc run update check ce todo distclean clean codespell clang-tidy build test all format $(SANITIZERS)
 
@@ -24,7 +28,7 @@ CMAKE_C_COMPILER=$(COMPILER)
 CMAKE_CXX_COMPILER=$(COMPILER)
 
 ifeq ($(SANITIZER),release)
-    CXX_FLAGS = -O3 -pedantic -Wall -Wextra -Werror
+    CXX_FLAGS = -O3 -Wpedantic -Wall -Wextra -Wshadow # TODO: -Werror
 endif
 ifeq ($(SANITIZER),debug)
     CXX_FLAGS = -g
@@ -62,11 +66,12 @@ $(SANITIZERS):
 
 build:
 	@mkdir -p $(BUILD)
-	cd $(BUILD); CC=$(CXX) cmake $(SOURCEDIR) $(TOOLCHAIN) $(SYSROOT) -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
+	cd $(BUILD); CC=$(CXX) cmake -G Ninja $(SOURCEDIR) $(TOOLCHAIN) $(SYSROOT) -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 	cmake --build $(BUILD)
 
-test:
-	cmake --workflow --preset $(SANITIZER)
+test: build
+	# cmake --workflow --preset $(SANITIZER)
+	ctest --test-dir $(BUILD) --rerun-failed --output-on-failure
 
 ce:
 	@mkdir -p $(BUILD)

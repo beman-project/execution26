@@ -28,8 +28,8 @@ jobs:
       fail-fast: false
 
       matrix:
-        # TODO: sanitizer: [debug, release, asan, usan, tsan]
-        sanitizer: [debug, release]
+        # TODO: sanitizer: [debug, release, asan, usan, tsan, lsan, msan]
+        preset: [debug, release]
         compiler: [g++-14, clang++-19]
 
     steps:
@@ -42,5 +42,8 @@ jobs:
           chmod +x llvm.sh
           sudo ./llvm.sh 19 all
 
-      - name: Linux ${{ matrix.compiler }} ${{ matrix.sanitizer }}
-        run: CXX=${{ matrix.compiler }} make ${{ matrix.sanitizer }}
+      - name: Linux ${{ matrix.compiler }} ${{ matrix.preset }}
+        run: CXX=${{ matrix.compiler }} cmake --workflow --preset ${{ matrix.preset }}
+
+      - name: Linux ${{ matrix.compiler }} sanitizer
+        run: CXX=${{ matrix.compiler }} make all
