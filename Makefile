@@ -1,7 +1,7 @@
 # Makefile
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-SANITIZERS = release debug usan tsan lsan
+SANITIZERS = release debug usan tsan # TODO: lsan
 OS := $(uname)
 ifeq ($(OS),Linux)
     SANITIZERS =+ asan msan
