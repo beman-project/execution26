@@ -109,6 +109,7 @@ struct eager {
         state(R&& r, S&& s) : outer_receiver(std::forward<R>(r)), inner_state() {
             inner_state.emplace(std::forward<S>(s), receiver{this});
         }
+        // TODO on next line: bugprone-unchecked-optional-access
         auto start() & noexcept -> void { ex::start((*this->inner_state).st); }
     };
     template <ex::receiver Receiver>
@@ -127,7 +128,6 @@ auto main() -> int {
 
     ex::inplace_stop_source source{};
     auto                    op{ex::connect(s, receiver{&source})};
-    (void)op;
     std::cout << "start\n";
     ex::start(op);
     std::cout << "started\n";
