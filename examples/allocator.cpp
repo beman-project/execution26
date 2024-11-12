@@ -13,7 +13,7 @@ template <std::size_t Size>
 struct inline_resource : std::pmr::memory_resource {
     const char* name;
     explicit inline_resource(const char* name) : name(name) {}
-    std::byte  buffer[Size]{}; // NOLINT(hicpp-avoid-c-arrays)
+    std::byte  buffer[Size]{};      // NOLINT(hicpp-avoid-c-arrays)
     std::byte* next{+this->buffer}; // NOLINT(hicpp-no-array-decay)
 
     void* do_allocate(std::size_t size, std::size_t) override {
@@ -42,7 +42,8 @@ struct allocator_aware_fun {
     explicit allocator_aware_fun(F&& fun) : fun(std::forward<F>(fun)) {}
     allocator_aware_fun(const allocator_aware_fun& other, allocator_type allocator = {})
         : fun(other.fun), allocator(allocator) {}
-    allocator_aware_fun(allocator_aware_fun&& other) noexcept : fun(std::move(other.fun)), allocator(other.allocator) {}
+    allocator_aware_fun(allocator_aware_fun&& other) noexcept
+        : fun(std::move(other.fun)), allocator(other.allocator) {}
     allocator_aware_fun(allocator_aware_fun&& other, allocator_type allocator)
         : fun(std::move(other.fun)), allocator(allocator) {}
 

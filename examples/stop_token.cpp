@@ -46,9 +46,9 @@ namespace exec = beman::execution26;
 // - std::print isn't available everywhere, yet. Let's try a simple
 //   placeholder.
 namespace {
-::std::mutex io_lock;
+::std::mutex        io_lock;
 void                print(std::string_view text, auto&&...) {
-    std::lock_guard const guard(io_lock);
+    const std::lock_guard guard(io_lock);
     ::std::cout << text;
 }
 
@@ -72,7 +72,7 @@ struct stop_callback_for_t {
 template <typename Token>
 auto inactive(const Token& token) -> void {
     ::std::latch        latch(1);
-    stop_callback_for_t const cb(token, [&latch] { latch.count_down(); });
+    const stop_callback_for_t cb(token, [&latch] { latch.count_down(); });
 
     latch.wait();
     print("inactive thread done (latch)\n");
