@@ -7,10 +7,10 @@ MAKEFLAGS+= --warn-undefined-variables  # Warn when an undefined variable is ref
 SANITIZERS = release debug usan # TODO: lsan
 OS := $(shell /usr/bin/uname)
 ifeq ($(OS),Darwin)
-    SANITIZERS =+ tsan
+    SANITIZERS += tsan
 endif
 ifeq ($(OS),Linux)
-    SANITIZERS =+ asan # TODO: msan
+    SANITIZERS += asan # TODO: msan
 endif
 
 .PHONY: default doc run update check ce todo distclean clean codespell clang-tidy build test all format $(SANITIZERS)
