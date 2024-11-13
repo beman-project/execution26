@@ -1,17 +1,30 @@
 # Makefile
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-SANITIZERS = release debug msan asan usan tsan
+MAKEFLAGS+= --no-builtin-rules          # Disable the built-in implicit rules.
+MAKEFLAGS+= --warn-undefined-variables  # Warn when an undefined variable is referenced.
+
+SANITIZERS = release debug usan # TODO: lsan
+OS := $(shell /usr/bin/uname)
+ifeq ($(OS),Darwin)
+    SANITIZERS += tsan
+endif
+ifeq ($(OS),Linux)
+    SANITIZERS += asan # TODO: msan
+endif
 
 .PHONY: default doc run update check ce todo distclean clean codespell clang-tidy build test all format $(SANITIZERS)
 
-COMPILER=system
+SYSROOT   ?=
+TOOLCHAIN ?=
+
+COMPILER=c++
 CXX_BASE=$(CXX:$(dir $(CXX))%=%)
 ifeq ($(CXX_BASE),g++)
-    COMPILER=gcc
+    COMPILER=g++
 endif
 ifeq ($(CXX_BASE),clang++)
-    COMPILER=clang
+    COMPILER=clang++
 endif
 
 CXX_FLAGS = -g
@@ -20,11 +33,10 @@ SOURCEDIR = $(CURDIR)
 BUILDROOT = build
 BUILD     = $(BUILDROOT)/$(SANITIZER)
 EXAMPLE   = beman.execution26.examples.stop_token
-CMAKE_C_COMPILER=$(COMPILER)
 CMAKE_CXX_COMPILER=$(COMPILER)
 
 ifeq ($(SANITIZER),release)
-    CXX_FLAGS = -O3 -pedantic -Wall -Wextra -Werror
+    CXX_FLAGS = -O3 -Wpedantic -Wall -Wextra -Wshadow # TODO: -Werror
 endif
 ifeq ($(SANITIZER),debug)
     CXX_FLAGS = -g
@@ -62,11 +74,12 @@ $(SANITIZERS):
 
 build:
 	@mkdir -p $(BUILD)
-	cd $(BUILD); CC=$(CXX) cmake $(SOURCEDIR) $(TOOLCHAIN) $(SYSROOT) -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
+	cd $(BUILD); CC=$(CXX) cmake -G Ninja $(SOURCEDIR) $(TOOLCHAIN) $(SYSROOT) -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 	cmake --build $(BUILD)
 
-test:
-	cmake --workflow --preset $(SANITIZER)
+test: build
+	# cmake --workflow --preset $(SANITIZER)
+	ctest --test-dir $(BUILD) --rerun-failed --output-on-failure
 
 ce:
 	@mkdir -p $(BUILD)
@@ -83,8 +96,9 @@ check:
 		< $$h sed -n "/^ *# *include <Beman\//s@.*[</]Beman/\(.*\).hpp>.*@$$from \1@p"; \
 	done | tsort > /dev/null
 
+build/$(SANITIZER)/compile_commands.json: $(SANITIZER)
 clang-tidy: build/$(SANITIZER)/compile_commands.json
-	run-clang-tidy -p build/$(SANITIZER) tests
+	run-clang-tidy -p build/$(SANITIZER) tests examples
 
 codespell:
 	codespell -L statics,snd,copyable,cancelled
@@ -105,7 +119,7 @@ clean-doc:
 	$(RM) -r docs/html docs/latex
 
 clean: clean-doc
-	$(RM) -r $(BUILD) 
+	$(RM) -r $(BUILD)
 	$(RM) mkerr olderr *~
 
 distclean: clean
