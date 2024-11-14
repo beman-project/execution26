@@ -4,16 +4,16 @@
 MAKEFLAGS+= --no-builtin-rules          # Disable the built-in implicit rules.
 MAKEFLAGS+= --warn-undefined-variables  # Warn when an undefined variable is referenced.
 
-SANITIZERS = release debug usan # TODO: lsan
+SANITIZERS = usan # TODO: lsan
 OS := $(shell /usr/bin/uname)
 ifeq ($(OS),Darwin)
-    SANITIZERS += tsan
+    SANITIZERS += tsan # TODO: asan
 endif
 ifeq ($(OS),Linux)
-    SANITIZERS += asan # TODO: msan
+    SANITIZERS += asan # TODO: tsan msan
 endif
 
-.PHONY: default doc run update check ce todo distclean clean codespell clang-tidy build test all format $(SANITIZERS)
+.PHONY: default release debug doc run update check ce todo distclean clean codespell clang-tidy build test all format $(SANITIZERS)
 
 SYSROOT   ?=
 TOOLCHAIN ?=
@@ -27,8 +27,10 @@ ifeq ($(CXX_BASE),clang++)
     COMPILER=clang++
 endif
 
-CXX_FLAGS = -g
-SANITIZER = release
+LDFLAGS :=
+SAN_FLAGS :=
+CXX_FLAGS := -g
+SANITIZER ?= default
 SOURCEDIR = $(CURDIR)
 BUILDROOT = build
 BUILD     = $(BUILDROOT)/$(SANITIZER)
@@ -43,18 +45,22 @@ ifeq ($(SANITIZER),debug)
 endif
 ifeq ($(SANITIZER),msan)
     SAN_FLAGS = -fsanitize=memory
+    LDFLAGS = $(SAN_FLAGS)
 endif
 ifeq ($(SANITIZER),asan)
     SAN_FLAGS = -fsanitize=address -fsanitize=pointer-compare -fsanitize=pointer-subtract -fsanitize-address-use-after-scope
 endif
 ifeq ($(SANITIZER),usan)
     SAN_FLAGS = -fsanitize=undefined
+    LDFLAGS = $(SAN_FLAGS)
 endif
 ifeq ($(SANITIZER),tsan)
     SAN_FLAGS = -fsanitize=thread
+    LDFLAGS = $(SAN_FLAGS)
 endif
 ifeq ($(SANITIZER),lsan)
     SAN_FLAGS = -fsanitize=leak
+    LDFLAGS = $(SAN_FLAGS)
 endif
 
 default: test
@@ -67,19 +73,22 @@ run: test
 doc:
 	doxygen docs/Doxyfile
 
-release: test
-
 $(SANITIZERS):
 	$(MAKE) SANITIZER=$@
 
 build:
-	@mkdir -p $(BUILD)
-	cd $(BUILD); CC=$(CXX) cmake -G Ninja $(SOURCEDIR) $(TOOLCHAIN) $(SYSROOT) -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
+	CC=$(CXX) LDFLAGS=$(LDFLAGS) cmake --fresh -G Ninja -S $(SOURCEDIR) -B  $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
+      -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS="$(CXX_FLAGS) $(SAN_FLAGS)"
 	cmake --build $(BUILD)
 
 test: build
-	# cmake --workflow --preset $(SANITIZER)
 	ctest --test-dir $(BUILD) --rerun-failed --output-on-failure
+
+release:
+	cmake --workflow --preset $@ --fresh
+
+debug:
+	cmake --workflow --preset $@ --fresh
 
 ce:
 	@mkdir -p $(BUILD)

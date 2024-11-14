@@ -50,4 +50,5 @@ install(
   DESTINATION ${INSTALL_CONFIGDIR}
 )
 
+set(CPACK_GENERATOR TGZ)
 include(CPack)
