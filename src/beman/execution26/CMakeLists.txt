@@ -6,6 +6,11 @@
 add_library(${TARGET_LIBRARY} STATIC)
 add_library(${TARGET_ALIAS} ALIAS ${TARGET_LIBRARY})
 
+if(CMAKE_BUILD_TYPE STREQUAL Debug)
+  target_link_libraries(${TARGET_LIBRARY} PUBLIC $<BUILD_INTERFACE:${TARGET_LIBRARY}_project_options>)
+  target_link_libraries(${TARGET_LIBRARY} PUBLIC $<BUILD_INTERFACE:${TARGET_LIBRARY}_project_warnings>)
+endif()
+
 include(CMakePrintHelpers)
 cmake_print_variables(TARGET_ALIAS TARGET_LIBRARY TARGET_PREFIX PROJECT_SOURCE_DIR)
 

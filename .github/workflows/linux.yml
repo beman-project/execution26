@@ -9,7 +9,8 @@ on:
     paths:
       - "include/**"
       - "src/**"
-      - "test/**"
+      - "tests/**"
+      - "examples/**"
       - "cmake/**"
       - "Makefile"
       - "CMakePresets.json"
@@ -20,7 +21,8 @@ on:
     paths:
       - "include/**"
       - "src/**"
-      - "test/**"
+      - "tests/**"
+      - "examples/**"
       - "cmake/**"
       - "Makefile"
       - "CMakePresets.json"
@@ -52,4 +54,5 @@ jobs:
         run: CXX=${{ matrix.compiler }} cmake --workflow --preset ${{ matrix.preset }}
 
       - name: Linux ${{ matrix.compiler }} sanitizer
+        if: startsWith(matrix.preset, 'debug')
         run: CXX=${{ matrix.compiler }} make all
