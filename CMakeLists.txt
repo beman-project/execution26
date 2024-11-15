@@ -11,18 +11,6 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
   message(FATAL_ERROR "In-source builds are not allowed!")
 endif()
 
-include(FetchContent)
-
-# Add project_options from https://github.com/aminya/project_options
-# Change the version in the following URL to update the package
-# (watch the releases of the repository for future updates)
-set(PROJECT_OPTIONS_VERSION "v0.41.0")
-FetchContent_Declare(
-  _project_options URL https://github.com/aminya/project_options/archive/refs/tags/${PROJECT_OPTIONS_VERSION}.zip
-)
-FetchContent_MakeAvailable(_project_options)
-include(${_project_options_SOURCE_DIR}/Index.cmake)
-
 set(TARGET_NAME execution26)
 set(TARGET_NAMESPACE beman) # FIXME: not used in install(EXPORT ...) CK?
 set(TARGET_PREFIX ${TARGET_NAMESPACE}.${TARGET_NAME})
@@ -34,40 +22,54 @@ set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-targets)
 include(GNUInstallDirs)
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
-# Initialize project_options variable related to this project
-# This overwrites `project_options` and sets `project_warnings`
-# uncomment to enable the options. Some of them accept one or more inputs:
-project_options(
-  PREFIX
-  ${PROJECT_NAME}
-  ENABLE_CACHE
-  # ENABLE_CLANG_TIDY
-  ENABLE_VS_ANALYSIS
-  # ENABLE_INTERPROCEDURAL_OPTIMIZATION
-  # ENABLE_NATIVE_OPTIMIZATION
-  # ENABLE_DOXYGEN
-  # ENABLE_COVERAGE
-  ENABLE_SANITIZER_ADDRESS
-  ENABLE_SANITIZER_UNDEFINED
-  ENABLE_SANITIZER_THREAD
-  ENABLE_SANITIZER_MEMORY
-  # ENABLE_SANITIZER_POINTER_COMPARE
-  # ENABLE_SANITIZER_POINTER_SUBTRACT
-  # ENABLE_CONTROL_FLOW_PROTECTION
-  # ENABLE_STACK_PROTECTION
-  # ENABLE_OVERFLOW_PROTECTION
-  # ENABLE_ELF_PROTECTION
-  # ENABLE_RUNTIME_SYMBOLS_RESOLUTION
-  # ENABLE_COMPILE_COMMANDS_SYMLINK
-  # ENABLE_PCH
-  # PCH_HEADERS
-  # WARNINGS_AS_ERRORS
-  # ENABLE_INCLUDE_WHAT_YOU_USE
-  # ENABLE_GCC_ANALYZER
-  # ENABLE_BUILD_WITH_TIME_TRACE
-  # ENABLE_UNITY
-  # LINKER "lld"
-)
+if(CMAKE_BUILD_TYPE STREQUAL Debug)
+  include(FetchContent)
+
+  # Add project_options from https://github.com/aminya/project_options
+  # Change the version in the following URL to update the package
+  # (watch the releases of the repository for future updates)
+  set(PROJECT_OPTIONS_VERSION "v0.41.0")
+  FetchContent_Declare(
+    _project_options URL https://github.com/aminya/project_options/archive/refs/tags/${PROJECT_OPTIONS_VERSION}.zip
+  )
+  FetchContent_MakeAvailable(_project_options)
+  include(${_project_options_SOURCE_DIR}/Index.cmake)
+
+  # Initialize project_options variable related to this project
+  # This overwrites `project_options` and sets `project_warnings`
+  # uncomment to enable the options. Some of them accept one or more inputs:
+  project_options(
+    PREFIX
+    ${PROJECT_NAME}
+    ENABLE_CACHE
+    # ENABLE_CLANG_TIDY
+    ENABLE_VS_ANALYSIS
+    # ENABLE_INTERPROCEDURAL_OPTIMIZATION
+    # ENABLE_NATIVE_OPTIMIZATION
+    # ENABLE_DOXYGEN
+    # ENABLE_COVERAGE
+    ENABLE_SANITIZER_ADDRESS
+    ENABLE_SANITIZER_UNDEFINED
+    ENABLE_SANITIZER_THREAD
+    ENABLE_SANITIZER_MEMORY
+    # ENABLE_SANITIZER_POINTER_COMPARE
+    # ENABLE_SANITIZER_POINTER_SUBTRACT
+    # ENABLE_CONTROL_FLOW_PROTECTION
+    # ENABLE_STACK_PROTECTION
+    # ENABLE_OVERFLOW_PROTECTION
+    # ENABLE_ELF_PROTECTION
+    # ENABLE_RUNTIME_SYMBOLS_RESOLUTION
+    # ENABLE_COMPILE_COMMANDS_SYMLINK
+    # ENABLE_PCH
+    # PCH_HEADERS
+    # WARNINGS_AS_ERRORS
+    # ENABLE_INCLUDE_WHAT_YOU_USE
+    # ENABLE_GCC_ANALYZER
+    # ENABLE_BUILD_WITH_TIME_TRACE
+    # ENABLE_UNITY
+    # LINKER "lld"
+  )
+endif()
 
 add_subdirectory(src/beman/execution26)
 
