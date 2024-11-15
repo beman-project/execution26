@@ -12,6 +12,8 @@
 #define BEMAN_EXECUTION26_DELETE(msg) delete
 #endif
 
+#define HAS_P3409
+
 // ----------------------------------------------------------------------------
 /*!
  * \mainpage Asynchronous Operation Support

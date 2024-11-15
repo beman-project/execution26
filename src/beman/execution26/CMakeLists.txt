@@ -69,6 +69,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/env_promise.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/env_type.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/error_types_of_t.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/finite_inplace_stop_source.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/forward_like.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/forwarding_query.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/fwd_env.hpp
@@ -142,6 +143,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/set_value.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/simple_allocator.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/simple_counting_scope.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/single_inplace_stop_source.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/single_sender.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/single_sender_value_type.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/start.hpp

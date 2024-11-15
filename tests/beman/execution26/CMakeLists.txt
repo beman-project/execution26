@@ -11,6 +11,23 @@ endif()
 list(
   APPEND
   execution_tests
+  stopcallback-finite.test
+  stopcallback-finite-cons.test
+  stopcallback-finite-general.test
+  stoptoken-finite.test
+  stoptoken-finite-general.test
+  stoptoken-finite-mem.test
+  stopsource-finite.test
+  stopsource-finite-general.test
+  stopsource-finite-cons.test
+  stopsource-finite-mem.test
+  stopsource-single.test
+  stopsource-single-general.test
+  stopsource-single-cons.test
+  stopsource-single-mem.test
+  stoptoken-single.test
+  stoptoken-single-general.test
+  stoptoken-single-mem.test
   notify.test
   exec-scounting.test
   exec-awaitable.test

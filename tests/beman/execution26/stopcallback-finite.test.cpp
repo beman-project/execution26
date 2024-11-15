@@ -1,12 +1,9 @@
 // tests/beman/execution26/stopcallback-finite.test.cpp               -*-C++-*-
-// ----------------------------------------------------------------------------
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-// ----------------------------------------------------------------------------
 
-#include <tests/beman/execution26/stopcallback-finite.test.hpp>
+#include <beman/execution26/detail/finite_inplace_stop_source.hpp>
+#include "test/execution.hpp"
 
-// ----------------------------------------------------------------------------
-
-namespace tests/beman/execution26/stopcallback-finite.test {
-    int tests/beman/execution26/stopcallback-finite.test_dummy{};
+TEST(stopcallback_finite) {
+    // section [stopcallback.finite] is empty
 }

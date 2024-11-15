@@ -1,12 +1,11 @@
 // tests/beman/execution26/stoptoken-single-mem.test.cpp              -*-C++-*-
-// ----------------------------------------------------------------------------
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-// ----------------------------------------------------------------------------
 
-#include <tests/beman/execution26/stoptoken-single-mem.test.hpp>
+#include <beman/execution26/detail/single_inplace_stop_source.hpp>
+#include "test/execution.hpp"
 
-// ----------------------------------------------------------------------------
-
-namespace tests/beman/execution26/stoptoken-single-mem.test {
-    int tests/beman/execution26/stoptoken-single-mem.test_dummy{};
+TEST(stoptoken_single_general) {
+    static_assert(test_std::stoppable_token<test_std::single_inplace_stop_token>);
+    test_std::single_inplace_stop_token token{};
+    ASSERT(token == token);
 }

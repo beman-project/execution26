@@ -7,6 +7,7 @@
 
 #include <beman/execution26/stop_token.hpp>
 #include <beman/execution26/detail/immovable.hpp>
+//-dk:TODO #include <test/common.hpp>
 #include <test/execution.hpp>
 
 #include <algorithm>
@@ -248,7 +249,7 @@ inline auto test::stop_callback_dtor_same_thread(Token token, Stop stop) -> void
 template <typename MakeStopSource>
 inline auto test::stop_source(MakeStopSource factory) -> void {
     // Plan:
-    // - Given a factory function create a stoppable-source.
+    // - Given a factory function to create a stoppable-source.
     // - Verify what the relevant concepts hold.
     // - Run tests confirming the common requirements (see the called
     //   test functions for their respective plans).

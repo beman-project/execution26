@@ -5,6 +5,7 @@
 #define INCLUDED_TEST_EXECUTION
 
 #include <beman/execution26/stop_token.hpp>
+//-dk:TODO #include <test/common.hpp>
 #include <concepts>
 #include <cstddef>
 
