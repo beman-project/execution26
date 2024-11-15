@@ -4,7 +4,7 @@
 MAKEFLAGS+= --no-builtin-rules          # Disable the built-in implicit rules.
 MAKEFLAGS+= --warn-undefined-variables  # Warn when an undefined variable is referenced.
 
-SANITIZERS := test
+SANITIZERS := run
 # SANITIZERS = usan # TODO: lsan
 # OS := $(shell /usr/bin/uname)
 # ifeq ($(OS),Darwin)
@@ -74,8 +74,8 @@ run: test
 doc:
 	doxygen docs/Doxyfile
 
-$(SANITIZERS):
-	$(MAKE) SANITIZER=$@
+# $(SANITIZERS):
+# 	$(MAKE) SANITIZER=$@
 
 build:
 	CC=$(CXX) cmake --fresh -G Ninja -S $(SOURCEDIR) -B  $(BUILD) $(TOOLCHAIN) $(SYSROOT) \
