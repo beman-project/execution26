@@ -192,7 +192,7 @@ $(function() {
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> nothrow() {</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>            <span class="keywordflow">return</span> <span class="keyword">noexcept</span>(<a class="code hl_variable" href="namespacebeman_1_1execution26.html#a20d6a7e8f250d3b019b817922fad6cd1">::beman::execution26::connect</a>(::beman::execution26::schedule(::std::declval&lt;Scheduler&gt;()),</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>                                                          receiver_t{<span class="keyword">nullptr</span>}));</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        };</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        }</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keyword">explicit</span> state_type(Scheduler&amp; sch, Receiver&amp; receiver) <span class="keyword">noexcept</span>(nothrow())</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            : state_base&lt;Receiver, Variant&gt;{receiver},</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>              op_state(<a class="code hl_variable" href="namespacebeman_1_1execution26.html#a20d6a7e8f250d3b019b817922fad6cd1">::beman::execution26::connect</a>(::beman::execution26::schedule(sch), receiver_t{<span class="keyword">this</span>})) {}</div>
