@@ -105,8 +105,8 @@ $(function() {
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>            <span class="keyword">requires</span>(Env1&amp;, <span class="keyword">const</span> Query&amp; query, Args&amp;&amp;... args) {</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>                env1.query(query, ::std::forward&lt;Args&gt;(args)...);</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>            } ||</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            <span class="keyword">requires</span>(Env2&amp; env2, <span class="keyword">const</span> Query&amp; query, Args&amp;&amp;... args) {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>                env2.query(query, ::std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            <span class="keyword">requires</span>(Env2&amp; e2, <span class="keyword">const</span> Query&amp; query, Args&amp;&amp;... args) {</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>                e2.query(query, ::std::forward&lt;Args&gt;(args)...);</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            })</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keyword">auto</span> query(<span class="keyword">const</span> Query&amp; query, Args&amp;&amp;... args) <span class="keyword">noexcept</span> -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) {</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> { env1.query(query, ::std::forward&lt;Args&gt;(args)...); }) {</div>
@@ -120,8 +120,8 @@ $(function() {
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            <span class="keyword">requires</span>(<span class="keyword">const</span> Env1&amp;, <span class="keyword">const</span> Query&amp; query, Args&amp;&amp;... args) {</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                env1.query(query, ::std::forward&lt;Args&gt;(args)...);</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            } ||</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            <span class="keyword">requires</span>(<span class="keyword">const</span> Env2&amp; env2, <span class="keyword">const</span> Query&amp; query, Args&amp;&amp;... args) {</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                env2.query(query, ::std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            <span class="keyword">requires</span>(<span class="keyword">const</span> Env2&amp; e2, <span class="keyword">const</span> Query&amp; query, Args&amp;&amp;... args) {</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                e2.query(query, ::std::forward&lt;Args&gt;(args)...);</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            })</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">auto</span> query(<span class="keyword">const</span> Query&amp; query, Args&amp;&amp;... args) <span class="keyword">const</span> <span class="keyword">noexcept</span> -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) {</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> { env1.query(query, ::std::forward&lt;Args&gt;(args)...); }) {</div>

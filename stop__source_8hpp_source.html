@@ -261,9 +261,9 @@ $(function() {
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>            <span class="keywordflow">while</span> (this-&gt;state-&gt;executing)</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                ;</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        }</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> next = &amp;this-&gt;state-&gt;callbacks; *next; next = &amp;this-&gt;next) {</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>            <span class="keywordflow">if</span> (*next == <span class="keyword">this</span>) {</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                *next = this-&gt;next;</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> n = &amp;this-&gt;state-&gt;callbacks; *n; n = &amp;this-&gt;next) {</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>            <span class="keywordflow">if</span> (*n == <span class="keyword">this</span>) {</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                *n = this-&gt;next;</div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>            }</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        }</div>
