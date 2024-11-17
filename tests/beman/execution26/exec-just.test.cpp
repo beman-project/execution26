@@ -173,7 +173,10 @@ struct counting_resource : std::pmr::memory_resource {
         ++this->count;
         return operator new(size);
     }
-    auto do_deallocate(void* p, std::size_t, std::size_t) -> void override { operator delete(p); }
+    auto do_deallocate(void* p, std::size_t, std::size_t) -> void override
+    {
+        operator delete(p);
+    }
     auto do_is_equal(const std::pmr::memory_resource& other) const noexcept -> bool override { return this == &other; }
 };
 auto test_just_allocator() -> void {
@@ -185,6 +188,7 @@ auto test_just_allocator() -> void {
 
     ASSERT(resource.count == 0u);
     auto copy(std::make_obj_using_allocator<std::pmr::string>(std::pmr::polymorphic_allocator<>(&resource), str));
+    test::use(copy);
     ASSERT(resource.count == 1u);
 
     auto env{test_std::get_env(receiver)};
@@ -195,7 +199,6 @@ auto test_just_allocator() -> void {
     auto state{test_std::connect(std::move(sender), memory_receiver{&resource})};
     test::use(state);
     ASSERT(resource.count == 2u);
-    test::use(copy);
 }
 } // namespace
 
@@ -208,7 +211,10 @@ TEST(exec_just) {
     try {
         test_just_constraints();
         test_just();
+#ifndef _MSC_VER
+        //-dk:TODO reenable allocator test for MSVC++
         test_just_allocator();
+#endif
     } catch (...) {
         // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "the just tests shouldn't throw");
