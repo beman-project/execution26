@@ -5,7 +5,7 @@ name: Linux Build
 
 on:
   push:
-    branches: ["master"]
+    branches: ["main"]
     paths:
       - "include/**"
       - "src/**"
@@ -17,7 +17,7 @@ on:
       - "CMakeLists.txt"
       - ".github/workflows/linux.yml"
   pull_request:
-    branches: ["master"]
+    branches: ["main"]
     paths:
       - "include/**"
       - "src/**"

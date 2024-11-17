@@ -5,7 +5,7 @@ name: Macos Build
 
 on:
   push:
-    branches: ["master"]
+    branches: ["main"]
     paths:
       - "include/**"
       - "src/**"
@@ -17,7 +17,7 @@ on:
       - "CMakeLists.txt"
       - ".github/workflows/macos.yml"
   pull_request:
-    branches: ["master"]
+    branches: ["main"]
     paths:
       - "include/**"
       - "src/**"

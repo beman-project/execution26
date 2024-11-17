@@ -34,7 +34,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        preset: [debug]
+        preset: [debug, release]
         # TODO: compiler: [cl, clang-cl]
         compiler: [cl]
 

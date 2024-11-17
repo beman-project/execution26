@@ -10,7 +10,7 @@ endif()
 
 list(
   APPEND
-  x_execution_tests
+  execution_tests
   notify.test
   exec-scounting.test
   exec-awaitable.test
@@ -92,12 +92,6 @@ list(
   thread-stoptoken.test
   thread.test
   utilities.test
-)
-
-list(
-  APPEND
-  execution_tests
-  exec-just.test
 )
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
