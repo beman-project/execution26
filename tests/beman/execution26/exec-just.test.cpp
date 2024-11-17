@@ -194,7 +194,7 @@ auto test_just_allocator() -> void {
     //test::use(copy);
     ++resource.count;
     ASSERT(resource.count == 1u);
-    return;
+    //return;
 
     auto env{test_std::get_env(receiver)};
     auto alloc{test_std::get_allocator(env)};
