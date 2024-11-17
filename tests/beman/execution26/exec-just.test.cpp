@@ -8,6 +8,7 @@
 #include <beman/execution26/detail/sync_wait.hpp>
 #include <test/execution.hpp>
 #include <string>
+#include <cstdlib>
 #include <memory_resource>
 
 #include <beman/execution26/detail/suppress_push.hpp>
@@ -171,9 +172,14 @@ struct counting_resource : std::pmr::memory_resource {
     std::size_t count{};
     auto        do_allocate(std::size_t size, std::size_t) -> void* override {
         ++this->count;
-        return operator new(size);
+        //return operator new(size);
+        return std::malloc(size);
     }
-    auto do_deallocate(void* p, std::size_t, std::size_t) -> void override { operator delete(p); }
+    auto do_deallocate(void* p, std::size_t, std::size_t) -> void override
+    {
+        //operator delete(p);
+        std::free(p);
+    }
     auto do_is_equal(const std::pmr::memory_resource& other) const noexcept -> bool override { return this == &other; }
 };
 auto test_just_allocator() -> void {
