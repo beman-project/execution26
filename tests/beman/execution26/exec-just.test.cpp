@@ -190,11 +190,14 @@ auto test_just_allocator() -> void {
     memory_receiver   receiver{&resource};
 
     ASSERT(resource.count == 0u);
+    auto copy{std::make_from_tuple<std::pmr::string>(
+       std::uses_allocator_construction_args<std::pmr::string>(std::pmr::polymorphic_allocator<>(&resource),
+       str)
+    )};
     //auto copy(std::make_obj_using_allocator<std::pmr::string>(std::pmr::polymorphic_allocator<>(&resource), str));
-    //test::use(copy);
-    ++resource.count;
+    test::use(copy);
     ASSERT(resource.count == 1u);
-    //return;
+    return;
 
     auto env{test_std::get_env(receiver)};
     auto alloc{test_std::get_allocator(env)};
