@@ -8,7 +8,6 @@
 #include <beman/execution26/detail/sync_wait.hpp>
 #include <test/execution.hpp>
 #include <string>
-#include <cstdlib>
 #include <memory_resource>
 
 #include <beman/execution26/detail/suppress_push.hpp>
@@ -172,13 +171,11 @@ struct counting_resource : std::pmr::memory_resource {
     std::size_t count{};
     auto        do_allocate(std::size_t size, std::size_t) -> void* override {
         ++this->count;
-        //return operator new(size);
-        return std::malloc(size);
+        return operator new(size);
     }
     auto do_deallocate(void* p, std::size_t, std::size_t) -> void override
     {
-        //operator delete(p);
-        std::free(p);
+        operator delete(p);
     }
     auto do_is_equal(const std::pmr::memory_resource& other) const noexcept -> bool override { return this == &other; }
 };
@@ -190,14 +187,9 @@ auto test_just_allocator() -> void {
     memory_receiver   receiver{&resource};
 
     ASSERT(resource.count == 0u);
-    auto copy{std::make_from_tuple<std::pmr::string>(
-       std::uses_allocator_construction_args<std::pmr::string>(std::pmr::polymorphic_allocator<>(&resource),
-       str)
-    )};
-    //auto copy(std::make_obj_using_allocator<std::pmr::string>(std::pmr::polymorphic_allocator<>(&resource), str));
+    auto copy(std::make_obj_using_allocator<std::pmr::string>(std::pmr::polymorphic_allocator<>(&resource), str));
     test::use(copy);
     ASSERT(resource.count == 1u);
-    return;
 
     auto env{test_std::get_env(receiver)};
     auto alloc{test_std::get_allocator(env)};
@@ -217,9 +209,12 @@ TEST(exec_just) {
 
     static_assert(std::same_as<test_std::completion_signatures<test_std::set_value_t()>, type>);
     try {
-        //test_just_constraints();
-        //test_just();
+        test_just_constraints();
+        test_just();
+#ifndef _MSC_VER
+        //-dk:TODO reenable allocator test for MSVC++
         test_just_allocator();
+#endif
     } catch (...) {
         // NOLINTNEXTLINE(cert-dcl03-c,hicpp-static-assert,misc-static-assert)
         ASSERT(nullptr == "the just tests shouldn't throw");
