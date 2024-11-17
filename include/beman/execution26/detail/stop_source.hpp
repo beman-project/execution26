@@ -181,9 +181,9 @@ inline auto beman::execution26::detail::stop_callback_base::deregister() -> void
             while (this->state->executing)
                 ;
         }
-        for (auto next = &this->state->callbacks; *next; next = &this->next) {
-            if (*next == this) {
-                *next = this->next;
+        for (auto n = &this->state->callbacks; *n; n = &this->next) {
+            if (*n == this) {
+                *n = this->next;
                 break;
             }
         }

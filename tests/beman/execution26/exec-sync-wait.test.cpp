@@ -125,7 +125,7 @@ auto test_sync_wait_result_type() -> void {
     const arg<1> arg1{};
     static_assert(std::same_as<std::optional<std::tuple<arg<0>, arg<1>, arg<2>>>,
                                test_detail::sync_wait_result_type<decltype(test_std::just(arg0, arg1, arg<2>{}))>>);
-};
+}
 
 auto test_sync_wait_state() -> void {
     using type = test_detail::sync_wait_state<decltype(test_std::just(arg<0>{}))>;

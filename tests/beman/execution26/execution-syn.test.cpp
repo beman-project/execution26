@@ -331,12 +331,12 @@ auto test_sender_adaptor() -> void {
     };
     static_assert(test_std::sender<sender>);
 
-    auto closure{arg_closure(17)};
-    static_assert(std::same_as<test_detail::sender_adaptor<arg_closure_t, int>, decltype(closure)>);
-    auto direct{closure(sender{})};
+    auto closure_{arg_closure(17)};
+    static_assert(std::same_as<test_detail::sender_adaptor<arg_closure_t, int>, decltype(closure_)>);
+    auto direct{closure_(sender{})};
     test::use(direct);
     static_assert(std::same_as<adapted_sender<sender>, decltype(direct)>);
-    auto via_op{sender{} | closure};
+    auto via_op{sender{} | closure_};
     test::use(via_op);
     static_assert(std::same_as<adapted_sender<sender>, decltype(via_op)>);
 }

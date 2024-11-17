@@ -74,7 +74,9 @@ class beman::execution26::simple_counting_scope : ::beman::execution26::detail::
             return nullptr;
         case state_t::unused:
             this->state = state_t::open; // fall-through!
+            [[fallthrough]];
         case state_t::open:
+            [[fallthrough]];
         case state_t::open_and_joining:
             ++this->count;
             return this;

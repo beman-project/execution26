@@ -45,12 +45,12 @@ struct fun {
 };
 
 struct overloaded {
-    auto operator()() && -> bool { return {}; };
-    auto operator()() const& -> int { return {}; };
-    auto operator()() & -> double { return {}; };
-    auto operator()(int&&) -> bool { return {}; };
-    auto operator()(const int&) -> int { return {}; };
-    auto operator()(int&) -> double { return {}; };
+    auto operator()() && -> bool { return {}; }
+    auto operator()() const& -> int { return {}; }
+    auto operator()() & -> double { return {}; }
+    auto operator()(int&&) -> bool { return {}; }
+    auto operator()(const int&) -> int { return {}; }
+    auto operator()(int&) -> double { return {}; }
 };
 
 auto test_callable() -> void {

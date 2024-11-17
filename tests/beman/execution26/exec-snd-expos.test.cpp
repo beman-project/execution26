@@ -437,7 +437,7 @@ struct get_domain_late_scheduler {
     };
     struct sender {
         using sender_concept = test_std::sender_t;
-        auto get_env() const noexcept -> env { return {}; };
+        auto get_env() const noexcept -> env { return {}; }
     };
     using scheduler_concept = test_std::scheduler_t;
     auto schedule() noexcept -> sender { return {}; }
@@ -751,7 +751,7 @@ auto test_basic_receiver() -> void {
         bool stopped{};
 
         auto set_value(T val) noexcept { this->value = val; }
-        auto set_error(err error) noexcept { this->error = error; }
+        auto set_error(err e) noexcept { this->error = e; }
         auto set_stopped() noexcept { this->stopped = true; }
     };
     struct unstoppable_receiver {

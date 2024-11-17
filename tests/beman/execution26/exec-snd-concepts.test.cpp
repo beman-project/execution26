@@ -163,7 +163,7 @@ auto test_sender_for() -> void {
 
     static_assert(test_std::sender<std_sender>);
     static_assert(not test_detail::sender_for<std_sender, tag_t>);
-};
+}
 } // namespace
 
 TEST(exec_snd_concepts) {

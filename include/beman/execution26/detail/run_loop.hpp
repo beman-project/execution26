@@ -38,6 +38,12 @@ class run_loop {
         }
     };
     struct opstate_base : ::beman::execution26::detail::immovable {
+        opstate_base() = default;
+        opstate_base(opstate_base const&) = delete;
+        opstate_base(opstate_base&&) = delete;
+        virtual ~opstate_base() = default;
+        auto operator=(opstate_base const&) -> opstate_base& = delete;
+        auto operator=(opstate_base&&) -> opstate_base& = delete;
         opstate_base* next{};
         virtual auto  execute() noexcept -> void = 0;
     };

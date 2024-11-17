@@ -115,19 +115,19 @@ struct impls_for<::beman::execution26::detail::when_all_t> : ::beman::execution2
             ::beman::execution26::stop_token_of_t<::beman::execution26::env_of_t<Receiver>>,
             ::beman::execution26::detail::on_stop_request<state_type>>;
 
-        void arrive(Receiver& receiver) noexcept {
+        void arrive(Receiver& recvr) noexcept {
             if (0u == --count)
-                this->complete(receiver);
+                this->complete(recvr);
         }
 
-        void complete(Receiver& receiver) noexcept {
+        void complete(Receiver& recvr) noexcept {
             switch (this->disp) {
             case disposition::started: {
                 auto tie = []<typename... T>(::std::tuple<T...>& t) noexcept {
                     return ::std::apply([](auto&... a) { return ::std::tie(a...); }, t);
                 };
                 auto set = [&](auto&... t) noexcept {
-                    ::beman::execution26::set_value(::std::move(receiver), ::std::move(t)...);
+                    ::beman::execution26::set_value(::std::move(recvr), ::std::move(t)...);
                 };
 
                 this->on_stop.reset();
@@ -140,17 +140,17 @@ struct impls_for<::beman::execution26::detail::when_all_t> : ::beman::execution2
                     ::std::visit(
                         [&]<typename Error>(Error& error) noexcept {
                             if constexpr (!::std::same_as<Error, nonesuch>) {
-                                ::beman::execution26::set_error(::std::move(receiver), ::std::move(error));
+                                ::beman::execution26::set_error(::std::move(recvr), ::std::move(error));
                             }
                         },
                         this->errors);
                 } catch (...) {
-                    ::beman::execution26::set_error(::std::move(receiver), ::std::current_exception());
+                    ::beman::execution26::set_error(::std::move(recvr), ::std::current_exception());
                 }
                 break;
             case disposition::stopped:
                 this->on_stop.reset();
-                ::beman::execution26::set_stopped(::std::move(receiver));
+                ::beman::execution26::set_stopped(::std::move(recvr));
                 break;
             }
         }
