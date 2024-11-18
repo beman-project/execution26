@@ -37,16 +37,13 @@ class run_loop {
             return {this->loop};
         }
     };
-    struct opstate_base : ::beman::execution26::detail::immovable {
-        opstate_base() = default;
-        opstate_base(opstate_base const&) = delete;
-        opstate_base(opstate_base&&) = delete;
+
+    struct opstate_base : ::beman::execution26::detail::virtual_immovable {
         virtual ~opstate_base() = default;
-        auto operator=(opstate_base const&) -> opstate_base& = delete;
-        auto operator=(opstate_base&&) -> opstate_base& = delete;
         opstate_base* next{};
         virtual auto  execute() noexcept -> void = 0;
     };
+
     template <typename Receiver>
     struct opstate : opstate_base {
         using operation_state_concept = ::beman::execution26::operation_state_t;
