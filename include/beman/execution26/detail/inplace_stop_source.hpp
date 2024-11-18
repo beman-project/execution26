@@ -4,6 +4,7 @@
 #ifndef INCLUDED_BEMAN_EXECUTION26_DETAIL_INPLACE_STOP_SOURCE
 #define INCLUDED_BEMAN_EXECUTION26_DETAIL_INPLACE_STOP_SOURCE
 
+#include <beman/execution26/detail/immovable.hpp>
 #include <atomic>
 #include <memory>
 #include <mutex>
@@ -48,15 +49,8 @@ class beman::execution26::inplace_stop_token {
 // ----------------------------------------------------------------------------
 
 class beman::execution26::inplace_stop_source {
-    struct callback_base {
-        callback_base() = default;
-        callback_base(callback_base const&) = delete;
-        callback_base(callback_base&&) = delete;
-        virtual ~callback_base() = default;
-        auto operator=(callback_base const&) -> callback_base& = delete;
-        auto operator=(callback_base&&) -> callback_base& = delete;
-
-         callback_base* next{};
+    struct callback_base : public ::beman::execution26::detail::virtual_immovable {
+        callback_base* next{};
         virtual auto   call() -> void = 0;
     };
 

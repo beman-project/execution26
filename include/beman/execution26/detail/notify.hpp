@@ -28,13 +28,7 @@ class notifier : ::beman::execution26::detail::immovable {
 
   private:
     friend struct impls_for<::beman::execution26::detail::notify_t>;
-    struct base {
-        base() = default;
-        base(base const&) = default;
-        base(base&&) = default;
-        virtual ~base() = default;
-        auto operator=(base const&) -> base& = default;
-        auto operator=(base&&) -> base& = default;
+    struct base : ::beman::execution26::detail::virtual_immovable {
         base*        next{};
         virtual auto complete() -> void = 0;
     };
