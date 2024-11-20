@@ -22,7 +22,7 @@
 
 /*!
  * \namespace beman
- * \brief Namespace for Beman projects http://github.com/beman-project/beman
+ * \brief Namespace for Beman projects http://github.com/bemanproject/beman
  * \headerfile beman/execution26/execution.hpp <beman/execution26/execution.hpp>
  */
 namespace beman {
