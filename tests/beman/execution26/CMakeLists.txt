@@ -54,6 +54,7 @@ list(
   exec-then.test
   exec-utils-cmplsigs.test
   exec-when-all.test
+  exec-with-awaitable-senders.test
   execution-queryable-concept.test
   execution-syn.test
   forward-like.test
