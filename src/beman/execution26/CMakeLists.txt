@@ -7,7 +7,8 @@ add_library(${TARGET_LIBRARY} STATIC)
 add_library(${TARGET_ALIAS} ALIAS ${TARGET_LIBRARY})
 
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
-  target_link_libraries(${TARGET_LIBRARY} PUBLIC $<BUILD_INTERFACE:${TARGET_LIBRARY}_project_options>)
+  # NOTE: Sanitizer or gcov is not possible for CXX_MODULES! CK
+  # XXX target_link_libraries(${TARGET_LIBRARY} PUBLIC $<BUILD_INTERFACE:${TARGET_LIBRARY}_project_options>)
   target_link_libraries(${TARGET_LIBRARY} PUBLIC $<BUILD_INTERFACE:${TARGET_LIBRARY}_project_warnings>)
 endif()
 

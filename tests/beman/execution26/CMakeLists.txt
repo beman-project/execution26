@@ -110,7 +110,8 @@ if(PROJECT_IS_TOP_LEVEL)
   enable_testing()
   find_package(beman_execution26 0.1.0 EXACT QUIET)
   if(beman_execution26_FOUND)
-    set(execution_tests exec-awaitable.test) # only one sample to save time! CK
+    set(execution_tests exec-awaitable.test) # only some samples to save time! CK
+    list(APPEND execution_tests execution-module.test)
   else()
     add_subdirectory(../../.. beman_execution26)
 
