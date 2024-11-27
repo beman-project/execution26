@@ -5,29 +5,7 @@ name: Macos Build
 
 on:
   push:
-    branches: ["main"]
-    paths:
-      - "include/**"
-      - "src/**"
-      - "tests/**"
-      - "examples/**"
-      - "cmake/**"
-      - "Makefile"
-      - "CMakePresets.json"
-      - "CMakeLists.txt"
-      - ".github/workflows/macos.yml"
   pull_request:
-    branches: ["main"]
-    paths:
-      - "include/**"
-      - "src/**"
-      - "tests/**"
-      - "examples/**"
-      - "cmake/**"
-      - "Makefile"
-      - "CMakePresets.json"
-      - "CMakeLists.txt"
-      - ".github/workflows/macos.yml"
 
 jobs:
   build:
@@ -37,8 +15,8 @@ jobs:
 
       matrix:
         preset: [debug, release]
-        # TODO: compiler: [g++, clang++-19]
-        compiler: [g++, clang++-18]
+        # TODO: compiler: [g++-14, clang++-19]
+        compiler: [clang++-18]
 
     steps:
       - uses: actions/checkout@v4

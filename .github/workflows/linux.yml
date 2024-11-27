@@ -5,29 +5,7 @@ name: Linux Build
 
 on:
   push:
-    branches: ["main"]
-    paths:
-      - "include/**"
-      - "src/**"
-      - "tests/**"
-      - "examples/**"
-      - "cmake/**"
-      - "Makefile"
-      - "CMakePresets.json"
-      - "CMakeLists.txt"
-      - ".github/workflows/linux.yml"
   pull_request:
-    branches: ["main"]
-    paths:
-      - "include/**"
-      - "src/**"
-      - "tests/**"
-      - "examples/**"
-      - "cmake/**"
-      - "Makefile"
-      - "CMakePresets.json"
-      - "CMakeLists.txt"
-      - ".github/workflows/linux.yml"
 
 jobs:
   build:
