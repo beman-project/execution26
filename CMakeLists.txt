@@ -23,6 +23,9 @@ set(TARGET_ALIAS ${TARGET_LIBRARY}::${TARGET_LIBRARY})
 set(TARGET_PACKAGE_NAME ${PROJECT_NAME}-config)
 set(TARGETS_EXPORT_NAME ${PROJECT_NAME}-targets)
 
+# This variable is a special case of the more-general CMAKE_<CONFIG>_POSTFIX variable for the DEBUG configuration.
+set(CMAKE_DEBUG_POSTFIX D)
+
 include(GNUInstallDirs)
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
