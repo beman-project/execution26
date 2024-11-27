@@ -11,7 +11,10 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
   message(FATAL_ERROR "In-source builds are not allowed!")
 endif()
 
-set(CMAKE_CXX_SCAN_FOR_MODULES ON)
+# Note that scanning is only performed if C++20 or higher is enabled for the target. Scanning for modules in the target's
+# sources belonging to file sets of type CXX_MODULES is always performed.
+# not needed: set(CMAKE_CXX_SCAN_FOR_MODULES ON)
+
 set(TARGET_NAME execution26)
 set(TARGET_NAMESPACE beman) # FIXME: not used in install(EXPORT ...) CK?
 set(TARGET_PREFIX ${TARGET_NAMESPACE}.${TARGET_NAME})
@@ -56,7 +59,7 @@ if(CMAKE_BUILD_TYPE STREQUAL Debug)
     ENABLE_SANITIZER_POINTER_COMPARE
     ENABLE_SANITIZER_POINTER_SUBTRACT
     ENABLE_CONTROL_FLOW_PROTECTION
-    ENABLE_STACK_PROTECTION
+    # XXX ENABLE_STACK_PROTECTION
     ENABLE_OVERFLOW_PROTECTION
     # ENABLE_ELF_PROTECTION
     # ENABLE_RUNTIME_SYMBOLS_RESOLUTION
