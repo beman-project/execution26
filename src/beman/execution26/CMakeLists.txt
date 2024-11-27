@@ -188,16 +188,19 @@ target_compile_features(${TARGET_LIBRARY} PUBLIC
 )
 
 target_sources(
-  beman_execution26
+  ${TARGET_LIBRARY}
   PUBLIC FILE_SET
-         beman_execution26 TYPE CXX_MODULES FILES execution.cpp
+         # XXX ${TARGET_LIBRARY}_modules
+         CXX_MODULES FILES execution.cppm
 )
 
-if(FALSE)
 install(
   TARGETS ${TARGET_LIBRARY}
   EXPORT ${TARGETS_EXPORT_NAME}1
   ARCHIVE DESTINATION lib/$<CONFIG>
+  FILE_SET CXX_MODULES # XXX ${TARGET_LIBRARY}_modules
+    # There's currently no convention for this location
+    DESTINATION ${INSTALL_CONFIGDIR}/src
   FILE_SET ${TARGET_LIBRARY}_public_headers
   FILE_SET ${TARGET_LIBRARY}_detail_headers
 )
@@ -210,11 +213,10 @@ install(
 )
 
 #-dk:TODO build/default/src/beman/execution26/CMakeFiles/beman_execution26.dir/beman.execution26.pcm
-install(
-  TARGETS beman_execution26
-  EXPORT beman_execution26
-  COMPONENT FILE_SET beman_execution26
-  DESTINATION lib/beman/execution26
-)
-endif()
+# install(
+#   TARGETS beman_execution26
+#   EXPORT beman_execution26
+#   COMPONENT FILE_SET beman_execution26
+#   DESTINATION lib/beman/execution26
+# )
 # cmake-format: on
