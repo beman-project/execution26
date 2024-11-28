@@ -178,10 +178,32 @@ void test_completion_from_another_thread() {
     }
 }
 
+void test_multiple_completions_from_other_threads() {
+    using namespace std::chrono_literals;
+    auto context = some_thread_pool{};
+    auto result  = [&] {
+        auto scheduler   = some_thread_pool_scheduler{context};
+        auto deadline    = scheduler.now() + 20ms;
+        auto split       = beman::execution26::split(scheduler.schedule_at(deadline));
+        auto resched     = beman::execution26::continues_on(split, scheduler);
+        auto return_42   = beman::execution26::then(resched, [] { return 42; });
+        auto three_times = beman::execution26::when_all(return_42, return_42, return_42);
+        return beman::execution26::sync_wait(three_times);
+    }();
+    ASSERT(result.has_value());
+    if (result.has_value()) {
+        auto [val0, val1, val2] = *result;
+        ASSERT(val0 == 42);
+        ASSERT(val1 == 42);
+        ASSERT(val2 == 42);
+    }
+}
+
 TEST(exec_split) {
     test_destroy_unused_split();
     test_destroy_two_unused_split();
     test_completion_sigs_and_sync_wait_on_split();
     test_two_sync_waits_on_one_split();
     test_completion_from_another_thread();
+    test_multiple_completions_from_other_threads();
 }

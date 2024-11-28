@@ -6,6 +6,7 @@
 
 #include <beman/execution26/detail/completion_signatures_of_t.hpp>
 #include <beman/execution26/detail/decayed_tuple.hpp>
+#include <beman/execution26/detail/decayed_type_list.hpp>
 #include <beman/execution26/detail/default_domain.hpp>
 #include <beman/execution26/detail/default_impls.hpp>
 #include <beman/execution26/detail/empty_env.hpp>
@@ -32,7 +33,6 @@
 #include <beman/execution26/detail/stop_callback_for_t.hpp>
 #include <beman/execution26/detail/stop_token_of_t.hpp>
 #include <beman/execution26/detail/transform_sender.hpp>
-#include <beman/execution26/detail/type_list.hpp>
 #include <beman/execution26/detail/type_list.hpp>
 #include <beman/execution26/detail/value_types_of_t.hpp>
 
@@ -108,9 +108,10 @@ struct impls_for<::beman::execution26::detail::when_all_t> : ::beman::execution2
                     ::std::exception_ptr,
                     ::beman::execution26::detail::meta::combine<::beman::execution26::detail::meta::to<
                         ::beman::execution26::detail::type_list,
-                        ::beman::execution26::detail::meta::combine<
-                            ::beman::execution26::
-                                error_types_of_t<Sender, env_t, ::beman::execution26::detail::type_list>...>>>>>>>;
+                        ::beman::execution26::detail::meta::combine<::beman::execution26::error_types_of_t<
+                            Sender,
+                            env_t,
+                            ::beman::execution26::detail::decayed_type_list>...>>>>>>>;
         using stop_callback = ::beman::execution26::stop_callback_for_t<
             ::beman::execution26::stop_token_of_t<::beman::execution26::env_of_t<Receiver>>,
             ::beman::execution26::detail::on_stop_request<state_type>>;

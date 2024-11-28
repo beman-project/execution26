@@ -31,6 +31,7 @@
 #include <beman/execution26/detail/set_stopped.hpp>
 #include <beman/execution26/detail/start.hpp>
 #include <beman/execution26/detail/transform_sender.hpp>
+#include <beman/execution26/detail/meta_unique.hpp>
 
 #include <exception>
 #include <type_traits>
@@ -80,7 +81,7 @@ struct impls_for<::beman::execution26::detail::schedule_from_t> : ::beman::execu
             try {
                 ::std::visit(
                     [this]<typename Tuple>(Tuple& result) noexcept -> void {
-                        if constexpr (not::std::same_as<::std::monostate, Tuple>) {
+                        if constexpr (not ::std::same_as<::std::monostate, Tuple>) {
                             ::std::apply(
                                 [this](auto&& tag, auto&&... args) {
                                     tag(::std::move(this->state->receiver), ::std::move(args)...);
@@ -96,10 +97,10 @@ struct impls_for<::beman::execution26::detail::schedule_from_t> : ::beman::execu
 
         template <typename Error>
         auto set_error(Error&& err) && noexcept -> void {
-            ::beman::execution26::set_error(std::move(state->rcvr), std::forward<Error>(err));
+            ::beman::execution26::set_error(std::move(state->receiver), std::forward<Error>(err));
         }
 
-        auto set_stopped() && noexcept -> void { ::beman::execution26::set_stopped(std::move(state->rcvr)); }
+        auto set_stopped() && noexcept -> void { ::beman::execution26::set_stopped(std::move(state->receiver)); }
 
         auto get_env() const noexcept -> decltype(auto) {
             return ::beman::execution26::detail::fwd_env(::beman::execution26::get_env(state->receiver));
@@ -139,14 +140,14 @@ struct impls_for<::beman::execution26::detail::schedule_from_t> : ::beman::execu
             auto sch{sender.template get<1>()};
 
             using sched_t   = ::std::remove_cvref_t<decltype(sch)>;
-            using variant_t = ::beman::execution26::detail::meta::prepend<
+            using variant_t = ::beman::execution26::detail::meta::unique<::beman::execution26::detail::meta::prepend<
                 ::std::monostate,
                 ::beman::execution26::detail::meta::transform<
                     ::beman::execution26::detail::as_tuple_t,
                     ::beman::execution26::detail::meta::to<::std::variant,
                                                            ::beman::execution26::completion_signatures_of_t<
                                                                ::beman::execution26::detail::child_type<Sender>,
-                                                               ::beman::execution26::env_of_t<Receiver>>>>>;
+                                                               ::beman::execution26::env_of_t<Receiver>>>>>>;
 
             return state_type<Receiver, sched_t, variant_t>(sch, receiver);
         }};
