@@ -264,7 +264,7 @@ struct impls_for<split_impl_t> : ::beman::execution26::detail::default_impls {
         }
 
         void start() noexcept {
-            on_stop.emplace(::beman::execution26::get_stop_token(::beman::execution26::get_env(receiver)),
+            on_stop.emplace(::beman::execution26::get_stop_token(::beman::execution26::get_env(*receiver)),
                             on_stop_type{sh_state});
             sh_state->add_listener(this);
         }
