@@ -1,7 +1,11 @@
 // src/beman/execution26/tests/exec-with-awaitable-senders.test.cpp   -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+#include <beman/execution26/detail/with_awaitable_senders.hpp>
+
 #include <beman/execution26/execution.hpp>
+
+#include <test/execution.hpp>
 
 #include <coroutine>
 #include <print>
@@ -31,13 +35,44 @@ struct promise : exec::with_awaitable_senders<promise> {
     void                unhandled_exception() {}
 };
 
-coroutine f() {
-    auto [just, value] = co_await exec::when_all(exec::just(42), awaitable{});
-    std::print("values: ({}, {})\n", just, value);
-    co_return;
+coroutine test_await_tuple() {
+    auto [just1, just2] = co_await exec::when_all(exec::just(42), exec::just(42));
+    ASSERT(just1 == 42);
+    ASSERT(just2 == 42);
+}
+
+coroutine test_await_void() { co_await exec::just(); }
+
+void test_sync_wait_awaitable() {
+    try {
+        auto [v] = exec::sync_wait(awaitable{}).value();
+        ASSERT(v == 1);
+    } catch (...) {
+        ASSERT(false);
+    }
+}
+
+coroutine test_mix_awaitable_and_sender() {
+    auto [just, value] = co_await exec::when_all(exec::just(0), awaitable{});
+    ASSERT(just == 0);
+    ASSERT(value == 1);
 }
 
 int main() {
-    auto work = f();
-    work.resume();
+    {
+        coroutine coro = test_await_tuple();
+        coro.resume();
+        coro.destroy();
+    }
+    {
+        coroutine coro = test_await_void();
+        coro.resume();
+        coro.destroy();
+    }
+    test_sync_wait_awaitable();
+    {
+        coroutine coro = test_mix_awaitable_and_sender();
+        coro.resume();
+        coro.destroy();
+    }
 }
