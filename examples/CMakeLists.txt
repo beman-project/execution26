@@ -12,6 +12,9 @@ list(
   stop_token
   stopping
   allocator
+  doc-just
+  doc-just_error
+  doc-just_stopped
 )
 
 foreach(EXAMPLE ${EXAMPLES})
