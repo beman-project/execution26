@@ -9,8 +9,8 @@
 namespace beman::execution26::detail {
 struct unspecified_promise {
     auto get_return_object() noexcept -> unspecified_promise;
-    auto initial_suspend() noexcept -> unspecified_promise;
-    auto final_suspend() noexcept -> unspecified_promise;
+    auto initial_suspend() noexcept -> ::std::suspend_never;
+    auto final_suspend() noexcept -> ::std::suspend_never;
     void unhandled_exception() noexcept;
     void return_void() noexcept;
     auto unhandled_stopped() noexcept -> ::std::coroutine_handle<>;

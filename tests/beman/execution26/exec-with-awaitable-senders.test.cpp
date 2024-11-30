@@ -30,7 +30,7 @@ struct coroutine : std::coroutine_handle<promise> {
 struct promise : exec::with_awaitable_senders<promise> {
     coroutine           get_return_object() { return {coroutine::from_promise(*this)}; }
     std::suspend_always initial_suspend() noexcept { return {}; }
-    std::suspend_always final_suspend() noexcept { return {}; }
+    std::suspend_never  final_suspend() noexcept { return {}; }
     void                return_void() {}
     void                unhandled_exception() {}
 };
@@ -58,21 +58,9 @@ coroutine test_mix_awaitable_and_sender() {
     ASSERT(value == 1);
 }
 
-int main() {
-    {
-        coroutine coro = test_await_tuple();
-        coro.resume();
-        coro.destroy();
-    }
-    {
-        coroutine coro = test_await_void();
-        coro.resume();
-        coro.destroy();
-    }
+TEST(exec_with_awaitable_senders) {
+    test_await_tuple().resume();
+    test_await_void().resume();
     test_sync_wait_awaitable();
-    {
-        coroutine coro = test_mix_awaitable_and_sender();
-        coro.resume();
-        coro.destroy();
-    }
+    test_mix_awaitable_and_sender().resume();
 }

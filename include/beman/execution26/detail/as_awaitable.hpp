@@ -32,11 +32,11 @@ struct as_awaitable_t {
             return ::std::forward<Expr>(expr).as_awaitable(promise);
         } else if constexpr (::beman::execution26::detail::
                                  is_awaitable<Expr, ::beman::execution26::detail::unspecified_promise>) {
-            return (void(promise), ::std::forward<Expr>(expr));
+            return ::std::forward<Expr>(expr);
         } else if constexpr (::beman::execution26::detail::awaitable_sender<Expr, Promise>) {
             return ::beman::execution26::detail::sender_awaitable<Expr, Promise>{::std::forward<Expr>(expr), promise};
         } else {
-            return (void(promise), ::std::forward<Expr>(expr));
+            return ::std::forward<Expr>(expr);
         }
     }
 };
