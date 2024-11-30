@@ -359,14 +359,14 @@ constexpr <a class="el" href="structbeman_1_1execution26_1_1get__stop__token__t.
 <tr class="memitem:a03915cdc92b5aeb582d916d6534e4bbc"><td class="memItemLeft" align="right" valign="top"><a id="a03915cdc92b5aeb582d916d6534e4bbc" name="a03915cdc92b5aeb582d916d6534e4bbc"></a>
 constexpr into_variant_t&#160;</td><td class="memItemRight" valign="bottom"><b>into_variant</b> {}</td></tr>
 <tr class="separator:a03915cdc92b5aeb582d916d6534e4bbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e2e04185134b5a7f2f49cb1e7cf6f07"><td class="memItemLeft" align="right" valign="top"><a id="a8e2e04185134b5a7f2f49cb1e7cf6f07" name="a8e2e04185134b5a7f2f49cb1e7cf6f07"></a>
-constexpr ::beman::execution26::just_t&#160;</td><td class="memItemRight" valign="bottom"><b>just</b> {}</td></tr>
+<tr class="memitem:a8e2e04185134b5a7f2f49cb1e7cf6f07"><td class="memItemLeft" align="right" valign="top">constexpr ::beman::execution26::just_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution26.html#a8e2e04185134b5a7f2f49cb1e7cf6f07">just</a> {}</td></tr>
+<tr class="memdesc:a8e2e04185134b5a7f2f49cb1e7cf6f07"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>just(<em>arg</em>...)</code>` yields a sender completing with <code><a class="el" href="structbeman_1_1execution26_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(<em>Arg</em>...)</code>  <br /></td></tr>
 <tr class="separator:a8e2e04185134b5a7f2f49cb1e7cf6f07"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a237024b54c8b4b5cde38bbcc9096fe9c"><td class="memItemLeft" align="right" valign="top"><a id="a237024b54c8b4b5cde38bbcc9096fe9c" name="a237024b54c8b4b5cde38bbcc9096fe9c"></a>
-constexpr ::beman::execution26::just_error_t&#160;</td><td class="memItemRight" valign="bottom"><b>just_error</b> {}</td></tr>
+<tr class="memitem:a237024b54c8b4b5cde38bbcc9096fe9c"><td class="memItemLeft" align="right" valign="top">constexpr ::beman::execution26::just_error_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution26.html#a237024b54c8b4b5cde38bbcc9096fe9c">just_error</a> {}</td></tr>
+<tr class="memdesc:a237024b54c8b4b5cde38bbcc9096fe9c"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>just_error(<em>error</em>)</code> yields a sender completing with <code><a class="el" href="structbeman_1_1execution26_1_1set__error__t.html" title="Type of the customization point object for error completions.">set_error_t</a>(<em>Error</em>)</code>  <br /></td></tr>
 <tr class="separator:a237024b54c8b4b5cde38bbcc9096fe9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada378024fdc1318ea1ea6b3e1d562a8c"><td class="memItemLeft" align="right" valign="top"><a id="ada378024fdc1318ea1ea6b3e1d562a8c" name="ada378024fdc1318ea1ea6b3e1d562a8c"></a>
-constexpr ::beman::execution26::just_stopped_t&#160;</td><td class="memItemRight" valign="bottom"><b>just_stopped</b> {}</td></tr>
+<tr class="memitem:ada378024fdc1318ea1ea6b3e1d562a8c"><td class="memItemLeft" align="right" valign="top">constexpr ::beman::execution26::just_stopped_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebeman_1_1execution26.html#ada378024fdc1318ea1ea6b3e1d562a8c">just_stopped</a> {}</td></tr>
+<tr class="memdesc:ada378024fdc1318ea1ea6b3e1d562a8c"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code><a class="el" href="namespacebeman_1_1execution26.html#ada378024fdc1318ea1ea6b3e1d562a8c" title="just_stopped(_) yields a sender completing with set_stopped_t()">just_stopped(_)</a></code> yields a sender completing with <code>set_stopped_t()</code>  <br /></td></tr>
 <tr class="separator:ada378024fdc1318ea1ea6b3e1d562a8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a123a6bc3e1506f6326e8d0c9dd5ffbd3"><td class="memItemLeft" align="right" valign="top"><a id="a123a6bc3e1506f6326e8d0c9dd5ffbd3" name="a123a6bc3e1506f6326e8d0c9dd5ffbd3"></a>
 constexpr ::beman::execution26::let_error_t&#160;</td><td class="memItemRight" valign="bottom"><b>let_error</b> {}</td></tr>
@@ -492,6 +492,155 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>version</b> {000}</td>
 <li><code>false</code> otherwise. </li>
 </ul>
 
+</div>
+</div>
+<a id="a8e2e04185134b5a7f2f49cb1e7cf6f07" name="a8e2e04185134b5a7f2f49cb1e7cf6f07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e2e04185134b5a7f2f49cb1e7cf6f07">&#9670;&#160;</a></span>just</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr ::beman::execution26::just_t beman::execution26::just {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>just(<em>arg</em>...)</code>` yields a sender completing with <code><a class="el" href="structbeman_1_1execution26_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(<em>Arg</em>...)</code> </p>
+<p><code>just</code> is a callable object of type <code>just_t</code>. Invoking <code>just(<em>arg</em>...)</code> yields a sender which stores its arguments and produces a value completion with these arguments when started. This sender completes synchronously when started.</p>
+<h4>Usage</h4>
+<pre>
+just(<em>arg</em>...)
+</pre><p>Above <code><em>Arg</em>...</code> is a pack of the types of <code><em>arg</em>...</code> after removing top-level <code>const</code> and reference qualifications (<code>std::remove_cvref_t&lt;decltype(<em>arg</em>)&gt;...</code>).</p>
+<h4>Completions Signatures</h4>
+<pre>
+<a class="el" href="structbeman_1_1execution26_1_1completion__signatures.html" title="Class template used to a specify a list of completion signatures.">completion_signatures</a>&lt;
+    <a class="el" href="structbeman_1_1execution26_1_1set__value__t.html" title="Type of the customization point object for successful completions.">set_value_t</a>(<em>Arg</em>...)
+&gt;;
+</pre><h4>Example</h4>
+<p>The normal use of <code>just(<em>args</em>...)</code> is as the starting point of a work graph. Various other examples will use <code>just</code> as their starting. The example below create a sender yielding three values and awaits the completion using <code>sync_wait(<em>sender</em>)</code>: for a value completion of <code><em>sender</em></code> it will yield an <code>std::optional&lt;std::tuple&lt;<em>Args</em>...&gt;&gt;<code>with the </code>tuple<code>containing the value copied/moved from the original arguments (an</code>optional` is returned to indicate cancellation).</code></p>
+<p><code></p><pre example="doc-just.cpp">
+#include &lt;<a class="el" href="execution_8hpp_source.html">beman/execution26/execution.hpp</a>&gt;
+#include &lt;cassert&gt;
+#include &lt;string&gt;
+using namespace std::string_literals;
+
+int main() {
+    auto result = ex::sync_wait(ex::just(17, "hello"s, true));
+    assert(result);
+    assert(*result == std::tuple(17, "hello"s, true));
+}
+</pre><p> </code></p>
+
+</div>
+</div>
+<a id="a237024b54c8b4b5cde38bbcc9096fe9c" name="a237024b54c8b4b5cde38bbcc9096fe9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a237024b54c8b4b5cde38bbcc9096fe9c">&#9670;&#160;</a></span>just_error</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr ::beman::execution26::just_error_t beman::execution26::just_error {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>just_error(<em>error</em>)</code> yields a sender completing with <code><a class="el" href="structbeman_1_1execution26_1_1set__error__t.html" title="Type of the customization point object for error completions.">set_error_t</a>(<em>Error</em>)</code> </p>
+<p><code>just_error</code> is a callable object of type <code>just_error_t</code>. Invoking <code>just_error(<em>error</em>)</code> yields a sender which stores its argument and produces an error completion with this error when started. This sender completes synchronously when started.</p>
+<h4>Usage</h4>
+<pre>
+just_error(<em>error</em>)
+</pre><p>The type <code><em>Error</em></code> used above is the type of <code><em>error</em></code> after removing top-level <code>const</code> and reference qualifications (<code>std::remove_cvref_t&lt;decltype(error)&gt;</code>).</p>
+<h4>Completions Signatures</h4>
+<pre>
+<a class="el" href="structbeman_1_1execution26_1_1completion__signatures.html" title="Class template used to a specify a list of completion signatures.">completion_signatures</a>&lt;
+    <a class="el" href="structbeman_1_1execution26_1_1set__error__t.html" title="Type of the customization point object for error completions.">set_error_t</a>(<em>Error</em>)
+&gt;;
+</pre><h4>Example</h4>
+<p>The normal use of <code>just_error(<em>error</em>)</code> is to report an error as the result of some work in a work graph. It would, e.g., be used as the completion produced by <code>let_value</code>. The example below creates a sender yielding an <code>std::error_code</code> on the error channel and uses that as the input for <code>upon_error</code> consuming the error and producing a value completion: using <code>sync_wait(just_error(<em>error</em>))</code> directly doesn't work because <code>sync_wait</code> requires exactly one value completion from its argument and <code>set_error</code> only has an error completion. The function used with <code>upon_error</code> verifies that the expected code was produced and also sets the flag <code>had_error</code> indicating it was called at all. This flag is checked after waiting for the result in <code>sync_wait</code>.</p>
+<pre example="doc-just_error.cpp">
+#include &lt;<a class="el" href="execution_8hpp_source.html">beman/execution26/execution.hpp</a>&gt;
+#include &lt;system_error&gt;
+#include &lt;cassert&gt;
+namespace ex = <a class="el" href="namespacebeman_1_1execution26.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution26</a>;
+
+int main() {
+    bool had_error{false};
+    auto result = ex::sync_wait(ex::just_error(std::error_code(17, std::system_category())) |
+                                ex::upon_error([&amp;](std::error_code ec) {
+                                    assert(ec.value() == 17);
+                                    had_error = true;
+                                }));
+    assert(had_error);
+}
+</pre> 
+</div>
+</div>
+<a id="ada378024fdc1318ea1ea6b3e1d562a8c" name="ada378024fdc1318ea1ea6b3e1d562a8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada378024fdc1318ea1ea6b3e1d562a8c">&#9670;&#160;</a></span>just_stopped</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr ::beman::execution26::just_stopped_t beman::execution26::just_stopped {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code><a class="el" href="namespacebeman_1_1execution26.html#ada378024fdc1318ea1ea6b3e1d562a8c" title="just_stopped(_) yields a sender completing with set_stopped_t()">just_stopped(_)</a></code> yields a sender completing with <code>set_stopped_t()</code> </p>
+<p><code>just_stopped</code> is a callable object of type <code>just_stopped_t</code>. Invoking <code><a class="el" href="namespacebeman_1_1execution26.html#ada378024fdc1318ea1ea6b3e1d562a8c" title="just_stopped(_) yields a sender completing with set_stopped_t()">just_stopped()</a></code> yields a sender which produces a cancellation completion when started. This sender completes synchronously when started.</p>
+<h4>Usage</h4>
+<pre>
+<a class="el" href="namespacebeman_1_1execution26.html#ada378024fdc1318ea1ea6b3e1d562a8c" title="just_stopped(_) yields a sender completing with set_stopped_t()">just_stopped()</a>
+</pre><h4>Completions Signatures</h4>
+<pre>
+<a class="el" href="structbeman_1_1execution26_1_1completion__signatures.html" title="Class template used to a specify a list of completion signatures.">completion_signatures</a>&lt;
+    set_stopped_t()
+&gt;;
+</pre><h4>Example</h4>
+<p>The normal use of <code><a class="el" href="namespacebeman_1_1execution26.html#ada378024fdc1318ea1ea6b3e1d562a8c" title="just_stopped(_) yields a sender completing with set_stopped_t()">just_stopped()</a></code> is to report a cancellation as the result of some work in a work graph. It would, e.g., be used as the completion produced by <code>let_value</code>. The example below creates a sender yielding a completion on the cancellation channel and uses that as the input for <code>upon_stopped</code> consuming the cancellation and producing a value completion: using <code>sync_wait(just_stopped())</code> directly doesn't work because <code>sync_wait</code> requires exactly one value completion from its argument and <code>set_stopped</code> only has a cancellation completion. The function used with <code>upon_stopped</code> sets the flag <code>had_stopped</code> indicating it was called at all. This flag is checked after waiting for the result in <code>sync_wait</code>.</p>
+<pre example="doc-just_error.cpp">
+#include &lt;<a class="el" href="execution_8hpp_source.html">beman/execution26/execution.hpp</a>&gt;
+#include &lt;system_error&gt;
+#include &lt;cassert&gt;
+namespace ex = <a class="el" href="namespacebeman_1_1execution26.html" title="Namespace for asynchronous operations and their vocabulary.">beman::execution26</a>;
+
+int main() {
+    bool had_stopped{false};
+    auto result = ex::sync_wait(ex::just_error(std::error_code(17, std::system_category())) |
+                                ex::upon_error([&amp;](std::error_code ec) {
+                                    assert(ec.value() == 17);
+                                    had_stopped = true;
+                                }));
+    assert(had_stopped);
+}
+</pre> 
 </div>
 </div>
 <a id="a6740b8ee2f45f2effc7695931e48b8eb" name="a6740b8ee2f45f2effc7695931e48b8eb"></a>

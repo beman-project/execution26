@@ -74,7 +74,15 @@ $(function() {
   <div class="headertitle"><div class="title">Asynchronous Operation Support </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>This project implements the C++ support for asynchronous operations, knows as <em>sender/receiver</em> or <code>std::execution</code>. </p>
+<div class="textblock"><p>This project implements the C++ support for asynchronous operations, knows as <em>sender/receiver</em> or <code>std::execution</code>.</p>
+<p>There are a few ingredients to using <code>std::execution</code>:</p>
+<ul>
+<li>Sender algoritms to composes work into an asynchronous workflow.</li>
+<li>Something holding and starting senders like <code>sync_wait()</code> or <code>counting_scope</code>.</li>
+<li>A coroutine binding like <code>task</code> to make sender composition easier for typical use cases.</li>
+<li>Some tools like a sender-aware <code>concurrent_queue</code>.</li>
+<li>Senders describing some asynchronous work. Sadly, there are currently no such senders are proposed. </li>
+</ul>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->

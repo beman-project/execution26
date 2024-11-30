@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['set_5ferror_0',['set_error',['../namespacebeman_1_1execution26.html#a5a55250379dfed82487b42003ff270b7',1,'beman::execution26']]],
-  ['set_5fstopped_1',['set_stopped',['../namespacebeman_1_1execution26.html#ab5950df93e9bed15bda2d87615fe6f39',1,'beman::execution26']]],
-  ['set_5fvalue_2',['set_value',['../namespacebeman_1_1execution26.html#ae49d099ae6a14cda99cd4b5a7f0be069',1,'beman::execution26']]]
+  ['just_0',['just',['../namespacebeman_1_1execution26.html#a8e2e04185134b5a7f2f49cb1e7cf6f07',1,'beman::execution26']]],
+  ['just_5ferror_1',['just_error',['../namespacebeman_1_1execution26.html#a237024b54c8b4b5cde38bbcc9096fe9c',1,'beman::execution26']]],
+  ['just_5fstopped_2',['just_stopped',['../namespacebeman_1_1execution26.html#ada378024fdc1318ea1ea6b3e1d562a8c',1,'beman::execution26']]]
 ];
