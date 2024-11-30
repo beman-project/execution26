@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beman::execution26: beman::execution26::as_awaitable_t Struct Reference</title>
+<title>beman::execution26: beman::execution26::with_awaitable_senders&lt; Promise &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -71,33 +71,37 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="namespacebeman.html">beman</a></li><li class="navelem"><a class="el" href="namespacebeman_1_1execution26.html">execution26</a></li><li class="navelem"><a class="el" href="structbeman_1_1execution26_1_1as__awaitable__t.html">as_awaitable_t</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespacebeman.html">beman</a></li><li class="navelem"><a class="el" href="namespacebeman_1_1execution26.html">execution26</a></li><li class="navelem"><a class="el" href="structbeman_1_1execution26_1_1with__awaitable__senders.html">with_awaitable_senders</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="structbeman_1_1execution26_1_1as__awaitable__t-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">beman::execution26::as_awaitable_t Struct Reference</div></div>
+<a href="structbeman_1_1execution26_1_1with__awaitable__senders-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">beman::execution26::with_awaitable_senders&lt; Promise &gt; Struct Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p>Turn an entity, e.g., a sender, into an awaitable.  
- <a href="structbeman_1_1execution26_1_1as__awaitable__t.html#details">More...</a></p>
-
-<p><code>#include &lt;<a class="el" href="execution_8hpp_source.html">beman/execution26/execution.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a8c7de1b2ab393eea65e5a7d907680ed5"><td class="memTemplParams" colspan="2"><a id="a8c7de1b2ab393eea65e5a7d907680ed5" name="a8c7de1b2ab393eea65e5a7d907680ed5"></a>
-template&lt;typename Expr , typename Promise &gt; </td></tr>
-<tr class="memitem:a8c7de1b2ab393eea65e5a7d907680ed5"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Expr &amp;&amp;expr, Promise &amp;promise) const</td></tr>
-<tr class="separator:a8c7de1b2ab393eea65e5a7d907680ed5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31503194668b72f00da3d53c9d12fced"><td class="memTemplParams" colspan="2"><a id="a31503194668b72f00da3d53c9d12fced" name="a31503194668b72f00da3d53c9d12fced"></a>
+template&lt;class OtherPromise &gt; <br />
+requires (!::std::same_as&lt;OtherPromise, void&gt;)</td></tr>
+<tr class="memitem:a31503194668b72f00da3d53c9d12fced"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set_continuation</b> (::std::coroutine_handle&lt; OtherPromise &gt; h) noexcept</td></tr>
+<tr class="separator:a31503194668b72f00da3d53c9d12fced"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00f7c69a6a2d07bc528e1953cb854e85"><td class="memItemLeft" align="right" valign="top"><a id="a00f7c69a6a2d07bc528e1953cb854e85" name="a00f7c69a6a2d07bc528e1953cb854e85"></a>
+::std::coroutine_handle&#160;</td><td class="memItemRight" valign="bottom"><b>continuation</b> () const noexcept</td></tr>
+<tr class="separator:a00f7c69a6a2d07bc528e1953cb854e85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba9ace1784e7b628bc9ada2ed31d319e"><td class="memItemLeft" align="right" valign="top"><a id="aba9ace1784e7b628bc9ada2ed31d319e" name="aba9ace1784e7b628bc9ada2ed31d319e"></a>
+::std::coroutine_handle&#160;</td><td class="memItemRight" valign="bottom"><b>unhandled_stopped</b> () noexcept</td></tr>
+<tr class="separator:aba9ace1784e7b628bc9ada2ed31d319e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00cfdad3f0c1faf9e61801d97d8044d2"><td class="memTemplParams" colspan="2"><a id="a00cfdad3f0c1faf9e61801d97d8044d2" name="a00cfdad3f0c1faf9e61801d97d8044d2"></a>
+template&lt;class Value &gt; </td></tr>
+<tr class="memitem:a00cfdad3f0c1faf9e61801d97d8044d2"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>await_transform</b> (Value &amp;&amp;value) -&gt; ::beman::execution26::detail::call_result_t&lt;<a class="el" href="structbeman_1_1execution26_1_1as__awaitable__t.html">::beman::execution26::as_awaitable_t</a>, Value, Promise &amp; &gt;</td></tr>
+<tr class="separator:a00cfdad3f0c1faf9e61801d97d8044d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Turn an entity, e.g., a sender, into an awaitable. </p>
-</div><hr/>The documentation for this struct was generated from the following file:<ul>
-<li>include/beman/execution26/detail/<a class="el" href="as__awaitable_8hpp_source.html">as_awaitable.hpp</a></li>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>include/beman/execution26/detail/<a class="el" href="with__awaitable__senders_8hpp_source.html">with_awaitable_senders.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
