@@ -18,6 +18,17 @@
  *
  * This project implements the C++ support for asynchronous operations,
  * knows as _sender/receiver_ or `std::execution`.
+ *
+ * There are a few ingredients to using `std::execution`:
+ *
+ * - Sender algoritms to composes work into an asynchronous workflow.
+ * - Something holding and starting senders like `sync_wait()`
+ *   or `counting_scope`.
+ * - A coroutine binding like `task` to make sender composition
+ *   easier for typical use cases.
+ * - Some tools like a sender-aware `concurrent_queue`.
+ * - Senders describing some asynchronous work. Sadly, there are
+ *   currently no such senders are proposed.
  */
 
 /*!
