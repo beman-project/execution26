@@ -23,6 +23,12 @@ struct awaitable {
     int  await_resume() { return 1; }
 };
 
+struct void_awaitable {
+    bool await_ready() { return false; }
+    void await_suspend(std::coroutine_handle<> h) { h.resume(); }
+    void await_resume() {}
+};
+
 struct coroutine : std::coroutine_handle<promise> {
     using promise_type = ::promise;
 };
@@ -52,6 +58,14 @@ void test_sync_wait_awaitable() {
     }
 }
 
+void test_sync_wait_void_awaitable() {
+    try {
+        ASSERT(exec::sync_wait(void_awaitable{}));
+    } catch (...) {
+        ASSERT(false);
+    }
+}
+
 coroutine test_mix_awaitable_and_sender() {
     auto [just, value] = co_await exec::when_all(exec::just(0), awaitable{});
     ASSERT(just == 0);
@@ -62,5 +76,6 @@ TEST(exec_with_awaitable_senders) {
     test_await_tuple().resume();
     test_await_void().resume();
     test_sync_wait_awaitable();
+    test_sync_wait_void_awaitable();
     test_mix_awaitable_and_sender().resume();
 }
