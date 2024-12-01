@@ -117,30 +117,37 @@ $(function() {
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            <span class="keywordflow">return</span> <span class="keyword">typename</span> sender_type::completion_signatures{};</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (::beman::execution26::detail::</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                               is_awaitable&lt;sender_type, ::beman::execution26::detail::env_promise&lt;decayed_env&gt;&gt;) {</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            return ::beman::execution26::completion_signatures&lt;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                <a class="code hl_struct" href="structbeman_1_1execution26_1_1set__value__t.html">::beman::execution26::set_value_t</a>(</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                    ::beman::execution26::detail::</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                        await_result_type&lt;sender_type, ::beman::execution26::detail::env_promise&lt;decayed_env&gt;&gt;),</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                <a class="code hl_struct" href="structbeman_1_1execution26_1_1set__error__t.html">::beman::execution26::set_error_t</a>(::std::exception_ptr),</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                <a class="code hl_struct" href="structbeman_1_1execution26_1_1set__stopped__t.html">::beman::execution26::set_stopped_t</a>()&gt;{};</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        }</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    }</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender, <span class="keyword">typename</span> Env&gt;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keyword">requires</span>(not ::std::same_as&lt;void,</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                                    <span class="keyword">decltype</span>(get_completion_signatures_t::get(::std::declval&lt;Sender&gt;(),</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                                                                              ::std::declval&lt;Env&gt;()))&gt;)</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">auto</span> operator()(Sender&amp;&amp; <a class="code hl_concept" href="conceptbeman_1_1execution26_1_1sender.html">sender</a>, Env&amp;&amp; env) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keywordflow">return</span> this-&gt;get(::std::forward&lt;Sender&gt;(<a class="code hl_concept" href="conceptbeman_1_1execution26_1_1sender.html">sender</a>), ::std::forward&lt;Env&gt;(env));</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    }</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>};</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> <a class="code hl_struct" href="structbeman_1_1execution26_1_1get__completion__signatures__t.html">get_completion_signatures_t</a> get_completion_signatures{};</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>} <span class="comment">// namespace beman::execution26</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            <span class="keyword">using </span>result_type = ::beman::execution26::detail::</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                await_result_type&lt;sender_type, ::beman::execution26::detail::env_promise&lt;decayed_env&gt;&gt;;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (::std::same_as&lt;void, result_type&gt;) {</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                return ::beman::execution26::completion_signatures&lt;<a class="code hl_struct" href="structbeman_1_1execution26_1_1set__value__t.html">::beman::execution26::set_value_t</a>(),</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                                                                   <a class="code hl_struct" href="structbeman_1_1execution26_1_1set__error__t.html">::beman::execution26::set_error_t</a>(</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                                                                       ::std::exception_ptr),</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                                                                   <a class="code hl_struct" href="structbeman_1_1execution26_1_1set__stopped__t.html">::beman::execution26::set_stopped_t</a>()&gt;{};</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                return ::beman::execution26::completion_signatures&lt;<a class="code hl_struct" href="structbeman_1_1execution26_1_1set__value__t.html">::beman::execution26::set_value_t</a>(result_type),</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                                                                   <a class="code hl_struct" href="structbeman_1_1execution26_1_1set__error__t.html">::beman::execution26::set_error_t</a>(</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                                                                       ::std::exception_ptr),</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                                                                   <a class="code hl_struct" href="structbeman_1_1execution26_1_1set__stopped__t.html">::beman::execution26::set_stopped_t</a>()&gt;{};</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        }</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    }</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sender, <span class="keyword">typename</span> Env&gt;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keyword">requires</span>(not ::std::same_as&lt;void,</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                                    <span class="keyword">decltype</span>(get_completion_signatures_t::get(::std::declval&lt;Sender&gt;(),</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                                                                              ::std::declval&lt;Env&gt;()))&gt;)</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keyword">auto</span> operator()(Sender&amp;&amp; <a class="code hl_concept" href="conceptbeman_1_1execution26_1_1sender.html">sender</a>, Env&amp;&amp; env) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keywordflow">return</span> this-&gt;get(::std::forward&lt;Sender&gt;(<a class="code hl_concept" href="conceptbeman_1_1execution26_1_1sender.html">sender</a>), ::std::forward&lt;Env&gt;(env));</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    }</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>};</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> <a class="code hl_struct" href="structbeman_1_1execution26_1_1get__completion__signatures__t.html">get_completion_signatures_t</a> get_completion_signatures{};</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>} <span class="comment">// namespace beman::execution26</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="comment">// ----------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aconceptbeman_1_1execution26_1_1sender_html"><div class="ttname"><a href="conceptbeman_1_1execution26_1_1sender.html">beman::execution26::sender</a></div><div class="ttdef"><b>Definition:</b> sender.hpp:32</div></div>
 <div class="ttc" id="anamespacebeman_1_1execution26_html"><div class="ttname"><a href="namespacebeman_1_1execution26.html">beman::execution26</a></div><div class="ttdoc">Namespace for asynchronous operations and their vocabulary.</div><div class="ttdef"><b>Definition:</b> allocator_aware_move.hpp:16</div></div>
 <div class="ttc" id="astructbeman_1_1execution26_1_1get__completion__signatures__t_html"><div class="ttname"><a href="structbeman_1_1execution26_1_1get__completion__signatures__t.html">beman::execution26::get_completion_signatures_t</a></div><div class="ttdef"><b>Definition:</b> get_completion_signatures.hpp:22</div></div>
