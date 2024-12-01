@@ -11,6 +11,7 @@
 #include <beman/execution26/detail/async_concurrent_queue.hpp>
 #include <beman/execution26/detail/conqueue_errc.hpp>
 #include <beman/execution26/detail/conqueue_error.hpp>
+#include <beman/execution26/detail/bounded_queue.hpp>
 
 // ----------------------------------------------------------------------------
 

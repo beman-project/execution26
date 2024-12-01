@@ -50,6 +50,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/basic_receiver.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/basic_sender.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/basic_state.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/bounded_queue.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/call_result_t.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/callable.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/check_type_alias_exist.hpp
@@ -69,6 +70,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/connect_awaitable.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/connect_result_t.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/conqueue_errc.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/conqueue_error.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/continues_on.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/decayed_same_as.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/decayed_tuple.hpp
