@@ -11,6 +11,11 @@ endif()
 list(
   APPEND
   execution_tests
+  conqueue-error.test
+  conqueue-errc.test
+  async-concurrent-queue.test
+  concurrent-queue.test
+  basic-concurrent-queue.test
   notify.test
   exec-scounting.test
   exec-awaitable.test
