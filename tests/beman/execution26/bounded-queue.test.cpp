@@ -148,6 +148,57 @@ auto test_pop(const auto one, auto two, const auto three, auto four, auto five) 
         t.join();
     }
 }
+
+template <typename T>
+auto test_async_push(auto one, auto two, auto three, auto four, auto five) -> void {
+    struct receiver {
+        using receiver_concept = test_std::receiver_t;
+        int& complete;
+        auto set_value() && noexcept -> void { this->complete = 1; }
+        auto set_error(test_std::conqueue_errc) && noexcept -> void { this->complete = 2; }
+        auto set_stopped() && noexcept -> void { this->complete = 3; }
+    };
+    static_assert(test_std::receiver<receiver>);
+
+    test_std::bounded_queue<T> queue(2);
+    auto                       s4{queue.async_push(four)}; // verify that the order isn't call but start()
+    auto                       s1{queue.async_push(one)};
+    auto                       s2{queue.async_push(two)};
+    auto                       s3{queue.async_push(three)};
+    auto                       s5{queue.async_push(five)};
+
+    int c1{}, c2{}, c3{}, c4{}, c5{};
+
+    auto op2{test_std::connect(std::move(s2), receiver{c2})}; // connect order also doesn't matter
+    ASSERT(c2 == 0);
+    auto op1{test_std::connect(std::move(s1), receiver{c1})};
+    ASSERT(c1 == 0);
+    auto op3{test_std::connect(std::move(s3), receiver{c3})};
+    ASSERT(c3 == 0);
+    auto op4{test_std::connect(std::move(s4), receiver{c4})};
+    ASSERT(c4 == 0);
+    auto op5{test_std::connect(std::move(s5), receiver{c5})};
+    ASSERT(c5 == 0);
+
+    test_std::start(op1);
+    ASSERT(c1 == 1);
+    test_std::start(op2);
+    ASSERT(c2 == 1);
+    test_std::start(op3);
+    ASSERT(c3 == 0);
+    test_std::start(op4);
+    ASSERT(c4 == 0);
+    test_std::start(op5);
+    ASSERT(c5 == 0);
+
+    ASSERT(queue.pop() == one);
+    ASSERT(c3 == 1);
+    ASSERT(queue.pop() == two);
+    ASSERT(c4 == 1);
+    queue.close();
+    ASSERT(c5 == 2);
+}
+
 } // namespace
 
 TEST(bounded_queue) {
@@ -166,4 +217,7 @@ TEST(bounded_queue) {
 
     test_pop<int>(1, 2, 3, 4, 5);
     test_pop<std::string>("one"s, "two"s, "three"s, "four"s, "five"s);
+
+    test_async_push<int>(1, 2, 3, 4, 5);
+    test_async_push<std::string>("one"s, "two"s, "three"s, "four"s, "five"s);
 }

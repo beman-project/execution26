@@ -108,6 +108,7 @@ target_sources(
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/indirect_meta_apply.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/inplace_stop_source.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/into_variant.hpp
+         ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/intrusive_queue.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/intrusive_stack.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/is_awaitable.hpp
          ${PROJECT_SOURCE_DIR}/include/beman/execution26/detail/is_awaiter.hpp

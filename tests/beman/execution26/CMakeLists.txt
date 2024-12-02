@@ -11,6 +11,7 @@ endif()
 list(
   APPEND
   execution_tests
+  intrusive-queue.test
   bounded-queue.test
   conqueue-error.test
   conqueue-errc.test
