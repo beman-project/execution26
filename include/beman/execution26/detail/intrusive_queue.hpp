@@ -17,6 +17,12 @@ struct intrusive_queue<next> {
     T* head{};
     T* tail{};
 
+    intrusive_queue() = default;
+    intrusive_queue(intrusive_queue&& other)
+        : head(::std::exchange(other.head, nullptr))
+        , tail(::std::exchange(other.tail, nullptr))
+    {
+    }
     auto push(T* n) -> void {
         if (this->head) {
             std::exchange(this->tail, n)->*next = n;

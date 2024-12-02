@@ -6,6 +6,7 @@
 #include <concepts>
 #include <string>
 #include <thread>
+#include <iostream> //-dk:TODO remove
 
 // ----------------------------------------------------------------------------
 
@@ -199,6 +200,79 @@ auto test_async_push(auto one, auto two, auto three, auto four, auto five) -> vo
     ASSERT(c5 == 2);
 }
 
+template <typename T>
+auto test_async_pop(auto one, auto two, auto three, auto four, auto five) -> void {
+    struct receiver {
+        using receiver_concept = test_std::receiver_t;
+        int&            complete;
+        std::vector<T>& vals;
+        auto set_value(T val) && noexcept -> void { this->complete = 1; vals.push_back(val); }
+        auto set_error(test_std::conqueue_errc) && noexcept -> void { this->complete = 2; }
+        auto set_stopped() && noexcept -> void { this->complete = 3; }
+    };
+    static_assert(test_std::receiver<receiver>);
+
+    test_std::bounded_queue<T> queue(2);
+    std::vector<T>             vals;
+    queue.push(one);
+    queue.push(two);
+
+    auto s4{queue.async_pop()};
+    auto s2{queue.async_pop()};
+    auto s1{queue.async_pop()};
+    auto s3{queue.async_pop()};
+    auto s5{queue.async_pop()};
+
+    int c1{}, c2{}, c3{}, c4{}, c5{};
+
+    auto op4{test_std::connect(std::move(s4), receiver{c4, vals})};
+    ASSERT(c4 == 0);
+    auto op2{test_std::connect(std::move(s2), receiver{c2, vals})};
+    ASSERT(c2 == 0);
+    auto op1{test_std::connect(std::move(s1), receiver{c1, vals})};
+    ASSERT(c1 == 0);
+    auto op3{test_std::connect(std::move(s3), receiver{c3, vals})};
+    ASSERT(c3 == 0);
+    auto op5{test_std::connect(std::move(s5), receiver{c5, vals})};
+    ASSERT(c5 == 0);
+
+    test_std::start(op1);
+    ASSERT(c1 == 1);
+    ASSERT(vals.size() == 1u);
+    ASSERT(vals.back() == one);
+
+    test_std::start(op2);
+    ASSERT(c2 == 1);
+    ASSERT(vals.size() == 2u);
+    ASSERT(vals.back() == two);
+
+    test_std::start(op3);
+    ASSERT(c3 == 0);
+    ASSERT(vals.size() == 2u);
+
+    test_std::start(op4);
+    ASSERT(c4 == 0);
+    ASSERT(vals.size() == 2u);
+
+    test_std::start(op5);
+    ASSERT(c5 == 0);
+    ASSERT(vals.size() == 2u);
+
+    queue.push(three);
+    ASSERT(c3 == 1);
+    ASSERT(vals.size() == 3u);
+    ASSERT(vals.back() == three);
+
+    queue.push(four);
+    ASSERT(c4 == 1);
+    ASSERT(vals.size() == 4u);
+    ASSERT(vals.back() == four);
+
+    queue.close();
+    ASSERT(c5 == 2);
+    ASSERT(vals.size() == 4u);
+}
+
 } // namespace
 
 TEST(bounded_queue) {
@@ -220,4 +294,6 @@ TEST(bounded_queue) {
 
     test_async_push<int>(1, 2, 3, 4, 5);
     test_async_push<std::string>("one"s, "two"s, "three"s, "four"s, "five"s);
+    test_async_pop<int>(1, 2, 3, 4, 5);
+    test_async_pop<std::string>("one"s, "two"s, "three"s, "four"s, "five"s);
 }

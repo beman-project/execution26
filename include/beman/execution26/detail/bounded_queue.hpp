@@ -67,8 +67,7 @@ class beman::execution26::bounded_queue : ::beman::execution26::detail::immovabl
         using sender_concept = ::beman::execution26::sender_t;
         using completion_signatures =
             ::beman::execution26::completion_signatures<::beman::execution26::set_value_t(),
-                                                        ::beman::execution26::set_error_t(
-                                                            ::beman::execution26::conqueue_errc),
+                                                        ::beman::execution26::set_error_t(::beman::execution26::conqueue_errc),
                                                         ::beman::execution26::set_stopped_t()>;
 
         bounded_queue&           queue;
@@ -81,6 +80,50 @@ class beman::execution26::bounded_queue : ::beman::execution26::detail::immovabl
     };
     static_assert(::beman::execution26::sender<push_sender>);
     static_assert(::beman::execution26::sender_in<push_sender>);
+
+    struct pop_sender {
+        struct state_base {
+            bounded_queue&           queue;
+            state_base*              next{};
+
+            state_base(bounded_queue& queue) : queue(queue) {}
+            virtual auto complete(T) -> void                                    = 0;
+            virtual auto complete(::beman::execution26::conqueue_errc) -> void = 0;
+        };
+        template <typename Receiver>
+        struct state : state_base {
+            using operation_state_concept = ::beman::execution26::operation_state_t;
+
+            ::std::remove_cvref_t<Receiver> receiver;
+
+            template <typename R>
+            state(bounded_queue& queue, R&& receiver)
+                : state_base(queue), receiver(::std::forward<R>(receiver)) {}
+
+            auto start() & noexcept {
+                this->queue.start_pop(*this);
+            }
+            auto complete(T val) -> void override { ::beman::execution26::set_value(::std::move(this->receiver), ::std::move(val)); }
+            auto complete(::beman::execution26::conqueue_errc error) -> void override {
+                ::beman::execution26::set_error(::std::move(this->receiver), error);
+            }
+        };
+
+        using sender_concept = ::beman::execution26::sender_t;
+        using completion_signatures =
+            ::beman::execution26::completion_signatures<::beman::execution26::set_value_t(T),
+                                                        ::beman::execution26::set_error_t(::beman::execution26::conqueue_errc),
+                                                        ::beman::execution26::set_stopped_t()>;
+
+        bounded_queue& queue;
+        template <::beman::execution26::receiver Receiver>
+        auto connect(Receiver&& receiver) && -> state<Receiver> {
+            static_assert(::beman::execution26::operation_state<state<Receiver>>);
+            return state<Receiver>(queue, ::std::forward<Receiver>(receiver));
+        }
+    };
+    static_assert(::beman::execution26::sender<pop_sender>);
+    static_assert(::beman::execution26::sender_in<pop_sender>);
 
     static_assert(::std::same_as<value_type, typename Allocator::value_type>);
 
@@ -101,13 +144,20 @@ class beman::execution26::bounded_queue : ::beman::execution26::detail::immovabl
         return this->closed;
     }
     auto close() noexcept -> void {
-        std::lock_guard cerberus(this->mutex);
+        std::unique_lock cerberus(this->mutex);
         this->closed = true;
-        while (not this->push_queue.empty()) {
-            this->push_queue.pop()->complete(::beman::execution26::conqueue_errc::closed);
-        }
+        push_sender_queue push_queue(std::move(this->push_queue));
+        pop_sender_queue pop_queue(std::move(this->pop_queue));
+        cerberus.unlock();
         this->push_condition.notify_all();
         this->pop_condition.notify_all();
+
+        while (not push_queue.empty()) {
+            push_queue.pop()->complete(::beman::execution26::conqueue_errc::closed);
+        }
+        while (not pop_queue.empty()) {
+            pop_queue.pop()->complete(::beman::execution26::conqueue_errc::closed);
+        }
     }
 
     auto push(const T& value) -> void { this->internal_push(value); }
@@ -163,7 +213,7 @@ class beman::execution26::bounded_queue : ::beman::execution26::detail::immovabl
         this->push_notify(cerberus);
         return rc;
     }
-    auto async_pop() -> sender auto { return ::beman::execution26::just(T()); }
+    auto async_pop() -> sender auto { return pop_sender(*this); }
 
   private:
     using allocator_traits = ::std::allocator_traits<Allocator>;
@@ -179,6 +229,7 @@ class beman::execution26::bounded_queue : ::beman::execution26::detail::immovabl
     using array_allocator_type   = allocator_traits::template rebind_alloc<element_t>;
     using array_allocator_traits = allocator_traits::template rebind_traits<element_t>;
     using push_sender_queue      = ::beman::execution26::detail::intrusive_queue<&push_sender::state_base::next>;
+    using pop_sender_queue       = ::beman::execution26::detail::intrusive_queue<&pop_sender::state_base::next>;
 
     template <typename... Args>
     auto construct(element_t* element, Args&&... args) {
@@ -237,16 +288,33 @@ class beman::execution26::bounded_queue : ::beman::execution26::detail::immovabl
         return true;
     }
     auto pop_notify(auto& cerberus) {
-        // if (not this->pop_queue.empty())
-        //     this->pop_queue.pop()->complete();
-        // else
-        this->pop_condition.notify_one();
+        if (not this->pop_queue.empty())
+        {
+            element_t* element{this->get(this->tail)};
+            ::std::remove_cvref_t<T> val{std::move(element->value)};
+            this->destroy(element);
+            ++this->tail;
+            auto state{this->pop_queue.pop()};
+            this->push_notify(cerberus);
+            state->complete(std::move(val));
+        }
+        else
+        {
+            cerberus.unlock();
+            this->pop_condition.notify_one();
+        }
     }
     auto push_notify(auto& cerberus) {
         if (not this->push_queue.empty())
+        {
+            cerberus.unlock();
             this->push_queue.pop()->complete();
+        }
         else
+        {
+            cerberus.unlock();
             this->push_condition.notify_one();
+        }
     }
     template <typename TT>
     auto internal_async_push(TT&& value) -> sender auto {
@@ -264,17 +332,33 @@ class beman::execution26::bounded_queue : ::beman::execution26::detail::immovabl
             return false;
         }
     }
+    auto start_pop(pop_sender::state_base& s) -> bool {
+        std::unique_lock cerberus(this->mutex);
+        if (this->head != this->tail) {
+            element_t* element(this->get(tail));
+            std::remove_cvref_t<T> val(std::move(element->value));
+            ++this->tail;
+            this->destroy(element);
+            this->push_notify(cerberus);
+            s.complete(std::move(val));
+            return true;
+        } else {
+            this->pop_queue.push(&s);
+            return false;
+        }
+    }
 
     Allocator                 allocator;
     array_allocator_type      array_allocator;
     mutable ::std::mutex      mutex;
+    push_sender_queue         push_queue;
     ::std::condition_variable push_condition;
+    pop_sender_queue          pop_queue;
     ::std::condition_variable pop_condition;
     ::std::size_t             max;
     element_t*                elements;
     ::std::uint64_t           head{}; // the next element to push to
     ::std::uint64_t           tail{}; // the next element to push from
-    push_sender_queue         push_queue;
     bool                      closed{};
 };
 
