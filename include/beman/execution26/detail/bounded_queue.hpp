@@ -431,10 +431,14 @@ auto beman::execution26::bounded_queue<T, Allocator>::internal_push(Arg&&       
         bool                                                                                        ready{false};
         ::std::variant<::std::monostate, ::beman::execution26::conqueue_errc, ::std::exception_ptr> result;
         ::std::condition_variable                                                                   condition;
+        bounded_queue&                                                                              queue;
 
-        state(Arg&& arg) : push_base(::std::forward<Arg>(arg)) {}
+        state(bounded_queue& queue, Arg&& arg) : push_base(::std::forward<Arg>(arg)), queue(queue) {}
         auto complete() -> void override {
-            this->ready = true;
+            ::std::lock_guard cerberus(queue.mutex);
+            {
+                this->ready = true;
+            }
             this->condition.notify_one();
         }
         auto complete(::beman::execution26::conqueue_errc err) -> void override {
@@ -446,7 +450,7 @@ auto beman::execution26::bounded_queue<T, Allocator>::internal_push(Arg&&       
             this->complete();
         }
     };
-    state s(::std::forward<Arg>(arg));
+    state s(*this, ::std::forward<Arg>(arg));
     this->start_push(s);
     {
         ::std::unique_lock cerberus(this->mutex);
