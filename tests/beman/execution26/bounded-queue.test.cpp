@@ -6,7 +6,6 @@
 #include <concepts>
 #include <string>
 #include <thread>
-#include <iostream> //-dk:TODO remove
 
 // ----------------------------------------------------------------------------
 
@@ -113,8 +112,8 @@ auto test_pop(const auto one, auto two, const auto three, auto four, auto five) 
             queue.push(five);
         });
 
-        std::error_code ec{};
-        auto            val4(queue.pop(ec));
+        std::error_code ec4{};
+        auto            val4(queue.pop(ec4));
         ASSERT(val4.has_value());
         ASSERT(*val4 == five);
         t.join();
@@ -142,10 +141,10 @@ auto test_pop(const auto one, auto two, const auto three, auto four, auto five) 
             queue.close();
         });
 
-        std::error_code ec{};
-        auto            val4(queue.pop(ec));
+        std::error_code ec4{};
+        auto            val4(queue.pop(ec4));
         ASSERT(not val4.has_value());
-        ASSERT(ec.value() == static_cast<int>(test_std::conqueue_errc::closed));
+        ASSERT(ec4.value() == static_cast<int>(test_std::conqueue_errc::closed));
         t.join();
     }
 }
@@ -160,6 +159,8 @@ auto test_async_push(auto one, auto two, auto three, auto four, auto five) -> vo
         auto set_error(std::exception_ptr) && noexcept -> void { this->complete = 3; }
         auto set_stopped() && noexcept -> void { this->complete = 4; }
     };
+    typename receiver::receiver_concept c{};
+    test::use(c);
     static_assert(test_std::receiver<receiver>);
 
     test_std::bounded_queue<T> queue(2);
@@ -215,6 +216,8 @@ auto test_async_pop(auto one, auto two, auto three, auto four, auto five) -> voi
         auto set_error(std::exception_ptr) && noexcept -> void { this->complete = 3; }
         auto set_stopped() && noexcept -> void { this->complete = 4; }
     };
+    typename receiver::receiver_concept c{};
+    test::use(c);
     static_assert(test_std::receiver<receiver>);
 
     test_std::bounded_queue<T> queue(2);
