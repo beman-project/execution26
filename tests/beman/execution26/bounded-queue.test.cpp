@@ -157,7 +157,8 @@ auto test_async_push(auto one, auto two, auto three, auto four, auto five) -> vo
         int& complete;
         auto set_value() && noexcept -> void { this->complete = 1; }
         auto set_error(test_std::conqueue_errc) && noexcept -> void { this->complete = 2; }
-        auto set_stopped() && noexcept -> void { this->complete = 3; }
+        auto set_error(std::exception_ptr) && noexcept -> void { this->complete = 3; }
+        auto set_stopped() && noexcept -> void { this->complete = 4; }
     };
     static_assert(test_std::receiver<receiver>);
 
@@ -206,9 +207,13 @@ auto test_async_pop(auto one, auto two, auto three, auto four, auto five) -> voi
         using receiver_concept = test_std::receiver_t;
         int&            complete;
         std::vector<T>& vals;
-        auto set_value(T val) && noexcept -> void { this->complete = 1; vals.push_back(val); }
+        auto            set_value(T val) && noexcept -> void {
+            this->complete = 1;
+            vals.push_back(val);
+        }
         auto set_error(test_std::conqueue_errc) && noexcept -> void { this->complete = 2; }
-        auto set_stopped() && noexcept -> void { this->complete = 3; }
+        auto set_error(std::exception_ptr) && noexcept -> void { this->complete = 3; }
+        auto set_stopped() && noexcept -> void { this->complete = 4; }
     };
     static_assert(test_std::receiver<receiver>);
 
