@@ -81,6 +81,8 @@ class beman::execution26::bounded_queue : ::beman::execution26::detail::immovabl
         virtual auto complete(::std::exception_ptr) -> void                = 0;
     };
 
+    struct blocking_pop_state;
+
     union element_t {
         element_t() {}
         template <typename... Args>
@@ -131,6 +133,41 @@ class beman::execution26::bounded_queue : ::beman::execution26::detail::immovabl
     ::std::uint64_t      tail{}; // the next element to push from
     bool                 closed{};
 };
+
+template <typename T, typename Allocator>
+struct beman::execution26::bounded_queue<T, Allocator>::blocking_pop_state : pop_base {
+        bounded_queue& queue;
+        bool           ready{false};
+        ::std::variant<::std::monostate, value_type, ::beman::execution26::conqueue_errc, ::std::exception_ptr>
+                                  result{};
+        ::std::condition_variable condition{};
+
+        blocking_pop_state(bounded_queue& queue) : queue(queue) {}
+        auto complete(value_type value) -> void override {
+            {
+                ::std::lock_guard cerberus(queue.mutex);
+                this->result = ::std::move(value);
+                this->ready  = true;
+            }
+            this->condition.notify_one();
+        }
+        auto complete(::beman::execution26::conqueue_errc err) -> void override {
+            {
+                ::std::lock_guard cerberus(queue.mutex);
+                result      = err;
+                this->ready = true;
+            }
+            this->condition.notify_one();
+        }
+        auto complete(::std::exception_ptr ex) -> void override {
+            {
+                ::std::lock_guard cerberus(queue.mutex);
+                result      = std::move(ex);
+                this->ready = true;
+            }
+            this->condition.notify_one();
+        }
+    };
 
 template <typename T, typename Allocator>
 class beman::execution26::bounded_queue<T, Allocator>::push_sender {
@@ -380,40 +417,7 @@ auto beman::execution26::bounded_queue<T, Allocator>::get(::std::uint64_t index)
 template <typename T, typename Allocator>
 template <typename HandleResult>
 auto beman::execution26::bounded_queue<T, Allocator>::internal_pop(HandleResult handle_result) {
-    struct state : pop_base {
-        bounded_queue& queue;
-        bool           ready{false};
-        ::std::variant<::std::monostate, value_type, ::beman::execution26::conqueue_errc, ::std::exception_ptr>
-                                  result{};
-        ::std::condition_variable condition{};
-
-        state(bounded_queue& queue) : queue(queue) {}
-        auto complete(value_type value) -> void override {
-            {
-                ::std::lock_guard cerberus(queue.mutex);
-                this->result = ::std::move(value);
-                this->ready  = true;
-            }
-            this->condition.notify_one();
-        }
-        auto complete(::beman::execution26::conqueue_errc err) -> void override {
-            {
-                ::std::lock_guard cerberus(queue.mutex);
-                result      = err;
-                this->ready = true;
-            }
-            this->condition.notify_one();
-        }
-        auto complete(::std::exception_ptr ex) -> void override {
-            {
-                ::std::lock_guard cerberus(queue.mutex);
-                result      = std::move(ex);
-                this->ready = true;
-            }
-            this->condition.notify_one();
-        }
-    };
-    state s(*this);
+    blocking_pop_state s(*this);
     this->start_pop(s);
     {
         ::std::unique_lock cerberus(this->mutex);
