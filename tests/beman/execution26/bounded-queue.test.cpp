@@ -50,18 +50,21 @@ auto test_push(const auto one, auto two, const auto three, auto four, auto five)
     ASSERT(rc2 == true);
 
     queue.close();
+    bool not_reached{true};
     try {
         queue.push(five);
-        ASSERT(false);
+        not_reached = false;
     } catch (const test_std::conqueue_error& error) {
         ASSERT(error.code().value() == static_cast<int>(test_std::conqueue_errc::closed));
     }
+    ASSERT(not_reached);
     try {
         queue.push(std::move(five));
-        ASSERT(false);
+        not_reached = false;
     } catch (const test_std::conqueue_error& error) {
         ASSERT(error.code().value() == static_cast<int>(test_std::conqueue_errc::closed));
     }
+    ASSERT(not_reached);
     std::error_code ec0{};
     ASSERT(queue.push(five, ec0) == false);
     ASSERT(ec0.value() == static_cast<int>(test_std::conqueue_errc::closed));
@@ -125,13 +128,15 @@ auto test_pop(const auto one, auto two, const auto three, auto four, auto five) 
             queue.close();
         });
 
+        bool not_reached{true};
         try {
             queue.pop();
-            ASSERT(false);
+            not_reached = false;
         } catch (const test_std::conqueue_error& ex) {
             ASSERT(&ex.code().category() == &test_std::conqueue_category());
             ASSERT(ex.code().value() == static_cast<int>(test_std::conqueue_errc::closed));
         }
+        ASSERT(not_reached);
         t.join();
     }
     {
@@ -160,7 +165,7 @@ auto test_async_push(auto one, auto two, auto three, auto four, auto five) -> vo
             this->complete = 1;
         }
         auto set_error(test_std::conqueue_errc) && noexcept -> void { this->complete = 2; }
-        auto set_error(std::exception_ptr) && noexcept -> void { this->complete = 3; }
+        auto set_error(const std::exception_ptr&) && noexcept -> void { this->complete = 3; }
         auto set_stopped() && noexcept -> void { this->complete = 4; }
     };
     static_assert(test_std::receiver<receiver>);
@@ -217,7 +222,7 @@ auto test_async_pop(auto one, auto two, auto three, auto four, auto) -> void {
             vals.push_back(val);
         }
         auto set_error(test_std::conqueue_errc) && noexcept -> void { this->complete = 2; }
-        auto set_error(std::exception_ptr) && noexcept -> void { this->complete = 3; }
+        auto set_error(const std::exception_ptr&) && noexcept -> void { this->complete = 3; }
         auto set_stopped() && noexcept -> void { this->complete = 4; }
     };
     static_assert(test_std::receiver<receiver>);
@@ -293,17 +298,21 @@ TEST(bounded_queue) {
     static_assert(std::same_as<int, test_std::bounded_queue<int>::value_type>);
     static_assert(std::same_as<std::allocator<int>, test_std::bounded_queue<int>::allocator_type>);
 
-    test_close<int>(1, 2);
-    test_close<std::string>("one"s, "two"s);
+    try {
+        test_close<int>(1, 2);
+        test_close<std::string>("one"s, "two"s);
 
-    test_push<int>(1, 2, 3, 4, 5);
-    test_push<std::string>("one"s, "two"s, "three"s, "four"s, "five"s);
+        test_push<int>(1, 2, 3, 4, 5);
+        test_push<std::string>("one"s, "two"s, "three"s, "four"s, "five"s);
 
-    test_pop<int>(1, 2, 3, 4, 5);
-    test_pop<std::string>("one"s, "two"s, "three"s, "four"s, "five"s);
+        test_pop<int>(1, 2, 3, 4, 5);
+        test_pop<std::string>("one"s, "two"s, "three"s, "four"s, "five"s);
 
-    test_async_push<int>(1, 2, 3, 4, 5);
-    test_async_push<std::string>("one"s, "two"s, "three"s, "four"s, "five"s);
-    test_async_pop<int>(1, 2, 3, 4, 5);
-    test_async_pop<std::string>("one"s, "two"s, "three"s, "four"s, "five"s);
+        test_async_push<int>(1, 2, 3, 4, 5);
+        test_async_push<std::string>("one"s, "two"s, "three"s, "four"s, "five"s);
+        test_async_pop<int>(1, 2, 3, 4, 5);
+        test_async_pop<std::string>("one"s, "two"s, "three"s, "four"s, "five"s);
+    } catch (...) {
+        abort();
+    }
 }

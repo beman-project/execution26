@@ -9,7 +9,7 @@
 
 namespace {
 struct node {
-    int   value;
+    int   value{};
     node* n_{};
 };
 } // namespace
@@ -26,10 +26,10 @@ TEST(intrusive_queue) {
     ASSERT(n0->n_ == nullptr);
     ASSERT(queue.empty());
 
-    for (int i = 0; i != 5; ++i) {
+    for (std::size_t i = 0u; i != n.size(); ++i) {
         queue.push(&n[i]);
     }
-    for (int i = 0; i != 5; ++i) {
+    for (std::size_t i = 0u; i != n.size(); ++i) {
         ASSERT(not queue.empty());
         ASSERT(queue.pop() == &n[i]);
     }

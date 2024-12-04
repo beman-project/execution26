@@ -6,6 +6,7 @@
 
 #include <beman/execution26/detail/immovable.hpp>
 #include <beman/execution26/detail/intrusive_queue.hpp>
+#include <beman/execution26/detail/decayed_same_as.hpp>
 #include <beman/execution26/detail/conqueue_errc.hpp>
 #include <beman/execution26/detail/conqueue_error.hpp>
 #include <beman/execution26/execution.hpp>
@@ -42,12 +43,16 @@ class beman::execution26::bounded_queue : ::beman::execution26::detail::immovabl
     static_assert(::std::same_as<value_type, typename Allocator::value_type>);
 
     explicit bounded_queue(::std::size_t max, Allocator allocator = {});
+    bounded_queue(bounded_queue&&)      = delete;
+    bounded_queue(const bounded_queue&) = delete;
     ~bounded_queue() {
         for (; this->tail != this->head; ++this->tail) {
             this->destroy(this->get(this->tail));
         }
         array_allocator_traits::deallocate(this->array_allocator, this->elements, this->max);
     }
+    auto operator=(bounded_queue&&) -> bounded_queue&      = delete;
+    auto operator=(const bounded_queue&) -> bounded_queue& = delete;
 
     auto is_closed() const noexcept -> bool;
     auto close() noexcept -> void;
@@ -71,8 +76,8 @@ class beman::execution26::bounded_queue : ::beman::execution26::detail::immovabl
         value_type value;
         push_base* next{};
 
-        template <typename Val>
-        push_base(Val&& val) : value(::std::forward<Val>(val)) {}
+        template <::beman::execution26::detail::decayed_same_as<value_type> Val>
+        explicit push_base(Val&& val) : value(::std::forward<Val>(val)) {}
         virtual auto complete() -> void                                    = 0;
         virtual auto complete(::beman::execution26::conqueue_errc) -> void = 0;
         virtual auto complete(::std::exception_ptr) -> void                = 0;
@@ -90,12 +95,17 @@ class beman::execution26::bounded_queue : ::beman::execution26::detail::immovabl
     struct blocking_pop_state;
 
     union element_t {
-        element_t() {}
+        element_t()                 = default;
+        element_t(element_t&&)      = delete;
+        element_t(const element_t&) = delete;
         template <typename... Args>
-        element_t(allocator_type& alloc, Args&&... args) {
+        explicit element_t(allocator_type& alloc, Args&&... args) {
             allocator_traits::construct(alloc, &value, ::std::forward<Args>(args)...);
         }
-        ~element_t() {}
+        ~element_t() {};
+        auto operator=(element_t&&) -> element_t&      = delete;
+        auto operator=(const element_t&) -> element_t& = delete;
+
         value_type value;
     };
 
