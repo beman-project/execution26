@@ -7,11 +7,12 @@
 #include <string>
 #include <system_error>
 #include <type_traits>
+#include <cinttypes>
 
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26 {
-enum class conqueue_errc { empty, full, closed, busy };
+enum class conqueue_errc : ::std::uint8_t { empty, full, closed, busy };
 
 inline auto conqueue_category() noexcept -> const ::std::error_category&;
 inline auto make_error_code(::beman::execution26::conqueue_errc) noexcept -> ::std::error_code;

@@ -57,6 +57,14 @@ struct intrusive_queue<next> {
     //! The original queue `other` will be empty after this operation.
     intrusive_queue(intrusive_queue&& other) noexcept
         : head(::std::exchange(other.head, nullptr)), tail(::std::exchange(other.tail, nullptr)) {}
+    intrusive_queue(const intrusive_queue&) = delete;
+    auto operator=(intrusive_queue&& other) noexcept -> intrusive_queue& {
+        this->head(::std::exchange(other.head, nullptr));
+        this->tail(::std::exchange(other.tail, nullptr));
+        return *this;
+    }
+    auto operator=(const intrusive_queue&) -> intrusive_queue& = delete;
+    ~intrusive_queue()                                         = default;
     //! @brief Push the node `n` to the end of the queue
     //! @details
     //! The "next" pointer of the new node is set to `nullptr`.
