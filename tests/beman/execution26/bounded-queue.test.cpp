@@ -154,13 +154,15 @@ auto test_async_push(auto one, auto two, auto three, auto four, auto five) -> vo
     struct receiver {
         using receiver_concept = test_std::receiver_t;
         int& complete;
-        auto set_value() && noexcept -> void { this->complete = 1; }
+        auto set_value() && noexcept -> void {
+            receiver_concept c{};
+            test::use(c);
+            this->complete = 1;
+        }
         auto set_error(test_std::conqueue_errc) && noexcept -> void { this->complete = 2; }
         auto set_error(std::exception_ptr) && noexcept -> void { this->complete = 3; }
         auto set_stopped() && noexcept -> void { this->complete = 4; }
     };
-    typename receiver::receiver_concept c{};
-    test::use(c);
     static_assert(test_std::receiver<receiver>);
 
     test_std::bounded_queue<T> queue(2);
@@ -209,6 +211,8 @@ auto test_async_pop(auto one, auto two, auto three, auto four, auto) -> void {
         int&            complete;
         std::vector<T>& vals;
         auto            set_value(T val) && noexcept -> void {
+            typename receiver::receiver_concept c{};
+            test::use(c);
             this->complete = 1;
             vals.push_back(val);
         }
@@ -216,8 +220,6 @@ auto test_async_pop(auto one, auto two, auto three, auto four, auto) -> void {
         auto set_error(std::exception_ptr) && noexcept -> void { this->complete = 3; }
         auto set_stopped() && noexcept -> void { this->complete = 4; }
     };
-    typename receiver::receiver_concept c{};
-    test::use(c);
     static_assert(test_std::receiver<receiver>);
 
     test_std::bounded_queue<T> queue(2);

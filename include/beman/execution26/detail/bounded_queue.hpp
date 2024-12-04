@@ -42,7 +42,12 @@ class beman::execution26::bounded_queue : ::beman::execution26::detail::immovabl
     static_assert(::std::same_as<value_type, typename Allocator::value_type>);
 
     explicit bounded_queue(::std::size_t max, Allocator allocator = {});
-    ~bounded_queue();
+    ~bounded_queue() {
+        for (; this->tail != this->head; ++this->tail) {
+            this->destroy(this->get(this->tail));
+        }
+        array_allocator_traits::deallocate(this->array_allocator, this->elements, this->max);
+    }
 
     auto is_closed() const noexcept -> bool;
     auto close() noexcept -> void;
@@ -281,14 +286,6 @@ beman::execution26::bounded_queue<T, Allocator>::bounded_queue(::std::size_t mx,
       array_allocator(alloc),
       max(mx),
       elements(array_allocator_traits::allocate(this->array_allocator, this->max)) {}
-
-template <typename T, typename Allocator>
-beman::execution26::bounded_queue<T, Allocator>::~bounded_queue() {
-    for (; this->tail != this->head; ++this->tail) {
-        this->destroy(this->get(this->tail));
-    }
-    array_allocator_traits::deallocate(this->array_allocator, this->elements, this->max);
-}
 
 template <typename T, typename Allocator>
 auto beman::execution26::bounded_queue<T, Allocator>::is_closed() const noexcept -> bool {

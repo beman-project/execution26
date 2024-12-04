@@ -569,11 +569,11 @@ auto test_default_impls_get_state() -> void {
         int  i3{};
         int  i4{};
     };
-    struct receiver {};
+    struct greceiver {};
 
     gsender0       s{};
     const gsender0 cs{};
-    receiver      r{};
+    greceiver      r{};
     static_assert(noexcept(test_detail::default_impls::get_state(gsender0{}, r)));
     static_assert(std::same_as<data&&, decltype(test_detail::default_impls::get_state(gsender0{}, r))>);
     ASSERT((data{1, 2}) == test_detail::default_impls::get_state(gsender0{}, r));

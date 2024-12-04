@@ -146,11 +146,11 @@ auto test_sync_wait_receiver() -> void {
         ASSERT(*state.result == (std::tuple{arg<0>{2}, arg<1>{3}, arg<2>{5}}));
     }
     {
-        using sender = decltype(test_std::just(arg<0>{}, arg<1>{}, arg<2>{}));
-        test_detail::sync_wait_state<sender> state{};
+        using sender_t = decltype(test_std::just(arg<0>{}, arg<1>{}, arg<2>{}));
+        test_detail::sync_wait_state<sender_t> state{};
         ASSERT(not state.result);
         ASSERT(not state.error);
-        test_std::set_error(test_detail::sync_wait_receiver<sender>{&state}, error{17});
+        test_std::set_error(test_detail::sync_wait_receiver<sender_t>{&state}, error{17});
         ASSERT(not state.result);
         ASSERT(state.error);
         try {

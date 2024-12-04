@@ -301,7 +301,7 @@ auto test_connect_with_awaiter() -> void {
         auto                       await_suspend(std::coroutine_handle<> h) -> void { this->handle = h; }
         auto                       await_resume() -> int { return 17; }
     };
-    struct receiver {
+    struct areceiver {
         using receiver_concept = test_std::receiver_t;
         bool& result;
         auto  set_value(int i) && noexcept -> void { this->result = i == 17; }
@@ -311,7 +311,7 @@ auto test_connect_with_awaiter() -> void {
 
     std::coroutine_handle<> handle{};
     bool                    result{};
-    auto                    op{test_std::connect(awaiter_t{handle}, receiver{result})};
+    auto                    op{test_std::connect(awaiter_t{handle}, areceiver{result})};
     ASSERT(handle == std::coroutine_handle{});
     test_std::start(op);
     ASSERT(handle != std::coroutine_handle{});
