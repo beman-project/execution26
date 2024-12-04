@@ -22,7 +22,7 @@ namespace {
 struct env {
     ex::inplace_stop_token token;
 
-    env(ex::inplace_stop_token token) : token(token) {} // NOLINT(hicpp-explicit-conversions)
+    env(ex::inplace_stop_token tok) : token(tok) {} // NOLINT(hicpp-explicit-conversions)
 
     auto query(const ex::get_stop_token_t&) const noexcept { return this->token; }
 };

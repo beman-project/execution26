@@ -424,8 +424,7 @@ auto beman::execution26::bounded_queue<T, Allocator>::async_pop() -> pop_sender 
 template <typename T, typename Allocator>
 template <typename... Args>
 auto beman::execution26::bounded_queue<T, Allocator>::construct(element_t* element, Args&&... args) -> void {
-    array_allocator_traits::construct(
-        this->array_allocator, this->get(this->head), this->allocator, ::std::forward<Args>(args)...);
+    array_allocator_traits::construct(this->array_allocator, element, this->allocator, ::std::forward<Args>(args)...);
 }
 
 template <typename T, typename Allocator>

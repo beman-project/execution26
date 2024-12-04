@@ -136,11 +136,11 @@ auto test_sync_wait_state() -> void {
 
 auto test_sync_wait_receiver() -> void {
     {
-        using sender = decltype(test_std::just(arg<0>{}, arg<1>{}, arg<2>{}));
-        test_detail::sync_wait_state<sender> state{};
+        using sender_t = decltype(test_std::just(arg<0>{}, arg<1>{}, arg<2>{}));
+        test_detail::sync_wait_state<sender_t> state{};
         ASSERT(not state.result);
         ASSERT(not state.error);
-        test_std::set_value(test_detail::sync_wait_receiver<sender>{&state}, arg<0>{2}, arg<1>{3}, arg<2>{5});
+        test_std::set_value(test_detail::sync_wait_receiver<sender_t>{&state}, arg<0>{2}, arg<1>{3}, arg<2>{5});
         ASSERT(state.result);
         ASSERT(not state.error);
         ASSERT(*state.result == (std::tuple{arg<0>{2}, arg<1>{3}, arg<2>{5}}));
@@ -163,11 +163,11 @@ auto test_sync_wait_receiver() -> void {
         }
     }
     {
-        using sender = decltype(test_std::just(arg<0>{}, arg<1>{}, arg<2>{}));
-        test_detail::sync_wait_state<sender> state{};
+        using sender_t = decltype(test_std::just(arg<0>{}, arg<1>{}, arg<2>{}));
+        test_detail::sync_wait_state<sender_t> state{};
         ASSERT(not state.result);
         ASSERT(not state.error);
-        test_std::set_error(test_detail::sync_wait_receiver<sender>{&state}, std::make_exception_ptr(error{17}));
+        test_std::set_error(test_detail::sync_wait_receiver<sender_t>{&state}, std::make_exception_ptr(error{17}));
         ASSERT(not state.result);
         ASSERT(state.error);
         try {
@@ -180,11 +180,11 @@ auto test_sync_wait_receiver() -> void {
         }
     }
     {
-        using sender = decltype(test_std::just(arg<0>{}, arg<1>{}, arg<2>{}));
-        test_detail::sync_wait_state<sender> state{};
+        using sender_t = decltype(test_std::just(arg<0>{}, arg<1>{}, arg<2>{}));
+        test_detail::sync_wait_state<sender_t> state{};
         ASSERT(not state.result);
         ASSERT(not state.error);
-        test_std::set_stopped(test_detail::sync_wait_receiver<sender>{&state});
+        test_std::set_stopped(test_detail::sync_wait_receiver<sender_t>{&state});
         ASSERT(not state.result);
         ASSERT(not state.error);
     }

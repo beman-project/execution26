@@ -203,7 +203,7 @@ auto test_async_push(auto one, auto two, auto three, auto four, auto five) -> vo
 }
 
 template <typename T>
-auto test_async_pop(auto one, auto two, auto three, auto four, auto five) -> void {
+auto test_async_pop(auto one, auto two, auto three, auto four, auto) -> void {
     struct receiver {
         using receiver_concept = test_std::receiver_t;
         int&            complete;

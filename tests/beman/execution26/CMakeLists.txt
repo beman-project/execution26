@@ -135,7 +135,6 @@ foreach(test ${execution_tests})
   add_test(NAME ${TEST_EXE} COMMAND $<TARGET_FILE:${TEST_EXE}>)
 endforeach()
 
-if(False)
 if(NOT PROJECT_IS_TOP_LEVEL)
   # test if the targets are findable from the build directory
   # cmake-format: off
@@ -157,5 +156,4 @@ if(NOT PROJECT_IS_TOP_LEVEL)
           # TODO(CK): Needed too? "--config $<CONFIG>"
   )
   # cmake-format: on
-endif()
 endif()
