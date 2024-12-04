@@ -211,7 +211,7 @@ auto test_async_pop(auto one, auto two, auto three, auto four, auto) -> void {
         int&            complete;
         std::vector<T>& vals;
         auto            set_value(T val) && noexcept -> void {
-            typename receiver::receiver_concept c{};
+            receiver_concept c{};
             test::use(c);
             this->complete = 1;
             vals.push_back(val);
