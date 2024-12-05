@@ -110,7 +110,10 @@ struct eager {
             inner_state.emplace(std::forward<S>(s), receiver{this});
         }
         // TODO on next line: bugprone-unchecked-optional-access
-        auto start() & noexcept -> void { ex::start((*this->inner_state).st); }
+        auto start() & noexcept -> void {
+            if (this->inner_state)
+                ex::start((*this->inner_state).st);
+        }
     };
     template <ex::receiver Receiver>
     auto connect(Receiver&& receiver) {

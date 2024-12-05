@@ -294,9 +294,11 @@ struct shared_wrapper {
     }
 
     ~shared_wrapper() noexcept {
+        // NOLINTBEGIN(clang-analyzer-cplusplus.NewDelete)
         if (sh_state) {
             sh_state->dec_ref();
         }
+        // NOLINTEND(clang-analyzer-cplusplus.NewDelete)
     }
 
     shared_wrapper(const shared_wrapper& other) noexcept : sh_state(other.sh_state) {

@@ -34,10 +34,10 @@ struct connect_all_t {
         auto data{::beman::execution26::detail::get_sender_data(::std::forward<S>(sender))};
         return ::std::apply(
             [&op](auto&&... c) {
-                return [&op]<::std::size_t... J>(::std::index_sequence<J...>, auto&&... c) {
+                return [&op]<::std::size_t... J>(::std::index_sequence<J...>, auto&&... cc) {
                     use(op);
                     return ::beman::execution26::detail::product_type{::beman::execution26::connect(
-                        ::beman::execution26::detail::forward_like<Sender>(c),
+                        ::beman::execution26::detail::forward_like<Sender>(cc),
                         ::beman::execution26::detail::
                             basic_receiver<Sender, Receiver, ::std::integral_constant<::size_t, J>>{op})...};
                 }(::std::make_index_sequence<::std::tuple_size_v<::std::decay_t<decltype(data.children)>>>{}, c...);

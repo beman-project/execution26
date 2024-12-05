@@ -39,7 +39,6 @@ class run_loop {
     };
 
     struct opstate_base : ::beman::execution26::detail::virtual_immovable {
-        virtual ~opstate_base() = default;
         opstate_base* next{};
         virtual auto  execute() noexcept -> void = 0;
     };
@@ -52,7 +51,7 @@ class run_loop {
         Receiver  receiver;
 
         template <typename R>
-        opstate(run_loop* loop, R&& receiver) : loop(loop), receiver(::std::forward<Receiver>(receiver)) {}
+        opstate(run_loop* lp, R&& rcvr) : loop(lp), receiver(::std::forward<Receiver>(rcvr)) {}
         auto start() & noexcept -> void {
             try {
                 this->loop->push_back(this);

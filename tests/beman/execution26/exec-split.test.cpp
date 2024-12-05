@@ -11,6 +11,8 @@
 
 // ----------------------------------------------------------------------------
 
+namespace {
+
 struct timed_scheduler_t : beman::execution26::scheduler_t {};
 
 class some_thread_pool {
@@ -143,9 +145,10 @@ void test_completion_sigs_and_sync_wait_on_split() {
     auto just          = beman::execution26::just(NonCopyable{});
     auto split         = beman::execution26::split(std::move(just));
     using split_sender = std::decay_t<decltype(split)>;
-    struct empty_env {};
+    struct local_empty_env {};
     using expected_value_completions = type_list<beman::execution26::set_value_t(const NonCopyable&)>;
-    using value_completions = beman::execution26::value_types_of_t<split_sender, empty_env, to_set_value_t, combine>;
+    using value_completions =
+        beman::execution26::value_types_of_t<split_sender, local_empty_env, to_set_value_t, combine>;
     static_assert(std::same_as<value_completions, expected_value_completions>);
 
     auto eat_completion = beman::execution26::then(split, [&](const NonCopyable&) {});
@@ -181,6 +184,7 @@ void test_completion_from_another_thread() {
 void test_multiple_completions_from_other_threads() {
     using namespace std::chrono_literals;
     auto context = some_thread_pool{};
+    ASSERT(some_thread_pool_scheduler(context) == some_thread_pool_scheduler(context));
     auto result  = [&] {
         auto scheduler   = some_thread_pool_scheduler{context};
         auto deadline    = scheduler.now() + 20ms;
@@ -198,6 +202,7 @@ void test_multiple_completions_from_other_threads() {
         ASSERT(val2 == 42);
     }
 }
+} // namespace
 
 TEST(exec_split) {
     test_destroy_unused_split();

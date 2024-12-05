@@ -41,7 +41,7 @@ class beman::execution26::inplace_stop_token {
     friend class ::beman::execution26::inplace_stop_source;
     template <typename CallbackFun>
     friend class ::beman::execution26::inplace_stop_callback;
-    explicit inplace_stop_token(::beman::execution26::inplace_stop_source* source) : source(source) {}
+    explicit inplace_stop_token(::beman::execution26::inplace_stop_source* src) : source(src) {}
 
     ::beman::execution26::inplace_stop_source* source{};
 };
@@ -86,7 +86,7 @@ class beman::execution26::inplace_stop_callback final
     inplace_stop_callback(::beman::execution26::inplace_stop_token, Init&&);
     inplace_stop_callback(const inplace_stop_callback&) = delete;
     inplace_stop_callback(inplace_stop_callback&&) = delete;
-    ~inplace_stop_callback() {
+    ~inplace_stop_callback() override {
         if (this->source) {
             this->source->deregister(this);
         }

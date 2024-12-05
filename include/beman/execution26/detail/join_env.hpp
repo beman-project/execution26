@@ -18,7 +18,7 @@ class join_env {
 
   public:
     template <typename E1, typename E2>
-    join_env(E1&& env1, E2&& env2) : env1(::std::forward<E1>(env1)), env2(::std::forward<E2>(env2)) {}
+    join_env(E1&& ev1, E2&& ev2) : env1(::std::forward<E1>(ev1)), env2(::std::forward<E2>(ev2)) {}
 
     template <typename Query, typename... Args>
         requires(

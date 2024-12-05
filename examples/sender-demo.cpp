@@ -14,8 +14,8 @@ struct just_op_state {
     std::pmr::string              value;
 
     template <typename R>
-    just_op_state(R&& r, std::pmr::string&& value)
-        : rec(std::forward<R>(r)), value(std::move(value), ex::get_allocator(ex::get_env(rec))) {}
+    just_op_state(R&& r, std::pmr::string&& val)
+        : rec(std::forward<R>(r)), value(std::move(val), ex::get_allocator(ex::get_env(rec))) {}
 
     void start() & noexcept { ex::set_value(std::move(rec), std::move(value)); }
 };
@@ -45,7 +45,7 @@ struct just_sender {
 static_assert(ex::sender<just_sender<std::pmr::string>>);
 static_assert(ex::sender_in<just_sender<std::pmr::string>>);
 
-int main() {
+int main() try {
     auto j = just_sender{std::pmr::string("value")};
     auto t = std::move(j) | ex::then([](const std::pmr::string& v) { return v + " then"; });
     auto w = ex::when_all(std::move(t));
@@ -60,4 +60,6 @@ int main() {
     } else
         std::cout << "operation was cancelled\n";
     std::cout << "after start\n";
+} catch (...) {
+    abort();
 }

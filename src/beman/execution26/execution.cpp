@@ -3,5 +3,6 @@
 // ----------------------------------------------------------------------------
 
 namespace beman::execution26 {
+extern int version;
 int version{000};
 }
