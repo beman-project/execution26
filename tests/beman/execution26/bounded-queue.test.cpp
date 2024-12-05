@@ -11,7 +11,7 @@
 
 namespace {
 template <typename T>
-auto test_close(auto one, auto two) {
+auto test_close(const auto& one, const auto& two) {
     test_std::bounded_queue<T> queue(1);
     ASSERT(noexcept(const_cast<const test_std::bounded_queue<T>&>(queue).is_closed()));
     ASSERT(not queue.is_closed());
@@ -39,7 +39,7 @@ auto test_close(auto one, auto two) {
 }
 
 template <typename T>
-auto test_push(const auto one, auto two, const auto three, auto four, auto five) -> void {
+auto test_push(const auto& one, auto two, const auto& three, auto four, auto five) -> void {
     test_std::bounded_queue<T> queue(4);
     queue.push(one);
     queue.push(std::move(two));
@@ -58,12 +58,14 @@ auto test_push(const auto one, auto two, const auto three, auto four, auto five)
         ASSERT(error.code().value() == static_cast<int>(test_std::conqueue_errc::closed));
     }
     ASSERT(not_reached);
+    auto five_copy(five);
     try {
         queue.push(std::move(five));
         not_reached = false;
     } catch (const test_std::conqueue_error& error) {
         ASSERT(error.code().value() == static_cast<int>(test_std::conqueue_errc::closed));
     }
+    five = five_copy;
     ASSERT(not_reached);
     std::error_code ec0{};
     ASSERT(queue.push(five, ec0) == false);
@@ -75,7 +77,7 @@ auto test_push(const auto one, auto two, const auto three, auto four, auto five)
 }
 
 template <typename T>
-auto test_pop(const auto one, auto two, const auto three, auto four, auto five) -> void {
+auto test_pop(const auto& one, const auto& two, const auto& three, const auto& four, auto five) -> void {
     test_std::bounded_queue<T> queue(4);
     queue.push(one);
     queue.push(two);
@@ -155,7 +157,7 @@ auto test_pop(const auto one, auto two, const auto three, auto four, auto five) 
 }
 
 template <typename T>
-auto test_async_push(auto one, auto two, auto three, auto four, auto five) -> void {
+auto test_async_push(const auto& one, const auto& two, const auto& three, const auto& four, const auto& five) -> void {
     struct receiver {
         using receiver_concept = test_std::receiver_t;
         int& complete;
@@ -210,16 +212,21 @@ auto test_async_push(auto one, auto two, auto three, auto four, auto five) -> vo
 }
 
 template <typename T>
-auto test_async_pop(auto one, auto two, auto three, auto four, auto) -> void {
+auto test_async_pop(const auto& one, const auto& two, const auto& three, const auto& four, const auto&) -> void {
     struct receiver {
         using receiver_concept = test_std::receiver_t;
         int&            complete;
         std::vector<T>& vals;
-        auto            set_value(T val) && noexcept -> void {
-            receiver_concept c{};
-            test::use(c);
-            this->complete = 1;
-            vals.push_back(val);
+        auto            set_value(const T& val) && noexcept -> void {
+            try {
+                receiver_concept c{};
+                test::use(c);
+                this->complete = 1;
+                vals.push_back(val);
+
+            } catch (...) {
+                abort();
+            }
         }
         auto set_error(test_std::conqueue_errc) && noexcept -> void { this->complete = 2; }
         auto set_error(const std::exception_ptr&) && noexcept -> void { this->complete = 3; }

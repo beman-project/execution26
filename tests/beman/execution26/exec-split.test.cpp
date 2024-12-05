@@ -11,6 +11,8 @@
 
 // ----------------------------------------------------------------------------
 
+namespace {
+
 struct timed_scheduler_t : beman::execution26::scheduler_t {};
 
 class some_thread_pool {
@@ -182,6 +184,7 @@ void test_completion_from_another_thread() {
 void test_multiple_completions_from_other_threads() {
     using namespace std::chrono_literals;
     auto context = some_thread_pool{};
+    ASSERT(some_thread_pool_scheduler(context) == some_thread_pool_scheduler(context));
     auto result  = [&] {
         auto scheduler   = some_thread_pool_scheduler{context};
         auto deadline    = scheduler.now() + 20ms;
@@ -199,6 +202,7 @@ void test_multiple_completions_from_other_threads() {
         ASSERT(val2 == 42);
     }
 }
+} // namespace
 
 TEST(exec_split) {
     test_destroy_unused_split();

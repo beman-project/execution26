@@ -91,7 +91,7 @@ auto inactive(Token token) -> void {
 #endif
 } // namespace
 
-auto main() -> int {
+auto main() -> int try {
     exec::stop_source source;
     ::std::thread     act([token = source.get_token()] { active(token); });
     ::std::thread     inact([token = source.get_token()] { inactive(token); });
@@ -103,4 +103,6 @@ auto main() -> int {
     act.join();
     inact.join();
     print("done\n");
+} catch (...) {
+    abort();
 }

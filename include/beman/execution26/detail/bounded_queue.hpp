@@ -102,7 +102,7 @@ class beman::execution26::bounded_queue : ::beman::execution26::detail::immovabl
         explicit element_t(allocator_type& alloc, Args&&... args) {
             allocator_traits::construct(alloc, &value, ::std::forward<Args>(args)...);
         }
-        ~element_t() {};
+        ~element_t() {}
         auto operator=(element_t&&) -> element_t&      = delete;
         auto operator=(const element_t&) -> element_t& = delete;
 
@@ -158,7 +158,7 @@ struct beman::execution26::bounded_queue<T, Allocator>::blocking_push_state : pu
     bounded_queue&                                                                              queue;
 
     template <typename Arg>
-    blocking_push_state(bounded_queue& que, Arg&& arg) : push_base(::std::forward<Arg>(arg)), queue(que) {}
+    explicit blocking_push_state(bounded_queue& que, Arg&& arg) : push_base(::std::forward<Arg>(arg)), queue(que) {}
     auto complete() -> void override {
         ::std::lock_guard cerberus(queue.mutex);
         {
@@ -182,7 +182,7 @@ struct beman::execution26::bounded_queue<T, Allocator>::blocking_pop_state : pop
     ::std::variant<::std::monostate, value_type, ::beman::execution26::conqueue_errc, ::std::exception_ptr> result{};
     ::std::condition_variable condition{};
 
-    blocking_pop_state(bounded_queue& que) : queue(que) {}
+    explicit blocking_pop_state(bounded_queue& que) : queue(que) {}
     auto complete(value_type value) -> void override {
         {
             ::std::lock_guard cerberus(queue.mutex);
@@ -496,6 +496,7 @@ auto beman::execution26::bounded_queue<T, Allocator>::internal_try_push(Arg&& ar
     return true;
 }
 
+// NOLINTBEGIN(misc-no-recursion)
 template <typename T, typename Allocator>
 auto beman::execution26::bounded_queue<T, Allocator>::pop_notify(auto& cerberus) -> void {
     assert(cerberus.owns_lock());
@@ -506,7 +507,9 @@ auto beman::execution26::bounded_queue<T, Allocator>::pop_notify(auto& cerberus)
         cerberus.unlock();
     }
 }
+// NOLINTEND(misc-no-recursion)
 
+// NOLINTBEGIN(misc-no-recursion)
 template <typename T, typename Allocator>
 auto beman::execution26::bounded_queue<T, Allocator>::push_notify(auto& cerberus) -> void {
     assert(cerberus.owns_lock());
@@ -527,6 +530,7 @@ auto beman::execution26::bounded_queue<T, Allocator>::push_notify(auto& cerberus
     }
     assert(not cerberus.owns_lock());
 }
+// NOLINTEND(misc-no-recursion)
 
 template <typename T, typename Allocator>
 template <typename Lock>
@@ -534,6 +538,7 @@ auto beman::execution26::bounded_queue<T, Allocator>::has_space(Lock&) noexcept 
     return this->head - this->tail < this->max;
 }
 
+// NOLINTBEGIN(misc-no-recursion)
 template <typename T, typename Allocator>
 template <typename Lock, typename V>
 auto beman::execution26::bounded_queue<T, Allocator>::push_value(Lock& cerberus, V&& value) -> void {
@@ -544,7 +549,9 @@ auto beman::execution26::bounded_queue<T, Allocator>::push_value(Lock& cerberus,
     this->pop_notify(cerberus);
     assert(not cerberus.owns_lock());
 }
+// NOLINTEND(misc-no-recursion)
 
+// NOLINTBEGIN(misc-no-recursion)
 template <typename T, typename Allocator>
 template <typename Lock>
 auto beman::execution26::bounded_queue<T, Allocator>::pop_value(Lock& cerberus) -> value_type {
@@ -555,6 +562,7 @@ auto beman::execution26::bounded_queue<T, Allocator>::pop_value(Lock& cerberus) 
     this->push_notify(cerberus);
     return val;
 }
+// NOLINTEND(misc-no-recursion)
 
 template <typename T, typename Allocator>
 auto beman::execution26::bounded_queue<T, Allocator>::start_push(push_base& s) -> void {
