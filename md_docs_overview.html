@@ -121,7 +121,7 @@ Example</summary>
 <div class="line">{</div>
 <div class="line">    using operation_state_concept = std::execution::operation_state_t;</div>
 <div class="line">    std::remove_cvref_t&lt;Receiver&gt; receiver;</div>
-<div class="line">    </div>
+<div class="line"> </div>
 <div class="line">    auto start() &amp; noexcept {</div>
 <div class="line">        std::execution::set_value(std::move(this-&gt;receiver));</div>
 <div class="line">    }</div>
@@ -160,7 +160,7 @@ Example</summary>
 <div class="line">{</div>
 <div class="line">    using receiver_concept = std::execution::receiver_t;</div>
 <div class="line">    std::remove_cvref_t&lt;NestedReceiver&gt; nested;</div>
-<div class="line">    </div>
+<div class="line"> </div>
 <div class="line">    auto get_env() const noexcept {</div>
 <div class="line">        return std::execution::get_env(this-&gt;nested);</div>
 <div class="line">    }</div>
@@ -197,7 +197,7 @@ Example</summary>
 <div class="line">struct example_receiver</div>
 <div class="line">{</div>
 <div class="line">    using receiver_concept = std::execution::receiver_t;</div>
-<div class="line">    </div>
+<div class="line"> </div>
 <div class="line">    auto set_value(int) &amp;&amp; noexcept -&gt;void {}</div>
 <div class="line">    auto set_stopped() &amp;&amp; noexcept -&gt;void {}</div>
 <div class="line">};</div>
@@ -209,7 +209,7 @@ Example</summary>
 <div class="line">        std::execution::set_value_t(int),</div>
 <div class="line">        std::execution::set_stopped_t()</div>
 <div class="line">    &gt;);</div>
-<div class="line">// providing a superset of signal models models receiver_of: </div>
+<div class="line">// providing a superset of signal models models receiver_of:</div>
 <div class="line">static_assert(std::execution::receiver_of&lt;example_receiver,</div>
 <div class="line">    std::execution::completion_signals&lt;</div>
 <div class="line">        std::execution::set_value_t(int)</div>
@@ -277,7 +277,7 @@ Example</summary>
 <div class="line">    using completion_signatures = std::execution::completion_signatures&lt;</div>
 <div class="line">        std::execution::set_value_t(int)</div>
 <div class="line">    &gt;;</div>
-<div class="line">    </div>
+<div class="line"> </div>
 <div class="line">    int value{};</div>
 <div class="line">    template &lt;std::execution::receiver Receiver&gt;</div>
 <div class="line">    auto connect(Receiver&amp;&amp; receiver) const -&gt; state&lt;Receiver&gt; {</div>
@@ -390,7 +390,7 @@ Example: inactive</summary>
 <div class="line">            std::execution::set_value(std::move(this-&gt;receiver));</div>
 <div class="line">        }</div>
 <div class="line">    }</div>
-<div class="line">};    </div>
+<div class="line">};</div>
 </div><!-- fragment --> </blockquote>
 </details>
 </blockquote>
